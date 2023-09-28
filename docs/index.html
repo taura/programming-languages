@@ -1,0 +1,3193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<script src="gen/html/js/lang.js"></script>
+  
+<title>プログラミング言語 / Programming Languages</title>
+
+<style>
+h1 {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #DDDDEE;
+}
+
+h2 {
+  font-size   : 13pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+h3 {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt;
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+div {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-color     : #99A1AA;
+}
+
+p {
+  font-size   : 12pt;
+  font-family : serif;
+  border-color     : #99A1AA;
+}
+
+pre {
+  background-color:#efe;
+}
+
+</style>
+</head>
+
+<body onload="main()">
+
+<body>
+
+<h1>プログラミング言語 / Programming Languages<br />田浦健次朗 / Kenjiro Taura</h1>
+<div>
+  <font size=-1>(the page is encoded in UTF-8)</font>
+  <ul>
+    <li><a href="?lang=ja"><img src=gen/html/img/japan_flag.png border=1 height=16 alt=Japanese /></a> / <a href="?lang=en"><img src=gen/html/img/english_flag.png border=1 height=16 alt=English /></a> </li>
+</ul>
+
+</div>
+
+<h2>お知らせ / What's New</h2>
+<div>
+
+  <p class="ja">
+    新しいものが上です.
+  </p>
+  <p class="en">
+    Newer entries come above.
+  </p>
+  
+  <p class="ja">
+    <font color=blue>
+      最初の青字部分がアナウンス日</font>
+    です．
+  </p>
+  <p class="en">
+    <font color=blue>
+      Blue letters in the beginning of a line
+    </font>
+    indicates the day the announcement was made on.
+  </p>
+  
+  <p class="ja">
+    授業をしながら更新していくので，
+    <font color=red>しょっちゅうreload</font>してください.
+  </p>
+  <p class="en">
+    <font color=red>Please reload the page</font>
+      frequently as it will be updated
+      during the course.
+  </p>
+
+  <ul>
+    <li class="en"><font color="blue">(2023/7/3)</font>
+      Work on whatever term report you chose to work on
+    </li>
+    <li class="ja"><font color="blue">(2023/7/3)</font>
+      期末レポートのために時間を使ってください
+    </li>
+
+    <li class="en"><font color="blue">(2023/7/3)</font>
+      Two videos are out explaining how you can work on the
+      compiler-building exercise
+    </li>
+    <li class="ja"><font color="blue">(2023/7/3)</font>
+      コンパイラ作る演習についての説明動画を2つアップしています
+    </li>
+
+
+
+    <li class="en"><font color="blue">(2023/6/26)</font>
+      Please declare what you do as your term report,
+      due end of this week. there is an assignment in ITC-LMS just for that.
+    </li>
+    <li class="ja"><font color="blue">(2023/6/26)</font>
+      期末レポートで何をするかを宣言してください, 今週末まで.
+      ITC-LMSにそのためだけの課題があります
+    </li>
+      
+    <li class="en"><font color="blue">(2023/6/26)</font>
+      Plan
+      <ol>
+        <li>10:25-11:10?
+          <a href=gen/slides/pdf/07-compiler.pdf>
+            Making a compiler
+        </a></li>
+        <li>11:00-
+          work on pl07_compile_c or anything (pl08_minc or your final report)
+        </li>
+      </ol>
+    </li>
+    <li class="ja"><font color="blue">(2023/6/26)</font>
+      Plan
+      <ol>
+        <li>10:25-11:10?
+          <a href=gen/slides/pdf/07-compiler.pdf>
+            Making a compiler
+        </a></li>
+        <li>11:00-
+          pl07_compile_c またはなんでも (pl08_minc または最終課題に向けてなんでも)
+        </li>
+      </ol>
+    </li>
+    
+    <li class="en"><font color="blue">(2023/6/19)</font>
+      Plan
+      <ol>
+        <li>10:25-11:00
+          <a href=gen/slides/pdf/07-compiler.pdf>
+            Making a compiler
+        </a></li>
+        <li>11:00-
+          work on pl07_compile_c
+        </li>
+      </ol>
+    </li>
+    <li class="ja"><font color="blue">(2023/6/19)</font>
+      Plan
+      <ol>
+        <li>10:25-11:00
+          <a href=gen/slides/pdf/07-compiler.pdf>
+            Making a compiler
+        </a></li>
+        <li>11:00-
+          pl07_compile_c をやる
+        </li>
+      </ol>
+    </li>
+
+    <li class="en"><font color="blue">(2023/6/19)</font>
+      <a href="gen/html/final_report.html?lang=en">
+        Specification of term report and evaluation</a>
+    </li>
+    <li class="ja"><font color="blue">(2023/6/19)</font>
+      <a href="gen/html/final_report.html">
+        期末レポートと評価の仕様
+      </a>
+    </li>
+
+    
+    <li class="en"><font color="blue">(2023/6/12)</font>
+      Plan
+      <ol>
+        <li>10:25-11:30
+          <a href=gen/slides/pdf/06-gc.pdf>Garbage Collection</a></li>
+        <li>11:30-
+          work with your group on pl06 to finish
+          <a href="gen/html/assignment_2_spec.html">assignment 2</a>
+        </li>
+      </ol>
+    </li>
+    <li class="ja"><font color="blue">(2023/6/12)</font>
+      予定
+      <ol>
+        <li>10:25-11:30
+          <a href=gen/slides/pdf/06-gc.pdf>Garbage Collection</a></li>
+        <li>11:30-
+          <a href="gen/html/assignment_2_spec.html">課題2</a>
+          の完成へ向けpl06をグループで
+        </li>
+      </ol>
+    </li>
+
+
+    <li class="ja"><font color="blue">(2023/6/5)</font>
+      <a href="gen/html/assignment_2_spec.html">課題2詳細</a>
+      を修正・更新したのでお読みください
+    </li>
+    <li class="en"><font color="blue">(2023/6/5)</font>
+      please read the
+      corrected/updated
+      <a href="gen/html/assignment_2_spec.html">assignment 2</a>
+    </li>
+    <li class="en"><font color="blue">(2023/6/5)</font>
+      Plan
+      <ol>
+        <li>10:25-11:30
+          <a href=gen/slides/pdf/06-gc.pdf>Garbage Collection</a></li>
+        <li>11:30-
+          work with your group on pl06 to finish
+          <a href="gen/html/assignment_2_spec.html">assignment 2</a>
+        </li>
+      </ol>
+    </li>
+    <li class="ja"><font color="blue">(2023/6/5)</font>
+      予定
+      <ol>
+        <li>10:25-11:30
+          <a href=gen/slides/pdf/06-gc.pdf>Garbage Collection</a></li>
+        <li>11:30-
+          <a href="gen/html/assignment_2_spec.html">課題2</a>
+          の完成へ向けpl06をグループで
+        </li>
+      </ol>
+    </li>
+
+    
+    <li class="en"><font color="blue">(2023/6/5)</font>
+      Plan
+      <ol>
+        <li>10:25-11:00
+          <a href=gen/slides/pdf/06-gc.pdf>Garbage Collection</a></li>
+        <li>work on pl06 to finish
+          <a href="gen/html/assignment_2_spec.html">assignment 2</a>
+        </li>
+      </ol>
+    </li>
+
+
+    
+    <li class="ja"><font color="blue">(2023/6/3)</font>
+      <a href="gen/html/assignment_2_spec.html">提出課題2の詳細</a>を公表
+    </li>
+    <li class="en"><font color="blue">(2023/6/3)</font>
+      <a href="gen/html/assignment_2_spec.html">Details of assignment 2</a> are out
+    </li>
+
+
+    <li class="en"><font color="blue">(2023/5/22)</font>
+      Plan
+      <ol>
+        <li>As always, indicate where you are in the Google sheet</li>
+        <li>10:25-11:25
+          <a href=gen/slides/pdf/05-rust.pdf>
+            Rust Memory Management
+          </a>
+        </li>
+        <li>11:25-
+          group work on pl05_calculator and pl06_memory_management
+        </li>
+        <li>
+          Sorry, I have to run to Kashiwa campus after my talk is done.
+          I'll leave Zoom after designating some of you as the host.
+          Please do group work in the remaining time.
+        </li>
+      </ol>
+    </li>
+
+    <li class="en"><font color="blue">(2023/5/22)</font>
+      予定
+      <ol>
+        <li>いつものようにGoogle sheetに居場所をご記入ください</li>
+        <li>10:25-11:25
+          <a href=gen/slides/pdf/05-rust.pdf>
+            Rust メモリ管理
+          </a>
+        </li>
+        <li>11:25-
+          pl05_calculator, pl06_memory_managementでgroup work
+        </li>
+        <li>
+          すみませんが自分の講義部分が終わったところで,
+          柏IIキャンパスに行かねばならず, 自分はそこで抜けさせていただきます.
+          (Zoomはどなたかをホストにした上で抜けます).
+          group workを時間までお願いします.
+        </li>
+      </ol>
+    </li>
+    
+    <li class="en"><font color="blue">(2023/5/15)</font>
+      Plan
+      <ol>
+        <li>Go Google sheet to indicate where you are</li>
+        <li>10:25-11:25
+          <a href=gen/slides/pdf/04-memory-management-intro.pdf>
+            Memory Management Introduction
+          </a>, 
+          <a href=gen/slides/pdf/05-rust.pdf>
+            Rust Memory Management (halfway)
+          </a>
+        </li>
+        <li>11:25-
+          group work on pl05_calculator and pl06_memory_management
+        </li>
+        <li>
+          find a new folder, assignment-2, in the same OneDrive folder for
+          pl06_memory_management
+        </li>
+      </ol>
+    </li>
+
+    <li class="ja"><font color="blue">(2023/5/15)</font>
+      Plan
+      <ol>
+        <li>いつものGoogle sheetで居場所を記録してください</li>
+        <li>10:25-11:25
+          <a href=gen/slides/pdf/04-memory-management-intro.pdf>
+            Memory Management Introduction
+          </a>, 
+          <a href=gen/slides/pdf/05-rust.pdf>
+            Rust Memory Management (halfway)
+          </a>
+        </li>
+        <li>11:25-
+          pl05_calculator と pl06_memory_management
+        </li>
+        <li>
+          前回と同じOneDriveフォルダに assignment-2
+          という新しいフォルダがあります. pl06_memory_management 用
+        </li>
+      </ol>
+    </li>
+
+
+    <li class="ja"><font color="blue">(2023/5/8)</font>
+      予定
+      <ol>
+        <li>10:25-10:40 <a href="https://www.menti.com/alup9foppey7" target="_blank">メモリ管理クイズ</a></li>
+        <li>10:40-11:30
+          <a href=gen/slides/pdf/04-memory-management-intro.pdf>
+            メモリ管理序論
+          </a>, 
+          <a href=gen/slides/pdf/05-rust.pdf>
+            Rust のメモリ管理(途中まで)
+          </a>
+        </li>
+        <li>11:40-
+          pl05_calculator でグループワーク
+        </li>
+      </ol>
+    </li>
+
+    <li class="en"><font color="blue">(2023/5/8)</font>
+      Plan
+      <ol>
+        <li>10:25-10:40 <a href="https://www.menti.com/alup9foppey7" target="_blank">memory management quiz</a></li>
+        <li>10:40-11:30
+          <a href=gen/slides/pdf/04-memory-management-intro.pdf>
+            Memory Management Introduction
+          </a>, 
+          <a href=gen/slides/pdf/05-rust.pdf>
+            Rust Memory Management (halfway)
+          </a>
+        </li>
+        <li>11:40-
+          group work on pl05_calculator
+        </li>
+      </ol>
+    </li>
+
+
+    
+    <li class="ja"><font color="blue">(2023/5/2)</font>
+      <a href="gen/html/assignment_1_spec.html">提出課題1の詳細</a>を公表
+    </li>
+    <li class="en"><font color="blue">(2023/5/2)</font>
+      <a href="gen/html/assignment_1_spec.html">Details of assignment 1</a> are out
+    </li>
+    <li class="ja"><font color="blue">(2023/5/1)</font>
+      Plan
+      <ol>
+        <li>居場所をグループ分けのスプシで表示してください. URLは<a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2023FEN-EE4d19L10F01" target="_blank">ITC-LMS</a>
+          で見てください.
+        </li>
+        <li>10:25-10:40 making programs outside Jupyter.
+          <a href="gen/slides/pdf/03-standalone-and-libraries.pdf" target="_blank">using libraries</a></li>
+        <li>10:40-11:10 pl04_standalone を,
+          グループ分けのスプシ "group on 5/1" にあるグループ分けに従って行う
+          <ul>
+            <li>教室の人は指定の場所近くに座る(詳しくは教室で)</li>
+            <li>Zoomの人は指定のブレークアウトルームに入る</li>
+            <li>やむを得ず教室とZoomで同じグループになる場合もあるかもしれない</li>
+            <li><font color="red">注: このグループはすでにアナウンス済みのものとは違う.
+                同じ言語をやる人 2人または3人がグループになる</font></li>
+          </ul>
+        </li>
+        <li>11:10-11:30 グループメンバーと議論をし, 学んだことをLearnWiz Oneで共有.
+          グループに一つ投稿 (一緒にやった人全員の名前を書いて投稿してください).
+          下書き用の共有ドキュメントは上記スプシより.
+          <ul>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-05-01-go" target="_blank">Go</a></li>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-05-01-julia" target="_blank">Julia</a></li>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-05-01-ocaml" target="_blank">OCaml</a></li>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-05-01-rust" target="_blank">Rust</a></li>
+          </ul>
+        </li>
+        <li>11:30- pl05_calculator をやる. 提出課題になる. 詳細は
+          ITC-LMSと<a href="gen/html/assignment_1_spec.html">ここ</a> <strike>でアナウンスします</strike>
+        </li>
+      </ol>
+    </li>
+    
+    <li class="en"><font color="blue">(2023/5/1)</font>
+      Plan
+      <ol>
+        <li>mark the grouping spreadsheet to indicate where you are.
+        get the link to the spreadsheet via <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2023FEN-EE4d19L10F01" target="_blank">ITC-LMS</a>)
+        </li>
+        <li>10:25-10:40 making programs outside Jupyter.
+          <a href="gen/slides/pdf/03-standalone-and-libraries.pdf" target="_blank">Using libraries</a></li>
+        <li>10:40-11:10 work on pl04_standalone, according to the group in Google sheet "group on 5/1"
+          <ul>
+            <li>Students in the classroom are seated around specified places (details to be announced in the room)</li>
+            <li>Students in the zoom enter the specified breakout room</li>
+            <li>When inevitable, ones in room and in zoom may be grouped</li>
+            <li><font color="red">note: the group for this work is different from what has been announced.
+                Two or three students working on the same language are grouped.</font></li>
+          </ul>
+        </li>
+        <li>11:10-11:30 discuss what you learned
+          with the group member and submit a summary to LearnWiz One. Post an answer
+          per group (post with names of all members who worked together). Use a collaborative document
+          linked from the spreadsheet for drafting your answer.
+          <ul>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-05-01-go" target="_blank">Go</a></li>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-05-01-julia" target="_blank">Julia</a></li>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-05-01-ocaml" target="_blank">OCaml</a></li>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-05-01-rust" target="_blank">Rust</a></li>
+          </ul>
+        </li>
+        <li>11:30- pl05_calculator, which becomes the first assignment to submit.
+          Details <strike>will be announced</strike> are in ITC-LMS and
+          <a href="gen/html/assignment_1_spec.html">this page</a>
+        </li>
+      </ol>
+    </li>
+        
+    <li class="ja"><font color="blue">(2023/4/24)</font>
+      予定
+      <ol>
+        <li>10:25-10:55<a href="gen/slides/pdf/01-oop.pdf" target="_blank">
+            How do Go/OCaml/Rust guarantee type safety</a></li>
+        <li>10:55-11:10<a href="gen/slides/pdf/02-parametric.pdf" target="_blank">
+            Parametric Polymorphism (aka Generic Types/Functions)</a></li>
+        <li>10:10-11:40 pl03_generic_fun_type</li>
+        <li>11:40- 答えを
+          <a href="https://docs.google.com/spreadsheets/d/1sG2i75HBrb5JskG4G-b-n2hlkSgBs-H35GXs4H4Cm0g/edit?usp=sharing">スプシ</a>に共有; pl03_generic_fun_type</li>
+        <li>
+          忘れずに
+          <a href="" target="_blank">
+            振り返り</a>を
+          <font color="red">明日までに</font>
+        </li>
+      </ol>
+    </li>
+    <li class="en"><font color="blue">(2023/4/24)</font>
+      Plan:
+      <ol>
+        <li>10:25-10:55<a href="gen/slides/pdf/01-oop.pdf" target="_blank">
+            How do Go/OCaml/Rust guarantee type safety</a></li>
+        <li>10:55-11:10<a href="gen/slides/pdf/02-parametric.pdf" target="_blank">
+            Parametric Polymorphism (aka Generic Types/Functions)</a></li>
+        <li>10:10-11:40 work on pl03_generic_fun_type</li>
+        <li>11:40- start writing your answers to
+          <a href="https://docs.google.com/spreadsheets/d/1sG2i75HBrb5JskG4G-b-n2hlkSgBs-H35GXs4H4Cm0g/edit?usp=sharing">spreadsheet</a>
+          ; continue working on pl03_generic_fun_type</li>
+        <li>
+          Don't forget to write
+          <a href="" target="_blank">
+            a reflective essay</a>
+          <font color="red">due tomorrow</font>
+        </li>
+      </ol>
+    </li>
+
+    <li class="ja"><font color="blue">(2023/4/23)</font>
+      グループ分けを行いましたので, 自分のグループを<a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2023FEN-EE4d19L10F01" target="_blank">ITC-LMS</a>でチェックしてください
+    </li>
+    <li class="en"><font color="blue">(2023/4/23)</font>
+      I have done grouping students.  Check your group via <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2023FEN-EE4d19L10F01" target="_blank">ITC-LMS</a>
+    </li>
+
+    <li class="ja"><font color="blue">(2023/4/17)</font>
+      本日の予定
+      <ol>
+        <li>10:25-10:40<a href="gen/slides/pdf/01-oop.pdf" target="_blank">
+            Object-Oriented Programming Basics</a></li>
+        <li>10:40-11:15 pl02_oop_basics をやる
+          (<font color="red">注:</font> Problem 6 のリンクが壊れています.
+          Problem 6を無視して以下のLearnWiz Oneのリンクを使ってください)
+        </li>
+        <li>11:15-11:30 答えを
+          <a href="https://docs.google.com/spreadsheets/d/1sG2i75HBrb5JskG4G-b-n2hlkSgBs-H35GXs4H4Cm0g/edit?usp=sharing">スプレッドシート</a>に書く
+          ; 引き続き pl02_oop_basics </li>
+        <li>11:30-11:50 LearnWiz One に本日の要約を書きそれを共有(交換)する
+          (無理は不要だができれば英語で).
+          <ul>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-04-17-go"
+                   target="_blank">Go</a></li>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-04-17-julia"
+                   target="_blank">Julia</a></li>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-04-17-ocaml"
+                   target="_blank">OCaml</a></li>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-04-17-rust"
+                   target="_blank">Rust</a></li>
+          </ul>
+          自分の答えを書いたら,
+          他の人の投稿を見ていいと思ったものに「いいね」をつける
+        </li>
+        ... 講義後に, 
+        <li>
+          本講義の残り用に学生のグループ分けをします.
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2023FEN-EE4d19L10F01" target="_blank">ITC-LMS</a> に行き, 課題に現れるアンケート<a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course/report/submission?idnumber=2023FEN-EE4d19L10F01&reportId=118615" target="_blank">a survey to group students</a>
+          に答えてください(<font color="red">〆切: 今週末</font>).
+        </li>
+        <li>
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course/report/submission?idnumber=2023FEN-EE4d19L10F01&reportId=118604" target="_blank">
+            振り返り</a>を書くのをお忘れなく(<font color="red">〆切: 明日</font>).
+        </li>
+      </ol>
+    </li>
+    <li class="en"><font color="blue">(2023/4/17)</font>
+      Plan:
+      <ol>
+        <li>10:25-10:40<a href="gen/slides/pdf/01-oop.pdf" target="_blank">
+            Object-Oriented Programming Basics</a></li>
+        <li>10:40-11:15 work on pl02_oop_basics
+          (<font color="red">Note:</font> The link in Problem 6 is broken.
+          Ignore it and follow one of the LearnWiz One links below instead)
+        </li>
+        <li>11:15-11:30 start writing your answers to
+          <a href="https://docs.google.com/spreadsheets/d/1sG2i75HBrb5JskG4G-b-n2hlkSgBs-H35GXs4H4Cm0g/edit?usp=sharing">spreadsheet</a>
+          ; continue working on pl02_oop_basics</li>
+        <li>11:30- summarize and exchange
+          what you learned in LearnWiz One
+          <ul>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-04-17-go"
+                   target="_blank">Go</a></li>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-04-17-julia"
+                   target="_blank">Julia</a></li>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-04-17-ocaml"
+                   target="_blank">OCaml</a></li>
+            <li><a href="https://app.learnwiz.one/events/pl-2023-04-17-rust"
+                   target="_blank">Rust</a></li>
+          </ul>
+          After posting your answer, see posts from others
+          and "like" posts you think are good
+        </li>
+        ... and after the class today, 
+        <li>
+          We are going to make groups for the rest of the course.
+          Please go to <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2023FEN-EE4d19L10F01" target="_blank">ITC-LMS</a> and take <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course/report/submission?idnumber=2023FEN-EE4d19L10F01&reportId=118615" target="_blank">a survey to group students</a>
+          that appears in the list of assignments, <font color="red">due this weekend</font>
+        </li>
+        <li>
+          Don't forget to write
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course/report/submission?idnumber=2023FEN-EE4d19L10F01&reportId=118604" target="_blank">
+            a reflective essay</a>
+          <font color="red">due tomorrow</font>
+        </li>
+      </ol>
+    </li>
+    <li class="ja"><font color="blue">(2023/4/16)</font>
+      pl01_basics の答えをJupyterで (別の課題 ans_pl01_basics として)
+      配布しています. 他の課題と同じように fetch してください
+    </li>
+    <li class="en"><font color="blue">(2023/4/16)</font>
+      Answers to pl01_basics are released through Jupyter
+      as another assignment ans_pl01_basics.
+      Fetch it like other assignments.
+    </li>
+
+    <li class="ja"><font color="blue">(2023/4/16)</font>
+      講義録画とpl01_basics の解説動画 (昨年作ったもので日本語)
+      を配信しています. <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2023FEN-EE4d19L10F01" target="_blank">ITC-LMS</a>からURLを入手してください.
+    </li>
+    <li class="en"><font color="blue">(2023/4/16)</font>
+      Lecture recordings as well as commentary videos
+      for pl01_basics (made last year in Japanese) are out.
+      Go <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2023FEN-EE4d19L10F01" target="_blank">ITC-LMS</a> and get the playlist URL.
+    </li>
+
+    <li class="ja"><font color="blue">(2023/4/09)</font>
+      授業内演習用のPCを持参してください</li>
+    <li class="en"><font color="blue">(2023/4/09)</font>
+      Bring your own PC for in-class work</li>
+
+    <li class="ja"><font color="blue">(2023/4/09)</font>
+      演習環境にJupyterを使います.
+      <a href="https://www.eidos.ic.i.u-tokyo.ac.jp/~tau/lecture/operating_systems/html/jupyter.html"
+         target="_blank">Jupyter環境の使い方</a>を見ておいてください</li>
+    <li class="en"><font color="blue">(2023/4/09)</font>
+      We are going to use Jupyter environment for your work
+      See
+      <a href="https://www.eidos.ic.i.u-tokyo.ac.jp/~tau/lecture/operating_systems/html/jupyter.html?lang=en"
+         target="_blank">How to access Jupyter environment</a></li>
+
+    <li class="ja"><font color="blue">(2023/4/09)</font>
+      Jupyter環境のユーザ名・パスワードの配布はITC-LMS経由で行います(上記
+      <a href="https://www.eidos.ic.i.u-tokyo.ac.jp/~tau/lecture/operating_systems/html/jupyter.html"
+         target="_blank">Jupyter環境の使い方</a>
+      参照).
+      以下の人が対象になるので, 履修を決めていない人も以下のいずれかをやってください
+      <ol>
+        <li>すでにUTASで本授業に履修登録済みの人</li>
+        <li>UTASで本授業をお気に入り登録した人</li>
+        <li>ITC-LMSで
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2023FEN-EE4d19L10F01" target="_blank">本授業のトップページ右上</a>にある「受講登録」ボタンを押して
+          自己登録した人(正式な履修登録したことにはなりませんので,
+          試しに参加して見る人はこれを使ってください).
+        </li>
+      </ol>
+    </li>
+    <li class="en"><font color="blue">(2023/4/09)</font>
+      Your user name and password will be distributed via ITC-LMS (see
+      <a href="https://www.eidos.ic.i.u-tokyo.ac.jp/~tau/lecture/operating_systems/html/jupyter.html?lang=en"
+         target="_blank">How to access Jupyter environment</a> above).
+      They are given to the following people, so please make sure you will be included.
+      <ol>
+        <li>Those who already registered to this course via UTAS</li>
+        <li>Those who bookmarked this course in UTAS</li>
+        <li>Those who self-registered yourself to this course, by pressing
+        the "register a course" button on the upper right of the
+        <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2023FEN-EE4d19L10F01" target="_blank">course top page</a>
+          (note: it's different from the formal course registration, which has to be done via UTAS.
+          If you are interested in this course but haven't decided to register,
+        please use this option).
+        </li>
+      </ol>
+    </li>
+
+    <li class="ja"><font color="blue">(2022/4/10)</font>今日の予定
+      <ol>
+        <li>イントロ (<a href=gen/slides/pdf/00-roadmap.pdf>
+            Roadmap</a>)</li>
+        <li>授業時間内, 11:15までに<a href="https://forms.gle/gNrc86Gup63rRG8k9" target="_blank">アンケート</a>にお応えください
+          (<a href="https://docs.google.com/forms/d/1MV454oq2NfpliczgoUclx3hA2e86_nkMUwV0TTfcK7A/viewanalytics">回答 (ついに見られるようになったはず)</a>)
+        </li>
+        <li>Jupyter環境を使ってみる, pl00_intro, pl01_basics.
+          11:15以降, できた人は答えを適宜
+          <a href="https://docs.google.com/spreadsheets/d/1sG2i75HBrb5JskG4G-b-n2hlkSgBs-H35GXs4H4Cm0g/edit?usp=sharing">スプレッドシート</a>
+          に書いてください(早いもんがち)
+        </li>
+        <li>授業終わりに
+          <a href="https://forms.gle/UydMzWz9YwaaSS6o9">
+            本日のまとめアンケート
+          </a>にお応えください
+        </li>
+      </ol>
+    </li>
+    
+    <li class="en"><font color="blue">(2022/4/10)</font>Plan for today
+      <ol>
+        <li>Course introduction (<a href=gen/slides/pdf/00-roadmap.pdf>
+            Roadmap</a>)</li>
+        <li>Answer <a href="https://forms.gle/gNrc86Gup63rRG8k9" target="_blank">a survey</a> during the class today and submit it until <font color="red">11:15AM</font> latest (<a href="https://docs.google.com/forms/d/1MV454oq2NfpliczgoUclx3hA2e86_nkMUwV0TTfcK7A/viewanalytics">reponses (now you should be able to see it, finally)</a>)
+        </li>
+        <li>Play with Jupyter; work on pl00_intro and pl01_basics.
+          Please share answer in this
+          <a href="https://docs.google.com/spreadsheets/d/1sG2i75HBrb5JskG4G-b-n2hlkSgBs-H35GXs4H4Cm0g/edit?usp=sharing">spreadsheet</a>
+          after 11:15AM (whoever comes it first)
+        </li>
+        <li>Answer
+          <a href="https://forms.gle/UydMzWz9YwaaSS6o9">
+            a wrap-up survey
+          </a>
+          at the end of the class today
+        </li>
+      </ol>
+    </li>
+  </ul>
+</div>
+
+
+    
+  
+<h2>スライド・資料 / Slides and other materials</h2>
+<div>
+  <ul>
+    <li>
+      <a href=gen/slides/pdf/00-roadmap.pdf>
+        Roadmap</a>
+    </li>
+
+    <li>
+      <a href=gen/slides/pdf/01-oop.pdf>
+        Object-Oriented Programming Basics</a>
+    </li>
+    
+    <li>
+      <a href=gen/slides/pdf/02-parametric.pdf>
+        Parametric Polymorphism (aka Generic Types/Functions)
+      </a>
+    </li>
+
+    <li>
+      <a href=gen/slides/pdf/03-standalone-and-libraries.pdf>
+        Going outside Jupyter and Using Libraries
+      </a>
+    </li>
+
+    <li>
+      <a href=gen/slides/pdf/04-memory-management-intro.pdf>
+        Memory Management Introduction
+      </a>
+    </li>
+    
+    <li>
+      <a href=gen/slides/pdf/05-rust.pdf>
+        Rust Memory Management
+      </a>
+    </li>
+
+    <li>
+      <a href=gen/slides/pdf/06-gc.pdf>
+        Garbage Collection
+      </a>
+    </li>
+
+    <li>
+      <a href=gen/slides/pdf/07-compiler.pdf>
+        Implementing Programming Languages
+      </a>
+    </li>
+  </ul>
+    
+  <font color="red">2021年度までのスライド</font>
+  
+  <ul>
+    <li>以下は昨年のスライド / Slides in the last year below
+    </li>
+    <li>
+      <a href=gen/slides_old/pdf/01-types.pdf>
+        安全性と型
+        / Safety and Types</a>
+    </li>
+    <li>
+      <a href=gen/slides_old/pdf/02-ocaml.pdf>
+        関数型言語，OCaml
+        / OCaml : A Functional Language</a>
+    </li>
+    <li>
+      <a href=gen/slides_old/pdf/03-python.pdf>
+        オブジェクト指向言語，Python
+        / Python : An Object-Oriented Language</a>
+    </li>
+    <li>
+      <a href=gen/slides_old/pdf/04-type-check.pdf>
+        オブジェクト指向言語と静的型システム
+        / Static Type Systems for Object-Oriented Languages</a>
+    </li>
+    <li>
+      <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+        OCamlのオブジェクト指向型システム
+        / The OCaml Type System</a>
+      </a>
+    </li>
+    <li>
+      <a href=gen/slides_old/pdf/06-gc.pdf>
+        ガベージコレクション
+        / Garbage Collection
+      </a>
+    </li>
+    <li>
+      <a href=gen/slides_old/pdf/07-gc-adv.pdf>
+        ガベージコレクション(2)
+        / Garbage Collection (2)
+      </a>
+    </li>
+    <li>
+      <a href=gen/slides_old/pdf/08-valgrind.pdf>Valgrind</a>
+    </li>
+    <li>
+      <a href=gen/slides_old/pdf/09-lexer-parser.pdf>
+        字句解析・構文解析
+        / Lexing and Parsing
+      </a>
+    </li>
+    <li>
+      <a href=gen/slides_old/pdf/10-compiler.pdf>
+        言語処理系を作ってみる
+        / A crash course in compiler construction
+      </a>
+    </li>
+  </ul>
+</div>
+
+<h2>参考書 / References</h2>
+<div>
+<ul>
+
+  <li>
+    <a href="https://www.amazon.co.jp/Compilers-Principles-Techniques-Tools-International/dp/0321491696"
+       target="_blank">Compilers: Principles, Techniques, and Tools: International Edition</a>
+    コンパイラといえばこの本というくらい有名(通称 Dragon Book)
+  </li>
+  
+  <li>Richard Jones and Rafael D Lins.
+    <a href=http://www.amazon.com/Garbage-Collection-Algorithms-Automatic-Management/dp/0471941484/ref=pd_sim_b_4?ie=UTF8&refRID=1AYS0HY6J10V1KMZJYC1>Garbage Collection: Algorithms for Automatic Dynamic Memory Management</a>
+  </li>
+
+  <li>
+    <a href=https://www.amazon.com/Garbage-Collection-Handbook-Management-Algorithms/dp/1420082795>The Garbage Collection Handbook: The Art of Automatic Memory Management</a> 自分はまだ中身を確認していないが，上記の新版らしいので，今買うならこちらがおすすめだろう．GCについて広く深く知るのに一冊というのならこれ．
+  </li>
+
+  <li>中村成洋(著), 相川光(著), 竹内郁雄(監修).
+    <a href=http://www.amazon.co.jp/%E3%82%AC%E3%83%99%E3%83%BC%E3%82%B8%E3%82%B3%E3%83%AC%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%AE%E3%82%A2%E3%83%AB%E3%82%B4%E3%83%AA%E3%82%BA%E3%83%A0%E3%81%A8%E5%AE%9F%E8%A3%85-%E4%B8%AD%E6%9D%91-%E6%88%90%E6%B4%8B/dp/4798025623/ref=sr_1_1?ie=UTF8&qid=1396694368&sr=8-1&keywords=%E3%82%AC%E3%83%99%E3%83%BC%E3%82%B8%E3%82%B3%E3%83%AC%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3>
+      ガベージコレクションのアルゴリズムと実装</a>
+  </li>
+
+  <li>
+    <a href="https://www.amazon.co.jp/Programming-Rust-Fast-Systems-Development/dp/1492052590/ref=pd_lpo_1?pd_rd_i=1492052590&psc=1"
+       target="_blank">Programming Rust: Fast, Safe Systems Development</a>
+  </li>
+  
+  <li>Yaron Minsky, Anil Madhavapeddy, and Jason Hickey. 
+    <a href=http://www.amazon.com/Real-World-OCaml-Functional-programming/dp/144932391X/ref=tmm_pap_title_0?ie=UTF8&qid=1396268703&sr=8-1-spell>
+      Real World OCaml: Functional programming for the masses.</a>
+    OCamlの本．OCamlを使いこなすにあたっての要点，ツール，実装に関してカバーされている．</li>
+
+  <li>Benjamin Pierce.
+    <a href=http://www.cis.upenn.edu/~bcpierce/tapl/ >
+      Types and Programming Languages.</a>
+    邦訳: <a href=http://www.amazon.co.jp/%E5%9E%8B%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E5%85%A5%E9%96%80-%E2%88%92%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E%E3%81%A8%E5%9E%8B%E3%81%AE%E7%90%86%E8%AB%96%E2%88%92-Benjamin-C-Pierce/dp/4274069117/ref=sr_1_1?ie=UTF8&qid=1396692195&sr=8-1&keywords=%E5%9E%8B%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E5%85%A5%E9%96%80>型システム入門．</a>
+    型システムの安全性について深く学んでみたくなった人向け．
+    授業ではここまでフォーマルな取り扱いはしない．
+  </li>
+
+  <li>Bertrand Meyer.
+    <a href=http://www.amazon.co.jp/Object-Oriented-Software-Construction-Bertrand-Meyer/dp/0136290493/ref=sr_1_1?ie=UTF8&qid=1396690551&sr=8-1&keywords=object+oriented+software+construction>
+      Object-Oriented Software Construction.</a>
+    邦訳: <a href=http://www.amazon.co.jp/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%85%A5%E9%96%80-SOFTWARE-SCIENCE-Programming-Paradigm/dp/4756100503/ref=sr_1_6?ie=UTF8&qid=1396690551&sr=8-6&keywords=object+oriented+software+construction>オブジェクト指向入門．</a>
+    発表用論文
+    <a href=http://dl.acm.org/citation.cfm?id=73708.73711>
+A Proposal for Making Eiffel Type-safe</a>
+で扱われている言語Eiffelの原著というべき本である．
+Eiffelのどこがtype-safeでなかったのかを知る原典ということになるが，
+そのようなネガティブな意味よりも，
+オブジェクト指向言語の考え方やそれを設計に反映させた言語の姿について学ぶことができる名著である．以下はその後出版された第2版．
+自分はこの邦訳を学部時代に読んで感銘を受けた．
+</li>
+
+  <li>Bertrand Meyer.
+    <a href=http://www.amazon.com/Object-Oriented-Software-Construction-CD-ROM-Edition/dp/0136291554>Object Oriented Software Construction (2nd Edition).</a>
+    邦訳: <a href=http://www.amazon.co.jp/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%85%A5%E9%96%80-%E7%AC%AC2%E7%89%88-%E5%8E%9F%E5%89%87%E3%83%BB%E3%82%B3%E3%83%B3%E3%82%BB%E3%83%97%E3%83%88-Architect%E2%80%99Archive-%E3%82%AF%E3%83%A9%E3%82%B7%E3%83%83%E3%82%AF%E3%83%A2%E3%83%80%E3%83%B3%E3%83%BB%E3%82%B3%E3%83%B3%E3%83%94%E3%83%A5%E3%83%BC%E3%83%86%E3%82%A3%E3%83%B3%E3%82%B0/dp/4798111112/ref=sr_1_4?ie=UTF8&qid=1396690551&sr=8-4&keywords=object+oriented+software+construction>オブジェクト指向入門 第2版 原則・コンセプト.</a>
+    上記の第2版. さらに大部になっている．自分はこちらを読んだわけではないが，今読むならこちらということになるだろうから紹介しておく．
+  </li>
+</ul>
+</div>
+
+<h2>リンク</h2>
+<div>
+<ul>
+  <li><a href=https://go.dev/ >Go</a></li>
+  <li><a href=https://julialang.org/ >Julia</a></li>
+  <li><a href=http://caml.inria.fr/ >OCaml</a></li>
+  <li><a href=http://ocaml.jp/ >OCaml日本語</a></li>
+  <li><a href=https://www.rust-lang.org/ >Rust</a></li>
+  
+  <li><a href=https://www.python.org/ >Python</a></li>
+  <li><a href=http://www.python.jp/ >Python日本語</a></li>
+  <li><a href=http://valgrind.org/ >Conservative GC (C/C++用のGC)</a></li>
+  <li><a href=http://valgrind.org/ >valgrind</a></li>
+  <li><a href=http://llvm.org/ >LLVM (コンパイラインフラストラクチャ)</a></li>
+  <li><a href=http://coins-compiler.sourceforge.jp/international/ >COINS (コンパイラインフラストラクチャ)</a></li>
+
+<li>以下の
+<a href=http://dl.acm.org/citation.cfm?id=73708.73711>
+A Proposal for Making Eiffel Type-safe</a>
+に関する発表を行う場合，Eiffelについて多少理解しておく必要がある．
+<ul>
+  <li><a href=http://docs.eiffel.com/book/method/object-oriented-software-construction-2nd-edition>Eiffel</a></li>
+  <li><a href=http://sourceforge.net/projects/tecomp/ >Eiffelの実装</a></ul>
+<li><a href=http://tecomp.sourceforge.net/index.php?file=doc/papers/lang/catcall_solution.txt>上記のEiffel実装で，
+    オリジナルの型システムに関する間違いにどう対処しているかを述べた論文</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+<a name=credit> </a>
+<h2>成績の付け方</h2>
+<div>
+単位がつく条件は以下の, 
+<blockquote>
+条件1 and 条件2 and (条件3a or 条件3b)
+</blockquote>
+
+<ul>
+  <li>条件1: まともな回数出席する．</li>
+  <li>条件2: 小課題に対してまともな提出をする．</li>
+  <li>条件3a: 最終回に発表を行う</li>
+  <li>条件3b: 最後に課す課題に対してきちんとしたレポートを提出する
+    (<a href=gen/html/final_report.html>最終レポート課題の仕様</a>)．
+  </li>
+</ul>
+</div>
+
+<a name=papers></a>
+<h2>発表用論文</h2>
+<div>
+授業で説明した内容を踏まえて，
+以下の論文の内容をスライドなども使いながら紹介，議論する．
+<ul>
+  <!--
+      <li>
+        先日行われた学会<a href=http://conf.researchr.org/home/ismm-2016 target=_blank>ISMM 2016</a> (<a href=http://dl.acm.org/citation.cfm?id=2926697&CFID=639615922&CFTOKEN=19482275 target=_blank>論文集</a>)では
+        メモリ管理に関連する論文が多く発表され，
+        比較的少ない予備知識で読むことができる．
+      </li>
+      
+  <li>William Cook. 
+    <a href=http://dl.acm.org/citation.cfm?id=73708.73711>
+      A Proposal for Making Eiffel Type-safe</a>
+    (<a href=gen/papers/making-eiffel-safe.pdf>pdf</a>).
+    <br />
+    Eiffelというオブジェクト指向言語の型システムの間違いを指摘した論文．
+    多くのオブジェクト指向言語に見られる，
+    部分型を含む型システム設計上の問題点を理解できる．
+  </li>
+
+  <li>
+    <a href=http://dl.acm.org/citation.cfm?id=66387>
+      Andrew W. Appel. 
+      Simple Generational Garbage Collection and Fast Allocation
+    </a> (<a href=gen/papers/appel-fast-allocation.pdf>pdf</a>).
+  </li>
+
+  <li>
+    <a href=http://dl.acm.org/citation.cfm?id=31085>
+      Andrew W. Appel.
+      Garbage Collection Can Be Faster Than Stack Allocation.
+    </a> (<a href=gen/papers/gc-can-be-faster.pdf>pdf</a>).
+    <br />
+    ゴミ集め方式によるメモリ管理のコストについて正しく考える基本を与えてくれる論文．
+    Standard ML of New Jerseyに使われているメモリ管理方式．
+  </li>
+
+  <li>
+    <a href=http://dl.acm.org/citation.cfm?id=989393.989442&coll=DL&dl=GUIDE>
+      Hans Boehm. Space Efficient Conservative Garbage Collection
+    </a> (<a href=gen/papers/boehm-conservative-gc.pdf>pdf</a>).
+    <br />
+    CやC++など，ポインタと整数の区別がつかないような言語にリンクするだけでGCを
+    してくれる超有用なライブラリ
+    <a href=http://hboehm.info/gc/ >conservative GC</a>の原著論文．
+  </li>
+  
+  <li>
+    <a href=http://dl.acm.org/citation.cfm?id=1250746>
+      Nicholas Nethercote and Julian Seward. 
+      Valgrind: A Framework for Heavyweight Dynamic Binary
+      Instrumentation</a>
+    (<a href=gen/papers/valgrind-p89-nethercote.pdf>pdf</a>).
+    <br />
+    C/C++言語のように，安全でないポインタのdereference,
+    添字をチェックしない配列アクセスなどを行う言語において
+    メモリアクセスエラーを検出する超有用なツール
+    <a href=http://valgrind.org/ >valgrind</a>の原著論文．
+    危険なメモリアクセス以外にも様々な用途に用いることができる有用な枠組み．
+  </li>
+-->
+</ul>
+</div>
+
+<h2>発表予定</h2>
+<div>
+<!--
+<table border=1>
+<tr>
+<td>
+  Andrew W. Appel.
+  Garbage Collection Can Be Faster Than Stack Allocation.
+</td>
+<td>
+  辻祥太郎
+</td>
+</tr>
+</table>
+-->
+</div>
+
+<h2>過去の「お知らせ」</h2>
+<div>
+  <ul>
+    <li>実際のお知らせの意味はありませんが,
+      過去にどんな風に進行したのかの記録として残します.</li>
+  </ul>
+</div>
+
+<h3>2022</h3>
+<div size=-2>
+  <font color="grey" size=-2>
+    <ul>
+      <li><font color="blue">2022/7/24</font>
+        長らくおまたせしてすいませんでした.
+        最終課題のオプション0の詳細説明＋ベースコードをリリースいたしました.
+      </li>
+      <li><font color="blue">2022/7/24</font>
+        ITC-LMS上に最終課題のエントリを作りました. 選んだオプションに応じて送信してください.
+        提出を3日延期して 8/15 (月) 23:00 としました.
+      </li>
+      <li><font color="blue">2022/7/11</font>
+        <ul>
+          <li><a href="#credit">成績評価, 最終レポート</a>について</li>
+          <li>課題02 (pl09) のチーム分け, 提出方法について
+            <ul>
+              <li>7/11 (月) 15:00 までにチームを確定. 自チームのGoogle Sheetに
+                Google Account (@g.ecc.u-tokyo.ac.jp)を記入</li>
+              <li>6/20, 6/27に来ておらずチームからはぐれているので
+                一人で出したいという人が複数人いた. 提出は妨げないが,
+                チームでの共同作業を通じた議論, 言語間の比較を期待している.
+                上記のようなことになっている時点で期待値以下であることは
+                理解してください</li>
+            </ul>
+          </li>
+          <li>
+            <a href=gen/slides/pdf/07-compiler.pdf>
+              コード生成の概要
+            </a>
+            ,
+            <a href=gen/slides/pdf/08-lexer-parser.pdf>
+              lexers and parsers
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li><font color="blue">2022/6/27</font>
+        <ul>
+          <li>説明少し 
+            <a href=gen/slides/pdf/07-compiler.pdf>
+              Implementing Programming Languages
+            </a>
+          </li>
+          <li>pl08 (C言語 -&gt アセンブリ言語), </li>
+          <li>pl09 (OCaml, Julia, Go, Rust -&gt アセンブリ言語)</li>
+        </ul>
+      </li>
+      <li><font color="blue">2022/6/20</font>
+        前回の続き. グループ分けのGoogle Sheetを見てください.
+        Zoomの人はグループ番号と同じbreakout roomへ
+      </li>
+      <li><font color="blue">2022/6/15</font>
+        Problem 1, Q2の間違い訂正
+        <ul>
+          <li><font color="red">誤:</font>
+            Q2 : during the loop #3 above (more precisely, at the beginning of an iteration of the loop #3), how many nodes are in the tree?</li>
+          <li><font color="green">正:</font>
+            Q2 : during the loop #2 (insert-and-remove phase) above (more precisely, at the beginning of an iteration of the loop #2), how many nodes are in the tree?</li>
+        </ul>
+      </li>
+      
+      <li><font color="blue">2022/6/13</font>
+        <ul>
+          <li>
+            <a href=gen/slides/pdf/06-gc.pdf>
+              Garbage Collection (incremental garbage collection)
+            </a>
+          </li>
+          <li>pl07 (team work) experimenting with garbage collection
+          </li>
+          <li>
+            <a href="https://commentscreen.com/comments?id=da3U1h9Lvn2yLHyKzzbf"
+               target="_blank">Comment Screen (余興)</a>
+          </li>
+          <li>
+            <a href="https://app.one.learnwiz.jp/ja/topic/25876341?pwd=600791"
+               target="_blank">まとめ・感想・気づき投稿</a>
+          </li>
+        </ul>
+      </li>
+      <li><font color="blue">2022/6/6</font>
+        <ul>
+          <li>
+            <a href=gen/slides/pdf/06-gc.pdf>
+              Garbage Collection
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li><font color="blue">2022/6/3</font>
+        pl05の課題の詳細をITC-LMSにアナウンスしました(「課題01 pl05_calculator」
+        本当の詳細は pl06 というnotebook).
+        テストデータとテストのやり方を指示していますのでそのテストを通して提出してください.
+        締切は6/11 (土)としました.
+      </li>
+      <li><font color="blue">2022/5/23</font>
+        <ul>
+          <li>
+            <a href="gen/slides/pdf/05-libraries.pdf" target="_blank">
+              説明スライド</a>
+          </li>
+          <li>演習 pl04, pl05</li>
+          <li>テーマ: 単独動作する(Jupyter内ではなく動作する)プログラムの作り方;
+            組み込み, 標準, 外部ライブラリの使い方</li>
+          <li>目標: XMLファイルの読み込み. データ構造への変換. XMLで式を読み込む電卓</li>
+          <li>pl05が課題になる(締め切り: <strike>多分 6/4 (土)</strike><font color="green">6/11 (土)</font>).
+            後日ITC-LMSでアナウンス</li>
+        </ul>
+      </li>
+      <li class="ja"><font color="blue">2022/5/16</font>
+        <ul>
+          <li>
+            <a href="gen/slides/pdf/04-rust.pdf" target="_blank">
+              Rust Memory Management</a>
+          </li>
+          <li>
+            <a href="https://app.one.learnwiz.jp/ja/topic/79961961?pwd=190271"
+               target="_blank">
+              質問(LearnWiz One)
+            </a>
+          </li>
+          <li>
+            演習 (pl03が終了していない人は続き)
+          </li>
+          <li>
+            次回以降の課題予告
+            <ul>
+              <li>Jupyterではなく, コマンドラインを使った単体動作するプログラムを書く練習</li>
+              <li>各言語のコマンドライン処理系(ocaml, ocamlc, julia, go, rustc)</li>
+              <li>ライブラリの使い方やインストール方法</li>
+              <li>各言語のライブラリ依存関係などを考慮したビルドコマンド(dune (OCaml), go (Go), cargo (Rust)</li>
+              <li>実用的なプログラムを書く上で欠かせない幾つかの機能
+                (ファイル入出力, コマンドライン引数)</li>
+              <li>それらを組み合わせ, 以下のような, 「式」を表す
+                XMLファイルを(ライブラリを使って. 自分で書く必要はない)読み込み,
+                値を評価するプログラム. XMLファイル名はコマンドラインから受け取れるようにする.
+                <pre>
+                  &lt;plus&gt;
+                  &lt;num&gt;1&lt;/num&gt;
+                  &lt;mul&gt;
+                  &lt;num&gt;2&lt;/num&gt;
+                  &lt;num&gt;3&lt;/num&gt;
+                  &lt;/mul&gt;
+                  &lt;div&gt;
+                  &lt;num&gt;4&lt;/num&gt;
+                  &lt;num&gt;5&lt;/num&gt;
+                  &lt;/div&gt;
+                  &lt;minus&gt;
+                  &lt;num&gt;6&lt;/num&gt;
+                  &lt;num&gt;7&lt;/num&gt;
+                  &lt;/minus&gt;
+                  &lt;/plus&gt;
+                </pre>
+              </li>
+              <li>つまり上記が格納されたファイルを e.xml として,
+                それを 1 + 2 * 3 + 4 / 5 + (6 - 7) のことだと認識して,
+                <pre>
+                  $ ./eval_expr e.xml
+                  6.8
+                </pre>
+                のような出力をするプログラムを作ることが目標
+              </li>
+              <li>XMLを読み込むライブラリ. 時間の節約のために使うといいものを上げるが, むしろこれらを見つけられるようになる練習をするのが大事. 「言語名 xml dom parser」などでググったり, ライブラリ一覧のサイトのようなものとお友達になる Go: <a href="https://pkg.go.dev/" target="_blank">https://pkg.go.dev/</a>, Rust: <a href="https://crates.io/" target="blank">https://crates.io/</a>)
+                <ul>
+                  <li>OCaml: <a href="https://github.com/aantron/markup.ml" target="_blank">Markup</a></li>
+                  <li>Julia: <a href="https://github.com/JuliaIO/LightXML.jl" target="_blank">LightXML</a></li>
+                  <li>Go : <a href="https://pkg.go.dev/github.com/subchen/go-xmldom" target="_blank">go-xmldom</a> (github.com/subchen/go-xmldom)</li>
+                  <li>Rust: <a href="https://docs.rs/minidom/latest/minidom/" target="_blank">minidom</a></li>
+                </ul>
+              </li>
+              <li>理解しづらいところは教えるつもりですが,
+                教材が間に合っていないので今日は予告だけ
+              </li>
+              <li>
+                なるべく自力で(Googleで?)解決することも目標なので,
+                これまでの演習が済んでいる人は, 詳細仕様, 教材を待たずに手を付けてください
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li class="ja"><font color="blue">2022/5/9</font> 本日は講義
+        <ul>
+          <li>
+            <a href="gen/slides/pdf/03-mm.pdf" target="_blank">
+              Memory Management Introduction
+            </a>
+          </li>
+          <li>
+            <a href="gen/slides/pdf/04-rust.pdf" target="_blank">
+              Rust Memory Management
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="ja"><font color="blue">2022/5/5</font>
+        Jupyter環境を入れ替えました. 以前と同じパスワードで使えるはずですが以下の2点にご注意ください.
+        <ul>
+          <li>SSHが <tt>"ssh_exchange_identification: connection closed by remote host"</tt> みたいなエラーで
+            失敗するようになった場合は, <tt>~/.ssh/known_hosts</tt> というファイルから,
+            該当するホストの行を削除する必要があります
+            (<a href="https://hichew-gaburichu.hatenablog.com/entry/2021/06/01/000959"
+                target="_blank">背景説明</a>)
+          </li>
+          <li>Jupyterに4時間何も入力がない場合, 自動的にログアウト, サーバーのシャットダウンを行うようにしました
+            (メモリ溢れを防ぐため).
+            基本的には使うたびにログイン, Start Serverを要求されるようになると思ってよいでしょう.
+            なにか問題があればお知らせください.
+          </li>
+        </ul>
+      </li>
+      <li class="ja"><font color="blue">2022/4/25</font>
+        今日のテーマは,
+        <a href="gen/slides/pdf/02-parametric.pdf" target="_blank">
+          「ジェネリック関数・型」(aka 「パラメトリック多相」)
+        </a>
+      </li>
+      <li class="ja"><font color="blue">2022/4/25</font>
+        <a href="https://docs.google.com/spreadsheets/d/1wl31o-vQ3K20rANd91khIq6svla4cKhiuTHds6r1m-w/edit?usp=sharing" target="_blank">
+          チーム分け, 担当言語</a>
+        を決めました.
+        <font color="red">
+          @g.ecc.u-tokyo.ac.jp でのサインインが必要
+        </font>
+        です. アクセスできない人はお知らせください.
+        <font color="red">
+          リモートの人は自分のチーム用のブレークアウトルーム
+        </font>
+        に入ってください. 教室の人は近くに座る.
+      </li>
+      <li class="ja"><font color="blue">2022/4/25</font>
+        いつもの
+        <a href="https://docs.google.com/spreadsheets/d/1N2B5yZyZz46HRli30W9k-rbkexiGX84y0XPs7g6jgJ0/edit#gid=211520013"
+           target="_blank">
+          答え共有用シート
+        </a>
+        (<font color="blue">書き込み開始 11:00ごろ</font>とします)
+        <font color="red">
+          今日から @g.ecc.u-tokyo.ac.jp でのサインインを必要としています
+          (アクセスできない人はお知らせください)
+        </font>
+      </li>
+      <li class="ja"><font color="blue">2022/4/25</font>
+        本日の
+        <a href="https://forms.gle/ar78ajCc6bwAAEc27" target="_blank">
+          進捗, 感想アンケート
+        </a>にお応えください. 問題が時間内に完了しなくても,
+        <font color="blue">11:30</font>ごろから書き込みを開始してください
+      </li>
+      <li class="ja"><font color="blue">2022/4/25</font>
+        以下のようなことについての
+        <a href="https://app.one.learnwiz.jp/ja/topic/pmp-week-04"
+           target="_blank">意見共有</a>をしてください.
+        他の人の意見を見て「いいね」をつけることもできます.
+        書き込みは<font color="blue">随時</font>.
+        上記と同様, 問題が時間内に完了しなくても,
+        <font color="blue">11:30</font>ごろから書き込みを開始してください
+        <ul>
+          <li>(まとめ) この言語の「○○」に関するまとめ (○○ :
+            部分型, パラメトリック多相(generic関数, 型), etc.)
+          </li>
+          <li>(まとめ) この言語の落とし穴, ハマったところ (文法でもなんでも)
+          </li>
+          <li>自分はJupyterに直打ちじゃなくて,
+            こんな風にコード書いてます(おすすめのコーディング方法, ツール)
+          </li>
+          <li>この言語, ここがイケてると思う
+          </li>
+          <li>この言語, ここがイケてないと思う (個人的趣向でもよいが,
+            理由が言えるとよい. 宗教戦争が勃発したときに論破するつもりで:-)
+          </li>
+          <li>その他疑問に思うこと, 純粋な質問,
+            他の人に「どう思う?」と問いたいことなどなんでも
+          </li>
+        </ul>
+      </li>
+      <li class="ja"><font color="blue">2022/4/25</font>
+        余興: <a href="https://commentscreen.com/comments?room=taura000"
+                 target="_blank">
+          CommentScreen</a> になんでもお書きください. 余興です
+      </li>
+      <li class="ja"><font color="blue">2022/4/25</font>
+        来週(5/2)は, 人道的見地から,
+        <font color="red"><strike>休講</strike></font>
+        <font color="blue">「オンデマンド学習」</font>とします.
+        ビデオと教材を(なる早で)提供しますので,
+        次々回(5/9)までに学習してください
+      </li>
+      <li></li>
+      <li class="ja"><font color="blue">2022/4/20</font> 
+        <a href="https://www.fos.kuis.kyoto-u.ac.jp/~igarashi/OCaml/"
+           target="_blank">
+          OCamlについて基本
+        </a>から学びたい人のための本
+      </li>
+      <li class="en"><font color="blue">2022/4/20</font>
+        For those who want to learn 
+        <a href="https://www.fos.kuis.kyoto-u.ac.jp/~igarashi/OCaml/"
+           target="_blank">
+          OCaml from the basics
+        </a>
+      </li>
+
+      <li class="ja">
+        拙スライド
+        <a href=gen/slides_old/pdf/02-ocaml.pdf>
+          関数型言語，OCaml
+          / OCaml : A Functional Language</a>, 
+        <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+          OCamlのオブジェクト指向型システム
+          / The OCaml Type System</a>
+        も結構ちゃんと書かれています :-)
+      </li>
+      <li class="ja">
+        My slides
+        <a href=gen/slides_old/pdf/02-ocaml.pdf>
+          関数型言語，OCaml
+          / OCaml : A Functional Language</a>, 
+        <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+          OCamlのオブジェクト指向型システム
+          / The OCaml Type System</a>
+        are fairly well written, too :-)
+      </li>
+      
+      <li class="ja"><font color="blue">2022/4/18</font> 予定
+        <ul>
+          <li><a href="gen/slides/pdf/01-oop.pdf" target="_blank">スライド</a></li>
+          <li><font color="blue">pl02</font>をFetchしてProblemをやってください</li>
+          <li>Problem 6では<a href="https://app.one.learnwiz.jp/topic/pl-week-02-oop" target="_blank">LearnWiz One</a>
+            に本日学んだことを書いて意見交換します</li>
+          <li>11:15以降, できた問題の<a href="https://docs.google.com/spreadsheets/d/1N2B5yZyZz46HRli30W9k-rbkexiGX84y0XPs7g6jgJ0/edit?usp=sharing">答えを書いて</a>してください</li>
+          <li>グループ分けのためのアンケートを<a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2022FEN-EE4d19L10F01" target="_blank">ITC-LMS</a>の課題 "A survey to group students" として出していますので,
+            答えてください(締切: 4/20(水) 23:00)</li>
+        </ul>
+      </li>
+      <li class="en"><font color="blue">2022/4/18</font> Plan
+        <ul>
+          <li><a href="gen/slides/pdf/01-oop.pdf" target="_blank">slides</a></li>
+          <li>Fetch <font color="blue">pl02</font> and work on Problems</li>
+          <li>For Problem 6, write what you learned today to <a href="https://app.one.learnwiz.jp/topic/pl-week-02-oop" target="_blank">LearnWiz One</a>
+            and exchange your thoughts</li>
+          <li>From 11:15 and on, <a href="https://docs.google.com/spreadsheets/d/1N2B5yZyZz46HRli30W9k-rbkexiGX84y0XPs7g6jgJ0/edit?usp=sharing">share your answers</a> of the problems you worked on</li>
+          <li>Answer the <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2022FEN-EE4d19L10F01" target="_blank">ITC-LMS</a> assignment "A survey to group students" (deadline: April 20th (Wed) 23:00)
+          </li>
+        </ul>
+      </li>
+
+      
+    </li>
+    <li class="ja"><font color="blue">2022/4/11</font> 
+      <a href="https://forms.gle/fc6xe3MHaSiYVtff6">
+        本日のまとめアンケート
+      </a>,
+      <a href="https://docs.google.com/forms/d/1tHTvYdbamtLuOWL1B0h-z20QRnMwKmvfxxOwgxTat0A/edit?usp=sharing" target="_blank">結果</a>
+    </li>
+    <li class="en"><font color="blue">2022/4/11</font> 
+      <a href="https://forms.gle/fc6xe3MHaSiYVtff6">
+        A wrap-up survey
+      </a>, 
+      <a href="https://docs.google.com/forms/d/1tHTvYdbamtLuOWL1B0h-z20QRnMwKmvfxxOwgxTat0A/edit?usp=sharing" target="_blank">result</a>
+    </li>
+    
+    <li class="ja"><font color="blue">2022/4/11</font> 予定
+      <ul>
+        <li><a href="gen/slides/pdf/00-roadmap.pdf">授業目的と形式</a></li>
+        <li><a href="https://forms.gle/fW46BC6AMFg4dxEx7" target="_blank">アンケート</a>に授業中答えて <font color="red">11:00AM</font> までに回答ください.
+          <a href="https://docs.google.com/forms/d/1XEh-ngWaszJvWHTCZHzYESPAZtszUQd-z_G3ls7Thuo/edit?usp=sharing" target="_blank">回答</a>
+        </li>
+        <li><a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2022FEN-EE4d19L10F01" target="_blank">ITC-LMS</a>で「Jupyter演習環境ユーザ名, パスワード受け取りのためのダミー課題」のフィードバックを見てJupyter 環境を使ってみてください(<a href="https://vimeo.com/697930599">説明動画(日本語)</a>).
+        </li>
+        <li>
+          pl00, pl01をFetchして, pl00を読み, pl01のProblem 1-8をやってください.           11:30以降, できた問題の<a href="https://docs.google.com/spreadsheets/d/1N2B5yZyZz46HRli30W9k-rbkexiGX84y0XPs7g6jgJ0/edit?usp=sharing">答えを共有</a>してください
+        </li>
+      </ul>
+    </li>
+    <li class="en"><font color="blue">2022/4/11</font> Plan
+      <ul>
+        <li><a href="gen/slides/pdf/00-roadmap.pdf">Course objectives and formats</a></li>
+        <li>Answer <a href="https://forms.gle/fW46BC6AMFg4dxEx7" target="_blank">a survey</a> during the class today and submit it until <font color="red">11:00AM</font> latest.
+          <a href="https://docs.google.com/forms/d/1XEh-ngWaszJvWHTCZHzYESPAZtszUQd-z_G3ls7Thuo/edit?usp=sharing" target="_blank">result</a>
+        </li>
+        <li>Check <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2022FEN-EE4d19L10F01" target="_blank">ITC-LMS</a> and get the feedback for
+          <i>"a dummy assignment to receive user name and password of the Jupyter environment for exercise"</i> and start playing with Jupyter environment
+          (<a href="https://vimeo.com/698002596">how-to video (English)</a>)
+        </li>
+        <li>
+          Fetch assignments <font color="blue">pl00 and pl01</font>; read pl00 and work on Problem 1-8 in pl01.  From 11:30-, <a href="https://docs.google.com/spreadsheets/d/1N2B5yZyZz46HRli30W9k-rbkexiGX84y0XPs7g6jgJ0/edit?usp=sharing">share your answers</a> to problems you are done with
+        </li>
+      </ul>
+    </li>
+    <li class="ja"><font color="blue">2022/4/10</font>
+      授業中にPCを用いますので各自準備してください
+    </li>
+    <li class="en"><font color="blue">2022/4/10</font>
+      Please make your PC ready for the class
+    </li>
+    <li class="ja"><font color="blue">2022/4/10</font>
+      家からでも教室でもどちらでも参加できます.
+      詳細は<a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2022FEN-EE4d19L10F01" target="_blank">ITC-LMS</a>.
+    </li>
+    <li class="en"><font color="blue">2022/4/10</font>
+      You can participate in the class from the classroom or your home.
+      Check <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2022FEN-EE4d19L10F01" target="_blank">ITC-LMS</a> for details.
+    </li>
+  </ul>
+</div>
+
+<h3>2021</h3>
+<div size=-2>
+  <font color="grey" size=-2>
+  <ul>
+    <li class="ja"><font color="blue">2021/7/25</font>
+      pl12 の 4-cogen で テストを実行すると以下のようなエラーになります
+<pre>      
+u21xxx@taulec:4-cogen$ make -f test.mk
+./cmp_gcc_occ.py exe/f00 10 -5 5           > check/f00.check
+/bin/sh: 1: ./cmp_gcc_occ.py: Permission denied
+make: *** [test.mk:25: check/f00.check] Error 126
+make: *** Deleting file 'check/f00.check'
+</pre>
+こちらのミスですいませんが以下のようにして回避して下さい.
+<pre>
+chmod +x ./cmp_gcc_occ.py
+</pre>
+    </li>
+    <li class="en"><font color="blue">2021/7/25</font>
+      testing under 4-cogen folder of pl12 results in the following error.
+<pre>      
+u21xxx@taulec:4-cogen$ make -f test.mk
+./cmp_gcc_occ.py exe/f00 10 -5 5           > check/f00.check
+/bin/sh: 1: ./cmp_gcc_occ.py: Permission denied
+make: *** [test.mk:25: check/f00.check] Error 126
+make: *** Deleting file 'check/f00.check'
+</pre>
+Please fix this error by executing the following.  My bad!
+<pre>
+chmod +x ./cmp_gcc_occ.py
+</pre>
+    </li>
+
+    
+    <li class="ja"><font color="blue">2021/7/25</font>
+      pl12 をやっている<font color="red">一部の人(*)</font>に, 以下のようなエラーが出ています.
+<pre>
+u21xxx@taulec:2-cc-parse$ make
+ocamlbuild cc.byte
++ ocamlyacc cc_parse.mly
+File "cc_parse.mly", line 36: syntax error
+ | definition* EOF                 { $1 }
+             ^
+Command exited with code 1.
+Compilation unsuccessful after building 4 targets (1 cached) in 00:00:00.
+make: *** [Makefile:six: cc.byte] Error 10
+</pre>
+すみませんがこのエラーが出ている人は, 以下の手順で, pl12 を fetch し直して下さい.
+エラーがでていない人は何もしなくて構いません.
+<pre>
+ssh u21xxx@taulec.zapto.org   # u21xxx は自分のユーザ名に置き換える
+cd notebooks
+mv pl12 pl12.org
+</pre>
+として, 自分の~/notebooks/pl12を一旦別の名前に(pl12が存在しない状態に)すると,
+再び pl12 がブラウザから fetch 可能な状態になりますので, fetch し直して下さい.
+すでに作業をしたファイルが有る場合はすいませんが,
+作業済みのものを, 新しいpl12フォルダにコピーして反映させて下さい.
+再fetch後は以下のような動作になるはずです.
+<pre>
+u21xxx@taulec:2-cc-parse$ make
+ocamlbuild -use-menhir cc.byte
+  ...
+</pre>
+
+<b>一部の人にpl12のfetchが必要な理由:</b>ですが,
+一旦田浦が pl12 をfetch可能にしたあとで,
+(上記を含めた)複数の間違いを修正しています.
+
+<font color="red">(*)</font>で言う,
+このエラーに遭遇する<font color="red">一部の人</font>とは,
+最初にpl12 をfetch可能にした後に
+(間違い修正前に)fetchをした人ということになります.
+
+修正・追加内容は,
+<ul>
+  <li><tt>2-cc-parse/Makefile</tt> に上記の修正</li>
+  <li><tt>3-cc-print</tt> 下で, いくつかの不足していたファイルを追加</li>
+</ul>
+です. 
+
+最初にpl12 をfetch可能にしたのが確か, 授業前日の夜中,
+修正をしたのがその数時間後だったと思います.
+授業前日の夜中にfetchをする人がいないだろうという思って,
+報告が遅れましたことをお詫びいたします.
+    </li>
+    
+
+    <li class="en"><font color="blue">2021/7/25</font>
+      <font color="red">Some of you (*)</font>
+      working on pl12 encounter the following error in <tt>2-cc-parse</tt>
+<pre>
+u21xxx@taulec:2-cc-parse$ make
+ocamlbuild cc.byte
++ ocamlyacc cc_parse.mly
+File "cc_parse.mly", line 36: syntax error
+ | definition* EOF                 { $1 }
+             ^
+Command exited with code 1.
+Compilation unsuccessful after building 4 targets (1 cached) in 00:00:00.
+make: *** [Makefile:six: cc.byte] Error 10
+</pre>
+If you are one of them, please fetch pl12 again following the procedure below.
+Otherwise you don't have to do anything.
+<pre>
+ssh u21xxx@taulec.zapto.org   # u21xxx should be your user name
+cd notebooks
+mv pl12 pl12.org
+</pre>
+That is, rename your <tt>~/notebooks/pl12</tt> to something else (so <tt>pl12</tt>
+does not exist) and it becomes fetchable again.  Please go ahead and fetch it again.
+If you have done some work already, please merge your work by copying your files
+into the newly fetched <tt>pl12</tt> folder.
+
+After refetching it, it should behave like this.
+<pre>
+u21xxx@taulec:2-cc-parse$ make
+ocamlbuild -use-menhir cc.byte
+  ...
+</pre>
+
+<b>The reason why some of you need to fetch pl12</b> is that
+I have corrected several errors (including the above)
+after I once released it (made it fetchable).
+
+<font color="red">Some of you (*)</font> who encouter this error
+are those who fetched it before I corrected it.
+
+Changes made are
+<ul>
+  <li><tt>2-cc-parse/Makefile</tt> was modified as above</li>
+  <li>several missing files were added to <tt>3-cc-print</tt></li>
+</ul>
+
+To the best of my memory, I released the first version
+a night before the last lecture and corrected it a few hours
+after that.
+I thought no one will fetch it in the night right before the lecture.
+Please accept my apologies to those who faced this error.
+    </li>
+
+
+    <li class="ja"><font color="blue">2021/7/12</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> イベントコード = <a href="https://app.sli.do/event/iwra35l1/live/questions" target="_blank">pl-07-12</a> </li>
+    <li class="en"><font color="blue">2021/7/12</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> event code = <a href="https://app.sli.do/event/iwra35l1/live/questions" target="_blank">pl-07-12</a></li>
+    <li class="ja"><font color="blue">2021/7/12</font> 予定
+      <ol>
+        <li>飯田 夏生君による発表
+          <a href="https://drive.google.com/file/d/1C65fHZVKGhvZUddC1eA1VmPnTehG0kAK/view?usp=sharing" target="_blank">
+            「並列ガベージコレクション」</a></li>
+        <li>残り時間は(オンデマンド)ビデオ
+          (<a href="https://drive.google.com/drive/folders/1oSVFt31bIPxVfCIcVB0B2sQkoUyRv9VL?usp=sharing" target="_blank">Google Drive</a>にアップ済み)による説明と,
+          演習・質問の時間</li>
+      </ol>
+    </li>
+    <li class="en"><font color="blue">2021/7/12</font> Plan
+      <ol>
+        <li>talk by Natsuo IIda kun.
+          <a href="https://drive.google.com/file/d/1C65fHZVKGhvZUddC1eA1VmPnTehG0kAK/view?usp=sharing" target="_blank">"Parallel Garbage Collection"</a></li>
+        <li>remaining time on
+          lecture by (on-demand) videos
+          (already on <a href="https://drive.google.com/drive/folders/1oSVFt31bIPxVfCIcVB0B2sQkoUyRv9VL?usp=sharing" target="_blank">Google Drive</a>) and
+          exercise and questions
+        </li>
+      </ol>
+    </li>
+        
+    
+    <li class="ja"><font color="blue">2021/7/5</font> 予定
+      ITC-LMSに課題を追加(pl10)
+    </li>
+    <li class="en"><font color="blue">2021/7/5</font> 予定
+      added an assignment (pl10) in ITC-LMS
+    </li>
+    <li class="ja"><font color="blue">2021/7/5</font>
+      <a href="#credit">成績の付け方</a>, 最終レポートについて更新
+    </li>
+    <li class="en"><font color="blue">2021/7/5</font> 
+      updated <a href="#credit">evaluation</a> and final report
+    </li>
+    <li class="ja"><font color="blue">2021/7/5</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> イベントコード = <a href="https://app.sli.do/event/4r6qanuk/live/questions" target="_blank">pl-07-05</a> </li>
+    <li class="en"><font color="blue">2021/7/5</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> event code = <a href="https://app.sli.do/event/4r6qanuk/live/questions" target="_blank">pl-07-05</a></li>
+    <li class="ja"><font color="blue">2021/7/5</font> 予定
+      <ol>
+        <li>講義 (30+分)
+          <a href=gen/slides_old/pdf/09-lexer-parser.pdf>
+            字句解析・構文解析
+            / Lexing and Parsing
+          </a>
+        </li>
+        <li>演習 (15分) pl11 and pl12
+        </li>
+        <li>講義 (45分)
+          <a href=gen/slides_old/pdf/10-compiler.pdf>
+            言語処理系
+            / Implementing Programming Languages
+          </a>
+        </li>
+      </ol>
+    </li>
+    <li class="en"><font color="blue">2021/7/5</font> Plan
+      <ol>
+        <li>講義 (30+分)
+          <a href=gen/slides_old/pdf/09-lexer-parser.pdf>
+            字句解析・構文解析
+            / Lexing and Parsing
+          </a>
+        </li>
+        <li>演習 (15分) pl11 and pl12
+        </li>
+        <li>講義 (45分)
+          <a href=gen/slides_old/pdf/10-compiler.pdf>
+            言語処理系
+            / Implementing Programming Languages
+          </a>
+        </li>
+      </ol>
+    </li>
+
+    <li><font color="blue">2021/6/28</font>
+      「小課題は期限より遅れた場合でも提出とみなしてもらえますか？」
+      一般論: 自分はあまり〆切を厳密に取り扱っていませんが, 程度はあります.
+      例えば, これまで小課題を何もしてこなかった(授業にほとんど関わってこなかった)人が,
+      学期の終わり間際になって全部の小課題を提出する, というようなケースを
+      OKするというつもりではありません. あくまで普段から授業, 小課題に
+      取り組んでいた人が間に合わなくて少し遅れたというようなケースを,
+      無下に未提出とはみなさないという意味です. 授業中に答えた「程度問題」
+      とはそういう意味です.
+    </li>
+
+    <li><font color="blue">2021/6/28</font>
+      Added <a href="#answer">an answer to a question</a> I got today.
+    </li>
+
+
+    
+    <li class="ja"><font color="blue">2021/6/28</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> イベントコード = <a href="https://app.sli.do/event/rr3k4300/live/questions" target="_blank">pl-06-28</a> </li>
+    <li class="en"><font color="blue">2021/6/28</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> event code = <a href="https://app.sli.do/event/rr3k4300/live/questions" target="_blank">pl-06-28</a></li>
+    <li class="ja"><font color="blue">2021/6/28</font> 予定
+      <ol>
+        <li>講義 (40分)
+          <a href=gen/slides_old/pdf/07-gc-adv.pdf>
+            ガベージコレクション (2)
+            / Garbage Collection (2)
+          </a>
+        </li>
+        <li>休憩 + 演習 pl10 (10分)</li>
+        <li>講義 (40分)
+          <a href=gen/slides_old/pdf/09-lexer-parser.pdf>
+            字句解析・構文解析
+            / Lexing and Parsing
+          </a>
+        </li>
+      </ol>
+    </li>
+    <li class="en"><font color="blue">2021/6/28</font> Plan
+      <ol>
+        <li>Lecture (40 mins)
+          <a href=gen/slides_old/pdf/07-gc-adv.pdf>
+            ガベージコレクション (2)
+            / Garbage Collection (2)
+          </a>
+        </li>
+        <li>break + exercise pl09_fixed (10 mins)</li>
+        <li>Lecture (40 mins)
+          <a href=gen/slides_old/pdf/09-lexer-parser.pdf>
+            字句解析・構文解析
+            / Lexing and Parsing
+          </a>
+        </li>
+      </ol>
+    </li>
+    <li class="ja"><font color="blue">2021/6/21</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> イベントコード = <a href="https://app.sli.do/event/ojph7hpq/live/questions" target="_blank">pl-06-21</a> </li>
+    <li class="en"><font color="blue">2021/6/21</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> event code = <a href="https://app.sli.do/event/ojph7hpq/live/questions" target="_blank">pl-06-21</a></li>
+    <li class="ja"><font color="blue">2021/6/21</font> 予定
+      <ol>
+        <li>講義 (40分)
+          <a href=gen/slides_old/pdf/07-gc-adv.pdf>
+            ガベージコレクション (2)
+            / Garbage Collection (2)
+          </a>
+        </li>
+        <li>休憩 + 演習 pl09_fixed (10分)</li>
+        <li>講義 (40分)
+          <a href=gen/slides_old/pdf/07-gc-adv.pdf>
+            ガベージコレクション (2)
+            / Garbage Collection (2)
+          </a>
+        </li>
+      </ol>
+    </li>
+    <li class="en"><font color="blue">2021/6/21</font> Plan
+      <ol>
+        <li>Lecture (40 mins)
+          <a href=gen/slides_old/pdf/07-gc-adv.pdf>
+            ガベージコレクション (2)
+            / Garbage Collection (2)
+          </a>
+        </li>
+        <li>break + exercise pl09_fixed (10 mins)</li>
+        <li>Lecture (40 mins)
+          <a href=gen/slides_old/pdf/07-gc-adv.pdf>
+            ガベージコレクション (2)
+            / Garbage Collection (2)
+          </a>
+        </li>
+      </ol>
+    </li>
+
+    <li class="ja"><font color="blue">2021/6/14</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> イベントコード = <a href="https://app.sli.do/event/3ymvtvbu/live/questions" target="_blank">pl-06-14</a> </li>
+    <li class="en"><font color="blue">2021/6/14</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> event code = <a href="https://app.sli.do/event/3ymvtvbu/live/questions" target="_blank">pl-06-14</a></li>
+    <li class="ja"><font color="blue">2021/6/14</font> 予定
+      <ol>
+        <li>講義 (40分)
+          <a href=gen/slides_old/pdf/06-gc.pdf>
+            ガベージコレクション
+            / Garbage Collection
+          </a>
+        </li>
+        <li>演習 (10分) pl09_fixed (もし先週すでにpl09をfetchしてしまった人がいたら, pl09_fixed をfetchしてください(細かいバグ修正))
+        </li>
+        <li>講義 (40分)
+          <a href=gen/slides_old/pdf/06-gc.pdf>
+            ガベージコレクション
+            / Garbage Collection
+          </a>
+        </li>
+      </ol>
+    </li>
+    <li class="en"><font color="blue">2021/6/14</font> Plan
+      <ol>
+        <li>Lecture (40 mins)
+          <a href=gen/slides_old/pdf/06-gc.pdf>
+            ガベージコレクション
+            / Garbage Collection
+          </a>
+        </li>
+        <li>Exercise (10 mins) pl09_fixed (in case you have already fetched pl09 last week, please fetch pl09_fixed and do it again (pl09 had several bugs))
+        </li>
+        <li>Lecture (40 mins)
+          <a href=gen/slides_old/pdf/06-gc.pdf>
+            ガベージコレクション
+            / Garbage Collection
+          </a>
+        </li>
+      </ol>
+    </li>
+
+    <li class="ja"><font color="blue">2021/6/7</font>
+      (話し終えた直後にチェックしたのですが)以下の質問を見逃していました.
+      <blockquote><font color="blue">
+          GCが走るタイミングはどういった基準で決められることが多いのでしょうか？(ヒープメモリの確保がある程度のサイズまで行われた時に走るとか…？)
+        </font>
+      </blockquote>
+      大変良い質問で, だいたい「ヒープメモリの確保がある程度のサイズまで行われた時に走る」なのですが, 「ある程度のサイズ」をどう決めるかが問題です.
+      実際にプログラムが最低限必要とするメモリ(生きているオブジェクト)量の定数倍, とすることが多いです. 
+           <a href=gen/slides_old/pdf/06-gc.pdf>
+             ガベージコレクション
+             / Garbage Collection
+           </a>のスライド60あたりで説明の予定です.
+    </li>
+
+    <li class="ja"><font color="blue">2021/6/7</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> イベントコード = <a href="https://app.sli.do/event/ys176n8n/live/questions" target="_blank">pl-06-07</a> </li>
+    <li class="en"><font color="blue">2021/6/7</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> event code = <a href="https://app.sli.do/event/ys176n8n/live/questions" target="_blank">pl-06-07</a></li>
+    <li class="ja"><font color="blue">2021/6/7</font> 予定
+      <ol>
+        <li>(40+分) 講義
+          <ul>
+            <li>
+              <a href=gen/slides_old/pdf/04-type-check.pdf>
+                オブジェクト指向言語と静的型システム
+                / Static Type Systems for Object-Oriented Languages</a>
+            </li>
+            <li>
+              <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+                OCamlのオブジェクト指向型システム
+                / The OCaml Type System</a>
+            </li>
+          </ul>
+        </li>
+        <li>(5分) 休み</li>
+        <li>(5分) pl06, pl07, 下記のスライド予習</li>
+        <li>(40分) 講義
+          <ul>
+            <li>
+              <a href=gen/slides_old/pdf/06-gc.pdf>
+                ガベージコレクション
+                / Garbage Collection
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ol>
+    </li>
+
+    <li class="en"><font color="blue">2021/6/7</font> Plan
+      <ol>
+        <li>(40+ mins) lecture
+          <ul>
+            <li>
+              <a href=gen/slides_old/pdf/04-type-check.pdf>
+                オブジェクト指向言語と静的型システム
+                / Static Type Systems for Object-Oriented Languages</a>
+            </li>
+            <li>
+              <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+                OCamlのオブジェクト指向型システム
+                / The OCaml Type System</a>
+            </li>
+          </ul>
+        </li>
+        <li>(5 mins) break</li>
+        <li>(5 mins) pl06, pl07, preview the slide deck below</li>
+        <li>(40 mins) lecture
+          <ul>
+            <li>
+              <a href=gen/slides_old/pdf/06-gc.pdf>
+                ガベージコレクション
+                / Garbage Collection
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ol>
+    </li>
+
+
+    <!-- ---------------------------------------------------- -->
+    
+    <li class="ja"><font color="blue">2021/5/31</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> イベントコード = <a href="https://app.sli.do/event/cqot76zt/live/questions" target="_blank">pl-05-31</a> </li>
+    <li class="en"><font color="blue">2021/5/31</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> event code = <a href="https://app.sli.do/event/cqot76zt/live/questions" target="_blank">pl-05-31</a></li>
+    <li class="ja"><font color="blue">2021/5/31</font> 予定
+      <ol>
+        <li>(35+分) 講義
+          <ul>
+            <li>
+              <a href=gen/slides_old/pdf/04-type-check.pdf>
+                オブジェクト指向言語と静的型システム
+                / Static Type Systems for Object-Oriented Languages</a>
+            </li>
+          </ul>
+        </li>
+        <li>(5分) 休み</li>
+        <li>(10分) 下記のスライド予習 + pl06, pl07</li>
+        <li>(40分) 講義 : 上記の続き
+          <ul>
+            <li>
+              <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+                OCamlのオブジェクト指向型システム
+                / The OCaml Type System</a>
+            </li>
+          </ul>
+        </li>
+      </ol>
+    </li>
+
+    <li class="en"><font color="blue">2021/5/31</font> Plan
+      <ol>
+        <li>(35+ mins) lecture
+          <ul>
+            <li>
+              <a href=gen/slides_old/pdf/04-type-check.pdf>
+                オブジェクト指向言語と静的型システム
+                / Static Type Systems for Object-Oriented Languages</a>
+            </li>
+          </ul>
+        </li>
+        <li>(5 mins) break</li>
+        <li>(10 mins) preview the slide deck below + pl06, pl07</li>
+        <li>(40 mins) lecture
+          <ul>
+            <li>
+              <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+                OCamlのオブジェクト指向型システム
+                / The OCaml Type System</a>
+            </li>
+          </ul>
+        </li>
+      </ol>
+    </li>
+
+
+    
+    <li class="ja"><font color="blue">2021/5/24</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> イベントコード = pl-05-24 </li>
+    <li class="en"><font color="blue">2021/5/24</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> event code = pl-05-24 </li>
+    <li class="ja"><font color="blue">2021/5/24</font> 予定
+      <ol>
+        <li>pl08 をFetchしてください(ans_pl08も同時リリース)</li>
+        <li>(40分) 講義
+          <ul>
+            <li>
+              <a href=gen/slides_old/pdf/04-type-check.pdf>
+                オブジェクト指向言語と静的型システム
+                / Static Type Systems for Object-Oriented Languages</a>
+            </li>
+            <li>
+              <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+                OCamlのオブジェクト指向型システム
+                / The OCaml Type System</a>
+            </li>
+          </ul>
+        </li>
+        <li>(15分) 休み + pl08 (上記講義を補うJupyter notebook. 課題ではない)</li>
+        <li>(35分) 講義 : 上記の続き</li>
+      </ol>
+    </li>
+
+    <li class="en"><font color="blue">2021/5/24</font> Plan
+      <ol>
+        <li>Fetch pl08 (ans_pl08 has been released, too)</li>
+        <li>(40 mins) Lecture
+          <ul>
+            <li>
+              <a href=gen/slides_old/pdf/04-type-check.pdf>
+                オブジェクト指向言語と静的型システム
+                / Static Type Systems for Object-Oriented Languages</a>
+            </li>
+            <li>
+              <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+                OCamlのオブジェクト指向型システム
+                / The OCaml Type System</a>
+            </li>
+          </ul>
+        </li>
+        <li>(15 mins) break + pl08
+          (Supplementary Jupyter notebook for the above lecture. Not an assignment)</li>
+        <li>(35 mins) Lecture : continue the above</li>
+      </ol>
+    </li>
+
+    <li class="ja"><font color="blue">2021/5/17</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> イベントコード = pl-05-17 </li>
+    <li class="en"><font color="blue">2021/5/17</font>  <a href="https://www.sli.do/" target="_blank">sli.do</a> event code = pl-05-17 </li>
+    <li class="ja"><font color="blue">2021/5/17</font> 予定
+      <ol>
+        <li>(10分) 演習 (pl05, pl06, pl07)</li>
+        <li>(30分) 講義
+          <a href=gen/slides_old/pdf/01-types.pdf>
+            安全性と型 / Safety and Types</a>
+        </li>
+        <li>(15分) 休み + 演習 (pl05, pl06, pl07)</li>
+        <li>(35分) 講義
+          <ul>
+            <li>
+              <a href=gen/slides_old/pdf/04-type-check.pdf>
+                オブジェクト指向言語と静的型システム
+                / Static Type Systems for Object-Oriented Languages</a>
+            </li>
+            <li>
+              <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+                OCamlのオブジェクト指向型システム
+                / The OCaml Type System</a>
+            </li>
+          </ul>
+        </li>
+      </ol>
+    </li>
+
+    <li class="en"><font color="blue">2021/5/17</font> 予定
+      <ol>
+        <li>(10 mins) Exercise (pl05, pl06, pl07)</li>
+        <li>(30 mins) Lecture
+          <a href=gen/slides_old/pdf/01-types.pdf>
+            安全性と型 / Safety and Types</a>
+        </li>
+        <li>(15 mins) Break + Exercise (pl05, pl06, pl07)</li>
+        <li>(40 mins) Lecture
+          <ul>
+            <li>
+              <a href=gen/slides_old/pdf/04-type-check.pdf>
+                オブジェクト指向言語と静的型システム
+                / Static Type Systems for Object-Oriented Languages</a>
+            </li>
+            <li>
+              <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+                OCamlのオブジェクト指向型システム
+                / The OCaml Type System</a>
+            </li>
+          </ul>
+        </li>
+      </ol>
+    </li>
+
+    <li class="ja"><font color="blue">2021/5/10</font> Jupyter上で Fetech feedback しても
+      何も落ちてこない問題は解消したと思います
+      (こちらの作業上のミスでした m(_ _)m)</li>
+    <li class="en"><font color="blue">2021/5/10</font> The issue that you cannot get anything
+      by Fetch feedback on Jupyter was fixed
+      (It was my operational mistake m(_ _)m)
+    </li>
+    <li class="ja"><font color="blue">2021/5/10</font> <a href="https://www.sli.do/" target="_blank">sli.do</a> イベントコード = pl-05-10 </li>
+    <li class="en"><font color="blue">2021/5/10</font> <a href="https://www.sli.do/" target="_blank">sli.do</a> event code = pl-05-10 </li>
+    <li class="ja"><font color="blue">2021/5/10</font> 予定
+      <ol>
+        <li>(5分) もろもろお知らせ</li>
+        <li>(10分)
+          <ul>
+            <li><a href="https://www.menti.com/zra6tbeyq8" target="_blank">Python</a>と<a href="https://www.menti.com/mkwjcpi5ru" target="_blank">他の言語</a>に関するかんたんなアンケート</li>
+            <li>pl04 (Pythonが初めての人)</li>
+            <li>pl05 (まだ終わってなければ)</li>
+            <li>または pl06/pl07 (pl05ができてしまった人); 以下を適宜参照
+              <ul>
+                <li>
+                  <a href=gen/slides_old/pdf/04-type-check.pdf>
+                    オブジェクト指向言語と静的型システム
+                    / Static Type Systems for Object-Oriented Languages</a>
+                </li>
+                <li>
+                  <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+                    OCamlのオブジェクト指向型システム
+                    / The OCaml Type System</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>(30分)
+          <a href=gen/slides_old/pdf/03-python.pdf>
+            プログラミング言語 3.
+            オブジェクト指向プログラミング (Python)
+            slide 44 (列とコンテナ) 〜
+          </a>
+        </li>
+        <li>(5分休憩 + 10分演習) 2の続き</li>
+        <li>(30分) 3の続き</li>
+      </ol>
+    </li>
+
+
+    
+    <li class="en"><font color="blue">2021/5/9</font> Plan
+      <ol>
+        <li>(5 mins) a few announcements</li>
+        <li>(10 mins) exercise on
+          <ul>
+            <li>Two quick surveys on <a href="https://www.menti.com/zra6tbeyq8" target="_blank">Python</a> and <a href="https://www.menti.com/mkwjcpi5ru" target="_blank">other languages</a></li>
+            <li>pl04 (if you are new to Python),</li>
+            <li>pl05 (if you haven't finished it yet), or</li>
+            <li>pl06/pl07 (if you have finished pl05); see the following 
+              as necessary
+              <ul>
+                <li>
+                  <a href=gen/slides_old/pdf/04-type-check.pdf>
+                    Static Type Systems for Object-Oriented Languages</a>
+                </li>
+                <li>
+                  <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+                    The OCaml Type System</a>
+                </a>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>(30 mins)
+          <a href=gen/slides_old/pdf/03-python.pdf>
+            Programming Languages 3.
+            Object-Oriented Programming (Python)
+            slide 44 (Sequences and containers) --
+          </a>
+        </li>
+        <li>(5 mins break + 10 mins) contiune the exercise (bullet #2)</li>
+        <li>(30 mins) contiune #3</li>
+      </ol>
+    </li>
+
+    <li class="ja"><font color="blue">2021/5/10</font>
+      新しいノートブック2つ
+      <ul>
+        <li>pl06_ocaml_oo.ml</li>
+        <li>pl07_ocaml_oo_types.ml</li>
+      </ul>
+    </li>
+    <li class="en"><font color="blue">2021/5/10</font>
+      Two new notebooks are out
+      <ul>
+        <li>pl06_ocaml_oo.ml</li>
+        <li>pl07_ocaml_oo_types.ml</li>
+      </ul>
+    </li>
+
+    <li class="ja"><font color="blue">2021/5/8</font>
+      pl02_ocaml_intro と pl03_ocaml_practice の答えを Jupyter で Fetch できます.
+      ans_pl02 と ans_pl03 を Fetchしてください.
+    </li>
+    <li class="en"><font color="blue">2021/5/8</font>
+      You can fetch answers of pl02_ocaml_intro and pl03_ocaml_practice on Jupyter.
+      Fetch ans_pl02 and ans_pl03.
+    </li>
+
+    <li class="ja"><font color="blue">2021/5/8</font>
+      課題 1. OCaml 基本 / OCaml Basics (pl02_ocaml_intro)
+      のfeedback を Jupyter 上で送りました.
+      Jupyter のpageから <font color="blue">Assignment -&gt Fetch feedback</font> してください
+      (次回以降もやる体力があるか不明 ...).
+    </li>
+    <li class="en"><font color="blue">2021/5/8</font>
+      I sent feedback for Assignment 1. OCaml 基本 / OCaml Basics (pl02_ocaml_intro),
+      on Jupyter.
+      From Jupyter page, go <font color="blue">Assignment -&gt Fetch feedback.</font>
+      (not sure I have enough energy left to do it for subsequent assignments ...).
+    </li>
+
+    <li class="ja"><font color="blue">2021/5/2</font>
+      前回の授業(4/26)前にITC-LMSに課題を一つ追加しています(pl05).
+      その後, 締切が鬼畜であったことに気づき, 変更しています(5/8 -&gt; 5/22).
+    </li>
+    <li class="en"><font color="blue">2021/5/2</font>
+      I added an assignment to ITC-LMS (pl05) on Apr 26,
+      after which I noticed the deadline was evil and
+      extended it (May 8 -&gt; May 22).
+    </li>
+
+    <li class="ja"><font color="blue">2021/5/2</font>
+      pl03, pl04 は ITC-LMS での提出課題はありません(評価にも含まれません)が,
+      やっておくことを推奨します. また, Jupyterでのsubmitも推奨します.
+    </li>
+    <li class="en"><font color="blue">2021/5/2</font>
+      There are no assignment in ITC-LMS on pl03 and pl04, which
+      are therefore not included in evaluation.
+      You are still encouraged to finish and submit them through Jupyter.
+    </li>
+
+    <li class="ja"><font color="blue">2021/4/26</font>
+      Jupyter Notebook に対する<a href="#errata">訂正</a>
+    </li>
+    <li class="en"><font color="blue">2021/4/26</font>
+      <a href="#errata">Errata</a> of Jupyter Notebooks
+    </li>
+    
+    <li><font color="blue">2021/4/26</font> 講義予定 (90分) / Plan (90 mins)
+      <ol>
+        <li class="ja"> sli.do イベントコード = pl-04-26 </li>
+        <li class="en"> sli.do event code = pl-04-26 </li>
+
+        <li class="ja">
+          <a href=gen/slides_old/pdf/02-ocaml.pdf>
+            プログラミング言語 2
+            関数型プログラミング (OCaml)
+            slide 78 〜
+          </a> 4節 関数型言語の理想と現実 (40+分)
+        </li>
+
+        <li class="en">
+          <a href=gen/slides_old/pdf/02-ocaml.pdf>
+            Programming Languages 2. 
+            Functional Programming (OCaml)
+            slide 78 --
+          </a> Section 4: The Ideal and the Reality of Functional Languages (40+ mins)
+        </li>
+
+        <li class="ja">演習 pl03, pl04, pl05 (20分)
+          <ul>
+            <li><b>pl03</b> OCamlについてもう少し</li>
+            <li><b>pl04</b> Python入門 (オブジェクト指向以前)</li>
+            <li><b>pl05</b> Pythonによるオブジェクト指向入門</li>
+          </ul>
+        </li>
+
+        <li class="en">Exercise pl03, pl04, pl05 (20分)
+          <ul>
+            <li><b>pl03</b> More about OCaml</li>
+            <li><b>pl04</b> Python Basics (without Object-Oriented Programming)</li>
+            <li><b>pl05</b> Object-Oriented Programming in Python</li>
+          </ul>
+        </li>
+
+        <li class="ja">
+          <a href=gen/slides_old/pdf/03-python.pdf>
+            プログラミング言語 3.
+            オブジェクト指向プログラミング (Python)
+            slide 60 〜
+          </a> 4節 クラスによる新しいデータの定義 
+        </li>
+        
+        <li class="en">
+          <a href=gen/slides_old/pdf/03-python.pdf>
+            Programming Languages 3.
+            Object-Oriented Programming (Python)
+            slide 60 --
+          </a> Section 4: Defining new data types with classes
+        </li>
+      </ol>
+    </li>
+      
+    <li class="ja"><font color="blue">2021/4/19</font> 講義予定 (90分)
+      <ol>
+        <li> sli.do event code = 419453</li>
+        <li>課題 pl02, できてしまった人は pl03をやる
+          (10分)
+        </li>
+        <li>
+          <a href=gen/slides_old/pdf/02-ocaml.pdf>
+            プログラミング言語 2
+            関数型プログラミング (OCaml)
+            slide 27 〜
+          </a> 3節 関数型言語について (30+分)
+        </li>
+        <li>休憩 + 課題 (10分)</li>
+        <li>
+          <a href=gen/slides_old/pdf/02-ocaml.pdf>
+            プログラミング言語 2
+            関数型プログラミング (OCaml)
+            slide 78 〜
+          </a> 4節 関数型言語の理想と現実 (30+分)
+        </li>
+      </ol>
+    </li>
+
+    <li class="en"><font color="blue">2021/4/19</font> Plan (90 mins)
+      <ol>
+        <li> sli.do event code = 419453</li>
+        <li>work on assignment pl02 (or pl03 if you have done with it)
+          (10 mins)</li>
+        <li>
+          <a href=gen/slides_old/pdf/02-ocaml.pdf>
+            Programming Languages 2
+            Functional Programming (OCaml), from slide #27 </a>
+          Section 3: Functional Languages (30+ mins)
+        </li>
+        <li>break + work on assignment
+          (10 mins)</li>
+        <li>
+          <a href=gen/slides_old/pdf/02-ocaml.pdf>
+            Programming Languages 2
+            Functional Programming (OCaml), from slide #78 </a>
+          Section 4: The Ideal and the Reality of
+          Functional Languages (30+ mins)
+        </li>
+      </ol>
+    </li>
+
+    <li class="ja"><font color="blue">2021/4/5</font>
+      提案に従い<a href="https://forms.gle/VME3p9jjyUiiGjra6"
+                   target="_blank">講義の言語に関するアンケート</a>
+      をとりますのでお答えください.
+    </li>
+    <li class="en"><font color="blue">2021/4/5</font>
+      Please respond.  As requested, I made
+      <a href="https://forms.gle/VME3p9jjyUiiGjra6"
+         target="_blank">a quick survey
+        on the lecture language</a>
+    </li>
+
+    <li class="ja"><font color="blue">2021/4/5</font>
+      講義録画のアクセス方法はITC-LMSのお知らせを見てください.
+    </li>
+    <li class="en"><font color="blue">2021/4/5</font>
+      The lecture video recording is available.
+      See ITC-LMS Information section for how to access them.
+    </li>
+
+    <li class="ja"><font color="blue">2021/4/5</font>
+      今日の授業に参加する人でまだUTASでの履修登録・仮登録をしていない人は,
+      ITC-LMSでこの授業に自己登録をしてください(あとで取り消せます).
+    </li>
+    <li class="en"><font color="blue">2021/4/5</font>
+      Those who participate in today's class but have not
+      registered even temporarily to it through UTAS should
+      self-register to this class through ITC-LMS (you can cancel it later)
+    </li>
+
+    <li class="ja"><font color="blue">2021/4/5</font>
+      すでに(UTASでもITC-LMSでも)登録している人はITC-LMSで
+      「0. URL受け取りのためのダミー課題 / A dummy assignment to receive URL」
+      のフィードバックを受け取ってください.
+      演習環境のアクセス方法が書いてあります.
+    </li>
+    <li class="en"><font color="blue">2021/4/5</font>
+      Those who are already registered (through UTAS or ITC-LMS)
+      to this class
+      should receive feedback to
+      "0. URL受け取りのためのダミー課題 / A dummy assignment to receive URL"
+      through ITC-LMS, which explains how to access
+      assignment environment.
+    </li>
+
+    <li class="ja"><font color="blue">2021/4/5</font> 講義予定 (90分)
+      <ol>
+        <li><a href="gen/slides_old/pdf/00-roadmap.pdf">
+            ロードマップ</a> (20分)</li>
+        <li><a href="gen/slides_old/pdf/00-online-vs-in-person.pdf">
+            参加方法 (online vs 教室)</a> (10分)</li>
+        <li>Jupyter環境 (登録必要. 上記参照) (5分)</li>
+        <li>休憩 (5分)</li>
+        <li>Jupyter環境を使ってみる. "Assignments" をクリック
+          -&gt; pl00, pl01, pl02 を "Fetch",
+          それらを見て作業
+          (30分)</li>
+        <li>最初の本題 (pl02関連):
+          <a href=gen/slides_old/pdf/02-ocaml.pdf>OCaml</a></li>
+        <li>
+          <ul>
+            <li><b>pl00</b> : 今日の授業終了時までにJupyterで必ずSubmit
+              (Submit練習)</li>
+            <li><b>pl01</b> :
+              書かれている作業が出来次第提出 (任意; いつでも良い)</li>
+            <li><b>pl02</b> :
+              少しでも作業したら一度Submit (できれば今日;
+              以降も何度もSubmit可);
+              3週間後を目処に正式な課題として提出(ITC-LMSでアナウンス)
+            </li>
+          </ul>
+        </li>
+      </ol>
+    </li>
+
+    <li class="en"><font color="blue">2021/4/5</font> Plan (90 mins)
+      <ol>
+        <li><a href="gen/slides_old/pdf/00-roadmap.pdf">Roadmap</a>
+          (20 minutes)</li>
+        <li><a href="gen/slides_old/pdf/00-online-vs-in-person.pdf">
+            How to participate (online vs classroom)</a> (10 mins)</li>
+        <li>Jupyter environment (you need to register. see above) (5 mins)</li>
+        <li>break (5 mins)</li>
+        <li>Playing with Jupyter; click "Assignment" -&gt; "Fetch" pl00, pl01, pl02 and walk through them (30 mins)</li>
+        <li>The first real subject (related to pl02)
+          <a href=gen/slides_old/pdf/02-ocaml.pdf>OCaml</a></li>
+        <li>
+          <ul>
+            <li><b>pl00</b> : you must submit it until the end of
+              this lecture (just to practice submission)
+            </li>
+            <li><b>pl01</b> :
+              submit if you do what it tells you to do
+              (optional; at any time)</li>
+            <li><b>pl02</b> :
+              submit after you did <i>anything</i> with it,
+              hopefully today (you can submit any number of times);
+              it will become the first assignment due approximately three
+              weeks from now, to be formally announced via ITC-LMS
+            </li>
+          </ul>
+        </li>
+      </ol>
+    </li>
+
+    <li class="ja"><font color="blue">2021/4/5</font>
+      質問は
+      <ul>
+        <li>口頭</li>
+        <li>Zoom chat</li>
+        <li><a href="https://sli.do" target="_blank">sli.do</a>
+          event code 190880 で</li>
+      </ul>
+    </li>
+
+    <li class="en"><font color="blue">2021/4/5</font>
+      ask questions via
+      <ul>
+        <li>voice</li>
+        <li>Zoom chat</li>
+        <li><a href="https://sli.do" target="_blank">sli.do</a>
+          event code 190880 で</li>
+      </ul>
+    </li>
+
+    <li class="ja"><font color="blue">2021/3/30</font> どちらで受けるつもりかの<a href="https://forms.gle/eHDVEddp4SEED9kTA" target="_blank">アンケート(匿名)</a> に答えてください.
+      実際にどちらで受けるかを制約するものではありません.
+    </li>
+    <li class="en"><font color="blue">2021/3/30</font> Please respond to <a href="https://forms.gle/eHDVEddp4SEED9kTA" target="_blank">a quick (anonymous) survey</a> on where you will/wanna take the class.
+      In no way will your answer constrain how you actually participate.
+    </li>
+    <li class="ja"><font color="blue">2021/3/30</font> 教室(工学部2号館4階 244),
+      家のどちらでも受講可能とします. 田浦は教室にいます.
+      教室で受講する場合もPC持参してください(授業時間内で演習のため).
+      オンライン授業のURLは
+      <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2021FEN-EE4d19L10F01" target="_blank">ITC-LMS</a>から
+    </li>
+    <li class="en"><font color="blue">2021/3/30</font> You can participate in the class
+      either in the classroom (Room 244, Faculty of Engineering Building #2, 4th floor) or in home.  I will teach in the classroom.
+      Bring your PC to the classroom for work during the classes.
+      Get online class URL via <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2021FEN-EE4d19L10F01" target="_blank">ITC-LMS</a>
+    </li>
+    <li class="ja"><font color="blue">2021/3/30</font> 2021 HP開設</li>
+    <li class="en"><font color="blue">2021/3/30</font> 2021 HP open</li>
+  </ul>
+  </font>
+</div>
+
+<a name="answer"></a>
+<h2>Answer to a question on June 28</h2>
+<div>
+  <font color="grey" size=-2>
+  I got the following question in today's lecture.
+
+<blockquote>
+Q: 
+<i>What's the order of evaluation for CFG of ocamlyacc?
+<br />
+Consider the following example of CFG:</i>
+<pre>
+   "I see (a man with a mirror)"
+or "I see (a man) with a mirror"
+</pre>
+</blockquote>
+
+This is indeed a good question about an issue that commonly arises when defininig a grammar using CFG. 
+
+Let me start by rephrasing your question for the sake of clarity.
+
+I assume you are asking how the sentence "I see a man with a mirror" will be parsed (recognized), with a hypothetical English-like grammar, like the following.
+
+<ol>
+  <li>
+<pre>
+np  / verb / np
+I   / see  / a man with a mirror
+</pre>
+  </li>
+  <li>
+<pre>
+np  / verb / np    / advp 
+I   / see  / a man / with a mirror
+</pre>
+  </li>
+</ol>
+
+I define a simple English-like grammar as follows for the sake of a concrete discussion.  For clarity, the following is not really the ocaml-conforming description, but you can easily make it a real grammar that ocamlyacc/ocamllex can accept.
+
+<pre>
+----------------------------------
+definition of an English-like grammar
+----------------------------------
+sentence :
+   np "see" np
+ | np "see" np advp
+
+advp :
+ | "with" np
+
+np :
+   noun
+ | np adjp
+
+adjp :
+ | "with" np
+
+----------------------------------
+definition of tokens
+----------------------------------
+noun := "I" | "a man" | "a mirror"
+</pre>
+
+In this grammar, just as you pointed out, a token sequence
+
+<pre>
+np "see" np "with" np
+</pre>
+
+can be parsed in two ways
+
+<ol>
+  <li>
+<pre>
+              np
+np "see" [np "with" np]   (* using sentence := np "see" np *)
+</pre>
+  </li>
+  <li>
+<pre>    
+              advp
+np "see" np ["with" np]   (* using sentence := np "see" np advp *)
+</pre>
+  </li>
+</ol>
+
+You are asking in which way it is parsed.
+
+<p>
+   The accurate answer is "it depends".  It depends on how you wrote a grammar (your original question cannot be answered, without specifying how you write the grammar).  It also depends on the tool you are using.  The following may be specific to ocamlyacc.
+</p>
+
+<p>
+  With that said, if you write an ocamlyacc grammar in the order above, it seems that it is parsed as (2).  It seems that the ocamlyacc uses the first rule that appears in the grammar, if you believe <a href="https://stackoverflow.com/questions/24516/resolving-reduce-reduce-conflict-in-yacc-ocamlyacc" target="_blank">this article.</a>  "Well, this simplest answer is to just ignore it and let the default reduce/reduce resolution handle it -- reduce the rule that appears first in the grammar."  In this case, "the first rule" involved in the ambiguity will be 'sentence := np "see" np advp' (the second rule being 'np := np adjp').
+</p>
+
+<p>
+I wrote an ocamlyacc grammar faithfully implementing the above and confirmed that
+</p>
+
+<ul>
+  <li>if I write the grammar in the above order (sentence; advp; np; adjp), then it is parsed as (2)</li>
+  <li>if I put the grammar in the opposite order (adjp; np; advp; sentence), then it is parsed as (1)</li>
+</ul>
+<p>
+However, I could not confirm the above statement "... the default reduce/reduce resolution handle it -- reduce the rule that appears first in the grammar" in an authoritative document.  Even if you find a statement like this in an authoritative document, "the rule that appears first in the grammar" is itself a very vague expression.  I don't know how to resolve grammar ambiguity with such an ambiguous rule :-)
+</p>
+
+  <p>
+The bottom line: you should not rely on the ambiguity resolution rule of the particular tool you are using; as a matter of fact, you ought not to define an ambiguous grammar (a grammar that can parse the same sequence of tokens in two or more different ways), at least when you define a syntax of a programming (artificial) language.
+  </p>    
+
+  <p>
+With that said, an ambiguity actually arises in programming languages.  A famous example is an if statement that may omit the "else" clause.  In such a language, a nested if statement like
+  </p>
+
+<pre>
+if expr if expr stmt else stmt
+</pre>    
+
+can be parse either
+
+<ol>
+  <li>if expr (if expr stmt else stmt) or</li>
+  <li>if expr (if expr stmt) else stmt</li>
+</ol>
+
+<p>
+  Most programming languages determine such statements should be parsed as the first one (i.e., 'else' must be associated with the closest 'if').  If you want to make your grammar behave this way you must be a bit creative in doing so.  See for example <a href="http://www.parsifalsoft.com/ifelse.html" target="_blank"> this page</a></p>
+
+<p>
+  NLP is totally different.  It is inherently ambiguous and we live with ambiguity.  Human is resolving ambiguity with a wealth of information including contexts, meaning of words, and common sense.  To put it differently, an ordinary CFG is not a powerful enough tool for defining natural language grammars.  NLP parsing is typically done with a statistical ambiguity resolution.</p>
+  </font>
+</div>
+
+
+<a name="errata"></a>
+<h2>Jupyter Notebook 修正 / Errata of Jupyter Notebooks</h2>
+<div>
+  <font color="grey" size=-2>
+  <ul>
+    <li class="ja">Jupyter notebook に対して,
+      後から判明した間違いをここにまとめて訂正します.
+      指摘してくれた皆さんありがとうございます.
+      これからも疑問があればお知らせください.
+    </li>
+    <li class="en">Errors in Jupyter notebooks found after released
+      are shown here.  Thanks to those of you who point them out.
+      When you find anything that you think might be an error,
+      please let me know.</li>
+  </ul>
+
+  <table border=1>
+    <tr>
+      <th>番号 / no</th>
+      <th>ファイル / File</th>
+      <th>場所 / Location</th>
+      <th><font color="red">誤 / Error</font></th>
+      <th><font color="green">正 / Correct</font></th>
+      <th><font color="blue">備考 / Remarks</font></th>
+    </tr>
+    <tr class="ja">
+      <th>1</th>
+      <td>pl02_ocaml_intro.ml</td>
+      <td>4-20. Problem 12 : 2分探索木の探索 / Searching a binary search tree</td>
+      <td>2分探索木の探索を行う関数<font color="red">bs_tree_search</font> を書け</td>
+      <td>2分探索木の探索を行う関数<font color="green">bs_tree_find</font> を書け</td>
+      <td>Thanks to 水橋 大瑶</td>
+    </tr>
+    <tr class="en">
+      <th>1</th>
+      <td>pl02_ocaml_intro.ml</td>
+      <td>4-20. Problem 12 : 2分探索木の探索 / Searching a binary search tree</td>
+      <td>
+        write a function <font color="red">bs_tree_search</font>
+        that searches a binary search tree for a value. 
+      </td>
+      <td>
+        write a function <font color="green">bs_tree_find</font>
+        that searches a binary search tree for a value. 
+      </td>
+      <td>Thanks to 水橋 大瑶</td>
+    </tr>
+
+    <tr>
+      <th>2</th>
+      <td>pl03_ocaml_practice.ml</td>
+      <td>1-1. 配列 / Arrays</td>
+      <td><tt>a.(2) <font color="red">=</font> 200                     (* 要素代入(更新) / assign to (update) an element *)</tt></td>
+      <td><tt>a.(2) <font color="green">&lt;-</font> 200                     (* 要素代入(更新) / assign to (update) an element *)</tt></td>
+      <td>Thanks to ダン チャン ジャ バオ</td>
+    </tr>
+
+    <tr class="ja">
+      <th>3</th>
+      <td>pl03_ocaml_practice.ml</td>
+      <td>1-3. レコードと更新可能なフィールド / Records and mutable fields</td>
+      <td>
+        <tt>type 型名 = <font color="red">record</font> { フィールド名 : 型 ; フィールド名 : 型 ; ... ; フィールド名 : 型 }</tt>
+      </td>
+      <td>
+        <tt>type 型名 = { フィールド名 : 型 ; フィールド名 : 型 ; ... ; フィールド名 : 型 }</tt>
+      </td>
+      <td>Thanks to 押川 令</td>
+    </tr>
+
+    <tr class="en">
+      <th>3</th>
+      <td>pl03_ocaml_practice.ml</td>
+      <td>1-3. レコードと更新可能なフィールド / Records and mutable fields</td>
+      <td>
+        <tt>type name = <font color="red">record</font> { field-name : type ; field-name : type ; ... ; field-name : type }</tt>
+      </td>
+      <td>
+        <tt>type name = { field-name : type ; field-name : type ; ... ; field-name : type }</tt>
+      </td>
+      <td>Thanks to 押川 令</td>
+    </tr>
+
+    <tr class="ja">
+      <th>3</th>
+      <td>pl03_ocaml_practice.ml</td>
+      <td>1-3. レコードと更新可能なフィールド / Records and mutable fields</td>
+      <td>
+        <tt>type 型名 = <font color="red">record</font> { フィールド名 : 型 ; フィールド名 : 型 ; ... ; フィールド名 : 型 }</tt>
+      </td>
+      <td>
+        <tt>type 型名 = { フィールド名 : 型 ; フィールド名 : 型 ; ... ; フィールド名 : 型 }</tt>
+      </td>
+      <td>Thanks to 押川 令</td>
+    </tr>
+
+    <tr class="ja">
+      <th>3</th>
+      <td>pl11_asm.ml</td>
+      <td>4-6. 割り算 / division</td>
+      <td>(%rdx,%rax) = (%rdx:%rax <font color="red">/</font> %rdi, %rdx:%rax <font color="red">%</font> %rdi)
+        ... (%rdx:%rax を %rdi で割った商が <font color="red">%rdx</font>, あまりが <font color="red">%rax</font> に入る)
+      </td>
+      <td>(%rdx,%rax) = (%rdx:%rax <font color="green">%</font> %rdi, %rdx:%rax <font color="green">/</font> %rdi)
+        ... (%rdx:%rax を %rdi で割った商が <font color="green">%rax</font>, あまりが <font color="green">%rdx</font> に入る)
+      </td>
+      <td>Thanks to 松岡 暉心</td>
+    </tr>
+
+    <tr class="en">
+      <th>3</th>
+      <td>pl11_asm.ml</td>
+      <td>4-6. 割り算 / division</td>
+      <td>(%rdx,%rax) = (%rdx:%rax <font color="red">/</font> %rdi, %rdx:%rax <font color="red">%</font> %rdi)
+        ... (that is, it divides %rdx:%rax by %rdi and puts the quotient on <font color="red">%rdx</font> and the remainder on <font color="red">%rax</font>)
+      </td>
+      <td>(%rdx,%rax) = (%rdx:%rax <font color="green">%</font> %rdi, %rdx:%rax <font color="green">/</font> %rdi)
+        ... (that is, it divides %rdx:%rax by %rdi and puts the quotient on <font color="green">%rax</font> and the remainder on <font color="green">%rdx</font>)
+      </td>
+      <td>Thanks to 松岡 暉心</td>
+    </tr>
+
+    
+  </table>
+  </font>
+</div>
+
+  
+<h3>2020</h3>
+<div size=-2>
+  <font color="grey" size=-2>
+  <ul>
+    <li class="ja">
+      <font color=blue>2020/7/19</font>
+      最終課題のファイルが一つ足りていませんでした(make -f test.mk 実行時の
+      cmp_gcc_occ.py). 先程追加いたしました. すいません.
+    </li>
+    <li class="ja">
+      <font color=blue>2020/7/19</font>
+      A file (cmp_gcc_occ.py necessary when you execute "make -f test.mk")
+      was missing and was just added to your directory.
+      Sorry.
+    </li>
+    
+    <li>
+      <font color=blue>2020/7/13</font>
+      starts @ 10:25
+      
+      Rustと所有権〜さよならｾｸﾞﾌｫ，はじめましてﾎﾞﾛｰｴﾗｰ!〜
+      (<a href="https://docs.google.com/presentation/d/1URQQtymrbSx3VdWuXYdqCt3bvHlpboBzT1jIVMqFpjQ/edit?usp=sharing" target="_blank">Google Drive (g.ecc.u-tokyo.ac.jp必要)</a>; <a href="presentations/2020/kondo-yoshida-rust.pdf">PDF</a>)
+    </li>
+    <li class="ja">
+      <font color=blue>2020/7/13</font>
+      <a href="gen/html/final_report.html" target="_blank">最終課題の仕様</a>;
+      提出は<a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2020FEN-EE4d19L10F01" target="_blank">ITC-LMS</a> (オプション0, 1, 2のどれか1を提出); 
+      締切 <font color="red">8/8 (土) 23:59</font>
+    </li>
+    <li class="en">
+      <font color=blue>2020/7/13</font>
+      <a href="gen/html/final_report.html" target="_blank">The final report spec</a>;
+      Submit via <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2020FEN-EE4d19L10F01" target="_blank">ITC-LMS</a> (submit one of option #0, #1, or #2); 
+      Due <font color="red">Aug 8th (Sat) 23:59</font>
+    </li>
+    <li class="ja">
+      <font color=blue>2020/7/11</font>
+      7/13 10:25〜は近藤佑亮君, 吉田光樹君による以下の発表があります.
+      田浦の授業には飽きたという人も来て下さい.
+      <blockquote>
+        Rustと所有権〜さよならｾｸﾞﾌｫ，はじめましてﾎﾞﾛｰｴﾗｰ!〜
+      </blockquote>
+    </li>
+
+    <li class="en">
+      <font color=blue>2020/7/11</font>
+      On July 13th 10:25-
+      近藤佑亮君 and 吉田光樹君 will talk about
+      <blockquote>
+        Rustと所有権〜さよならｾｸﾞﾌｫ，はじめましてﾎﾞﾛｰｴﾗｰ!〜
+      </blockquote>
+      Everyone including those who are bored with my lecture are welcome to join.
+    </li>
+
+    <li>
+      <font color=blue>2020/7/6</font>
+      starts @ 10:25;
+
+      
+      <ol>
+        <li>talk: <a href="gen/slides_old/pdf/10-compiler.pdf">A crash (crude) course on machine (assembly) language</a></li>
+        <li>(optional) exercise: compilation by hand (ex08_asm.c.ipynb)</li>
+        <li>if time remains ...</li>
+        <li>talk: <a href="gen/slides_old/pdf/10-compiler.pdf">A crash (crude) course on implementing a compiler</a></li>
+        <li>talk: <a href="gen/slides_old/pdf/07-gc-adv.pdf">incremental GC</a></li>
+        <li>I will deliver follow-up videos on these subjects if the time expires</li>
+        <li>(optional) exercise: "implementation of a compiler";
+          materials come after the lecture</li>
+        <li>exercise: on Lexing and parsing (ex07_lex_parse.c.ipynb) will be due Aug 1st
+          (to be on ICT-LMS after today's lecture) </li>
+      </ol>
+    </li>
+    <li>
+      <font color=blue>2020/6/29</font>
+      starts @ 10:25;
+      <ol>
+        <li>talk: <a href="gen/slides_old/pdf/09-lexer-parser.pdf">Lexing and parsing</a></li>
+        <li>exercise: Lexing and parsing (ex07_lex_parse.c.ipynb)</li>
+        <li>talk: <a href="gen/slides_old/pdf/07-gc-adv.pdf">incremental GC</a></li>
+      </ol>
+    </li>
+    <li>
+      <font color=blue>2020/6/22</font>
+      starts @ 10:25;
+      <ol>
+        <li>
+          Join the class via
+          <a href="https://www.tanma.jp/?classId=3725038">
+            Tanma!
+          </a>
+          and send me a real-time feedback!
+        </li>
+        <li>
+        
+          <a href=gen/slides_old/pdf/06-gc.pdf>
+            ガベージコレクション
+            / Garbage Collection
+          </a>
+        </li>
+        <li>
+          Garbage collection exercise
+          (ex05_gc.c.ipynb and ex05_gc_visualize.py.ipynb)
+        </li>
+        <li>
+          Terminal and SSH for the next week
+          (ex00_term_and_ssh.c.ipynb)
+        </li>
+        <li>
+          <a href=gen/slides_old/pdf/07-gc-adv.pdf>
+            ガベージコレクション (II)
+            / Garbage Collection (II)
+          </a>
+        </li>
+      </ol>
+    </li>
+    <li>
+      <font color=blue>2020/6/15</font>
+      starts @ 10:25;
+      <ol>
+        <li>
+          <a href=gen/slides_old/pdf/06-gc.pdf>
+            ガベージコレクション
+            / Garbage Collection
+          </a>
+        </li>
+        <li>
+          Garbage collection exercise
+          (ex05_gc.c.ipynb and ex05_gc_visualize.py.ipynb)
+        </li>
+        <li>
+          highlight important points of OCaml type system if time permits
+        </li>
+      </ol>
+    </li>
+    <li>
+      <font color=blue>2020/6/8</font>
+      starts @ 10:25;
+      <ol>
+        <li>
+          <a href=gen/slides_old/pdf/04-type-check.pdf>
+            talk (static type systems for object-oriented languages)
+          </a>
+        </li>
+        <li>
+          break (work ex04_ocaml_oo.ml.ipynb);
+        </li>
+        <li>
+          <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+            talk (OCaml type system) or finish early
+          </a>
+        </li>
+      </ol>
+    </li>
+    <li>
+      <font color=blue>2020/5/25</font>
+      starts @ 10:25;
+      <ol>
+        <li>
+          <a href=gen/slides_old/pdf/04-type-check.pdf>
+            talk (static type systems for object-oriented languages)
+          </a>
+        </li>
+        <li>
+          break (work ex04_ocaml_oo.ml.ipynb);
+        </li>
+        <li>
+          <a href=gen/slides_old/pdf/05-oo-ocaml.pdf>
+            talk (OCaml type system)
+          </a>
+        </li>
+      </ol>
+    </li>
+    <li>
+      <font color=blue>2020/5/18</font>
+      starts @ 10:25;
+      <ol>
+        <li>
+          <a href=gen/slides_old/pdf/03-python.pdf>
+            talk (wrap up) Python
+          </a>
+        </li>
+        <li>
+          break (work ex03_python_oo.py.ipynb or ex04_ocaml_oo.ml.ipynb);
+        </li>
+        <li>
+          <a href=gen/slides_old/pdf/01-types.pdf>
+            briefly talk about safety and types
+          </a>
+        </li>
+        <li>
+          break (or work ex04_ocaml_oo.ml.ipynb);
+        </li>
+        <li>
+          <a href=gen/slides_old/pdf/04-type-check.pdf>
+            talk (static type systems for object-oriented languages)
+          </a>
+        </li>
+      </ol>
+    </li>
+    <li>
+      <font color=blue>2020/5/11</font>
+      starts @ 10:25;
+      <a href=gen/slides_old/pdf/02-ocaml.pdf>
+        talk (wrap up OCaml);
+      </a>
+      work (ex03_python_oo.py.ipynb);
+      <a href=gen/slides_old/pdf/03-python.pdf>
+        talk (object-oriented programming)
+      </a>
+    </li>
+    <li class="ja">
+      <font color=blue>2020/4/27</font>
+      先週までとURLが違います.
+      <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2020FEN-EE4d19L10F01">ITC-LMS</a>
+      を見てください(土曜日にLine/Emailのお知らせを飛ばしたつもりですが飛んでいないかも?).
+      もしITC-LMSが重かったら...
+      <a href="https://zoom.us/j/93949794150?pwd=dEQ3SHhqZGdGeVZLQzkvbElrTlBpUT09">いまだけ</a>
+    </li>
+    <li class="ja">
+      <font color=blue>2020/4/27</font>
+      Class URL has changed.  Get it at
+      <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2020FEN-EE4d19L10F01">ITC-LMS</a>
+      (I sent a LINE/Email notification but did it reach you?).
+      In case ITC-LMS does not respond, <a href="https://zoom.us/j/93949794150?pwd=dEQ3SHhqZGdGeVZLQzkvbElrTlBpUT09">only now</a>
+    </li>
+    <li class="en">
+      <font color=blue>2020/4/20</font>
+      Wake and be ready to work with your laptop not smartphone!
+    </li>
+    <li class="ja">
+      <font color=blue>2020/4/20</font>
+      <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2020FEN-EE4d19L10F01">
+        ITC-LMS</a>で最初のダミー課題のフィードバックを受取り,
+      作業用URLを入手してください.
+    </li>
+    <li class="en">
+      <font color=blue>2020/4/20</font>
+      Go <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2020FEN-EE4d19L10F01">
+        ITC-LMS</a>, read the feedback for your first empty assignment and 
+      get your workplace URL.
+    </li>
+    <li class="ja">
+      <font color=blue>2020/4/13</font>
+      Zoomに<a href="gen/slides_old/pdf/zoom-sign-in.pdf">g.ecc.u-tokyo.ac.jpサインイン</a>が必要な
+        会議への入り方
+    </li>
+    <li class="en">
+      <font color=blue>2020/4/13</font>
+      How to enter <a href="gen/slides_old/pdf/zoom-sign-in.pdf">Zoom meetings that require sign in
+      </a>
+    </li>
+    <li class="ja">
+      <font color=blue>2020/4/2</font>
+      日本語授業が受けづらい(多分外国人)学生が一人でもいたら英語で喋ります.
+      連絡をください.
+    </li>
+    <li class="en">
+      <font color=blue>2020/4/2</font>
+      If there is one (presumably international) student who doesn't
+      speak Japanese, I will do the lecture in English.
+      Please let me know if that is the case for you.
+    </li>
+    <li>
+      <font color=blue>2020/4/2</font>
+      オンライン授業に備えて / Get ready for online classes
+      <ul>
+        <li class="ja">オンライン授業のURLは
+          <a href="https://utas.adm.u-tokyo.ac.jp/" target="_blank">UTAS</a>
+          のシラバス -&gt; 「詳細情報」
+          -&gt; 「オンライン授業URL」からたどれます(全授業共通ルール)が,
+        </li>
+        <li class="en">The URL for online classes can
+          be obtained from 
+          <a href="https://utas.adm.u-tokyo.ac.jp/" target="_blank">UTAS</a>
+          syllabus -&gt; "details" 「詳細情報」
+          -&gt; "online class URL" 「オンライン授業URL」
+          (ground rule)
+        </li>
+        <li class="ja">
+          初回授業に<font color="green">先立ち</font>
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/" target="_blank">ITC-LMS</a>でお知らせ通知機能をONにしておいてください(<a href="https://youtu.be/xAur5zar5Sc" target="_blank">手順</a>)
+        </li>
+        <li class="en">
+          Prior to the first lecture, 
+          please set "Email/Line Notification"
+          of <a href="https://itc-lms.ecc.u-tokyo.ac.jp/" target="_blank">ITC-LMS</a> (<a href="https://youtu.be/xAur5zar5Sc" target="_blank">how</a>).
+        </li>
+        <li class="ja">
+          初回授業に<font color="green">先立ち</font> ITC-LMS 上で
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2020FEN-EE4d19L10F01">
+            受講登録
+          </a>
+          して, 情報が見れる+お知らせが受け取れる
+          ようにしておいてください
+        </li>
+        <li class="en">
+          Prior to the first lecture,
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2020FEN-EE4d19L10F01">
+            register yourself (受講登録)</a>
+          in ITC-LMS, so that you can
+          browse course information
+          and receive notifications.
+        </li>
+        <li class="ja">
+          オンライン講義URLは
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/" target="_blank">
+            ITC-LMS</a>で,
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2020FEN-EE4d19L10F01">本講義</a>の「お知らせ」に書く予定ですので,
+          UTASが重くて開かなければ,
+          直接ITC-LMSに行ってください
+          (か, Email, LINE通知を見てください).
+        </li>
+        <li class="en">
+          URL(s) of this lecture will be written
+          in and sent through its <a href="https://itc-lms.ecc.u-tokyo.ac.jp/lms/course?idnumber=2020FEN-EE4d19L10F01">"notifications" 「お知らせ」</a> in 
+          <a href="https://itc-lms.ecc.u-tokyo.ac.jp/" target="_blank">
+            ITC-LMS</a>,
+          so if you experience UTAS becoming unresponsive,
+          just go straight to ITC-LMS (or just check your Email or LINE).
+        </li>
+        <li class="ja">
+          第一週4/6に始める(つながる)予定ですが,
+          中身をいきなり喋りだすことはない予定です.
+          初回は主に
+          <a href=gen/slides_old/pdf/how-to-attend.pdf>
+            「オンライン授業の受け方」
+          </a>
+          について話しなるべく多く質問を受け付けます.
+        </li>
+        <li class="en">
+          I am going to start at the first week
+          (Apr. 6) but I won't get into the technical
+          content right away.
+          I will mostly talk about
+          <a href=gen/slides_old/pdf/how-to-attend.pdf>
+            How to attend online classes</a>
+          and take as many questions as possible.
+        </li>
+        <li class="ja">
+          講義に出たいのにギガ不足, ソフトのトラブルその他で
+          出れないという人がいたら田浦まで
+          連絡ください. tau@eidos.ic.i.u-tokyo.ac.jp
+        </li>
+        <li class="en">
+          If you want to participate but have difficulties
+          due to the data capacity limit of your
+          connection ("Giga-limit"),
+          let me know tau@eidos.ic.i.u-tokyo.ac.jp
+        </li>
+      </ul>
+    </li>
+    <li class="ja">
+      <font color=blue>2020/4/2</font> 2020年版HP開設
+    </li>
+    <li class="en">
+      <font color=blue>2020/4/2</font> HP opened.
+    </li>
+  </ul>
+  </font>
+</div>
+
+<h3>2019</h3>
+<div size=-2>
+  <font color="grey" size=-2>
+  <ul>
+    <li><font color=blue>2019/7/17</font>
+      予想に反して早く <a href=gen/html/final_report.html>最終課題の仕様</a>
+      公開 </li>
+
+    <li><font color=blue>2019/7/17</font>
+      コンパイラ演習(課題としてはオプション)は
+      <tt>notebooks/compiler_skeleton</tt>にあります </li>
+
+    <li><font color=blue>2019/7/17</font>
+      最終課題のオプションに, 「コンパイラ(コード生成器)を作る」
+      をあげます. 詳細は授業後約24時間以内に書きます</li>
+
+    <li><font color=blue>2019/7/17</font>
+      その他この他, 最終課題の詳細を授業後約24時間以内に書き,
+      ITC-LMS にてレポートを出題します </li>
+
+    <li><font color=blue>2019/6/23</font> <a href=gen/html/lex_parse_2019.html>字句解析・構文解析 (2019版)の演習</a></li>
+    <li><font color=blue>2019/6/23</font> これまでのアナウンスの日付が全て2018になっていたことに
+      気づいて修正 orz </li>
+    <li><font color=blue>2019/5/28</font>
+      ex04_ocaml_oo.ipynbの締め切り
+      <font color=red>6/15 (土) 23:59</font>
+    </li>
+    <li><font color=blue>2019/5/18</font>
+      口頭でもアナウンスしたとおり,
+      <font color=red>5/20 (月)</font>は休講です
+      掲示が遅くなり申し訳ありません(UTASでも連絡しています).
+    </li>
+    <li><font color=blue>2019/4/22</font>
+      ex03_python_oo.ipynbの締め切り
+      <font color=red>5/11 (土) 23:59</font>
+    </li>
+    <li><font color=blue>2019/4/22</font>
+      ex02_ocaml_practice.ipynbの締め切り
+      <font color=red>4/27 (土) 23:59</font>
+    </li>
+    <li><font color=blue>2019/4/22</font>
+      ex01_ocaml_intro.ipynb の
+      <a href="https://taulec.zapto.org:19000/notebooks/ans/ex01_ocaml_intro_ans.ipynb">
+        解答例.</a> わからなかった問題がある人は参考にしてください
+    </li>
+    
+    <li><font color=blue>2019/4/15</font>
+      ex01_ocaml_intro.ipynb の締め切り <font color=red>4/20 (土) 23:59</font>
+      4/15夕方までにLMSの課題として提出方法を指示します
+      (コードの提出 + 形式的な提出作業のみ. レポートは不要).
+    </li>
+    <li><font color=blue>2019/4/15</font>
+      次の自習課題 ex02_ocaml_practice.ipynb を公開.
+    </li>
+    <li><font color=blue>2019/4/8</font>
+      初回の授業前もしくは授業中に, 
+      <a href="https://forms.gle/Y12jbawYBcPi1Fi88" target="_blank">Jupyter演習環境のアカウント作成要求</a>
+      をしてください.
+      <a href="https://forms.gle/Y12jbawYBcPi1Fi88" target="_blank">Request your account
+        on the Jupyter hands-on exercise environment</a> before or during the first lecture.
+    </li>
+    <li><font color=blue>2019/4/8</font>
+      できたら<a href="https://bit.ly/2Kh2v1t" target="_blank">このシート</a>で
+      Jupyter環境のアクセス情報を取得して下さい
+      (4/8 13:00更新.
+        シートへのアクセス許可を落としたので,
+        見たい場合は誰かがわかるように, リクエストして下さい.
+        Googleアカウントでアクセスをrequestするか,
+        田浦あてにメールでも良いです
+        (いずれにせよ誰かがわかるようにしてください.
+        自分の情報が確認できたらまた田浦あてに連絡を下さい)).
+      After you are done, check
+      <a href="https://bit.ly/2Kh2v1t" target="_blank">this sheet</a>
+      to get your account info on the Jupyter environment
+      (4/8 13:00 UPDATE.
+        Anyone's access permission is now off.
+        If you want to see it,
+        request access revealing who you are.
+        You can request access through your Google account
+        or simply send me an Email (In any case, tell me
+        who is requesting. Also let me know when you obtain
+        the necessary information).)
+    </li>
+    <li><font color=blue>2019/4/8</font> 今後のために
+      <a href="https://itc-lms.ecc.u-tokyo.ac.jp/"> ITC-LMS </a> で
+      メールのお知らせを受け取る設定をしておいて下さい
+      (任意で, LINEでも受け取れます).
+      課題提出や授業に関するお知らせなどは ITC-LMS を用いて行います.
+    </li>
+    <li><font color=blue>2019/4/4</font> 2019年版HP開設</li>
+  </ul>
+  </font>
+</div>
+
+<h3>2018</h3>
+<div size=-2>
+  <font color="grey" size=-2>
+  <ul>
+    <li><font color=blue>2018/7/2</font>
+      Updated the spec on
+      <a href=gen/html/final_report.html>the final report</a>,
+      including which exercises are mandatory.
+    </li>
+      
+    <li><font color=blue>2018/7/2</font>
+      I will announce the exact requirement to get a credit shortly.
+      For now, I'll just announce that the exercises on
+      <a href=gen/html/gc.html>conservative GC</a>
+      is not a part of the requirement.  Details will come shortly.
+    </li>
+
+    <li><font color=blue>2018/7/2</font>
+      最終回(7/9)は有志による発表です.
+      The last lecture is presentations by volunteers.
+      <ul>
+        <li>王 力捷:
+          Block-free concurrent GC: stack scanning and copying
+          <a href=https://dl.acm.org/citation.cfm?id=2926701 target="_blank">citation</a>,
+          <a href=gen/papers/block_free_oesterlund.pdf target="_blank">paper</a>,
+          <a href=https://drive.google.com/file/d/18bdCjGajOzyqemhMLkXN68NxNPT0tXSB/view?usp=sharing target="_blank">slides</a>
+        </li>
+        <li>宮里 俊太郎:
+          Rust流のメモリ管理, ライフタイムやリージョン.
+          Region-Based Memory Management in Cyclone.
+          <a href=https://dl.acm.org/citation.cfm?id=512563 target="_blank"> citation</a>,
+          <a href=https://www.cs.umd.edu/projects/cyclone/papers/cyclone-regions.pdf target="_blank">paper</a>,
+          <a href=presentations/2018/miyazato.pdf target="_blank">slides</a>
+          
+        </li>
+        <li>浅井明里: 
+          A proposal for making Eiffel type-safe
+        <a href=http://dl.acm.org/citation.cfm?id=73708.73711 target="_blank">citation</a>, 
+        <a href=https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=3&cad=rja&uact=8&ved=0ahUKEwitrZzgvI_cAhUIqJQKHUWiCwAQFggxMAI&url=https%3A%2F%2Fwww.cs.utexas.edu%2F~wcook%2Fpapers%2FCookEiffel89%2FCookEiffel89.pdf&usg=AOvVaw2RBmyM86hXolwrKfuO4Rqt target="_blank">paper pdf</a>, 
+        <a href=https://drive.google.com/file/d/1x78I6PYREWRm0D07yKA8dnQFoOi7do8C/view?usp=sharing target="_blank">slides</a>
+        </li>
+      </ul>
+    </li>
+    
+    <li><font color=blue>2018/6/11</font>
+      The class on <font color=red>June 18 will be canceled</font>.  m(_ _)m
+      すみませんが, <font color=red>6/18 (月) の講義を休講</font>とします. m(_ _)m</li>
+    <li><font color=blue>2018/5/31</font>
+      The class on <font color=red>June 4 will be canceled</font>.  Sorry.
+      すみませんが, <font color=red>6/4 (月) の講義を休講</font>とします.</li>
+    <li><font color=blue>2018/4/8</font> 2018年版HP開設</li>
+  </ul>
+  </font>
+</div>
+
+  
+</body>
+</html>

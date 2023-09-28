@@ -1,0 +1,674 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>プログラミング言語: 字句解析と構文解析を作る</title>
+
+<style>
+body {counter-reset: h2}
+  h2 {counter-reset: h3}
+  h3 {counter-reset: h4}
+  h4 {counter-reset: h5}
+  h5 {counter-reset: h6}
+
+  h2:before {counter-increment: h2; content: counter(h2) ". "}
+  h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+  h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+  h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+  h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+  h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+h1 {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #CCCCDD;
+}
+
+h2 {
+  font-size   : 14pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt ;
+   
+  border-color     : #99A1AA;
+  background-color : #DDDDEE;
+}
+
+h3 {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 14pt;
+  padding     : 3pt 20pt;
+  border-style     : solid;
+  border-width     : 1pt 1pt 0pt 15pt;
+  border-color     : #99A1AA;
+  background-color : #EEEEFF;
+}
+
+div {
+  font-size   : 12pt;
+  font-family : serif;
+  margin      : 10pt;
+  padding     : 3pt 20pt;
+  border-color     : #99A1AA;
+}
+
+p {
+  font-size   : 12pt;
+  font-family : serif;
+  border-color     : #99A1AA;
+}
+
+pre {
+  background-color:#efe;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>プログラミング言語: 字句解析と構文解析を作る<br>田浦健次朗</h1>
+<div>
+<font size=-1>(the page is encoded in UTF-8)</font>
+<br>
+<a href=../../>top page</a>
+</div>
+
+<h2>リンク</h2>
+<div>
+<ul>
+  <li><a href=http://ocaml.jp/archive/ocaml-manual-3.06-ja/manual026.html>ocamllexとocamlyacc (日本語)</a></li>
+  <li><a href=http://caml.inria.fr/pub/docs/manual-ocaml-400/manual026.html>ocamllexとocamlyacc (英語)</a></li>
+  <li><a href=http://gallium.inria.fr/~fpottier/menhir/>Menhir</a>
+</ul>
+</div>
+
+<h2>演習を実行する二つの方法</h2>
+<div>
+  <ul>
+    <li>この演習ではOCamlを使ってlexerやparserを作る</li>
+    <li>マシン自身はこれまでのクラウド環境を用いるが,
+      多少本格的な, 複数のファイルからなるプログラムになるため,
+      これまでのようにJupyterノートブックで完結するわけにはいかない</li>
+    <li>普通にエディタを用いてプログラムを書き, インタプリタまたはコンパイラで実行する</li>
+    <li>そのための方法が二つある</li>
+  </ul>
+</div>
+
+<h3>方法1: Jupyterノートブックの terminal を使う</h3>
+<div>
+  <ol>
+    <li>いつものようにJupyter環境にログイン</li>
+    <li>[New] -&gt; [Terminal] を選択するとブラウザ内にシェルが立ち上がるので普通にコマンドを打ち込めばよい</li>
+    <li>なお, 一部のキー(Ctrl-Nなど)をブラウザに奪われるせいでエディタなどが思う動作をしないことがある. その時は諦めて次の方法を用いよ</li>
+  </ol>
+</div>
+
+<h3>方法2: SSHでログインできるようにする</h3>
+<div>
+  <ol>
+    <li>方法1は手始めには便利だが本格的な作業をしようと思うと,
+      ブラウザ内で文字が見にくいとか一部のキーが使えないとかやりにくいところが出てくるので,
+      自分でログインできるようにしてしまう方が速い</li>
+    <li>Jupyterノートブックのトップレベルのフォルダ
+      (ex0?_???.ipynb が置いてあるフォルダ)を表示
+      ("Jupyter"アイコンを押す)</li>
+    <li> [Upload] ボタンを押して<font color="blue">自分の SSH 公開鍵 (拡張子 .pub を持つこと)
+      </font>
+      をそのフォルダにアップロードする.
+      「SSH 公開鍵って何?」という人は<a href="#ssh">ページ末尾</a>を参照
+    </li>
+    <li> 上記「方法1」で terminalを開き, 以下のコマンドを実行する
+<pre>
+$ <u>cp_pubkey</u>
+</pre>
+なおこのコマンドがやっていることは以下(だけ)である. 要するに必要なことは, 公開鍵を自分の
+~/.ssh/authorized_keys として保存することである. それが出来るならやり方はどうでもよい.
+<pre>
+#!/bin/bash -x
+mkdir -p ~/.ssh
+cat ~/notebooks/*.pub >> ~/.ssh/authorized_keys
+</pre>
+    </li>
+    <li>これが済んだら自分の端末から以下を実行して, 無事ログインできるか確認せよ.
+<pre>      
+$ <u>ssh <font color="red">u190xx</font>@taulec.zapto.org</u>
+</pre>
+      u190xxの部分は普段自分が使っているポート番号
+      (<tt>https://taulec.zapto.org:<font color="red">190xx</font></tt>)
+      の前に u を付けたもの. 確認したければ「方法1」で開いたターミナルから
+      whoamiコマンドで確認できる
+<pre>
+$ <u>whomi</u>
+u19000
+</pre>
+    </li>
+  </ol>
+</div>
+  
+<h2>作業場所</h2>
+<div>
+  <ul>
+    <li><tt>~/notebooks/lex_parse</tt>
+      というフォルダ内に必要ファイルが準備されているのでそこで作業して下さい.
+    </li>
+  </ul>
+</div>
+
+<h2>ocamllexを使ってみる</h2>
+<div>
+最初に，字句解析器だけのサンプルを動かしてみる．
+<ol>
+  <li>サブフォルダ1/ に移動して，<tt>my_lex.mll</tt> を見てみよ．</li>
+  <li>ocamllexでそこから，字句解析器 <tt>my_lex.ml</tt> を生成せよ．</li>
+  <li>ocamlに <tt>my_lex.ml</tt> を読み込ませ(<tt>-init</tt>オプション), 
+    <tt>lex</tt> という関数ができていることを確認せよ</li>
+  <li><tt>Lexing.from_string</tt> 関数を用いて<tt>lexbuf</tt>を生成し，
+    そこから順に，トークンを読み込んでみよ</li>
+  <li><tt>my_lex.mll</tt> には，<tt>test_lex</tt>
+    という関数が定義されている．
+    それを使って<tt>lex</tt>をテストしてみよ．</li>
+</ol>
+
+実行例(青字部分を入力せよ)
+
+<pre>
+$ <font color=blue>ocamllex my_lex.mll</font>
+5 states, 267 transitions, table size 1098 bytes
+$ <font color=blue>ocaml -init my_lex.ml</font>
+        OCaml version 4.01.0
+
+# <font color=blue>let b = Lexing.from_string "12 +34+56";;</font>
+# <font color=blue>lex b ;;</font>
+- : token = NUM 12
+# <font color=blue>lex b ;;</font>
+- : token = PLUS
+# <font color=blue>lex_string;;</font>
+- : string -> unit = < fun>
+# <font color=blue>lex_string "1+2 +3 + 4";;</font>
+NUM(1)
+PLUS
+NUM(2)
+PLUS
+NUM(3)
+PLUS
+NUM(4)
+EOF
+- : unit = ()
+</pre>
+</div>
+
+<h2>字句解析器の拡張</h2>
+<div>
+前節の字句解析器の定義を変更し，
+浮動小数点数の字句を扱えるようにせよ
+(現時点では，負の数は扱えなくて良い)．
+浮動小数点数は，最低限，<tt>12.34</tt> などの表記を扱えるようにする．
+できれば，<tt>12.3e10</tt> などの，表記も扱えるようにしてみよ．
+<tt>lex_string</tt>を用いてテストしてみよ．
+
+</div>
+
+
+<h2>ocamlyaccを使ってみる (+ 分割コンパイル)</h2>
+<div>
+サブフォルダ2/ に移動してみよ．
+<tt>calc_parse.mly, calc_lex.mll, calc.ml</tt> という3つのファイルがある．
+<ol>
+  <li>それぞれのファイルを見てみよ．
+    構文解析器の名前は何で，
+    どのような入力に対して何を出力する関数になるのか理解せよ．
+  <li>makeして，何がおこるか見てみよ．うまくいくと，
+    <tt>_build/</tt> というフォルダにたくさん生成物
+    (<tt>.cmo</tt>)ができて，さらに，
+    <tt>calc.top</tt>という対話的処理系ができあがる</li>
+  <li><tt>./calc.top -I _build</tt>を実行してみよ．
+    字句解析器 (<tt>Calc_lex.lex</tt>),
+    構文解析器 (<tt>Calc_parse.program</tt>), それらのテスト関数
+    (<tt>Calc.lex_string, Calc.parse_string</tt>)
+    が定義されていることを確認してみよ．</li>
+  <li><tt>Calc.parse_string</tt>を用いて構文解析器をテストしてみよ</li>
+</ol>
+
+
+<pre>
+$ <font color=blue>make</font>
+ocamlbuild calc.byte
+/usr/bin/ocamldep -modules calc.ml > calc.ml.depends
+/usr/bin/ocamllex -q calc_lex.mll
+/usr/bin/ocamldep -modules calc_lex.ml > calc_lex.ml.depends
+/usr/bin/ocamlyacc calc_parse.mly
+/usr/bin/ocamldep -modules calc_parse.mli > calc_parse.mli.depends
+/usr/bin/ocamlc -c -o calc_parse.cmi calc_parse.mli
+/usr/bin/ocamlc -c -o calc_lex.cmo calc_lex.ml
+/usr/bin/ocamlc -c -o calc.cmo calc.ml
+/usr/bin/ocamldep -modules calc_parse.ml > calc_parse.ml.depends
+/usr/bin/ocamlc -c -o calc_parse.cmo calc_parse.ml
+/usr/bin/ocamlc calc_parse.cmo calc_lex.cmo calc.cmo -o calc.byte
+ocamlmktop -o calc.top -I _build calc_parse.cmo calc_lex.cmo calc.cmo
+$ <font color=blue>./calc.top -I _build</font>
+        OCaml version 4.01.0
+
+# <font color=blue>Calc_lex.lex ;;</font>
+- : Lexing.lexbuf -> Calc_parse.token = < fun>
+# <font color=blue>Calc_parse.program ;;</font>
+- : (Lexing.lexbuf -> Calc_parse.token) -> Lexing.lexbuf -> int = < fun>
+# <font color=blue>Calc.lex_string ;;</font>
+- : string -> unit = < fun>
+# <font color=blue>Calc.parse_string ;;</font>
+- : string -> int = < fun>
+# <font color=blue>Calc.parse_string "1+ 2 + 3 +4" ;;</font>
+- : int = 10
+# 
+</pre>
+</div>
+
+
+<h2>構文解析器を拡張する</h2>
+<div>
+<p>
+前節のサンプルを拡張し，
+<ul>
+  <li>浮動小数点数 </li>
+  <li>引き算，掛け算，割り算 (<tt>1.2 * 3.4 - 5.6 / 7.8</tt> など)</li>
+  <li>括弧 ( ...) (<tt>( 1 + 2) * 4</tt> など)</li>
+  <li>単項マイナス，単項プラス (<tt>3 / - 10</tt>, <tt>+20</tt>, など)</li>
+</ul>
+を扱えるようにせよ．
+</p>  
+<p>
+注意:
+<ul>
+  <li>計算は全て浮動小数点数(float)で行う．</li>
+  <li>
+  OCamlでは，<tt>+, -</tt> 
+  などの演算記号は整数(のみ)に対する演算記号であり，
+  浮動小数点数に対する演算は，<tt>+., -., *., /.</tt> で行う．</li>
+  <li>掛け算，割り算と，足し算，引き算の優先順位を正しく扱えるようにせよ．</li>
+</ul>
+</p>
+<p>
+優先順位を正しく扱うにはいくつかのやり方があるが，
+新しい予約語も必要なくわかりやすいのは，
+適宜，文法の記号を増やすことである．元々の文法は以下のように，
+<tt>expr</tt>という一つの記号しか用いていない．
+</p>
+<pre>
+expr :
+ | NUM           { $1 }
+ | expr PLUS NUM { $1 + $3 }
+</pre>
+
+<p>
+これを単純に，
+<pre>
+expr :
+ | NUM           { $1 }
+ | expr PLUS NUM { $1 + $3 }
+ | expr MUL NUM  { $1 * $3 }
+   ...
+</pre>
+のように拡張すると，
+<pre>
+3 + 4 * 5
+</pre>
+という式は，(3 + 4) * 5 = 35 と評価されてしまう．
+</p>
+<p>
+これを避けるには，「PLUS/MINUSよりも強い結合をする演算子だけからなる式」として，新しい記号---例えば term---を導入し，
+<pre>
+expr :
+ | term           { $1 }
+ | expr PLUS term { $1 + $3 }
+   ...
+</pre>
+のようにしておく．そしてtermを，
+<pre>
+term :
+ | NUM           { $1 }
+ | term MUL NUM  { $1 * $3 }
+   ...
+</pre>
+とすれば，足し算と掛け算の結合順位を正しく扱える文法が出来上がる．
+</p>
+<p>
+この要領で，括弧や，単項演算子(こちらは掛け算割り算よりも強い)
+をただしく扱えるよう，適宜記号を導入せよ．
+</p>
+
+</div>
+
+<h2>構文木を作る</h2>
+<div>
+<p>
+ここまでのところ，構文解析した式の評価結果は，
+以下のように直接評価規則の中に記述していた．
+<pre>
+expr :
+   ...
+ | expr PLUS NUM { $1 + $3 }
+</pre>
+これは，電卓のような簡単なプログラムでは十分な方法だが，
+少しでも複雑なケースでは普通そうはしない
+(原理的に無理な場合もあるし，
+仮に可能であってもプログラムの見通しが悪くなる)．
+</p>
+<p>
+少し複雑なプログラムでは，
+構文解析器は，読み込んだ式を表すデータ構造
+---通常，「構文木(Parse Tree, Syntax Tree)」，
+「抽象構文木(Abstract Syntax Tree)」などと呼ばれる---
+を構築するだけにする．
+そしてそれとは別途に，
+「構文木を受け取ってその値を評価するプログラム(評価器)」
+を作成する．
+<p>
+  サブフォルダ<tt>3/</tt> には，サブフォルダ<tt>2/</tt>と同じことを，
+この方式で行ったプログラムが収められている．
+構文木の定義は，<tt>calc_ast.ml</tt> に入っており，
+  <tt>calc_parse.mly</tt>や<tt>calc.ml</tt>からそれを用いている．
+</p>
+<p>
+  サブフォルダ<tt>3/</tt>に移動せよ．
+  <tt>calc_ast.ml, calc_parse.mly, calc_lex.mll, calc.ml</tt>という4つのファイルがある．
+<ol>
+  <li>それぞれのファイルを見てみよ．
+    <tt>calc_ast.ml</tt>中の構文木の定義，
+    <tt>calc_parse.mly</tt>
+    中の評価規則がどのように変わっているのか見てみよ．
+    <tt>calc.ml</tt>中の <tt>eval_expr</tt> という関数を見てみよ．
+    </li>
+  <li>makeしてみよ．</li>
+  <li><tt>./calc.top -I _build</tt>を実行してみよ．</li>
+  <li><tt>Calc.parse_string</tt>
+    を用いて構文解析器が返すデータ構造を見てみよ．</li>
+</ol>
+</p>
+</div>
+
+<h2>評価器を作成</h2>
+<div>
+<p>
+構文木を受け取ってその値を返すような関数
+<tt>eval_expr</tt> を定義せよ(calc.mlの最後に追加)．
+</p>
+<pre>
+let rec eval_expr e = (* e は式の構文木 *)
+   ...
+</pre>
+<p>
+文字列を受け取って，それを構文解析によって構文木にし，
+それをeval_exprして，評価値を返す関数
+<tt>eval_string</tt> を定義せよ．
+</p>
+<pre>
+let rec eval_string s = (* e は文字列 *)
+   ...
+</pre>
+
+
+</div>
+
+<h2>構文木を用いたプログラムを拡張</h2>
+<div>
+<tt>3/</tt>にあるプログラムを拡張し，
+<ul>
+  <li>浮動小数点数 
+  <li>引き算，掛け算，割り算 (<tt>1.2 * 3.4 - 5.6 / 7.8</tt> など)
+  <li>括弧 ( ...) (<tt>( 1 + 2) * 4</tt> など)
+  <li>単項マイナス，単項プラス (<tt>3 / - 10</tt>, <tt>+20</tt>, など)
+</ul>
+を扱えるようにせよ．これらに対応して，
+  構文木の定義(<tt>calc_ast.ml</tt>中の<tt>ast</tt>)，
+  評価器の定義(<tt>calc.ml</tt>中の<tt>eval_expr</tt>)
+  の定義も変更が必要である．
+
+
+</div>
+
+
+<h2>電卓からプログラミング言語への第一歩: 変数</h2>
+<div>
+ここまでで作った電卓程度の計算能力しか持たない計算機を，
+もう少し強力にするために，計算結果を変数に入れ，
+それをあとで使えるようにしよう．文法としては，
+OCamlの let のそれを借りることにしよう．つまり，
+以下のようなものもまた「式」として受け付けるようにする．
+<ul>
+<li>
+<pre>
+let x = 1.2 in x + 3.4
+</pre>
+</li>
+
+<li>
+<pre>
+let x = 1.2 in x + x
+</pre>
+</li>
+
+<li>
+<pre>
+(let x = 1.2 in x + x) / 3.4
+</pre>
+</li>
+</ul>
+
+方針:
+<ul>
+  <li>式の中に変数が現れた時，その変数の値がわかるようにするために，
+    letで変数に入れられた値を覚えておく必要がある．</li>
+  <li>そのために，変数と値の結びつき(束縛)を記憶し，
+    あとから検索できるデータ構造が必要である．
+    そのようなデータ構造は通常「環境(environment)」と呼ばれる．
+  <li><font color=blue>
+      <tt>eval_expr</tt>は今や，式だけでなく環境も一緒に受け取る
+    </font>
+<pre>
+let rec eval_expr e env = ...
+</pre>
+</li>
+
+  <li>環境を実現するための一番簡単なデータ構造は，
+    (変数名，値) の組をリストにしたもの．
+    たとえば， 
+<pre>
+  [ ("x", 12.3); ("y", 45.6) ]
+</pre>
+は， <tt>x</tt>が<tt>12.3</tt>, <tt>y</tt>が<tt>45.6</tt>
+に束縛されている環境を表す．
+</li>
+
+<li>環境から，対応する値を検索するには，Listモジュールの，assoc
+  という関数を使うのが簡単である．
+<pre>
+# List.assoc "y"  [ ("x", 12.3); ("y", 45.6) ] ;;
+- : float = 45.6
+</pre>
+</li>
+
+</ul>
+<p>
+構文木の定義，
+  字句解析器, 構文解析器, および評価器(<tt>eval_expr</tt>)を適宜拡張して，
+これを実現せよ．
+</p>
+
+</div>
+
+<h2>If式，比較演算子</h2>
+<div>
+前問をさらに拡張して，if式，
+および各種の比較演算子を扱えるようにせよ．構文は，
+OCamlのそれに準ずる (if 式 then 式 else 式, =, &lt;&gt;,
+<, >, &lt;=, &gt;=)．
+
+</div>
+
+
+<h2>関数定義と関数適用</h2>
+<div>
+  <font color=blue>(余力がある人のオプション課題)</font>
+電卓とプログラミング言語の最大の違いは，
+後者が「関数」を定義できることである．
+前問を更に拡張して，関数を定義してそれを呼べるようにせよ．
+難しさの順にいくつかのレベルを設定するので，
+それを参考に自分で仕様を決めてできる範囲で実装せよ．
+
+<ul>
+<li>レベル1: Cのように，関数はトップレベルでしか定義できない．
+  (関数の中で関数を定義したりできない)．
+  さらに，関数を値として扱うことはできない．具体的には，
+  定義した関数名は，関数呼び出し式の関数部分(つまり，
+  f x y z ...の f の位置)にしか来ることはできない．</li>
+
+<li>レベル2: レベル1と同様だが，後半の制限を取り除く．
+  つまり，関数を別の関数に渡したりできる．</li>
+
+<li>レベル3: OCamlのようにどこでも関数を定義できる．
+  しかし，再帰呼出しはできない．具体的には
+<pre>
+let f n = if n = 1 then 0 else n * f (n - 1)
+</pre>
+のような関数を書いても，
+再帰呼出しのfが未定義であるというエラーが出る
+(OCamlのlet式と同じ仕様).，</li>
+
+<li>レベル4: OCamlのようにどこでも関数を定義できる．
+  さらに，再帰的な関数を定義するための構文 let rec
+  をサポートする．</li>
+</ul>
+
+
+
+実装する際，どんな違いが出るのかを簡単に述べておく．
+<ul>
+<li> レベル2: これまでと異なり，式の評価結果が数とは限らず，
+  関数になることがある．それを反映して，これまで，eval_expr
+  は構文器と環境を受け取って，floatを返していたところが，
+  評価結果全体を表す型 value を定義して，valueを返すようにする．
+<br/>
+  評価結果としての「関数」は，
+  引数のリストと式を組にしておけばよい．
+</li>
+
+<li> レベル3: 「関数」がまた別の中で定義されうることで，
+  関数が自由変数を持ちうるようになる．例えば，
+<pre>
+let f x = let g y = x + y in g
+</pre>
+という式を考えてみる．ここで定義されたgという関数は，
+<ul>
+  <li>yを渡されて，</li>
+  <li><font color=red>x</font> + yを返す</li>
+</ul>
+という関数だが，ここで計算中に<font color=red>x</font>という，
+  渡された以外の変数を使っていることが問題である．
+  関数がトップレベルでしか定義されないのなら，
+  こういう問題はおこらない．
+  比喩的に言うならば，<font color=red>
+    xの値は，「gが定義された時のxの値をg自身が覚えている」
+  </font>のであって，
+  gを呼び出す人から供給されるのではない．
+  レベル3を実装するには，そのことを反映して，
+  評価結果としての関数の値をそのように定義する必要がある．
+  具体的には，関数はそれが定義された時の環境を覚えている．
+  つまり，関数は，引数のリスト，式，環境を組にしたものになる．
+</li>
+
+<li> レベル4: レベル3を素直に実装すると，
+  関数が定義された時の環境というのは，自分自身の定義は含まない．
+  つまり，
+<pre>
+let f x = let g y = x + y in g
+</pre>
+において，gが定義された時の環境というのは，
+f や x の定義を含んでいるが，gの定義は含まない．
+結果として，これだけでは再帰的な関数を定義することはできない．
+これは，OCamlのlet式の仕様と同じである．
+OCamlではそのために，let recという構文がある．
+letとlet recの違いを一言で言えば，
+後者は，変数に束縛する式を評価する環境の中に，
+let recで定義された変数自身が含まれるということである．
+これによって再帰的な関数の定義が可能になる．
+</li>
+</ul>
+</div>
+
+<a name="ssh"> </a>
+<h2>SSH公開鍵</h2>
+<div>
+  SSHの公開鍵を使ったことがない(かどうかもよくわからない)という人向けの補足説明
+</div>
+
+<h3>LinuxまたはMacの場合</h3>
+<div>
+  <ol>
+    <li>「端末」を開く</li>
+    <li> すでにあるかどうか確認
+<pre>
+$ <u>cd</u>
+$ <u>ls .ssh</u>
+</pre>
+で id_rsa.pub とか, id_dsa.pub とかそんな名前のファイルが存在していればそれが公開鍵.
+中身を確認して以下みたいな感じであればOK. それをアップロードすれば良い.
+なおその場合, 同じフォルダに id_rsa (または id_dsa) などの(.pubのない)ファイルも見つかるはずで,
+それがないと認証は出来ないので一応注意. 
+
+<pre>
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9s/2Uiy187OPx9/qLuiQg086zXFB2eug5Q6ByBf125BQyFYxTL1Pw+ViQ/QHwt0fNDYa/+KEHjhZnbcGR7cpbltEsJzCJd/TK9wziLbrrGnkxRz0OJhQMDI4EJulUwwzy1e+ghTHKiKpnmT5F79cXBcK58RWaDpBdv0cTar+BIxESaprsoWeu75AANdcKE/7Ek1aDVpqDPfFnFnBdUfXbMPV6wIc1pQvMNVwlNMRTSNFnvj9EVwyVR+AFKnstVEBdRGErlsChZHNGHeBIlsSF/XbG3PDK24n6hvibAtyezq+DNE7fSjsn21Zx80ggaEJeTWuB/TiOnA0e6KDpU2h3 
+</pre>
+    </li>
+    <li> なければ以下で生成する
+<pre>
+$ <u>ssh-keygen</u>
+</pre>
+ファイルを(<tt>~/.ssh/id_rsa</tt>と<tt>~/.ssh/id_rsa.pub</tt>とかに)
+保存するかと聞かれるのでyesと答えれば良い. id_rsa.pub の方が公開鍵. 
+    </li>
+  </ol>
+</div>
+
+<h3>Windowsの場合</h3>
+<div>
+  <ol>
+    <li>cygwinやBash for Windows 10などでUnix類似の環境がある人は上記, Linux/Macの手順に従えば良い</li>
+    <li>そうでない場合,
+      <a href="https://www.putty.org/">putty</a>を使うのか?</li>
+    <li>上記ページへ行って, putty本体と,
+      puttygen.exe (a RSA and DSA key generation utility)をダウンロード</li>
+    <li>puttygen.exe でキーを Generate</li>
+    <li>save private key で秘密鍵を保存</li>
+    <li>公開鍵(上で表示したような文字列)は窓内に表示されるので
+      そのテキストを選択し, 拡張子 .pub を持つファイル名としてどこかに保存する</li>
+    <li>公開鍵は上記手順でアップロードする</li>
+    <li>puttyが保存した秘密鍵で認証を行うよう, 以下の手順でログイン
+      <ul>
+        <li>puttyを起動</li>
+        <li>左メニューの SSH -&gt; Auth でprivate keyとして上記で保存した秘密鍵を指定</li>
+        <li>メニューの Session で サーバを taulec.zapto.org として接続</li>
+        <li>窓が出てきて ユーザ名を聞かれるので 自分のユーザ名 (u190xx) を入力</li>
+        <li>これで無事ログインできるはず</li>
+      </ul>
+    </li>
+    <li>それにしても本当にこんなにまだるっこしいことをしないとSSHのログインができない,
+      というのは,
+      いくらWindowsでもとても信じられない(誰かマシな方法を知っていたら教えて下さい)</li>
+    <li>入力した情報は Session の中の Saved Sessions に名前を記入して Save すると
+      毎回打たなくても良くなる</li>
+  </ol>
+</div>
+
+</body>
+</html>
