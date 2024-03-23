@@ -1,3 +1,6 @@
+# note: /usr/local/bin/opam must exist
+# and be installed by
+# bash -c "sh <(curl -fsSL https://raw.githubusercontent.com/ocaml/opam/master/shell/install.sh)"
 
 install:
 	opam init --yes
