@@ -1,13 +1,13 @@
 langs:=go julia ocaml rust
 
-inst_start:=23220
-inst_end:=23249
+inst_start:=24000
+inst_end:=23999
 inst_users:=$(addprefix u,$(shell seq $(inst_start) $(inst_end))) pl0
 inst_targets:=$(foreach user,$(inst_users),$(foreach lang,$(langs),inst/$(user)/$(lang)))
 
-uninst_start:=23200
-uninst_end:=23249
-uninst_users:=$(addprefix u,$(shell seq $(uninst_start) $(uninst_end))) share
+uninst_start:=24000
+uninst_end:=23999
+uninst_users:=$(addprefix u,$(shell seq $(uninst_start) $(uninst_end))) pl0
 uninst_targets:=$(foreach user,$(uninst_users),$(foreach lang,$(langs),uninst/$(user)/$(lang)))
 
 install : $(inst_targets)
