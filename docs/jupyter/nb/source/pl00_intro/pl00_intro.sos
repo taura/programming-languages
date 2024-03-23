@@ -208,7 +208,7 @@ print("hello Julia")
 * コマンドライン(JupyterターミナルやSSH)で使うには以下を(JupyterターミナルやSSHでログインした端末で)実行する
 * to use in a command line (Jupyter terminal or SSH), execute the following (in the Jupyter terminal or SSH terminal)
 ```
-export PATH=~/julia-1.8.5/bin:$PATH
+export PATH=~/.juliaup/bin:$PATH
 ```
 <br/>
 
@@ -217,8 +217,8 @@ export PATH=~/julia-1.8.5/bin:$PATH
 <!--- end md --->
 
 <!--- md --->
-* 以下で`julia`コマンドの場所 (`/home/uNNNNN/julia-1.8.5/bin/julia`) が表示されることを確認
-* make sure the following command shows the location of `julia` command (`/home/uNNNNN/julia-1.8.5/bin/julia`)
+* 以下で`julia`コマンドの場所 (`/home/uNNNNN/.juliaup/bin/julia`) が表示されることを確認
+* make sure the following command shows the location of `julia` command (`/home/uNNNNN/.juliaup/bin/julia`)
 ```
 which julia
 ```
