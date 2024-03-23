@@ -1,0 +1,382 @@
+<!--- md --->
+
+#* Programming Languages (3) --- Generic functions and types
+
+<!--- end md --->
+
+<!--- md w --->
+
+Enter your name and student ID.
+
+ * Name:
+ * Student ID:
+
+<!--- end md --->
+
+<!--- md --->
+
+# Choose your language
+
+From this week and on, choose the language you are assigned to (see [this](https://docs.google.com/spreadsheets/d/1wl31o-vQ3K20rANd91khIq6svla4cKhiuTHds6r1m-w/edit#gid=0))
+
+Declare your choice in the following cell (leave the one you choose).  In this notebook, I will work on
+<!--- end md --->
+
+<!--- md w points=1 --->
+Go
+Julia
+OCaml
+Rust
+<!--- end md --->
+
+<!--- md --->
+# Roadmap
+
+* In this notebook, you are going to learn _generic_ functions and types
+
+* A _generic function_ (_type_) refers a function (_type_) that can be instantiated with many types
+* A generic function is very useful because it can apply to many different types with a single definition
+
+* Below, you are going to write a function that optimizes (minimizes) a function (_objective function_) given as a parameter, over a domain, which is also given as a parameter. i.e.,  ${\tt minimize}(f, D)$
+* Wouldn't it be nice if we can implement it for functions that take, say, a floating point number, an integer, a pair of floating point numbers, etc., with a single definition?
+* We can/will do this as follows
+1. write a domain class/object that generates elements from the domain, one at a time
+1. write the function that repeatedly draws an element $x$ from the domain, evaluates the objective function at $x$, and records the minimum value encountered
+ 
+<!--- end md --->
+
+<!--- md label=prob,ans --->
+# A warm up
+
+##*P A function that takes a function 
+
+* Write a function $f$ that takes a float-taking function $g$ and apply $g$ to 1.0 in your language
+* That is, $f(g) = g(1.0)$
+* Master the syntax representing a function type, though in some languages you don't have to write it up yourself
+
+<!--- end md --->
+
+<!--- code w points=1 kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="A function that takes a function" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="A function that takes a function" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="A function that takes a function" nb/source/pl03_generic_fun_type/include/pl03_a.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="A function that takes a function" nb/source/pl03_generic_fun_type/include/pl03_a_rs/src/main.rs --->
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+# A domain class for a floating point number
+
+* Our ultimate goal is to write a _generic_ minimizer, but to make matters easier, let's first define a data structure that generates floating point numbers
+
+##*P A domain class for a floating point number
+
+Define a data structure `float_random_generator` (change the name according to case conventions/requirements of your language), which
+ * takes $a$, $b$ and $n$ upon creation
+ * has `next()` method that returns a random floating point number in the interval $[a, b]$ up to $n$ times, after which it returns a value that indicates no more values
+
+Note: `next()` may return either a floating point number of a value that indicates "no value". the most natural way to do it depends on your language.  Here are some keywords you want to search for
+
+ |      |                      |
+ |------|----------------------|
+ |Go    |multiple return values|
+ |Julia |nothing               |
+ |OCaml |option                |
+ |Rust  |Option                |
+
+<!--- end md --->
+
+<!--- code w points=1 kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="A domain class for a floating point number" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="A domain class for a floating point number" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="A domain class for a floating point number" nb/source/pl03_generic_fun_type/include/pl03_a.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="A domain class for a floating point number" nb/source/pl03_generic_fun_type/include/pl03_a_rs/src/main.rs --->
+<!--- end code --->
+
+
+<!--- md label=prob,ans --->
+# A minimizer for float -> float functions
+
+##*P A minimizer for float -> float functions
+
+Write a function `minimize`, which
+ * takes $f$ (a function that takes a float and returns a float) and a `float_random_generator`
+ * finds $x$ that minimizes $f(x)$ among those generated by the `float_random_generator`
+
+In a pseudo code:
+```
+repeat {
+  x = gen.next()
+  if (no more values) break
+  y = f(x)
+}
+and return (x, f(x)) that attained the minimum value
+```
+<!--- end md --->
+
+<!--- code w points=1 kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="A minimizer for float -> float functions" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="A minimizer for float -> float functions" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="A minimizer for float -> float functions" nb/source/pl03_generic_fun_type/include/pl03_a.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="A minimizer for float -> float functions" nb/source/pl03_generic_fun_type/include/pl03_a_rs/src/main.rs --->
+<!--- end code --->
+
+
+<!--- md label=prob,ans --->
+##*P Apply float -> float minimizer
+
+Apply `minimize` to minimize function $f(x) = x(x-1)(x-2)$ in the interval $[0, 2]$
+
+<!--- end md --->
+
+<!--- code w points=1 kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Apply float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="Apply float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Apply float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_a.go --->
+main()
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="Apply float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_a_rs/src/main.rs --->
+main();
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+# A first step to make it generic
+
+* You will notice that the underlying principles or the algorithm dictated by the `minimize` function defined above generically works for domains other than floating point numbers; all it is doing is to draw an element from a domain and apply the function to it, with nothing specific to a floating point number
+* It is therefore quite natural to desire it be generic in our programs too
+* Remarkably, it is automatically happening in some languages (which one, do you think?)
+* In other languages, the objective function $f$ explicitly takes a floating point number and your domain parameter is `float_random_generator`, both of which prevent us from applying the same function to any other domain
+
+* Let's first fix the latter, that is, its domain parameter hard-coded to `float_random_generator`
+
+##*P A somewhat generic float -> float minimizer
+
+* If necessary in your language, make an interface or a similar mechanism, called `float_generator`, that represents any type that has `next()` method that returns a floating point number
+* Clearly, `float_random_generator` clearly implements `float_generator`; make it explicit if required in your language
+* Fix the `minimize` function so as to takes any type that implements the above interface
+<!--- end md --->
+
+<!--- code w points=1 kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="A somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="A somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="A somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_b.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="A somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_b_rs/src/main.rs --->
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+##*P Apply a somewhat generic float -> float minimizer
+
+Check the new `minimize` works for the same function $f(x) = x(x-1)(x-2)$ and the `float_random_generator`
+<!--- end md --->
+
+<!--- code w points=1 kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Apply a somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="Apply a somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Apply a somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_b.go --->
+main()
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="Apply a somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_b_rs/src/main.rs --->
+main();
+<!--- end code --->
+
+<!--- md --->
+# Warning to Go workers
+
+* The problems below require parametric types
+* Go supports parametric types only from 1.18, and Go version in the Jupyter environment is not new enough to support it
+* <font color="red">_To complete problems below, you need to use the command line version of go;_</font> login with SSH or use the Jupyter terminal.  Try 
+```
+go version
+```
+to see the version
+<!--- end md --->
+
+<!--- md label=prob,ans --->
+# A warm up for a generic type
+
+##*P Define a trivial generic type and a function
+
+* Master the syntax of parameterized data type, creating an instance such types and parameterized functions
+* As a practice, define a parameterized data type, called `triv`, that takes any value $x$ of any type $T$, and a function that takes a value of `triv` type and returns its value. That is, something along the following in your language
+```
+s = triv(3)
+x = triv_val(s) # should return 3
+t = triv("hello")
+y = triv_val(t) # should return "hello"
+```
+
+* The syntax differs between languages
+
+ |     |                |                                         |
+ |-----|----------------|-----------------------------------------|
+ |Go   |generator[$T$]  |[Tutorial: Getting started with generics](https://go.dev/doc/tutorial/generics)|
+ |Julia|generator{$T$}  |[Parametric Types](https://docs.julialang.org/en/v1/manual/types/#Parametric-Types)|
+ |Julia|generator{$T$}  |[Parametric Methods](https://docs.julialang.org/en/v1/manual/methods/#Parametric-Methods)|
+ |Rust |generator<$T$>  |[Generic Data Types](https://doc.rust-lang.org/book/ch10-01-syntax.html#generic-data-types)|
+ |OCaml|$'a$ generator  |[Records and variants](https://ocaml.org/manual/coreexamples.html#s:tut-recvariants)|
+
+
+<!--- end md --->
+
+<!--- code w points=1 kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Define a trivial generic type and a function" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="Define a trivial generic type and a function" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Define a trivial generic type and a function" nb/source/pl03_generic_fun_type/include/pl03_b.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="Define a trivial generic type and a function" nb/source/pl03_generic_fun_type/include/pl03_b_rs/src/main.rs --->
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+# Generic (parameterized) functions and types
+
+* Now we are ready to make `minimize` truly generic, in the sense that it can now minimize a function whose domain is not a floating point number
+* To this end, you need to _parameterize_ `float_generator`
+* Let's call it `generator`; it can take a type parameter $T$ and its `next()` method now generates a value of $T$
+
+##*P A generic T -> float minimizer
+
+* Parameterize the generator type, as well as the type of incoming parameters of `minimize`, so that it can minimize functions taking values other than a floating point number (e.g., an integer or a pair of floats)
+
+<!--- end md --->
+
+<!--- code w points=1 kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="A generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="A generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="A generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_c.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="A generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_c_rs/src/main.rs --->
+<!--- end code --->
+
+
+<!--- md label=prob,ans --->
+
+##*P Apply a generic T -> float minimizer
+
+* Write a generator `ellipse_generator`, which takes an ellipse's center $(x_0, y_0)$ and horizontal and vertical radius $a$ and $b$ upon creation and whose `next()` method returns a pair of floats inside the ellipse. That is, `next()` should return a random point $(x, y)$ satisfying
+$$\frac{(x-x_0)^2}{a^2} + \frac{(y-y_0)^2}{b^2} \leq 1$$
+* Minimize function $f(x, y) = x^2 + y^2$ in the ellipse whose center $= (3, 3)$, $a = 2$ and $b = 1$
+
+<!--- end md --->
+
+<!--- code w points=1 kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Apply a generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="Apply a generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Apply a generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_c.go --->
+main()
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="Apply a generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_c_rs/src/main.rs --->
+main();
+<!--- end code --->
+
+

@@ -1,0 +1,433 @@
+<!--- md --->
+
+#* Programming Languages (1)
+
+<!--- end md --->
+
+<!--- md w --->
+
+Enter your name and student ID.
+
+ * Name:
+ * Student ID:
+
+<!--- end md --->
+
+<!--- md --->
+
+# Choose your language
+
+Choose a language you want to work on for today from the following.
+
+* Go --- designed as a "better C"
+* Julia --- popular for scientific computing
+* OCaml --- a practical functional language
+* Rust --- a system programming language with memory safety without garbage collection
+
+
+* Choose a language you want to learn instead of one you already know.
+* The choice you made for today is not final, however; the language you work on in the rest of the course will be determined based on your preference as well as the balance.
+
+Declare your choice in the following cell (leave the one you choose).  In this notebook, I will work on
+<!--- end md --->
+
+<!--- md w points=1 --->
+Go
+Julia
+OCaml
+Rust
+<!--- end md --->
+
+<!--- md --->
+# Prepare
+
+* Find an authoritive documentation for the language you chose by Google (e.g., google with [_the language name_ documentation])
+* I recommend you to find them by yourself, but in case you have a hard time finding it, here they are
+
+
+* [Go:](https://go.dev/doc/)
+* [Julia:](https://docs.julialang.org/en/v1/)
+* [OCaml:](https://ocaml.org/manual/)
+* Rust: [language manual](https://doc.rust-lang.org/book/) and [other docs](https://www.rust-lang.org/learn)
+
+<!--- end md --->
+
+
+<!--- md --->
+# Roadmap
+
+* In this notebook, you will learn most basic elements of virtually all programming languages
+* You will find the following a useful recipe when learning a new programming language
+
+<!--- end md --->
+
+
+<!--- md label=prob,ans --->
+# Defining functions
+
+* Defining a function is probably the most basic yet most important tool for any programming language
+
+#*P 
+
+* In the language you chose, write a function `f` that takes a number $x$ and return $x + 1$. i.e.,
+
+$$ f(x) = x + 1 $$
+
+* <font color="red">Do not forget to change the language of all the cells below</font>, from python to your choice.
+
+<!--- end md --->
+
+<!--- code w kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="A function" nb/source/pl01_basics/include/pl01.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="A function" nb/source/pl01_basics/include/pl01.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="A function" nb/source/pl01_basics/include/pl01.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="A function" nb/source/pl01_basics/include/pl01.rs --->
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+and compute ${\tt f}(3)$.
+<!--- end md --->
+
+<!--- code w kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Apply a function" nb/source/pl01_basics/include/pl01.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="Apply a function" nb/source/pl01_basics/include/pl01.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+f(3)
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+f(3)
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+# Recursive function
+
+* A recursive function is simply a function that calls itself
+* If there is one thing that makes a programming language different from a calculator, it is a recursive function
+
+#*P 
+
+* Using a recursive definition of a function `fib` that takes an integer $n$ and return the $n$th fibonacci number $f_n$ defined as follows
+
+$$ f_n = \left\{\begin{array}{ll} 1 & (n < 2) \\ f_{n-1} + f_{n-2} & (n \geq 2) \end{array} \right. $$
+
+* Note: for the purpose of today, it suffices to write a straightforward recursive function; never mind the efficiency (time complexity) of the algorithm; you do not have to do use loops to make it linear time
+
+<!--- end md --->
+
+<!--- code w kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="A recursive function" nb/source/pl01_basics/include/pl01.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="A recursive function" nb/source/pl01_basics/include/pl01.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="A recursive function" nb/source/pl01_basics/include/pl01.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="A recursive function" nb/source/pl01_basics/include/pl01.rs --->
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+and compute ${\tt fib}(10)$.  It must be 89.
+<!--- end md --->
+
+<!--- code w kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+fib 10
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+fib(10)
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+fib(10)
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+fib(10)
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+# Variables
+
+* A variable is a tool to "remember" an intermediate result of a computation
+* It is useful to make programs easier to read (by breaking otherwise long expressions into a series of small expressions) and more efficient (by avoiding repeated computations)
+
+#*P 
+
+* Learn how to introduce a new variable and define `fib2` that does exactly the same computation as `fib`, but with variables; specifically, compute $f_{n-1} + f_{n-2}$ by $x = {\tt fib2}(n-1)$, $y = {\tt fib2}(n-2)$, and then compute $x + y$.
+
+<!--- end md --->
+
+<!--- code w kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="A variable" nb/source/pl01_basics/include/pl01.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="A variable" nb/source/pl01_basics/include/pl01.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="A variable" nb/source/pl01_basics/include/pl01.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="A variable" nb/source/pl01_basics/include/pl01.rs --->
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+and compute ${\tt fib2}(10)$.  It must be 89.
+<!--- end md --->
+
+<!--- code w kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+fib2 10
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+fib2(10)
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+fib2(10)
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+fib2(10)
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+# Defining types
+
+* In programming languages, _a type_ generally means a set of values having the same or similar properties or applicable operations
+* Basic examples are integers, floating point numbers, strings, etc.
+
+* Programming languages allow you to define a new type built from existing types
+* e.g., define a complex number as a pair of real numbers (real and imaginary part)
+
+* Different languages have different names/mechanisms to compose a new type from existing types
+  * C : struct
+  * C++ : struct/class
+  * Python : class
+  * Go : struct
+  * Julia : struct
+  * OCaml : tuples, records, object (class)
+  * Rust : struct
+
+#*P 
+
+* Learn how to define a new composite type in the language you chose;
+* define a new type representing a person (named `person` or `Person` depending on the naming constraint/convention of the language), which consists of the name (string) and the date of birth (string);
+
+<!--- end md --->
+
+<!--- code w kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="A data type" nb/source/pl01_basics/include/pl01.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="A data type" nb/source/pl01_basics/include/pl01.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="A data type" nb/source/pl01_basics/include/pl01.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="A data type" nb/source/pl01_basics/include/pl01.rs --->
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+* define a function called `person_name` that takes a person and returns his/her name;
+* create a person whose name is "Masakazu Mimura" (date of birth = 1967/6/8) and apply `person_name` to it
+<!--- end md --->
+
+<!--- code w kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Person name" nb/source/pl01_basics/include/pl01.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="Person name" nb/source/pl01_basics/include/pl01.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Person name" nb/source/pl01_basics/include/pl01.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="Person name" nb/source/pl01_basics/include/pl01.rs --->
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+# Recursive types
+
+* Just as a function can be recursive, so can a type
+* A recursive type is a type one of whose component has the same type as itself
+* It is the basis for defining data structures that can grow arbitrarily large, such as trees, lists, and graphs
+
+#*P 
+
+* Define a type that represents a binary tree
+* More specifically, a binary tree is either
+  * empty,
+  * or a node having two children each of which is a binary tree (note that a child may be empty)
+
+<!--- end md --->
+
+<!--- code w kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="bintree" nb/source/pl01_basics/include/pl01.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="bintree" nb/source/pl01_basics/include/pl01.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="bintree" nb/source/pl01_basics/include/pl01.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="bintree" nb/source/pl01_basics/include/pl01.rs --->
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+
+#*P 
+
+* Define a function `mk_tree` that takes an integer $n$ and returns the "maximally balanced binary tree" that has exactly $n$ nodes
+* A binary tree $t$ is maximally balanced when $t$'s left child has exactly the same as or just one more nodes than $t$'s right child
+* Given $n$, the maximally balanced binary tree of $n$ nodes is unique
+
+<!--- end md --->
+
+<!--- code w kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="mk_tree" nb/source/pl01_basics/include/pl01.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="mk_tree" nb/source/pl01_basics/include/pl01.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="mk_tree" nb/source/pl01_basics/include/pl01.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="mk_tree" nb/source/pl01_basics/include/pl01.rs --->
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+
+#*P 
+
+* Define a function `count_nodes` that takes a binary tree and returns the number of nodes in it
+
+<!--- end md --->
+
+<!--- code w kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="count_nodes" nb/source/pl01_basics/include/pl01.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="count_nodes" nb/source/pl01_basics/include/pl01.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="count_nodes" nb/source/pl01_basics/include/pl01.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="count_nodes" nb/source/pl01_basics/include/pl01.rs --->
+<!--- end code --->
+
+<!--- md label=prob,ans --->
+
+#*P 
+
+* Obviously, for $t = {\tt mk\_tree}(n)$, ${\tt count\_nodes}(t)$ should return $n$
+* Confirm this for meaningfully large $n$ (e.g., 1000)
+
+<!--- end md --->
+
+<!--- code w kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="1000 nodes" nb/source/pl01_basics/include/pl01.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="1000 nodes" nb/source/pl01_basics/include/pl01.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="1000 nodes" nb/source/pl01_basics/include/pl01.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="1000 nodes" nb/source/pl01_basics/include/pl01.rs --->
+<!--- end code --->
+
+

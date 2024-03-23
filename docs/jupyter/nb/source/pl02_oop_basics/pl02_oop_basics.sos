@@ -1,0 +1,274 @@
+<!--- md --->
+
+#* Programming Languages (2) --- Object-Oriented Programming Basics
+
+<!--- end md --->
+
+<!--- md w --->
+
+Enter your name and student ID.
+
+ * Name:
+ * Student ID:
+
+<!--- end md --->
+
+<!--- md --->
+
+# Choose your language
+
+Choose a language you want to work on for today from the following.
+
+* Go --- designed as a "better C"
+* Julia --- popular for scientific computing
+* OCaml --- a practical functional language
+* Rust --- a system programming language with memory safety without garbage collection
+
+Declare your choice in the following cell (leave the one you choose).  In this notebook, I will work on
+<!--- end md --->
+
+<!--- md w points=1 --->
+Go
+Julia
+OCaml
+Rust
+<!--- end md --->
+
+<!--- md --->
+# Roadmap
+
+* Below, you are going to learn the basics of object-oriented programming, a cornerstone of all modern programming languages
+
+1. define two data types representing _rectangles_ (`rect`) and _ellipses_ (`ellipse`)
+1. define functions or methods that compute their areas
+1. have an array or a similar container that _mixes_ both rectangles and ellipses
+1. some languages require you to define another type (something like `shape` or `Shape` encompassing both rectangles and ellipses)
+
+* Note: follow case conventions/requirements about type names of your language; Go, Julia and Rust conventionally capitalize them and OCaml requires them to be in lowercase
+
+##*P Read documents
+
+* Before you start, spend some time to go through relevant sections of your language manual
+
+ |     |                                     |
+ | :-- | :---------------------------------- |
+ |Go   |[Data](https://go.dev/doc/effective_go#data)|
+ |     |[Methods](https://go.dev/doc/effective_go#methods)|
+ |     |[Interfaces and other types](https://go.dev/doc/effective_go#interfaces_and_types)|
+ |Julia|[Composite Types](https://docs.julialang.org/en/v1/manual/types/#Composite-Types)|
+ |     |[Methods](https://docs.julialang.org/en/v1/manual/methods/#Methods)|
+ |OCaml|[Objects in OCaml](https://ocaml.org/manual/objectexamples.html)|
+ |     |[Data types](https://ocaml.org/manual/coreexamples.html#s:datatypes)|
+ |Rust |[Using Structs to Structure Related Data](https://doc.rust-lang.org/book/ch05-00-structs.html)|
+ |     |[Method Syntax](https://doc.rust-lang.org/book/ch05-03-method-syntax.html?highlight=impl#method-syntax)|
+ |     |[Traits: Defining Shared Behavior](https://doc.rust-lang.org/book/ch10-02-traits.html)|
+
+
+<!--- end md --->
+
+<!--- md label=prob,ans --->
+# Class definition
+
+* A _class_ is a way to define a composite type along with some functions associated with it (_methods_)
+* Different languages call the mechanism differently; it is called `struct` in C++, Go, Julia, and Rust, or `class` in C++, Java, Python and OCaml
+* No matter how it's called in your language, it generally defines what kind of fields or functions (typically called _methods_) data of that class have
+
+##*P Define data structure representing a rectangle and an ellipse
+
+* Define two new data types `rect` (or `Rect`) and `ellipse` (or `Ellipse`) representing a rectangle and an ellipse, respectively 
+* For simplicity, you may assume sides of rectangles and axes of ellipses are parallel to x- or y-axis
+* We will later define a type that encompasses both of them (which might be named `shape` or `Shape`) if necessary and other shapes such as lines, polygons, etc.
+* Relevant constructs and related sections in the documentation
+
+ |     |      |                                     |
+ | :-- | :--- | :---------------------------------- |
+ |Go   |struct|[Data](https://go.dev/doc/effective_go#data) |
+ |Julia|struct|[Composite Types](https://docs.julialang.org/en/v1/manual/types/#Composite-Types)|
+ |OCaml|class |[Objects in OCaml](https://ocaml.org/manual/objectexamples.html)|
+ |Rust |struct|[Using Structs to Structure Related Data](https://doc.rust-lang.org/book/ch05-00-structs.html)|
+
+* Note: In OCaml, you could use `type` construct to define just a single type `shape` with two constructors (perhaps `Rect` and `Ellipse`).  Similarly, you can use `enum` with multiple constructors in Rust.
+* In this exercise, however, use `class`/`object` of OCaml or `struct` of Rust to define each of rectangle and ellipse as a separate type
+
+* Note: when using `class`/`object` of OCaml, you need to define its methods at the same time.  You can do it here or the problem below
+
+<!--- end md --->
+
+<!--- code w points=1 kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl02_oop_basics/include/pl02.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl02_oop_basics/include/pl02.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl02_oop_basics/include/pl02.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl02_oop_basics/include/pl02.rs --->
+<!--- end code --->
+
+
+<!--- md label=prob,ans --->
+# Methods
+
+* _Methods_ are similar to functions, except that a method of the same name can be defined (i.e., implemented differently) for different classes
+* When you call a method, which of the different implementations of the same name gets called is determined by the type(s) of its argument(s) (_dynamic dispatch_)
+
+ |     |        |                                       |
+ | :-- | :----- | :------------------------------------ |
+ |Go   |func    |[Methods](https://go.dev/doc/effective_go#methods)|
+ |Julia|function|[Methods](https://docs.julialang.org/en/v1/manual/methods/#Methods)|
+ |OCaml|method  |[Objects in OCaml](https://ocaml.org/manual/objectexamples.html)|
+ |Rust |impl    |[Method Syntax](https://doc.rust-lang.org/book/ch05-03-method-syntax.html?highlight=impl#method-syntax)|
+
+##*P Define a method that computes the area of rect/ellipse
+
+* Define `area` method for `rect` and `ellipse` that computes its area
+
+<!--- end md --->
+
+<!--- code w points=1 kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl02_oop_basics/include/pl02.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl02_oop_basics/include/pl02.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl02_oop_basics/include/pl02.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl02_oop_basics/include/pl02.rs --->
+<!--- end code --->
+
+
+<!--- md label=prob,ans --->
+# Subtypes and similar concepts (interface, trait, etc.)
+
+* Now that we have defined two different methods with the same name `area`, but it wouldn't be that useful, unless you can have _a_ variable that holds values of both types at different points of an execution
+* For example, we like to have an array (or any container data) that has both rectangles and ellipses and iterate over them, assigning a variable elements of different types over time, e.g., like this in Python
+```
+for s in shapes:
+    s.area()
+```    
+* An issue is, _what should be the type of the variable `s` or `shapes` above?_  How to declare their types?
+* Intuitively, we need a type that encompasses both rectangles and ellipses (and perhaps other shapes defined in future), perhaps called `shape`
+* Approaches differ between languages
+  * some languages (e.g., Java, C/C++) let you define `shape` explicitly and _extend_ it to define rectangles and ellipses
+  * Go and Rust introduce _interface_ or _trait_, that look like types but do not allow creation of actual data that belong to them (some would call them _abstract types_); they basically specify what kind of methods must be implemented for any data to claim a particular interface or trait
+* Superficially, it does not appear to be an issue in languages that do not require any type declarations (e.g., Python, Julia, or OCaml)
+* It is true to some extent, but a more profound issue is whether the language can guarantee, prior to execution, that type errors do not happen during runtime
+
+ |     |         |                           |
+ | :-- | :------ |:--------------------------|
+ |Go   |interface|[Interfaces and other types](https://go.dev/doc/effective_go#interfaces_and_types)|
+ |Julia|         ||
+ |OCaml|         ||
+ |Rust |trait    |[Traits: Defining Shared Behavior](https://doc.rust-lang.org/book/ch10-02-traits.html)|
+
+##*P Create an array/a list/a vector/a slice 
+
+* Create an array-like data structure that has _both_ rectangle(s) and ellipse(s)
+* For simplicity, create a two-element array whose
+  * first element : a rectangle whose lower left corner is (0,0) and upper right corner is (100,100)
+  * second element : an ellipse whose center is (0,0) and the radius along x-axis 100 and the radius along y-axis is 50
+* Depending on the language you chose, you may have to define a type encompassing rect and ellipse and perhaps have to redefine rect and ellipse too
+
+* Some languages have idiosyncrasies for arrays and similar containers, which you might find confusing
+* Some pointers about ways to create arrays or similar containers in each language
+
+ |     |      |        |                                       |
+ |:----|:-----|:-------|:--------------------------------------|
+ |Go   |array |new     |[Arrays](https://go.dev/doc/effective_go#arrays) |
+ |Go   |slice |make    |[Slices](https://go.dev/doc/effective_go#slices) |
+ |Julia|array |[a,b,..]|[Array literals](https://docs.julialang.org/en/v1/manual/arrays/#man-array-literals)|
+ |OCaml|list  |[a;b;..]   |[Data types](https://ocaml.org/manual/coreexamples.html#s:datatypes)|
+ |OCaml|array |[\|a;b;..\|] |[Imperative features](https://ocaml.org/manual/coreexamples.html#s:imperative-features)|
+ |Rust |array |[a,b,..]   |[The Array Type](https://doc.rust-lang.org/book/ch03-02-data-types.html#the-array-type)|
+ |Rust |slice |&array   |[The Slice Type](https://doc.rust-lang.org/book/ch04-03-slices.html)|
+ |Rust |Vec   |Vec::new|[Storing Lists of Values with Vectors](https://doc.rust-lang.org/book/ch08-01-vectors.html#storing-lists-of-values-with-vectors)|
+
+<!--- end md --->
+
+<!--- code w points=1 kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl02_oop_basics/include/pl02.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl02_oop_basics/include/pl02.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl02_oop_basics/include/pl02.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl02_oop_basics/include/pl02.rs --->
+<!--- end code --->
+
+
+<!--- md label=prob,ans --->
+# Working on mixed collections
+
+##*P Scan an array of shapes
+
+* Write a function, named `sum_area`, which scans an array of shapes and returns the sum of each shape's area
+* Apply `sum_area` to the list created above 
+
+ |     |      |                                              |
+ | :-- | :--- | :------------------------------------------- |
+ |Go   |for   |[For](https://go.dev/doc/effective_go#for)    |
+ |Julia|for   |[Repeated Evaluation: Loops](https://docs.julialang.org/en/v1/manual/control-flow/#man-loops)|
+ |OCaml|List  |[Module List](https://ocaml.org/api/List.html)|
+ |OCaml|for   |[Loops](https://ocaml.org/manual/expr.html#sss:expr-loops)|
+ |Rust |for   |[Looping Through a Collection with for](https://doc.rust-lang.org/book/ch03-05-control-flow.html#looping-through-a-collection-with-for)|
+
+<!--- end md --->
+
+<!--- code w points=1 kernel=python --->
+
+<!--- end code --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl02_oop_basics/include/pl02.ml --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl02_oop_basics/include/pl02.jl --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl02_oop_basics/include/pl02.go --->
+<!--- end code --->
+
+<!--- code w label=ans kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl02_oop_basics/include/pl02.rs --->
+<!--- end code --->
+
+
+<!--- md label=prob,ans --->
+# Static vs. dynamic type checking
+
+* What if you pass an array some of whose element do not have `area` method?
+* Some languages simply allow such a program to start execution and raise an error (type error) _at runtime_ (_dynamic type checking_), while others do not allow such programs to compile, by detecting such errors prior to execution (_static type checking_)
+* A profound language design issue is how to statically type-check, while allowing maximum flexibility
+
+<!--- end md --->
+
