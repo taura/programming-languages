@@ -1,8 +1,8 @@
 targz:=go1.22.1.linux-amd64.tar.gz
 
 install:
-	wget -O $(targz) https://go.dev/dl/$(targz)
-	tar xf $(targz) -C ~/
+	wget -O ~/$(targz) https://go.dev/dl/$(targz)
+	tar xf ~/$(targz) -C ~/
 	~/go/bin/go install github.com/gopherdata/gophernotes@latest
 	mkdir -p ~/.local/share/jupyter/kernels
 	chmod 'u+w' ~/.local/share/jupyter/kernels
@@ -14,4 +14,4 @@ install:
 uninstall:
 	chmod -R 'u+w' ~/go ; rm -rf ~/go
 	chmod -R 'u+w' ~/.local/share/jupyter/kernels/gophernotes ; rm -rf ~/.local/share/jupyter/kernels/gophernotes
-	rm -f $(targz)
+	rm -f ~/$(targz)
