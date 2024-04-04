@@ -3,6 +3,9 @@ fn f(x: i32) -> i32 {
         return x + 1
 }
 /*** endif */
+/*** if label == "Apply a function" */
+f(3)
+/*** endif */
 /*** if label == "A recursive function"  */
 fn fib(n: i32) -> i32 {
     if n < 2 {

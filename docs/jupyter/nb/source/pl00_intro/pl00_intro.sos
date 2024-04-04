@@ -162,11 +162,16 @@ ls
 ## Go
 
 ### Jupyterで使う場合 / Using in Jupyter
+
+* 以下を下のセルに入力して実行してみよ
+* Copy the following to the cell below and execute it
+```
+println("hello go")
+```
 <!--- end md --->
 
 <!--- code w kernel=go points=1 --->
-/* this is Go code */
-println("hello go")
+/* Go cell */
 <!--- end code --->
 
 <!--- md --->
@@ -189,17 +194,24 @@ export PATH=~/go/bin:$PATH
 ```
 which go
 ```
+
 <!--- end md --->
 
 <!--- md --->
 ## Julia
 
 ### Jupyterで使う場合 / Using in Jupyter
+
+* 以下を下のセルに入力して実行してみよ
+* Copy the following to the cell below and execute it
+```
+print("hello Julia")
+```
+
 <!--- end md --->
 
 <!--- code w kernel=julia points=1 --->
-# this is Julia code
-print("hello Julia")
+# Julia cell
 <!--- end code --->
 
 <!--- md --->
@@ -231,12 +243,19 @@ which julia
 <!--- end md --->
 
 <!--- md --->
+
+* 以下を下のセルに入力して実行してみよ
+* Copy the following to the cell below and execute it
+```
+Printf.printf("hello ocaml");
+flush_all()
+```
+
 * printfを実行しているはずだが表示されない(とりあえず今は気にしない)
 * despite printf, the message does not get printed (never mind, for now)
 <!--- end md --->
 <!--- code w kernel=ocaml points=1 --->
-(** this is OCaml code *)
-Printf.printf("hello ocaml")
+(** OCaml cell *)
 <!--- end code --->
 
 <!--- md --->
@@ -255,7 +274,7 @@ eval $(opam env)
 
 <!--- md --->
 * 以下で`ocaml`コマンドの場所 (`/home/uNNNNN/.opam/default/bin/ocaml`) が表示されることを確認
-* make sure the following command shows the location of `cargo` or `rustc` command (`/home/uNNNNN/.opam/default/bin/ocaml` or `/home/uNNNNN/.opam/default/bin/ocaml`)
+* make sure the following command shows the location of `ocaml` (`/home/uNNNNN/.opam/default/bin/ocaml`)
 ```
 which ocaml
 ```
@@ -265,11 +284,16 @@ which ocaml
 ## Rust
 
 ### Jupyterで使う場合 / Using in Jupyter
+
+* 以下を下のセルに入力して実行してみよ
+* Copy the following to the cell below and execute it
+```
+println!("hello rust")
+```
 <!--- end md --->
 
 <!--- code w kernel=rust points=1 --->
 // this is Rust code
-println!("hello rust")
 <!--- end code --->
 
 <!--- md --->
@@ -294,4 +318,3 @@ which cargo
 which rustc
 ```
 <!--- end md --->
-

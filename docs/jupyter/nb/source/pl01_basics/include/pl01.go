@@ -6,6 +6,9 @@ func f(x int) int {
         return x + 1
 }
 /*** endif */
+/*** if label == "Apply a function" */
+f(3)
+/*** endif */
 /*** if label == "A recursive function"  */
 func fib(n int) int {
         if n < 2 {

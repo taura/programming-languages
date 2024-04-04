@@ -137,32 +137,39 @@
         <li class="ja">
           課題一覧の中から, "課題0: Jupyterパスワード" の,
           「教員からのコメント」を見る(課題を提出する必要はない)
+          <ul>
+            <li>
+              注: 上記課題が見えない人は, UTOLで受講登録する
+              (参考: <a href="https://utol.ecc.u-tokyo.ac.jp/common/manual/download?file=1"
+                        target="_blank" rel="noopener">UTOL学生向け利用マニュアル(簡易版) p31
+                10.1. 受講登録</a>)
+            </li>
+            <li>
+              注: UTOL上で受講登録しても履修登録したことにはなりません.
+              履修することにした場合, <a href="https://utas.adm.u-tokyo.ac.jp/"
+                                         target="_blank" rel="noopener">UTAS</a>.
+              から履修登録してください.
+            </li>
+          </ul>
         </li>
         <li class="en">
           From the assignment list, find "Assignment 0: Jupyter password"
           and get its "Comments from the instructor" (you don't have to submit
           a report for the assignment)
-        </li>
-        
-        <li class="ja">
-          注: 上記課題が見えない人は, UTILで受講登録する
-          (参考: <a href="https://utol.ecc.u-tokyo.ac.jp/common/manual/download?file=1"
-                    target="_blank" rel="noopener">ITC-LMS学生向け利用マニュアル(簡易版) p31
-            10.1. 受講登録</a>)
-          注: UTOL上で受講登録しても履修登録したことにはなりません.
-          履修することにした場合, <a href="https://utas.adm.u-tokyo.ac.jp/"
-                                     target="_blank" rel="noopener">UTAS</a>.
-          から履修登録してください.
-        </li>
-        <li class="en">
-          Note: if you do not find the assignment, register yourself to the course course
-          by "Register a course" button in UTOL
-          (see: <a href="https://utol.ecc.u-tokyo.ac.jp/common/manual/download?file=1"
-                   target="_blank" rel="noopener">UTOL User Manual for Students p28</a>)
-          Note: registering to the course in UTOL does not sign up for the course.
-          If you decide to sign up for the course, do it from
-          <a href="https://utas.adm.u-tokyo.ac.jp/"
-             target="_blank" rel="noopener">UTAS</a>.
+          <ul>
+            <li>
+              Note: if you do not find the assignment, register yourself to the course course
+              by "Register a course" button in UTOL
+              (see: <a href="https://utol.ecc.u-tokyo.ac.jp/common/manual/download?file=1"
+                       target="_blank" rel="noopener">UTOL User Manual for Students p28</a>)
+            </li>
+            <li>
+              Note: registering to the course in UTOL does not sign up for the course.
+              If you decide to sign up for the course, do it from
+              <a href="https://utas.adm.u-tokyo.ac.jp/"
+                 target="_blank" rel="noopener">UTAS</a>.
+            </li>
+          </ul>
         </li>
 
         <li class="ja">
@@ -226,10 +233,10 @@ and login with the user name and password.
     </div>
 
     <h3 class="ja">
-      注意: 採点対象のセルをコピーしないこと
+      <font color=red>注意: 採点対象のセルをコピーしないこと</font>
     </h3>
     <h3 class="en">
-      Note: do not copy graded cells 
+      <font color=red>Note: do not copy graded cells </font>
     </h3>
     <div>
       <ul>
@@ -250,22 +257,59 @@ and login with the user name and password.
     <div>
       <ul>
         <li class="ja">Jupyterlabのnotebookでの作業を提出する場合,
+          UTOL上の課題として提出の指示がある.
+        </li>
+        <li class="en">When you are supposed to send your work done in Jupyterlab
+          notebook, there is an assignment that instructs you to do that in the UTOL.
+        </li>
+        
+        <li class="ja">その場合, まず
           Jupyterlabの<font color="blue">Nbgrader</font> -&gt;
           <font color="blue">Assignment List</font> から
           <font color="blue">Submit</font> ボタンでsubmitする.
         </li>
         
-        <li class="en">When you send your work done in Jupyterlab
-          notebook, 
+        <li class="en">In that case, first
           go to <font color="blue">Nbgrader</font> -&gt;
           <font color="blue">Assignment List</font> in the Jupyterlab menu,
           and press
           <font color="blue">Submit</font> button to submit it.
         </li>
+
+        <li class="ja">加えてUTOL上でも対応する課題に対して,
+          Jupyter上で提出したことを報告するだけの送信を行う
+        </li>
+        <li class="en">In addition, submit the corresponding UTOL assignment
+          just to say you submit it on Jupyter.
+        </li>
       </ul>
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/3LelysDSeTk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      
+    </div>
+
+    <h3 class="ja">
+      Validateボタンについて
+    </h3>
+    <h3 class="en">
+      Note on the validate button
+    </h3>
+    <div>
+      <ul>
+        <li class="ja">
+          notebookを開いているページの上部にあるvalidateボタンや,
+          Assignment Listページ中のvalidateボタンを押す必要はない
+        </li>
+        <li class="ja">
+          ただし, セルをコピーしてnotebookが壊れていた場合は, 直ちに以下のようなエラーが出るので,
+          submitする前にnotebookが壊れていないかをチェックするのに有用である
+        </li>
+        <li class="ja">
+          notebookが壊れていなくても, セルによってはエラーになるので,
+          答えがあっているかどうかを
+        </li>
+        
+      </ul>
+
     </div>
 
     <h2 class="ja">
