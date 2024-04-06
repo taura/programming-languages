@@ -163,7 +163,9 @@ ls
 
 ### Jupyterで使う場合 / Using in Jupyter
 
-* 以下を下のセルに入力して実行してみよ
+* 以下のセルをクリックして右上の言語選択メニューに「Go」と表示されることを確認せよ
+* Click the cell below and confirm "Go" is selected in the language menu on the right
+* 以下を下のセルにコピーして実行してみよ
 * Copy the following to the cell below and execute it
 ```
 println("hello go")
@@ -171,7 +173,6 @@ println("hello go")
 <!--- end md --->
 
 <!--- code w kernel=go points=0 --->
-/* Go cell */
 <!--- end code --->
 
 <!--- md --->
@@ -202,7 +203,9 @@ which go
 
 ### Jupyterで使う場合 / Using in Jupyter
 
-* 以下を下のセルに入力して実行してみよ
+* 以下のセルをクリックして右上の言語選択メニューに「Juila 1.10.2」と表示されることを確認せよ
+* Click the cell below and confirm "Julia 1.10.2" is selected in the language menu on the right
+* 以下を下のセルにコピーして実行してみよ
 * Copy the following to the cell below and execute it
 ```
 print("hello Julia")
@@ -211,7 +214,6 @@ print("hello Julia")
 <!--- end md --->
 
 <!--- code w kernel=julia points=0 --->
-# Julia cell
 <!--- end code --->
 
 <!--- md --->
@@ -244,7 +246,9 @@ which julia
 
 <!--- md --->
 
-* 以下を下のセルに入力して実行してみよ
+* 以下のセルをクリックして右上の言語選択メニューに「OCaml default2」と表示されることを確認せよ
+* Click the cell below and confirm "OCaml default" is selected in the language menu on the right
+* 以下を下のセルにコピーして実行してみよ
 * Copy the following to the cell below and execute it
 ```
 Printf.printf("hello ocaml\n");
@@ -252,7 +256,6 @@ flush_all()
 ```
 <!--- end md --->
 <!--- code w kernel=ocaml points=0 --->
-(** OCaml cell *)
 <!--- end code --->
 
 <!--- md --->
@@ -282,7 +285,9 @@ which ocaml
 
 ### Jupyterで使う場合 / Using in Jupyter
 
-* 以下を下のセルに入力して実行してみよ
+* 以下のセルをクリックして右上の言語選択メニューに「Rust」と表示されることを確認せよ
+* Click the cell below and confirm "Rust" is selected in the language menu on the right
+* 以下を下のセルにコピーして実行してみよ
 * Copy the following to the cell below and execute it
 ```
 println!("hello rust")
@@ -290,7 +295,6 @@ println!("hello rust")
 <!--- end md --->
 
 <!--- code w kernel=rust points=0 --->
-// this is Rust code
 <!--- end code --->
 
 <!--- md --->
