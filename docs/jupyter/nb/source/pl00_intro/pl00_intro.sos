@@ -57,7 +57,7 @@ f(3)
 
 <!--- code w kernel=python --->
 import time
-time.sleep(5.0)
+time.sleep(3.0)
 <!--- end code --->
 
 <!--- md --->
@@ -77,7 +77,7 @@ time.sleep(5.0)
 
 <!--- code w kernel=python --->
 import time
-time.sleep(20.0)
+time.sleep(10.0)
 <!--- end code --->
 
 <!--- md --->
@@ -170,7 +170,7 @@ println("hello go")
 ```
 <!--- end md --->
 
-<!--- code w kernel=go points=1 --->
+<!--- code w kernel=go points=0 --->
 /* Go cell */
 <!--- end code --->
 
@@ -210,7 +210,7 @@ print("hello Julia")
 
 <!--- end md --->
 
-<!--- code w kernel=julia points=1 --->
+<!--- code w kernel=julia points=0 --->
 # Julia cell
 <!--- end code --->
 
@@ -247,14 +247,11 @@ which julia
 * 以下を下のセルに入力して実行してみよ
 * Copy the following to the cell below and execute it
 ```
-Printf.printf("hello ocaml");
+Printf.printf("hello ocaml\n");
 flush_all()
 ```
-
-* printfを実行しているはずだが表示されない(とりあえず今は気にしない)
-* despite printf, the message does not get printed (never mind, for now)
 <!--- end md --->
-<!--- code w kernel=ocaml points=1 --->
+<!--- code w kernel=ocaml points=0 --->
 (** OCaml cell *)
 <!--- end code --->
 
@@ -292,7 +289,7 @@ println!("hello rust")
 ```
 <!--- end md --->
 
-<!--- code w kernel=rust points=1 --->
+<!--- code w kernel=rust points=0 --->
 // this is Rust code
 <!--- end code --->
 
