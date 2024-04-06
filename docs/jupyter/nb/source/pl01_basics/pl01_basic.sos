@@ -69,49 +69,40 @@ Declare your choice in the following cell.  You can write any number of language
 
 $$ f(x) = x + 1 $$
 
-* <font color="red">You only have to work on one language you chose.</font>  Answering other languages is welcome, of course.
+* <font color="red">In cells that follow, choose your language from the language selection menu.</font>
 
 <!--- end md --->
 
-<!--- md --->
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
 Go
 <!--- end md --->
-
-<!--- code w label=prob kernel=go points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=go --->
 <!--- exec-include ./mk_version.py -D label="A function" nb/source/pl01_basics/include/pl01.go --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Julia
 <!--- end md --->
-
-<!--- code w label=prob kernel=jl points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="A function" nb/source/pl01_basics/include/pl01.jl --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 OCaml
 <!--- end md --->
-
-<!--- code w label=prob kernel=ml points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
 <!--- exec-include ./mk_version.py -D label="A function" nb/source/pl01_basics/include/pl01.ml --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Rust
 <!--- end md --->
-
-<!--- code w label=prob kernel=rs points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="A function" nb/source/pl01_basics/include/pl01.rs --->
@@ -121,45 +112,36 @@ Rust
 and compute ${\tt f}(3)$.
 <!--- end md --->
 
-<!--- md --->
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
 Go
 <!--- end md --->
-
-<!--- code w label=prob kernel=go points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=go --->
 <!--- exec-include ./mk_version.py -D label="Apply a function" nb/source/pl01_basics/include/pl01.go --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Julia
 <!--- end md --->
-
-<!--- code w label=prob kernel=jl points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="Apply a function" nb/source/pl01_basics/include/pl01.jl --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 OCaml
 <!--- end md --->
-
-<!--- code w label=prob kernel=ml points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
 <!--- exec-include ./mk_version.py -D label="Apply a function" nb/source/pl01_basics/include/pl01.ml --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Rust
 <!--- end md --->
-
-<!--- code w label=prob kernel=rs points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="Apply a function" nb/source/pl01_basics/include/pl01.rs --->
@@ -181,45 +163,36 @@ $$ f_n = \left\{\begin{array}{ll} 1 & (n < 2) \\ f_{n-1} + f_{n-2} & (n \geq 2) 
 
 <!--- end md --->
 
-<!--- md --->
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
 Go
 <!--- end md --->
-
-<!--- code w label=prob kernel=go points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=go --->
 <!--- exec-include ./mk_version.py -D label="A recursive function" nb/source/pl01_basics/include/pl01.go --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Julia
 <!--- end md --->
-
-<!--- code w label=prob kernel=jl points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="A recursive function" nb/source/pl01_basics/include/pl01.jl --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 OCaml
 <!--- end md --->
-
-<!--- code w label=prob kernel=ml points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
 <!--- exec-include ./mk_version.py -D label="A recursive function" nb/source/pl01_basics/include/pl01.ml --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Rust
 <!--- end md --->
-
-<!--- code w label=prob kernel=rs points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="A recursive function" nb/source/pl01_basics/include/pl01.rs --->
@@ -229,45 +202,36 @@ Rust
 and compute ${\tt fib}(10)$.  It must be 89.
 <!--- end md --->
 
-<!--- md --->
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
 Go
 <!--- end md --->
-
-<!--- code w label=prob kernel=go points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=go --->
 fib(10)
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Julia
 <!--- end md --->
-
-<!--- code w label=prob kernel=jl points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
 fib(10)
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 OCaml
 <!--- end md --->
-
-<!--- code w label=prob kernel=ml points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
 fib 10
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Rust
 <!--- end md --->
-
-<!--- code w label=prob kernel=rs points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
 fib(10)
@@ -285,45 +249,36 @@ fib(10)
 
 <!--- end md --->
 
-<!--- md --->
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
 Go
 <!--- end md --->
-
-<!--- code w label=prob kernel=go points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=go --->
 <!--- exec-include ./mk_version.py -D label="A variable" nb/source/pl01_basics/include/pl01.go --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Julia
 <!--- end md --->
-
-<!--- code w label=prob kernel=jl points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="A variable" nb/source/pl01_basics/include/pl01.jl --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 OCaml
 <!--- end md --->
-
-<!--- code w label=prob kernel=ml points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
 <!--- exec-include ./mk_version.py -D label="A variable" nb/source/pl01_basics/include/pl01.ml --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Rust
 <!--- end md --->
-
-<!--- code w label=prob kernel=rs points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="A variable" nb/source/pl01_basics/include/pl01.rs --->
@@ -333,45 +288,36 @@ Rust
 and compute ${\tt fib2}(10)$.  It must be 89.
 <!--- end md --->
 
-<!--- md --->
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
 Go
 <!--- end md --->
-
-<!--- code w label=prob kernel=go points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=go --->
 fib2(10)
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Julia
 <!--- end md --->
-
-<!--- code w label=prob kernel=jl points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
 fib2(10)
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 OCaml
 <!--- end md --->
-
-<!--- code w label=prob kernel=ml points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
 fib2 10
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Rust
 <!--- end md --->
-
-<!--- code w label=prob kernel=rs points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
 fib2(10)
@@ -402,45 +348,36 @@ fib2(10)
 
 <!--- end md --->
 
-<!--- md --->
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
 Go
 <!--- end md --->
-
-<!--- code w label=prob kernel=go points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=go --->
 <!--- exec-include ./mk_version.py -D label="A data type" nb/source/pl01_basics/include/pl01.go --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Julia
 <!--- end md --->
-
-<!--- code w label=prob kernel=jl points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="A data type" nb/source/pl01_basics/include/pl01.jl --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 OCaml
 <!--- end md --->
-
-<!--- code w label=prob kernel=ml points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
 <!--- exec-include ./mk_version.py -D label="A data type" nb/source/pl01_basics/include/pl01.ml --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Rust
 <!--- end md --->
-
-<!--- code w label=prob kernel=rs points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="A data type" nb/source/pl01_basics/include/pl01.rs --->
@@ -451,45 +388,36 @@ Rust
 * create a person whose name is "Masakazu Mimura" (date of birth = 1967/6/8) and apply `person_name` to it
 <!--- end md --->
 
-<!--- md --->
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
 Go
 <!--- end md --->
-
-<!--- code w label=prob kernel=go points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=go --->
 <!--- exec-include ./mk_version.py -D label="Person name" nb/source/pl01_basics/include/pl01.go --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Julia
 <!--- end md --->
-
-<!--- code w label=prob kernel=jl points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="Person name" nb/source/pl01_basics/include/pl01.jl --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 OCaml
 <!--- end md --->
-
-<!--- code w label=prob kernel=ml points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
 <!--- exec-include ./mk_version.py -D label="Person name" nb/source/pl01_basics/include/pl01.ml --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Rust
 <!--- end md --->
-
-<!--- code w label=prob kernel=rs points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="Person name" nb/source/pl01_basics/include/pl01.rs --->
@@ -511,45 +439,36 @@ Rust
 
 <!--- end md --->
 
-<!--- md --->
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
 Go
 <!--- end md --->
-
-<!--- code w label=prob kernel=go points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=go --->
 <!--- exec-include ./mk_version.py -D label="bintree" nb/source/pl01_basics/include/pl01.go --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Julia
 <!--- end md --->
-
-<!--- code w label=prob kernel=jl points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="bintree" nb/source/pl01_basics/include/pl01.jl --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 OCaml
 <!--- end md --->
-
-<!--- code w label=prob kernel=ml points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
 <!--- exec-include ./mk_version.py -D label="bintree" nb/source/pl01_basics/include/pl01.ml --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Rust
 <!--- end md --->
-
-<!--- code w label=prob kernel=rs points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="bintree" nb/source/pl01_basics/include/pl01.rs --->
@@ -565,45 +484,36 @@ Rust
 
 <!--- end md --->
 
-<!--- md --->
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
 Go
 <!--- end md --->
-
-<!--- code w label=prob kernel=go points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=go --->
 <!--- exec-include ./mk_version.py -D label="mk_tree" nb/source/pl01_basics/include/pl01.go --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Julia
 <!--- end md --->
-
-<!--- code w label=prob kernel=jl points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="mk_tree" nb/source/pl01_basics/include/pl01.jl --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 OCaml
 <!--- end md --->
-
-<!--- code w label=prob kernel=ml points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
 <!--- exec-include ./mk_version.py -D label="mk_tree" nb/source/pl01_basics/include/pl01.ml --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Rust
 <!--- end md --->
-
-<!--- code w label=prob kernel=rs points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="mk_tree" nb/source/pl01_basics/include/pl01.rs --->
@@ -617,45 +527,36 @@ Rust
 
 <!--- end md --->
 
-<!--- md --->
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
 Go
 <!--- end md --->
-
-<!--- code w label=prob kernel=go points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=go --->
 <!--- exec-include ./mk_version.py -D label="count_nodes" nb/source/pl01_basics/include/pl01.go --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Julia
 <!--- end md --->
-
-<!--- code w label=prob kernel=jl points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="count_nodes" nb/source/pl01_basics/include/pl01.jl --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 OCaml
 <!--- end md --->
-
-<!--- code w label=prob kernel=ml points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
 <!--- exec-include ./mk_version.py -D label="count_nodes" nb/source/pl01_basics/include/pl01.ml --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Rust
 <!--- end md --->
-
-<!--- code w label=prob kernel=rs points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="count_nodes" nb/source/pl01_basics/include/pl01.rs --->
@@ -670,45 +571,36 @@ Rust
 
 <!--- end md --->
 
-<!--- md --->
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
 Go
 <!--- end md --->
-
-<!--- code w label=prob kernel=go points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=go --->
 <!--- exec-include ./mk_version.py -D label="1000 nodes" nb/source/pl01_basics/include/pl01.go --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Julia
 <!--- end md --->
-
-<!--- code w label=prob kernel=jl points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="1000 nodes" nb/source/pl01_basics/include/pl01.jl --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 OCaml
 <!--- end md --->
-
-<!--- code w label=prob kernel=ml points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
 <!--- exec-include ./mk_version.py -D label="1000 nodes" nb/source/pl01_basics/include/pl01.ml --->
 <!--- end code --->
 
-<!--- md --->
+<!--- md label=ans --->
 Rust
 <!--- end md --->
-
-<!--- code w label=prob kernel=rs points=1 --->
-<!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="1000 nodes" nb/source/pl01_basics/include/pl01.rs --->
