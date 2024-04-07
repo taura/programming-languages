@@ -28,10 +28,6 @@ Declare your choice in the following cell (leave the one you choose).  In this n
 <!--- end md --->
 
 <!--- md w points=1 --->
-Go
-Julia
-OCaml
-Rust
 <!--- end md --->
 
 <!--- md --->
@@ -94,24 +90,26 @@ Rust
 
 <!--- end md --->
 
+<!--- md --->
+**解答セル/Answer Cell**
+<!--- end md --->
 <!--- code w points=1 kernel=python --->
-
 <!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl02_oop_basics/include/pl02.ml --->
+<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl03_oop_basics/include/pl03.ml --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl02_oop_basics/include/pl02.jl --->
+<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl03_oop_basics/include/pl03.jl --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl02_oop_basics/include/pl02.go --->
+<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl03_oop_basics/include/pl03.go --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
-<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl02_oop_basics/include/pl02.rs --->
+<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl03_oop_basics/include/pl03.rs --->
 <!--- end code --->
 
 
@@ -134,24 +132,26 @@ Rust
 
 <!--- end md --->
 
+<!--- md --->
+**解答セル/Answer Cell**
+<!--- end md --->
 <!--- code w points=1 kernel=python --->
-
 <!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl02_oop_basics/include/pl02.ml --->
+<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl03_oop_basics/include/pl03.ml --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl02_oop_basics/include/pl02.jl --->
+<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl03_oop_basics/include/pl03.jl --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl02_oop_basics/include/pl02.go --->
+<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl03_oop_basics/include/pl03.go --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
-<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl02_oop_basics/include/pl02.rs --->
+<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl03_oop_basics/include/pl03.rs --->
 <!--- end code --->
 
 
@@ -203,24 +203,26 @@ for s in shapes:
 
 <!--- end md --->
 
+<!--- md --->
+**解答セル/Answer Cell**
+<!--- end md --->
 <!--- code w points=1 kernel=python --->
-
 <!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl02_oop_basics/include/pl02.ml --->
+<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl03_oop_basics/include/pl03.ml --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl02_oop_basics/include/pl02.jl --->
+<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl03_oop_basics/include/pl03.jl --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl02_oop_basics/include/pl02.go --->
+<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl03_oop_basics/include/pl03.go --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
-<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl02_oop_basics/include/pl02.rs --->
+<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl03_oop_basics/include/pl03.rs --->
 <!--- end code --->
 
 
@@ -242,24 +244,26 @@ for s in shapes:
 
 <!--- end md --->
 
+<!--- md --->
+**解答セル/Answer Cell**
+<!--- end md --->
 <!--- code w points=1 kernel=python --->
-
 <!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl02_oop_basics/include/pl02.ml --->
+<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl03_oop_basics/include/pl03.ml --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl02_oop_basics/include/pl02.jl --->
+<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl03_oop_basics/include/pl03.jl --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl02_oop_basics/include/pl02.go --->
+<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl03_oop_basics/include/pl03.go --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
-<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl02_oop_basics/include/pl02.rs --->
+<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl03_oop_basics/include/pl03.rs --->
 <!--- end code --->
 
 
