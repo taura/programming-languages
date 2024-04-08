@@ -1,0 +1,325 @@
+\documentclass[12pt,dvipdfmx]{beamer}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf}
+\DeclareGraphicsExtensions{.eps}
+\graphicspath{{out/}{out/tex/}{out/tex/gpl/}{out/tex/svg/}{out/tex/lsvg/}{out/tex/dot/}}
+% \graphicspath{{out/}{out/tex/}{out/pdf/}{out/eps/}{out/tex/gpl/}{out/tex/svg/}{out/pdf/dot/}{out/pdf/gpl/}{out/pdf/img/}{out/pdf/odg/}{out/pdf/svg/}{out/eps/dot/}{out/eps/gpl/}{out/eps/img/}{out/eps/odg/}{out/eps/svg/}}
+\usepackage{listings}
+\usepackage{fancybox}
+\usepackage{hyperref}
+\usepackage{color}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% themes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetheme{Szeged} % Szeged
+%% no navigation bar
+% default boxes Bergen Boadilla Madrid Pittsburgh Rochester
+%% tree-like navigation bar
+% Antibes JuanLesPins Montpellier
+%% toc sidebar
+% Berkeley PaloAlto Goettingen Marburg Hannover Berlin Ilmenau Dresden Darmstadt Frankfurt Singapore Szeged
+%% Section and Subsection Tables
+% Copenhagen Luebeck Malmoe Warsaw
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% innerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \useinnertheme{circles}	% default circles rectangles rounded inmargin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% outerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% outertheme
+% \useoutertheme{default}	% default infolines miniframes smoothbars sidebar sprit shadow tree smoothtree
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% colorthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usecolortheme{seahorse}
+%% special purpose
+% default structure sidebartab 
+%% complete 
+% albatross beetle crane dove fly seagull 
+%% inner
+% lily orchid rose
+%% outer
+% whale seahorse dolphin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% fontthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usefonttheme{serif}  
+% default professionalfonts serif structurebold structureitalicserif structuresmallcapsserif
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% generally useful beamer settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+% do not show navigation
+\setbeamertemplate{navigation symbols}{}
+% show page numbers
+\setbeamertemplate{footline}[frame number]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% define some colors for convenience
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\mido}[1]{{\color{green}#1}}
+\newcommand{\mura}[1]{{\color{purple}#1}}
+\newcommand{\ore}[1]{{\color{orange}#1}}
+\newcommand{\ao}[1]{{\color{blue}#1}}
+\newcommand{\aka}[1]{{\color{red}#1}}
+
+\setbeamercolor{ex}{bg=cyan!20!white}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% customize beamer template
+%% https://www.opt.mist.i.u-tokyo.ac.jp/~tasuku/beamer.html
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\iffalse
+%\renewcommand{\familydefault}{\sfdefault}  % 英文をサンセリフ体に
+%\renewcommand{\kanjifamilydefault}{\gtdefault}  % 日本語をゴシック体に
+\usefonttheme{structurebold} % タイトル部を太字
+\setbeamerfont{alerted text}{series=\bfseries} % Alertを太字
+\setbeamerfont{section in toc}{series=\mdseries} % 目次は太字にしない
+\setbeamerfont{frametitle}{size=\Large} % フレームタイトル文字サイズ
+\setbeamerfont{title}{size=\LARGE} % タイトル文字サイズ
+\setbeamerfont{date}{size=\small}  % 日付文字サイズ
+
+\definecolor{UniBlue}{RGB}{0,150,200} 
+\definecolor{AlertOrange}{RGB}{255,76,0}
+\definecolor{AlmostBlack}{RGB}{38,38,38}
+\setbeamercolor{normal text}{fg=AlmostBlack}  % 本文カラー
+\setbeamercolor{structure}{fg=UniBlue} % 見出しカラー
+\setbeamercolor{block title}{fg=UniBlue!50!black} % ブロック部分タイトルカラー
+\setbeamercolor{alerted text}{fg=AlertOrange} % \alert 文字カラー
+\mode<beamer>{
+    \definecolor{BackGroundGray}{RGB}{254,254,254}
+    \setbeamercolor{background canvas}{bg=BackGroundGray} % スライドモードのみ背景をわずかにグレーにする
+}
+
+
+%フラットデザイン化
+\setbeamertemplate{blocks}[rounded] % Blockの影を消す
+\useinnertheme{circles} % 箇条書きをシンプルに
+\setbeamertemplate{navigation symbols}{} % ナビゲーションシンボルを消す
+\setbeamertemplate{footline}[frame number] % フッターはスライド番号のみ
+
+%タイトルページ
+\setbeamertemplate{title page}{%
+    \vspace{2.5em}
+    {\usebeamerfont{title} \usebeamercolor[fg]{title} \inserttitle \par}
+    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle \par}
+    \vspace{1.5em}
+    \begin{flushright}
+        \usebeamerfont{author}\insertauthor\par
+        \usebeamerfont{institute}\insertinstitute \par
+        \vspace{3em}
+        \usebeamerfont{date}\insertdate\par
+        \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
+    \end{flushright}
+}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% how to typset code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstset{language = C,
+numbers = left,
+numberstyle = {\tiny \emph},
+numbersep = 10pt,
+breaklines = true,
+breakindent = 40pt,
+frame = tlRB,
+frameround = ffft,
+framesep = 3pt,
+rulesep = 1pt,
+rulecolor = {\color{blue}},
+rulesepcolor = {\color{blue}},
+flexiblecolumns = true,
+keepspaces = true,
+basicstyle = \ttfamily\scriptsize,
+identifierstyle = ,
+commentstyle = ,
+stringstyle = ,
+showstringspaces = false,
+tabsize = 4,
+escapechar=\@,
+}
+
+\title{Programming Lanaugages (0) \\
+Roadmap}
+\institute{}
+\author{Kenjiro Taura}
+\date{}
+
+\AtBeginSection[]
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+\iffalse
+\AtBeginSubsection[]
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection,currentsubsection]
+\end{frame}
+}
+\fi
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% \begin{frame}
+% \frametitle{Contents}
+% \tableofcontents
+% \end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Objectives of programming languages}
+  \begin{itemize}
+  \item easy to learn
+  \item easy to get programs right
+  \item execute fast
+  \item safe (avoid disaster)
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{The course objectives}
+  \begin{itemize}
+  \item get how different programming languages approach
+    these goals differently
+  \item topics
+    \begin{itemize}
+    \item types
+    \item code reusability
+      (generics, subtyping, inheritance, etc.)
+    \item memory management/safety
+    \item performance
+    \item building compilers
+    \end{itemize}
+
+  \item the main course work: you choose a language from below
+    and do course work in it
+    \begin{itemize}
+    \item \ao{Go}
+    \item \ao{Julia}
+    \item \ao{OCaml}
+    \item \ao{Rust}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{The course format}
+  \begin{itemize}
+  \item after a few weeks, we group students
+  \item each group will be four students, each working on a different language
+  \item we discuss approaches to the above objectives
+    taken by different languages,
+    within and across groups
+  \item you are expected to engage these discussions and other activities
+    (not just to listen to talks and get things done)
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Evaluation}
+  \begin{itemize}
+  \item small coding-centric assignments (a few times)
+  \item reflective essay (every week, until the end of the day)
+  \item participations (esp. in discussions)
+  \item a final report (building a simple C compiler)
+  \item no exams
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Reflective essay}
+  \begin{itemize}
+  \item every week, you write a short reflective essay that expresses
+    such things as
+    \begin{itemize}
+    \item what \ao{\it you} have learned (conceptualize/internalize experiences)
+    \item what came through \ao{\it your} mind while listening to the talk
+      and working on assignments
+    \item how \ao{\it you} worked on the exercise
+      (where you struggled, how you got help, how useful was AI, etc.)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Today}
+  \begin{itemize}
+  \item answer a survey on your programming language experiences
+  \item play with the Jupyter environment
+    \begin{itemize}
+    \item choose a language you work on (for today)
+    \item write a few programs in it
+    \end{itemize}
+  \item practice submission (submit \ao{pl00\_intro} in Jupyter and UTOL (Assignment 1))
+  \item work on assignment \ao{pl01\_basics}
+  \item and share your answers!
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{About AI (ChatGPT, Copilot, ...)}
+  \begin{itemize}
+  \item generally \ao{OK to use it for coding exercises and technical assignments}
+  \item do \mura{not} use it for reflective essays (obvious. it's about {\it you})
+  \item AI solves many basic coding problems esp. in early weeks
+  \item basic coding problems are still given for
+    \begin{itemize}
+    \item fun,
+    \item learning main \ao{\it ideas} behind language design, and
+    \item prerequisite for discussing implementation
+      (memory management, compilers, etc.)
+    \end{itemize}
+  \item main takeaway:
+    \ao{\it you don't have to be struggled by minor/syntactic errors
+      (AI will fix your mistake); you instead focus on ideas/concepts}
+  \end{itemize}
+\end{frame}
+\end{document}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{A special week on AlphaCode}
+  \begin{itemize}
+  \item I welcome a volunteer(s) to make a deep dive into
+    the AlphaCode paper (or others related to it)
+    
+  \item \href{https://www.science.org/doi/10.1126/science.abq1158}{{\it ``Competition-level code generation with AlphaCode''}}
+
+  \item You can do the presentation on this (or a related) paper
+    and substitute a final report with it
+
+  \item also look at an essay \href{https://cacm.acm.org/magazines/2023/2/268950-the-premature-obituary-of-programming/fulltext}{{\it ``The Premature Obituary of Programming}}
+  \end{itemize}
+\end{frame}
+
+
+\end{document}
+
+
+

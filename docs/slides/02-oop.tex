@@ -1,0 +1,470 @@
+\documentclass[12pt,dvipdfmx]{beamer}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf}
+\DeclareGraphicsExtensions{.eps}
+\graphicspath{{out/}{out/tex/}{out/tex/gpl/}{out/tex/svg/}{out/tex/lsvg/}{out/tex/dot/}}
+% \graphicspath{{out/}{out/tex/}{out/pdf/}{out/eps/}{out/tex/gpl/}{out/tex/svg/}{out/pdf/dot/}{out/pdf/gpl/}{out/pdf/img/}{out/pdf/odg/}{out/pdf/svg/}{out/eps/dot/}{out/eps/gpl/}{out/eps/img/}{out/eps/odg/}{out/eps/svg/}}
+\usepackage{listings}
+\usepackage{fancybox}
+\usepackage{hyperref}
+\usepackage{color}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% themes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetheme{Szeged} % Szeged
+%% no navigation bar
+% default boxes Bergen Boadilla Madrid Pittsburgh Rochester
+%% tree-like navigation bar
+% Antibes JuanLesPins Montpellier
+%% toc sidebar
+% Berkeley PaloAlto Goettingen Marburg Hannover Berlin Ilmenau Dresden Darmstadt Frankfurt Singapore Szeged
+%% Section and Subsection Tables
+% Copenhagen Luebeck Malmoe Warsaw
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% innerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \useinnertheme{circles}	% default circles rectangles rounded inmargin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% outerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% outertheme
+% \useoutertheme{default}	% default infolines miniframes smoothbars sidebar sprit shadow tree smoothtree
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% colorthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usecolortheme{seahorse}
+%% special purpose
+% default structure sidebartab 
+%% complete 
+% albatross beetle crane dove fly seagull 
+%% inner
+% lily orchid rose
+%% outer
+% whale seahorse dolphin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% fontthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usefonttheme{serif}  
+% default professionalfonts serif structurebold structureitalicserif structuresmallcapsserif
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% generally useful beamer settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+% do not show navigation
+\setbeamertemplate{navigation symbols}{}
+% show page numbers
+\setbeamertemplate{footline}[frame number]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% define some colors for convenience
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\mido}[1]{{\color{green}#1}}
+\newcommand{\mura}[1]{{\color{purple}#1}}
+\newcommand{\ore}[1]{{\color{orange}#1}}
+\newcommand{\ao}[1]{{\color{blue}#1}}
+\newcommand{\aka}[1]{{\color{red}#1}}
+
+\setbeamercolor{ex}{bg=cyan!20!white}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% customize beamer template
+%% https://www.opt.mist.i.u-tokyo.ac.jp/~tasuku/beamer.html
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\iffalse
+%\renewcommand{\familydefault}{\sfdefault}  % 英文をサンセリフ体に
+%\renewcommand{\kanjifamilydefault}{\gtdefault}  % 日本語をゴシック体に
+\usefonttheme{structurebold} % タイトル部を太字
+\setbeamerfont{alerted text}{series=\bfseries} % Alertを太字
+\setbeamerfont{section in toc}{series=\mdseries} % 目次は太字にしない
+\setbeamerfont{frametitle}{size=\Large} % フレームタイトル文字サイズ
+\setbeamerfont{title}{size=\LARGE} % タイトル文字サイズ
+\setbeamerfont{date}{size=\small}  % 日付文字サイズ
+
+\definecolor{UniBlue}{RGB}{0,150,200} 
+\definecolor{AlertOrange}{RGB}{255,76,0}
+\definecolor{AlmostBlack}{RGB}{38,38,38}
+\setbeamercolor{normal text}{fg=AlmostBlack}  % 本文カラー
+\setbeamercolor{structure}{fg=UniBlue} % 見出しカラー
+\setbeamercolor{block title}{fg=UniBlue!50!black} % ブロック部分タイトルカラー
+\setbeamercolor{alerted text}{fg=AlertOrange} % \alert 文字カラー
+\mode<beamer>{
+    \definecolor{BackGroundGray}{RGB}{254,254,254}
+    \setbeamercolor{background canvas}{bg=BackGroundGray} % スライドモードのみ背景をわずかにグレーにする
+}
+
+
+%フラットデザイン化
+\setbeamertemplate{blocks}[rounded] % Blockの影を消す
+\useinnertheme{circles} % 箇条書きをシンプルに
+\setbeamertemplate{navigation symbols}{} % ナビゲーションシンボルを消す
+\setbeamertemplate{footline}[frame number] % フッターはスライド番号のみ
+
+%タイトルページ
+\setbeamertemplate{title page}{%
+    \vspace{2.5em}
+    {\usebeamerfont{title} \usebeamercolor[fg]{title} \inserttitle \par}
+    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle \par}
+    \vspace{1.5em}
+    \begin{flushright}
+        \usebeamerfont{author}\insertauthor\par
+        \usebeamerfont{institute}\insertinstitute \par
+        \vspace{3em}
+        \usebeamerfont{date}\insertdate\par
+        \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
+    \end{flushright}
+}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% how to typset code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstset{language = C,
+numbers = left,
+numberstyle = {\tiny \emph},
+numbersep = 10pt,
+breaklines = true,
+breakindent = 40pt,
+frame = tlRB,
+frameround = ffft,
+framesep = 3pt,
+rulesep = 1pt,
+rulecolor = {\color{blue}},
+rulesepcolor = {\color{blue}},
+flexiblecolumns = true,
+keepspaces = true,
+basicstyle = \ttfamily\scriptsize,
+identifierstyle = ,
+commentstyle = ,
+stringstyle = ,
+showstringspaces = false,
+tabsize = 4,
+escapechar=\@,
+}
+
+\title{Programming Lanaugages (2) \\
+Object-Oriented Programming Basics}
+\institute{}
+\author{Kenjiro Taura}
+\date{}
+
+\AtBeginSection[]
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+\iffalse
+\AtBeginSubsection[]
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection,currentsubsection]
+\end{frame}
+}
+\fi
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% \begin{frame}
+% \frametitle{Contents}
+% \tableofcontents
+% \end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Classes and objects}
+
+  \begin{itemize}
+  \item a \ao{\it class} $\approx$ a data type definition $+$
+    functions (\ao{\it methods}) for it
+  \item an \ao{\it object} is a data instance created from a class definition
+  \end{itemize}
+
+  \begin{center}
+\begin{lstlisting}[language=python]
+# define a @\ao{\it class}@ named rect
+class rect:
+  def __init__(self, x, y, width, height):
+    self.x = x
+    self.y = y
+    self.width = width
+    self.height = height
+
+r = rect(10,20,30,40) # create @\ao{\it an instance} (or \ao{\it an object}) of rect@
+\end{lstlisting}
+  \end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Methods}
+  \begin{itemize}
+  \item $\approx$ functions
+  \item unlike ordinary functions, a method of the same name can be defined
+    for multiple classes (i.e., implemented differently)
+  \end{itemize}
+
+  \begin{center}
+\begin{lstlisting}[language=python]
+class rect:
+  ...
+  # define a @\ao{\it method}@ named area
+  def area(self):
+    return self.width * self.height
+
+class ellipse:
+  ...
+  # define @\ao{\it another}@ method named area
+  def area(self):
+    return self.radius * self.radius * math.pi
+  \end{lstlisting}
+\end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Dynamic dispatch}
+  \begin{itemize}
+  \item when you call a method, which method gets called among many implementations is determined by the class argument(s) belong to
+  \end{itemize}
+
+\begin{center}
+\begin{lstlisting}[language=python]
+# shapes may have both rect and ellipse instances
+for s in shapes:
+    ... s.area() ...
+\end{lstlisting}
+\end{center}
+  
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Language design points}
+\begin{center}
+\begin{lstlisting}[language=python]
+# shapes may have both rect and ellipse instances
+for s in shapes:
+    ... s.area() ...
+\end{lstlisting}
+\end{center}
+  
+  \begin{itemize}
+  \item in a code like the above, a variable {\tt s} may take a value of different classes (types) over time \ao{\it (polymorphism)}
+  \item for languages that require type declarations,
+    {\it how to declare/specify the type of {\tt s} or {\tt shapes}?}
+  \item {\it does Go/Julia/OCaml/Rust require type declarations?}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Language design points}
+\begin{center}
+\begin{lstlisting}[language=python]
+# shapes may have both rect and ellipse instances
+for s in shapes:
+    ... s.area() ...
+\end{lstlisting}
+\end{center}
+  \begin{itemize}
+  \item more fundamentally, how can we guarantee, prior to execution,
+      that \ao{\it type errors ($\approx$ application of non-existing methods)
+      do not happen at runtime?}
+  \item such property is called \ao{\it type safety}
+  \item an algorithm that checks type safety
+    prior to execution is often called
+    \ao{\it static type checking}
+    
+  \item \ao{\it does Go/Julia/OCaml/Rust guarantee type safety?}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Different approaches}
+
+  \begin{itemize}
+  \item forgo static type checking and thus type safety
+    (e.g., Python, javascript, Lisp, Smalltalk, \ldots)
+  \item disallow polymorphism altogether and make it (trivially) type-safe
+    (e.g., Pascal)
+  \item do some (loose) static type checking but allow polymorphism
+    via unsafe casts between pointers (e.g., C/C++)
+  \item allow polymorphism yet guarantee type safety via \ao{\it subtypes}
+    \begin{itemize}
+    \item \ao{\it $C$ is a subtype of $P$ ($C \leq P$)} $\equiv$
+      a value of $C$ can be safely used wherever $P$ is expected
+    \item allow $P \leftarrow C$
+      (assign a variable of type $P$ a value of type $C$)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Different approaches to subtyping}
+
+  \begin{itemize}
+  \item \ao{\it subclass} vs. \ao{\it interface}
+    \begin{itemize}
+    \item a \ao{\it subclass} that {\it inherits, extends or derives from}
+      an existing class to make a subtype
+    \item an \ao{\it interface} (or {\it trait, abstract class}, etc.)
+      and a \ao{\it (concrete) class} that {\it implements or conforms to} it
+    \end{itemize}
+  \end{itemize}
+
+  \begin{center}
+    \includegraphics[width=0.35\textwidth]{out/pdf/svg/interface_1.pdf}
+    \includegraphics[width=0.35\textwidth]{out/pdf/svg/interface_2.pdf}
+  \end{center}
+
+  \begin{itemize}
+  \item \ao{\it nominal (explicit)} vs. \ao{\it structural} subtyping
+    \begin{itemize}
+    \item nominal : subtype relation admitted only when so declared
+    \item structural : subtype relation admitted whenever appropriate
+      (based on the structure)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{How/if they guarantee type safety?}
+  \begin{itemize}
+  \item following slides briefly explain how Go/Rust/OCaml guarantee \ao{\it type safety}
+  \item \ao{\it type safety} $\equiv$ ``no such methods'' error never happens at runtime
+    $\equiv$ when a program containing $o.m(\ldots)$ passes static type check,
+    $o$ always has method $m$ at runtime
+  \item recall that this is not the case for some languages (including Python, Julia, C++, etc.)
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{A common framework}
+  \begin{itemize}
+  \item we (i.e., static type checker) like to guarantee that,
+    \begin{itemize}
+    \item for any expression $E$ whose \ao{\it static type} is $S$,
+    \item any value $E$ could take at runtime can be \ao{\it safely put} in anywhere $S$ is expected
+      ($\approx$ any such value implements all the methods $S$ specifies)
+    \end{itemize}
+  \item for which we have to guarantee that,
+    for any \ao{\it assignment-like operations} $o = p$,
+    any value $p$ could take at runtime can be \ao{\it safely put} in anywhere $S$ is expected
+  \item we want to check it by comparing $p$'s static type ($T$) and $o$'s static type ($S$)
+  \item this is precisely what we like to capture by
+    \ao{\it subtype} relationship ($T \leq S$)
+  \end{itemize}
+\end{frame}
+    
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Note: assignment-like operations}
+  \begin{itemize}
+  \item  $=$ any operation in which a value is
+    stored to a location of potentially different static type
+    \begin{itemize}
+    \item assignment to a variable/structure/array element
+    \item function calls (passing values to parameters)
+    \item function return (returning a value)
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Subtype relationship}
+  \begin{itemize}
+  \item $T$ is a subtype of $S$ ($T \leq S$)
+  \item $\approx$
+    any value of $T$ can be safely put anywhere $S$ is expected
+  \item $\approx$
+    $T$ has all methods $S$ has 
+  \item (this is not exactly correct, but suffices for now)
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Go}
+  \begin{itemize}
+  \item details on \href{https://go.dev/ref/spec\#Assignability}{Assignability section of Go reference}
+  \item<1-> Q: when is a type $T$ a subtype of another type $S$ ($T \leq S$)?
+  \item<2-> A: one of the following
+    \begin{enumerate}
+    \item $S$ and $T$ are identical type
+    \item $S$ is an interface and $T$ is a {\tt struct/interface} that {\it implements} $S$ or a pointer to it
+    \end{enumerate}
+  \item<3-> Q: so when is $T$ said to {\it implement} an interface $S$?
+  \item<4-> A:
+    \begin{itemize}
+    \item $T$ has all the methods specified in $S$, and 
+    \item each method in $T$ has the same type as the method of the same name in $S$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Rust}
+  \begin{itemize}
+  \item<1-> Q: when is a type $T$ a subtype of another type $S$ ($T \leq S$)?
+  \item<2-> A: one of the following
+    \begin{enumerate}
+    \item $S$ and $T$ are identical type
+    \item $S$ is a reference to a trait and $T$ is a reference to a {\tt struct} that {\it implements} $S$
+    \end{enumerate}
+  \item<3-> Q: so when does $T$ {\it implement} an interface $S$?
+  \item<4-> A:
+    \begin{itemize}
+    \item $T$ has all the methods specified in $S$, and 
+    \item each method in $T$ has the same type as the method of the same name in $S$
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{OCaml}
+  \begin{itemize}
+  \item<1-> Q: when is a type $T$ a subtype of another type $S$ ($T \leq S$)?
+  \item<2-> A: one of the following, among others
+    \begin{enumerate}
+    \item<2-> $S$ and $T$ are identical type
+    \item<3-> when each of $S$ and $T$ is a function type ($S = a \rightarrow b$
+      and $T = a' \rightarrow b'$), then $b' \leq b$ and $a \leq a'$
+    \item<4-> when each of $S$ and $T$ is an object type ($S = {\tt <} m_0 : t_0, \ldots {\tt >}$,
+      $T = {\tt <} m'_0 : t'_0, \ldots {\tt >}$), then
+      \begin{itemize}
+      \item $\{ m_0, \ldots \} \subset \{ m'_0, \ldots \}$ and 
+      \item for each $m_i = m'_j$, $t'_j \leq t_i$
+      \end{itemize}
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\end{document}
+
+
+

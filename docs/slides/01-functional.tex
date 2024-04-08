@@ -1,0 +1,464 @@
+\documentclass[12pt,dvipdfmx]{beamer}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf}
+\DeclareGraphicsExtensions{.eps}
+\graphicspath{{out/}{out/tex/}{out/tex/gpl/}{out/tex/svg/}{out/tex/lsvg/}{out/tex/dot/}}
+% \graphicspath{{out/}{out/tex/}{out/pdf/}{out/eps/}{out/tex/gpl/}{out/tex/svg/}{out/pdf/dot/}{out/pdf/gpl/}{out/pdf/img/}{out/pdf/odg/}{out/pdf/svg/}{out/eps/dot/}{out/eps/gpl/}{out/eps/img/}{out/eps/odg/}{out/eps/svg/}}
+\usepackage{listings}
+\usepackage{fancybox}
+\usepackage{hyperref}
+\usepackage{color}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% themes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetheme{Szeged} % Szeged
+%% no navigation bar
+% default boxes Bergen Boadilla Madrid Pittsburgh Rochester
+%% tree-like navigation bar
+% Antibes JuanLesPins Montpellier
+%% toc sidebar
+% Berkeley PaloAlto Goettingen Marburg Hannover Berlin Ilmenau Dresden Darmstadt Frankfurt Singapore Szeged
+%% Section and Subsection Tables
+% Copenhagen Luebeck Malmoe Warsaw
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% innerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \useinnertheme{circles}	% default circles rectangles rounded inmargin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% outerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% outertheme
+% \useoutertheme{default}	% default infolines miniframes smoothbars sidebar sprit shadow tree smoothtree
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% colorthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usecolortheme{seahorse}
+%% special purpose
+% default structure sidebartab 
+%% complete 
+% albatross beetle crane dove fly seagull 
+%% inner
+% lily orchid rose
+%% outer
+% whale seahorse dolphin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% fontthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usefonttheme{serif}  
+% default professionalfonts serif structurebold structureitalicserif structuresmallcapsserif
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% generally useful beamer settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+% do not show navigation
+\setbeamertemplate{navigation symbols}{}
+% show page numbers
+\setbeamertemplate{footline}[frame number]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% define some colors for convenience
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\mido}[1]{{\color{green}#1}}
+\newcommand{\mura}[1]{{\color{purple}#1}}
+\newcommand{\ore}[1]{{\color{orange}#1}}
+\newcommand{\ao}[1]{{\color{blue}#1}}
+\newcommand{\aka}[1]{{\color{red}#1}}
+
+\setbeamercolor{ex}{bg=cyan!20!white}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% customize beamer template
+%% https://www.opt.mist.i.u-tokyo.ac.jp/~tasuku/beamer.html
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\iffalse
+%\renewcommand{\familydefault}{\sfdefault}  % 英文をサンセリフ体に
+%\renewcommand{\kanjifamilydefault}{\gtdefault}  % 日本語をゴシック体に
+\usefonttheme{structurebold} % タイトル部を太字
+\setbeamerfont{alerted text}{series=\bfseries} % Alertを太字
+\setbeamerfont{section in toc}{series=\mdseries} % 目次は太字にしない
+\setbeamerfont{frametitle}{size=\Large} % フレームタイトル文字サイズ
+\setbeamerfont{title}{size=\LARGE} % タイトル文字サイズ
+\setbeamerfont{date}{size=\small}  % 日付文字サイズ
+
+\definecolor{UniBlue}{RGB}{0,150,200} 
+\definecolor{AlertOrange}{RGB}{255,76,0}
+\definecolor{AlmostBlack}{RGB}{38,38,38}
+\setbeamercolor{normal text}{fg=AlmostBlack}  % 本文カラー
+\setbeamercolor{structure}{fg=UniBlue} % 見出しカラー
+\setbeamercolor{block title}{fg=UniBlue!50!black} % ブロック部分タイトルカラー
+\setbeamercolor{alerted text}{fg=AlertOrange} % \alert 文字カラー
+\mode<beamer>{
+    \definecolor{BackGroundGray}{RGB}{254,254,254}
+    \setbeamercolor{background canvas}{bg=BackGroundGray} % スライドモードのみ背景をわずかにグレーにする
+}
+
+
+%フラットデザイン化
+\setbeamertemplate{blocks}[rounded] % Blockの影を消す
+\useinnertheme{circles} % 箇条書きをシンプルに
+\setbeamertemplate{navigation symbols}{} % ナビゲーションシンボルを消す
+\setbeamertemplate{footline}[frame number] % フッターはスライド番号のみ
+
+%タイトルページ
+\setbeamertemplate{title page}{%
+    \vspace{2.5em}
+    {\usebeamerfont{title} \usebeamercolor[fg]{title} \inserttitle \par}
+    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle \par}
+    \vspace{1.5em}
+    \begin{flushright}
+        \usebeamerfont{author}\insertauthor\par
+        \usebeamerfont{institute}\insertinstitute \par
+        \vspace{3em}
+        \usebeamerfont{date}\insertdate\par
+        \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
+    \end{flushright}
+}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% how to typset code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstset{language = C,
+numbers = left,
+numberstyle = {\tiny \emph},
+numbersep = 10pt,
+breaklines = true,
+breakindent = 40pt,
+frame = tlRB,
+frameround = ffft,
+framesep = 3pt,
+rulesep = 1pt,
+rulecolor = {\color{blue}},
+rulesepcolor = {\color{blue}},
+flexiblecolumns = true,
+keepspaces = true,
+basicstyle = \ttfamily\scriptsize,
+identifierstyle = ,
+commentstyle = ,
+stringstyle = ,
+showstringspaces = false,
+tabsize = 4,
+escapechar=\@,
+}
+
+\title{Programming Lanaugages (1) \\
+Functional Programming}
+\institute{}
+\author{Kenjiro Taura}
+\date{}
+
+\AtBeginSection[]
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+\iffalse
+\AtBeginSubsection[]
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection,currentsubsection]
+\end{frame}
+}
+\fi
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% \begin{frame}
+% \frametitle{Contents}
+% \tableofcontents
+% \end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{What is functional programming? 1st attempt}
+  \begin{itemize}
+  \item Wikipedia:
+    \begin{quote}
+    \ldots functional programming is a programming paradigm where programs are constructed by applying and composing functions.
+    \end{quote}
+
+  \item \ldots, well, I am almost always writing and applying functions, \ldots
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{What is functional programming? 2nd attempt}
+  \begin{itemize}
+  \item ask ChatGPT: describe the most important aspect of functional programming in less than 100 words.
+    \begin{quote}
+      Functional programming's essence lies in treating computation as
+      the evaluation of mathematical functions. It emphasizes
+      \ao{\it immutability,} pure functions, and higher-order functions,
+      enabling clearer, more concise, and maintainable code. By
+      \ao{\it avoiding mutable state and side effects,} it enhances modularity
+      and facilitates reasoning about program behavior.
+    \end{quote}
+  \item is it about \ao{\it ``avoiding side effects''}, or more generally
+    \ao{\it avoiding certain tools that you have been taught and are now familiar with}?
+  \item if so, why you care?
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{What is functional programming? My take}
+  \begin{itemize}
+  \item it is a ``way of thinking'' when you solve a problem
+  \item it formulates the solution to the problem using \ao{\it recursion}
+  \item let's dig into it using an example
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{An example}
+  \begin{itemize}
+  \item Q: write a function that computes the sum of elements in an array
+  \item A: a ``procedural'' Python program
+\begin{lstlisting}
+def sum_array(a):
+    n = len(a)
+    s = 0
+    for i in range(n):
+        s = s + a[i]
+    return s
+\end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Thinking behind the procedural version}
+  \begin{itemize}
+  \item well, to compute {\tt a[0] + a[1] + \ldots + a[n-1]}, 
+  \item start with {\tt s = 0}, and
+  \item {\tt s = s + a[0]}
+  \item {\tt s = s + a[1]}
+  \item \ldots
+  \item {\tt s = s + a[n-1]}
+  \item now {\tt s} should hold what we want
+  \end{itemize}
+remember how you overcame the following confusing ``equation''?
+\begin{lstlisting}
+s = s + a[i]  # do you mean 0 = a[i] ??
+\end{lstlisting}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{A ``functional'' version}
+  \begin{itemize}
+  \item []
+\begin{lstlisting}
+# a[b] + a[b+1] + ... + a[e-1]
+def sum_range(a, b, e):
+    if begin == end:
+        return 0
+    else:
+        return a[begin] + sum_range(a, begin + 1, end)
+
+def sum_array(a):
+    return sum_range(a, 0, len(a))
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{A (superficial) characteristics of the ``functional'' version}
+  \begin{itemize}
+  \item {\it no updates} to variables (like {\tt s = s + ...})
+  \item no loops
+  \end{itemize}
+  but the point is not about \ao{\it avoiding} them
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{The thinking behind the functional version}
+  \begin{itemize}
+  \item the observation
+    \[ \mbox{sum of {\tt a[0:n]}} = \mbox{\tt a[0]} + \mbox{sum of {\tt a[1:n]}} \]
+  \item \ldots and you can compute ``sum of {\tt a[1:n]}'' (almost) by a recursive call
+  \item to be precise, you define a function to compute sum of an array range {\tt a[b:e]} by
+    \[ \mbox{sum of {\tt a[b:e]}} = \mbox{\tt a[b]} + \mbox{sum of {\tt a[b+1:e]}} \]
+  \item one more thing is the base case (when {\tt b} $=$ {\tt e}, sum is zero)
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Note : a few more alternatives}
+  \begin{itemize}
+  \item 
+    \[ \mbox{sum of {\tt a[b:e]}} = \mbox{sum of {\tt a[b:e-1]}} + \mbox{\tt a[e-1]} \]
+  \item 
+    \[ \mbox{sum of {\tt a[b:e]}} = \mbox{sum of {\tt a[b:c]}} + \mbox{\tt a[c:e]} \]
+    where ${\tt c} = \left\lfloor ({\tt b} + {\tt e}) / 2 \right\rfloor$,
+    or any value that satisfies ${\tt b} < {\tt c} < {\tt e}$, for that matter
+
+\begin{lstlisting}
+def sum_range(a, b, e):
+    if b == e:
+        return 0
+    elif b + 1 == e:
+        return a[b]
+    else:
+        c = (b + e) // 2
+        return sum_range(a, b, c) + sum_range(a, c, e)
+\end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{The ``functional way'' of problem solving}
+  \begin{itemize}
+  \item $\approx$ solving a problem by recursive calls
+  \item $\approx$ solving a problem by assuming solutions to ``smaller'' cases are known
+  \end{itemize}
+
+  this is very powerful because of the same reason why solving math problems
+  using \ao{\it recurrence relation (漸化式)} is very powerful
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Solving problems with recurrence relation : an example}
+  \begin{itemize}
+  \item Q: Draw $n$ lines in a plane,
+    in such a way that no three lines intersect at a point.
+    How many regions do they divide the plane into?
+  \item A: Let the number of regions $a_n$. Then,
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+    \[ \only<3>{\left\{}
+        \begin{array}{rcl}
+          \only<2->{a_0 & = & 1,} \\
+          \only<3->{a_n & = & a_{n-1} + n} \\
+        \end{array}
+      \only<3>{\right.} \]
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \only<1-2>{\includegraphics[width=\textwidth]{out/pdf/svg/recurrence_1.pdf}}%
+        \only<3>{\includegraphics[width=\textwidth]{out/pdf/svg/recurrence_2.pdf}}
+      \end{column}
+    \end{columns}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{The functional thinking}
+  \begin{enumerate}
+  \item say you are asked to find an answer to a problem (e.g., $f(n)$ or $g(a)$)
+  \item try to answer it,
+    {\it assuming the answer to \ao{``smaller cases''}
+    are known}
+  \item express it using recursions
+  \end{enumerate}
+  
+  \begin{itemize}
+  \item what \ao{\it ``smaller''} exactly means depends on the problem
+    \begin{itemize}
+    \item smaller integers (e.g., $n - 1$, $n/2$, etc.)
+    \item smaller arrays (e.g., $a[0:n-1]$, $a[1:n]$, $a[0:n/2]$,
+      numbers in $a$ less than $x$, etc.)
+    \item a child of a tree node
+    \item etc.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{The divide-and-conquer paradigm}
+  \begin{itemize}
+  \item a similarly powerful paradigm
+    is the ``divide-and-conquer'' problem solving
+  \item given an input $X$
+  \item somehow \ao{\it ``divide''} $X$ into smaller
+    instances $X_0, X_1, \cdots$
+  \item solve each of them using a recursion
+  \item somehow \ao{\it ``merge''} them into the solution to $X$
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{One more example}
+  \begin{itemize}
+  \item Q: define a function that, given $a$ and $n$, computes $a^n$
+    \begin{itemize}
+    \item note: Python has a builtin primitive ($a$ {\tt **} $n$) or {\tt pow}
+      that just does that, but here we define it without them
+    \end{itemize}
+  \item A: the ``procedural'' version
+\begin{lstlisting}
+def pow(a, n):
+    p = 1
+    for i in range(n):
+        p = p * a
+    return p
+\end{lstlisting}
+  \item this expresses \ao{\it how} you compute $a^n$, step by step
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{A functional version}
+  \begin{itemize}
+  \item instead ask ``what is'' $a^n$
+  \item well,
+    \begin{itemize}
+    \item base case: $n = 0 \Rightarrow 1$
+    \item otherwise, $a^n = a * a^{n-1}$
+\begin{lstlisting}
+def pow(a, n):
+    if n == 0:
+        return 1
+    else:
+        return a * pow(a, n - 1)
+\end{lstlisting}
+    \end{itemize}
+  \end{itemize}
+\end{frame}  
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{A smarter version}
+\begin{lstlisting}
+def pow(a, n):
+    if n == 0:
+        return 1
+    elif n % 2 == 0:
+        p = pow(a, n // 2)
+        return p * p
+    else:
+        return a * pow(a, n - 1)
+\end{lstlisting}
+\end{frame}  
+
+
+\end{document}
+
+

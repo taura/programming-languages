@@ -1,0 +1,4292 @@
+\documentclass[11pt,dvipdfmx]{beamer}
+\usepackage{pgfpages}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.eps}
+\usepackage{listings,jlisting}
+\usepackage{fancybox}
+\usepackage{hyperref}
+
+\newif\ifja
+\newif\ifeng
+%\jatrue
+%\engfalse
+\jafalse
+\engtrue
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% themes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetheme{default} % Szeged
+%\usetheme{Boadilla}
+%% no navigation bar
+% default boxes Bergen Boadilla Madrid Pittsburgh Rochester
+%% tree-like navigation bar
+% Antibes JuanLesPins Montpellier
+%% toc sidebar
+% Berkeley PaloAlto Goettingen Marburg Hannover Berlin Ilmenau Dresden Darmstadt Frankfurt Singapore Szeged
+%% Section and Subsection Tables
+% Copenhagen Luebeck Malmoe Warsaw
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% innerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \useinnertheme{circles}	% default circles rectangles rounded inmargin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% outerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% outertheme
+% \useoutertheme{default}	% default infolines miniframes smoothbars sidebar sprit shadow tree smoothtree
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% colorthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usecolortheme{seahorse}
+%% special purpose
+% default structure sidebartab 
+%% complete 
+% albatross beetle crane dove fly seagull 
+%% inner
+% lily orchid rose
+%% outer
+% whale seahorse dolphin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% fontthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usefonttheme{serif}  
+% default professionalfonts serif structurebold structureitalicserif structuresmallcapsserif
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% generally useful beamer settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+% do not show navigation
+\setbeamertemplate{navigation symbols}{}
+% show page numbers
+\setbeamertemplate{footline}[frame number]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% define some colors for convenience
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\mido}[1]{{\color{green}#1}}
+\newcommand{\mura}[1]{{\color{purple}#1}}
+\newcommand{\ore}[1]{{\color{orange}#1}}
+\newcommand{\ao}[1]{{\color{blue}#1}}
+\newcommand{\aka}[1]{{\color{red}#1}}
+\newcommand{\shiro}[1]{{\color{white}#1}}
+
+\setbeamercolor{ex}{bg=cyan!20!white}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% how to typset code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstset{language = C,
+numbers = left,
+numberstyle = {\tiny \emph},
+numbersep = 10pt,
+breaklines = true,
+breakindent = 40pt,
+frame = tlRB,
+frameround = ffft,
+framesep = 3pt,
+rulesep = 1pt,
+rulecolor = {\color{blue}},
+rulesepcolor = {\color{blue}},
+flexiblecolumns = true,
+keepspaces = true,
+basicstyle = \ttfamily\scriptsize,
+identifierstyle = ,
+commentstyle = ,
+stringstyle = ,
+showstringspaces = false,
+tabsize = 4,
+escapechar=\@,
+}
+
+\title{Programming Language (7) \\
+Garbage Collection}
+\institute{}
+\author{田浦}
+\date{}
+
+\AtBeginSection[] % Do nothing for \section*
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+\AtBeginSubsection[] % Do nothing for \section*
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection,currentsubsection]
+\end{frame}
+}
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{目次}
+\tableofcontents
+\end{frame}
+\fi
+\ifeng
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\section{GCの良し悪しの基準}
+\fi
+\ifeng
+\section{Criteria of evaluating GCs (RC vs. traversing)}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}
+\frametitle{GCの良し悪しの基準}
+\begin{enumerate}
+\item \ao{正確さ:} 
+  \begin{itemize}
+  \item 回収可能なゴミの範囲が広いか
+  \end{itemize}
+\item \ao{メモリ割り当てコスト:} 
+  \begin{itemize}
+  \item メモリ割当をするのに必要な(GCを含めた)仕事
+  \end{itemize}
+\item \ao{mutatorオーバーヘッド:} 
+  \begin{itemize}
+  \item GCが機能するためにmutatorに課されるオーバーヘッドが少ないか
+  \end{itemize}
+\item \ao{停止時間(pause time):} 
+  \begin{itemize}
+  \item GCが機能するためにmutatorが(一時的に)停止
+    しなくてはならない時間が短いか
+  \end{itemize}
+\end{enumerate}
+\end{frame}
+\fi
+%%% END %%%
+\ifeng
+\begin{frame}
+\frametitle{Evaluating GCs}
+\begin{enumerate}
+\item \ao{preciseness:} 
+  \begin{itemize}
+  \item garbage that can be collected
+  \end{itemize}
+\item \ao{memory allocation cost:} 
+  \begin{itemize}
+  \item the work (including GC) required to allocate memory 
+  \end{itemize}
+\item \ao{pause time:} 
+  \begin{itemize}
+  \item the (worst case) time the mutator has to (temporarily) suspend
+    for GC to function
+  \end{itemize}
+\item \ao{mutator overhead:} 
+  \begin{itemize}
+  \item the overhead imposed on the mutator for GC to function
+  \end{itemize}
+\end{enumerate}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}
+\frametitle{基準1: 正確さ}
+\begin{itemize}
+\item \aka{参照カウントは循環ゴミを回収できない}
+\item 参照カウント $<$ 走査型 (走査型のほうが通常優れる)
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{out/pdf/svg/refcount_0.pdf}
+\end{center}
+\end{frame}
+\fi
+%%% END %%%
+\ifeng
+\begin{frame}
+\frametitle{Criteria \#1: preciseness}
+\begin{itemize}
+\item \aka{\it reference counting cannot reclaim cyclic garbage}
+\item reference count $<$ traversing GC (traversing GC is better)
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{out/pdf/svg/refcount_en_0.pdf}
+\end{center}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}
+\frametitle{基準2: メモリ割り当てコスト} 
+\begin{itemize}
+\item<1-> 一言で甲乙をつけるのは難(詳しくは後述)
+\item<2-> 走査型:
+  \begin{itemize}
+  \item \ao{コストは「到達可能だったオブジェクト」と「そうでなかった(回収できた)オブジェクト」の大きさの比}で決まる(後述)
+  \item アプリと使用メモリ次第． 極小〜極大まで
+  \item 改善手段: \ao{世代別GC}
+  \end{itemize}
+
+\item<3-> 参照カウント:
+  \begin{itemize}
+  \item 参照数0になったオブジェクトの回収コストは少ない\&一定
+  \item メモリがかつかつでも一定(優秀)
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Criteria \#2: memory allocation cost} 
+\begin{itemize}
+\item<1-> difficult to say in a few words (more details ahead)
+\item<2-> \ao{traversing GC:}
+  \begin{itemize}
+  \item \ao{\it the cost is determined by the ratio 
+      ``reachable objects'' / ``unreachable (reclaimed) objects''} (later)
+  \item totally depending on apps and memory size,
+    it can be anywhere from the minimum to infinity
+  \item an advanced technique: \ao{generational GC}
+  \end{itemize}
+
+\item<3-> \ao{reference counting:}
+  \begin{itemize}
+  \item the cost of reclaiming an object once its RC drop to zero
+    is small and constant
+  \item it is constant even if memory is scarce (good) 
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}
+\frametitle{基準3: 停止時間(pause time)} 
+\begin{itemize}
+\item<1-> 参照カウント $<$ 走査型 (参照カウントのほうが通常優れている)
+\item<2-> 走査型: 
+  \begin{itemize}
+  \item 生きているオブジェクトを\aka{「全部一気に」}たどり，
+    たどられなかったオブジェクトを\aka{「全部一気に」}回収
+  \item ドンと働いてドンと回収
+  \item<3-> たどってる最中にmutatorに動かれると
+    ($=$グラフを書き換えられると)厄介
+    \begin{itemize}
+    \item その厄介を何とかする方法: \ao{インクリメンタルGC}
+    \item 世代別GCにも似た効果あり
+    \end{itemize}
+  \end{itemize}
+
+\item<4-> 参照カウント:
+  \begin{itemize}
+  \item (mutatorがポインタを書き換えた結果)参照数0が発生したら，
+    \ao{即回収可能}
+  \item 発生したゴミをこまめに回収
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Criteria \#3: pause time} 
+\begin{itemize}
+\item<1-> reference counting $<$ traversing GC
+  (reference counting is better)
+\item<2-> \ao{traversing GC:} 
+  \begin{itemize}
+  \item traverse {\it all} live objects, {\it en masse},
+    and reclaim {\it all} unreached objects, {\it en masse}
+  \item do a whole bunch of work and get a whole bunch of free blocks
+  \item<3-> why so?
+    troubled if the mutator runs ($=$ changes the graph of objects)
+    during traversing
+    \begin{itemize}
+    \item a solution: \ao{incremental GC}
+    \item generational GCs mitigate it too
+    \end{itemize}
+  \end{itemize}
+
+\item<4-> \ao{reference counting:}
+  \begin{itemize}
+  \item when an object's RC drops to zero
+    (as a result of mutator's action),
+    it can be reclaimed \ao{immediately}
+  \item reclaim garbage as they arise
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}[fragile]
+\frametitle{基準4: mutatorオーバーヘッド}
+
+\begin{itemize}
+\item 走査型 $<$ 参照カウント (走査型のほうが優れている)
+\item 参照カウントは，ポインタの更新時のオーバーヘッド大
+\begin{lstlisting}
+object * p, * q;
+p = q;    
+\end{lstlisting}
+は
+\begin{lstlisting}
+if (p) p->rc--;
+if (q) q->rc++;
+p = q;
+\end{lstlisting}
+に. さらに，
+\begin{itemize}
+\item マルチスレッドプログラムでは?
+\item カウンタが溢れたらどうする? (そのためのチェックどうする?)
+\end{itemize}
+\item 改善技術: \ao{遅延参照カウント，sticky参照カウント，1 bit参照カウント}
+\item 注: 走査型でも世代別GC，
+インクリメンタルGCなどではポインタ更新時のオーバーヘッドあり
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Criteria \#4: mutator overhead}
+
+\begin{itemize}
+\item traversing $<$ reference counting (traversing GC is better)
+\item reference counting has a large overhead for updating RCs
+\begin{lstlisting}
+object * p, * q;
+p = q;    
+\end{lstlisting}
+will do:
+\begin{lstlisting}
+if (p) p->rc--;
+if (q) q->rc++;
+p = q;
+\end{lstlisting}
+Moreover,
+\begin{itemize}
+\item what about multithreaded programs?
+\item what if the counter overflows (how to check it)?
+\end{itemize}
+\item techniques:
+  \ao{deferred reference counting, sticky reference counting,
+    1 bit reference counting}
+\item remark: some traversing GCs (e.g., generational and incremental)
+  add overhead to pointer updates too
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}[fragile]
+\frametitle{要約}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+  \frametitle{Summary}
+
+  \begin{center}
+  \begin{tabular}{|l|c|c|}\hline
+    & traversing & reference counting \\\hline
+    preciseness & $+$ & $-$ \\
+    allocation cost & ? ($\ast$) & $+$ \\
+    pause time & $-$ ($\dagger$) & $+$ \\
+    mutator overhead & $+$ ($\ddagger$) & $-$ \\\hline
+  \end{tabular}
+  \end{center}
+
+  \begin{itemize}
+  \item [($\ast$)] depends on size of reachable graph and memory;
+    \ao{generational} garbage collector helps
+  \item [($\dagger$)] \mura{incremental} garbage collector helps
+  \item [($\ddagger$)] both \ao{generational} and \mura{incremental}
+    garbage collectors impose some mutator overheads
+  \end{itemize}
+
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\section{2つの走査型GC (マーク\&スイープとコピー)}
+\fi
+\ifeng
+\section{Two traversing GCs (mark\&sweep vs. copying)}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}
+\frametitle{\ao{マーク\&スイープGC}と\ao{コピーGC}}
+到達可能なオブジェクトをどうするかの違い
+\begin{itemize}
+\item<1-> \ao{マーク\&スイープGC}: 「訪問済み」印をつける
+\item<2-> \ao{コピーGC}: 別の(連続)領域にコピーする
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+  \frametitle{\ao{mark\&sweep GC} vs. \ao{copying GC}}
+  they differ in what to do on reachable objects
+\begin{itemize}
+\item<1-> \ao{mark\&sweep GC}: mark them as ``visited''
+\item<2-> \ao{copying GC}: copy them into a distinct (contiguous) region
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{マーク\&スイープGC}
+\begin{itemize}
+\item 発見したオブジェクトに「印をつける(マークする)」だけ. コピーはしない
+\item ポインタの書き換えなども必要ない
+\item 空き領域は連続していないので，割り当てのサイズに応じて，
+  適切な空き領域を見つけられるような管理方式が必要
+\end{itemize}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_1.pdf}}%
+\only<2>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_2.pdf}}%
+\only<3>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_3.pdf}}%
+\only<4>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_4.pdf}}%
+\only<5>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_5.pdf}}%
+\only<6>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_6.pdf}}%
+\only<7>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_7.pdf}}%
+\only<8>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_8.pdf}}%
+\only<9>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_9.pdf}}%
+\end{center}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Mark\&sweep GC}
+\begin{enumerate}
+\item \ao{mark-phase:}
+  \begin{itemize}
+  \item traverses objects from the root, \ao{\it marking}
+    objects it encounters
+  \item maintains \ao{\it mark stack (not shown in the figure)},
+    marked objects whose children may have not been marked ($=$ light gray objects)
+  \end{itemize}
+\item \ao{sweep phase:}
+  \begin{itemize}
+  \item reclaims all memory blocks that were not visited
+  \item free memory blocks are not contiguous,
+    so must be managed by an appropriate data structure
+    \ao{\it (free lists)}
+  \end{itemize}
+\end{enumerate}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_1.pdf}}%
+\only<2>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_2.pdf}}%
+\only<3>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_3.pdf}}%
+\only<4>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_4.pdf}}%
+\only<5>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_5.pdf}}%
+\only<6>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_6.pdf}}%
+\only<7>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_7.pdf}}%
+\only<8>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_8.pdf}}%
+\only<9>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/ms_algorithm_9.pdf}}%
+\end{center}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}
+\frametitle{最も基本的なコピーGC図解}
+\begin{itemize}
+\item 本質$\approx$グラフのコピー($\approx$シリアライズ)
+  \begin{itemize}
+  \item もともと同じポインタはコピー後も同じになるように
+  \end{itemize}
+\item \ao{semi-space GC} (ルートから到達可能なオブジェクトをまるごと別領域へコピー)
+\end{itemize}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_0.pdf}}%
+\only<2>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_1.pdf}}%
+\only<3>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_2.pdf}}%
+\only<4>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_3.pdf}}%
+\only<5>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_4.pdf}}%
+\only<6>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_5.pdf}}%
+\only<7>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_6.pdf}}%
+\only<8>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_7.pdf}}%
+\end{center}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Copying GC}
+\begin{itemize}
+\item in essence, $\approx$ copying a graph ($\approx$ serialization)
+  \begin{itemize}
+  \item the same pointers must remain the same after the copy
+  \end{itemize}
+\item \ao{semi-space GC}
+  (copy all objects reachable from the root into another space)
+\end{itemize}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_0.pdf}}%
+\only<2>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_1.pdf}}%
+\only<3>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_2.pdf}}%
+\only<4>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_3.pdf}}%
+\only<5>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_4.pdf}}%
+\only<6>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_5.pdf}}%
+\only<7>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_6.pdf}}%
+\only<8>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/copy_working_7.pdf}}%
+\end{center}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}[fragile]
+\frametitle{コピーGC: アルゴリズム}
+\begin{columns}
+\begin{column}{0.53\textwidth}
+\begin{lstlisting}
+void *free, *scan;
+copy_gc() {
+  free = scan = to_space;
+  redirect_ptrs(root);
+  while (scan < free) {
+    redirect_ptrs(scan);
+    scan += scanが指すオブジェクトのサイズ;
+  }
+}
+redirect_ptrs(void * o) {
+  for (p @$\in$@ oに含まれるポインタ) {
+    if (pはcopy済み) {
+      p = pのforward pointer;
+    } else {
+      p を free へコピー;
+      p = free;
+      pのforward pointer = free;
+      free += p が指すオブジェクトのサイズ;
+    }
+  }
+}
+\end{lstlisting}
+\end{column}
+\begin{column}{0.45\textwidth}
+不変条件
+\begin{itemize}
+\item $p < {\tt scan}$ $\Rightarrow$ $p$はredirect済み (from spaceへのポインタは含まない)
+\item $p < {\tt free}$はコピー済み
+\end{itemize}
+\only<1>{\includegraphics[width=\textwidth]{out/pdf/svg/copy_working_4.pdf}}%
+\only<2>{\includegraphics[width=\textwidth]{out/pdf/svg/copy_working_5.pdf}}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Copying GC: algorithm}
+\begin{columns}
+\begin{column}{0.58\textwidth}
+\begin{lstlisting}
+void *free, *scan;
+copy_gc() {
+  free = scan = to_space;
+  redirect_ptrs(root);
+  while (scan < free) {
+    redirect_ptrs(scan);
+    scan += @{\rm the size of object}@ scan @{\rm points to}@;
+  }
+}
+redirect_ptrs(void * o) {
+  for (p @$\in$@ @pointers in@ o) {
+    if (p @has been copied@) {
+      p = p@'s {\it forward pointer}@;
+    } else {
+      @copy {\tt p} to {\tt free}@;
+      p = free;
+      p@'s {\rm forward pointer}@ = free;
+      free += @{\rm the size of object}@ p @{\rm points to}@;
+    }
+  }
+}
+\end{lstlisting}
+\end{column}
+\begin{column}{0.45\textwidth}
+invariant
+\begin{itemize}
+\item $p < {\tt scan}$ $\Rightarrow$ $p$ has been reached; so has
+  its direct children 
+\item $p < {\tt free}$ $\Rightarrow$ $p$ has been reached; but its
+  children may not
+\end{itemize}
+\only<1>{\includegraphics[width=\textwidth]{out/pdf/svg/copy_working_4.pdf}}%
+\only<2>{\includegraphics[width=\textwidth]{out/pdf/svg/copy_working_5.pdf}}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{マーク\&スイープGC vs コピーGC}
+\begin{itemize}
+\item コピーGCの利点
+  \begin{itemize}
+  \item GC後，生きているオブジェクトの領域が連続領域
+  \item $\rightarrow$空き領域も連続領域
+  \item $\rightarrow$
+    \ao{メモリ割り当てのオーバーヘッド少}(空き領域の探索が事実上不要)
+  \end{itemize}
+\item コピーGCの欠点
+  \begin{itemize}
+  \item そもそもコピーは重い
+  \item コピーのための空き領域が必要(メモリ利用効率が悪い)
+    \begin{itemize}
+    \item 「コピーされ得るオブジェクト量 $\leq$ 空き領域」の保証が必要
+    \item $\rightarrow$ from space $=$ to space
+    \end{itemize}
+  \item ポインタと非ポインタが正確に区別できないと動かない
+    (\mura{曖昧なポインタ}が許されない)
+    \begin{itemize}
+    \item ポインタだったらコピー先に張り換え
+    \item ポインタじゃないものを書き換えたら惨事
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Mark\&sweep vs. copying GC}
+\begin{itemize}
+\item copying GC pros:
+  \begin{itemize}
+  \item live objects occupy a contiguous region after a GC
+  \item $\rightarrow$ the free region becomes contiguous too
+  \item $\rightarrow$
+    \ao{the overhead for memory allocation is small}
+    (no need to ``search'' the free region)
+  \end{itemize}
+\item copying GC cons:
+  \begin{itemize}
+  \item copy is expensive, obviously
+  \item the free region must be reserved to accommodate objects copied
+    (low memory utilization)
+    \begin{itemize}
+    \item must ensure ``size of objects that may be copied''
+      $\leq$ ``size of the region to copy them into''
+    \item $\rightarrow$ ``from space'' $=$ ``to space''
+    \end{itemize}
+  \item pointers must be ``precisely'' distinguished from non-pointers
+    (\mura{ambiguous pointers} are not allowed)
+    \begin{itemize}
+    \item pointers are updated to the destinations of copies
+    \item a disaster occurs if you update non-pointers
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\section{走査型GCのメモリ割り当てコスト(mark-cons比)}
+\fi
+\ifeng
+\section{Memory allocation cost of traversing GCs
+  (mark-cons ratio)}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{走査型GCのメモリ割り当てコスト}
+\begin{itemize}
+\item 大雑把には，
+\begin{quote}
+一回のGC時間 $\propto$ 到達可能だったオブジェクトの量
+\end{quote}
+\item 前提:
+  \begin{itemize}
+  \item ヒープの大きさ(copy GCならばsemi spaceの大きさ) $= \ao{M}$
+  \item 到達可能なオブジェクトの量 $= \ao{r}$
+  \item {\footnotesize 常に$r$というのは非現実的だがさしあたりそう仮定する}
+  \end{itemize}
+\item 挙動: 以下の繰り返し:
+  \begin{enumerate}
+  \item GC発生 $\rightarrow$ $r$ バイト スキャン(またはコピー)して; 
+    $(M - r)$だけの空き領域を作る
+  \item $(M - r)$バイト (GCせずに)割り当て
+  \end{enumerate}
+\begin{center}
+\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/mark_cons_ratio_0.pdf}}%
+\only<2>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/mark_cons_ratio_1.pdf}}%
+\only<3->{\includegraphics[width=0.6\textwidth]{out/pdf/svg/mark_cons_ratio_2.pdf}}%
+\end{center}
+
+\only<4>{\ao{\[ \therefore \mbox{1 バイト割り当てあたりのコスト} \propto \frac{r}{M - r} \]}}
+
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Memory allocation cost of traversing GCs}
+\begin{itemize}
+\item let's quantify the cost of
+  allocating a byte including GC's work
+  
+\item assume:
+  \begin{itemize}
+  \item heap size (size of a semi-space in case of copying GC) $= \ao{M}$
+  \item reached objects $= \ao{r}$
+  \item {\footnotesize assume for the sake of argument it's {\it always} $r$}
+  \end{itemize}
+
+\item<3-> behavior at equilibrium: the program repeats:
+  \begin{enumerate}
+  \item a GC occurs $\rightarrow$ scan (or copy) $r$ bytes,
+    to make a free space of $(M - r)$ bytes
+  \item allocate $(M - r)$ bytes without triggering a GC
+  \end{enumerate}
+
+\item<4-> a key observation
+\begin{quote}
+  the time (cost) of a single GC
+  is roughly proportional to the amount of reached objects (i.e., $\propto r$)
+\end{quote}
+  
+\end{itemize}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/mark_cons_ratio_0.pdf}}%
+\only<2>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/mark_cons_ratio_1.pdf}}%
+\only<3->{\includegraphics[width=0.5\textwidth]{out/pdf/svg/mark_cons_ratio_2.pdf}}%
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Memory allocation cost of traversing GCs}
+  \begin{itemize}
+  \item<1-> []
+\begin{center}
+\includegraphics[width=0.5\textwidth]{out/pdf/svg/mark_cons_ratio_2.pdf}
+\end{center}
+\item<2-> []
+  \begin{eqnarray*}
+    \therefore
+    & & \mbox{the cost of allocating a byte} \\
+    & \only<3->{=} & \only<3->{\alpha + \frac{\mbox{the amount of time spent on a GC}}
+                     {\mbox{the amount of space reclaimed by a GC}}} \\
+    & \only<4->{=} & \only<4->{\alpha + \beta \frac{\mbox{the amount of space visited by a GC}}
+                           {\mbox{the amount of space reclaimed by a GC}}} \\
+    & \only<5->{=} & \only<5->{\alpha + \beta \frac{r}{M - r}}
+  \end{eqnarray*}
+
+  \item<3-> $\alpha$ : a constant cost needed anyway, even if you don't need to reclaim memory at all
+  \item<5-> $\beta$ : an average cost to examine a single byte
+    \begin{itemize}
+    \item copy it (in a copying GC)
+    \item see if it is a pointer to an unvisited object
+    \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+
+\begin{frame}
+  \frametitle{Note on copying GC vs mark-sweep GC}
+  \begin{itemize}
+  \item the key observation
+    \begin{quote}
+      the time (cost) of a single GC is roughly proportional to the amount of reached objects (i.e., $\propto r$)
+    \end{quote}
+    ignores the cost of so-called ``sweep phase''
+
+  \item a more accurate quantification will be
+    \[ \mbox{the time (cost) of a single GC}
+      \approx \beta r + \ao{\gamma (M - r)}, \]
+    which adds a constant ($\gamma$) to an allocation cost
+    per byte, which any memory allocator will incur anyway
+
+  \item i.e., the cost will be 
+
+  \begin{eqnarray*}
+    &   & \alpha + \frac{\beta r + \ao{\gamma (M - r)}}{M-r} \\
+    & = & \alpha + \ao{\gamma} + \beta \frac{r}{M-r} \\
+  \end{eqnarray*}
+  
+  \end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{走査型GCのメモリ割り当てコスト}
+\begin{itemize}
+\item 重要な式:
+\[ \mbox{1 バイト割り当てあたりのコスト} \propto \ao{\frac{r}{M - r}} \]
+
+\item 右辺をしばしば \ao{mark-cons比 (mark-cons ratio)}と呼ぶ．語源:
+  \begin{itemize}
+  \item mark : 到達可能なオブジェクトに印をつける仕事量
+  \item cons : Lispという言語で，リストセルの割り当て$=${\tt (cons x y)}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Memory allocation cost of traversing GCs}
+\begin{itemize}
+\item important formula:
+\[ \mbox{allocation cost per byte} \propto \mbox{\ao{const.}} + \ao{\frac{r}{M - r}} \]
+
+\item \ao{$r/(M-1)$} is often
+  called \ao{\it mark-cons ratio}. its origin:
+  \begin{itemize}
+  \item mark : the amount of work to \ao{\it mark} reachable objects
+  \item cons : the synonym of memory allocation in the ancient Lisp language
+    $=${\tt (cons x y)}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{走査型GCのメモリ割り当てコスト}
+
+\[ \mbox{1 バイト割り当てあたりのコスト} \propto \ao{\frac{r}{M - r}} \]
+
+\begin{columns}
+\begin{column}{0.7\textwidth}
+\begin{itemize}
+\item $r$はアプリ固有の量(GCに左右されない)
+  \begin{itemize}
+  \item 注:
+    GC起動の「タイミング」によって$r$が上下することはある
+  \end{itemize}
+\item $M$は調節可能なパラメータ
+\item $M$が大 $\rightarrow$ コスト小
+\item \ao{$\rightarrow$ $M$ (使用メモリ)を大きくしてコストを削減可能}
+\item 要は余剰メモリがあればGCをあまりしなくてよくなるという
+  \ao{あたりまえ}のこと
+\item ただし，単にGCが少なくなる，
+  という以上の\ao{定量的な把握}は重要
+\end{itemize}
+\end{column}
+\begin{column}{0.3\textwidth}
+%\includegraphics[width=\textwidth]{out/pdf/img/atarimae.pdf}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Memory allocation cost of traversing GCs}
+
+\[ \mbox{cost per byte} \propto \ao{\mbox{const.} + \frac{r}{M - r}} \]
+
+\begin{itemize}
+\item $r$ (primarily) depends only on app (not dependent of GCs)
+  \begin{itemize}
+  \item remark:
+    $r$ may fluctuate depending on ``when'' GCs occur
+  \end{itemize}
+\item $M$ is an adjustable parameter (up to GC's choice)
+\item $M$ is large $\rightarrow$ the cost is small
+\item \ao{$\rightarrow$ you can reduce the cost by making $M$
+    (memory usage) larger}
+\item may sound obvious, but remember that
+  what is important is the cost \ao{\it per allocation (byte)},
+  not the frequency of GCs
+\end{itemize}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{$M$ (使用メモリ量)はいくらにするのか?}
+
+\begin{itemize}
+\item $M$を大にすればコスト小!?
+  \begin{itemize}
+  \item $\rightarrow$ 好きなだけ(搭載メモリ量まで)大きくすれば? 
+  \end{itemize}
+\item 普通「節度」を持って$M$を決める
+\[ \ao{M \propto r} \]
+例えば，$\alpha > 1$ なる定数を決めて，
+\[ \ao{M = \alpha r} \]
+
+\item 実際にはGC時に，その時到達可能だったオブジェクトのサイズを計測し，
+  $r$とする
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{How large do we make $M$ (memory usage)?}
+
+\begin{itemize}
+\item alright, the larger we make $M$, the smaller the cost becomes
+  \begin{itemize}
+  \item $\rightarrow$ why don't we make it arbitrarily
+    large (up to physical memory)?
+  \end{itemize}
+\item we normally set $M$ ``modestly'', like:
+\[ \ao{M \propto r} \]
+e.g., choose a constant $k > 1$ and set:
+\[ \ao{M = k r} \]
+
+\item a GC measures the amount of reachable objects to get $r$
+  and set $M$ according to the above formula
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{$M$ (使用メモリ量)はいくらにするのか?}
+\begin{itemize}
+\item このとき，
+  \begin{itemize}
+  \item コスト: \[ \mbox{mark-cons比} = \frac{r}{\alpha r - r} = \frac{1}{\alpha - 1} \]
+  \item 使用メモリ: 
+\[ \propto \mbox{ある瞬間に到達可能だったオブジェクトのサイズ} \]
+  \end{itemize}
+どちらも「理にかなっている」
+\item ほとんどのGCは$\alpha$を設定できる
+\item 通常$\alpha = 1.5$ 〜 $2$程度だが，
+  大胆に増やせばコストが減ることは知っておくと良い
+\end{itemize}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{How large do we make $M$ (memory usage)?}
+\begin{itemize}
+\item in this setting,
+  \begin{itemize}
+  \item cost: \[ \mbox{mark-cons ratio} = \frac{r}{k r - r} = \frac{1}{k - 1} \]
+  \item memory usage 
+\[ \propto \mbox{the size of reachable objects at a point during execution} \]
+  \end{itemize}
+both are ``reasonable''
+\item most GCs allow you to set $k$ (or $M$ directly)
+\item normally, $k = 1.5 \sim 2$, but
+  it is worth knowing that you can reduce the cost by setting it large
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\section{世代別GC}
+\fi
+\ifeng
+\section{Generational GC}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{世代別GC: はじめに}
+\begin{itemize}
+\item 目的: 走査型GCにおけるGCオーバーヘッド(\ao{mark-cons比})の低下
+\item 手段: 普段は\ao{最近作られたオブジェクト(若い世代)}
+  だけを走査・回収する
+  \begin{itemize}
+  \item 普段は若い世代だけを走査
+  \item それだけでは回収しきれなくなったら全体を走査
+  \end{itemize}
+\item なぜこれでうまく行く(かもしれない)のだろう?
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Generational GC: introduction}
+\begin{itemize}
+\item \ao{objective:} reduce \ao{\it mark-cons ratio} in traversing GCs
+\item \ao{how:} traverse and reclaim
+  only \ao{\it recently created objects (young generation)}
+  \begin{itemize}
+  \item traverse only young generations often
+  \item traverse the entire heap occasionally
+    when it does not reclaim enough space
+  \end{itemize}
+\item why does it work?
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{mark-cons比 (復習)}
+\begin{eqnarray*}
+&   & \mbox{GCオーバーヘッド} \\
+& \equiv & \mbox{1バイトのメモリ割り当てに要したGCの仕事量} \\
+\only<2->{& = & \frac{\mbox{\ao{GCが行った仕事量}}}{\mbox{\mura{メモリ割当量}}}} \\
+\only<3->{&   & \mbox{\footnotesize (以降走査型を仮定．ある一回のGCに着目)} } \\
+\only<4->{& \propto & 
+\frac{\mbox{\ao{ルートから到達可能だったオブジェクトの量}}}
+     {\mbox{\mura{回収したオブジェクトの量}}} } \\
+\only<5->{& = & 
+\frac{\mbox{\ao{ルートから到達可能だったオブジェクトの量}}}
+     {\mbox{\mura{ルートから到達不能だったオブジェクトの量}}} }
+\end{eqnarray*}
+\begin{itemize}
+\item<6-> つまり，「ルートから到達可能なオブジェクトの割合」
+  が少ないほど効率が良くなる
+\item<7-> 以降，
+  「ルートから到達可能」を「生きてる」と言うことにする
+  (厳密には誤用)
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{mark-cons ratio (review)}
+\begin{eqnarray*}
+&   & \mbox{GC overhead} \\
+& \equiv & \mbox{GC's work per allocating a byte} \\
+\only<2->{& = & \frac{\mbox{\ao{GC's work}}}{\mbox{\mura{memory allocated}}}} \\
+\only<3->{&   & \mbox{\footnotesize (assume a traversing GC; look at a specific GC)} } \\
+\only<4->{& \propto & 
+\frac{\mbox{\ao{space reachable from the root}}}
+     {\mbox{\mura{space reclaimed}}} } \\
+\only<5->{& = & 
+\frac{\mbox{\ao{space reachable from the root}}}
+     {\mbox{\mura{space unreachable from the root}}} }
+\end{eqnarray*}
+\begin{itemize}
+\item<6-> \ao{\it the less reachable space there are,
+  the smaller it becomes}
+\item<7-> below, we simply say an object is ``alive'' when
+  it is ``reachable from the root'' (strictly, not a correct usage)
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{世代別GCの基本発想}
+\begin{itemize}
+\item 基本発想:
+  \ao{「生きてるオブジェクトの割合が少ない」領域だけ}をGCすれば?
+
+\begin{center}
+\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/gen_gc_idea.pdf}}%
+\only<2>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/gen_gc_idea_1.pdf}}%
+\only<3>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/gen_gc_idea_2.pdf}}%
+\end{center}
+\item 2つの課題:
+  \begin{enumerate}
+  \item \ao{狙う領域:} 生きているオブジェクトの割合が少ないのはどこ?
+  \item \ao{正しさ:} その領域「だけ」をGC(走査)して，
+    その領域内の，生きてるオブジェクトをすべて見つけるには?
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Generational GC: the basic idea}
+\begin{itemize}
+\item basic idea:
+  traverse (collect) only
+  \ao{\it a region that has a lesser live object ratio}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/gen_gc_idea.pdf}}%
+\only<2>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/gen_gc_idea_1_1.pdf}}%
+\only<3->{\includegraphics[width=0.6\textwidth]{out/pdf/svg/gen_gc_idea_2_1.pdf}}%
+\end{center}
+\item<4-> two problems:
+  \begin{enumerate}
+  \item<5-> where to target: \ao{\it which region has a lesser live object ratio?}
+  \item<6-> correctness:
+    how to find all live objects in a region,
+    \ao{\it by traversing ``only'' that region?}
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{課題1: 世代別GCが狙う領域}
+\begin{beamercolorbox}{ex}
+\vskip0.5cm
+\begin{center}
+若い(最近作られた)オブジェクトがいる領域
+\end{center}
+\vskip0.2cm
+\end{beamercolorbox}
+
+\begin{center}
+\only<2->{Q: なぜ(または，いつ)これが功を奏するのか?}
+\end{center}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Problem 1: where generational GC targets}
+\begin{beamercolorbox}{ex}
+\vskip0.5cm
+\begin{center}
+a region holding young (recently created) objects
+\end{center}
+\vskip0.2cm
+\end{beamercolorbox}
+
+\begin{center}
+\only<2->{Q: why (or when) is this effective?}
+\end{center}
+\end{frame}
+\fi
+
+\iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{世代別GCが功を奏するための条件}
+
+\begin{itemize}
+\item<1-> 若いオブジェクトだけを走査した方が(全体を走査するより) mark-cons比が低い
+\item<2-> $\iff$ 若いオブジェクトの領域のほうが「生きてるオブジェクトの割合」が低い
+\item<3-> $\iff$ あるオブジェクト(生死不明)を見た時，\ao{若いほど死んでる可能性大}
+\item<4-> $\iff$ ???
+\begin{center}
+\only<4>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/gen_hypo_0.pdf}}%
+\only<5->{\includegraphics[width=0.7\textwidth]{out/pdf/svg/gen_hypo_1.pdf}}%
+\end{center}
+\item<6-> んなアホな???
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{世代別GCが功を奏するための条件}
+
+\begin{itemize}
+\item 「あるオブジェクト(生死不明)を見た時，\ao{若いほど死んでる可能性大}」
+  なんてあるわけない
+\item ポイントは，
+「ある程度以上生き長らえたことがわかっている」オブジェクトと，
+「0歳時点からその後の消息不明」では違うということ
+\begin{itemize}
+\item \ao{0歳から生死不明．今生きてれば15歳}のはず\ldots
+\item \ao{20歳時点で生存確認済み．今生きてれば40歳}のはず\ldots
+\end{itemize}
+どちらが「今もきっと生きている」でしょう?
+
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{(Weak) Generational Hypothesis}
+\begin{itemize}
+\item 「ほとんどのオブジェクトは短命」
+  (``most objects die young'')
+
+\item (メモリ割り当て手段がヒープしかない言語では)
+  多くのプログラムで成り立っていそうな性質
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{out/pdf/svg/lifetime_distribution.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{(Weak) generational hypothesis}
+\begin{itemize}
+\item \ao{\it ``most objects die young''}
+
+\item it seems to hold in most languages
+  (where all memory allocations are served from the heap)
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{out/pdf/svg/lifetime_distribution.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{(Weak) Generational Hypothesisに関するstudy}
+\begin{itemize}
+\item 様々な言語・プログラムで，
+「ある(高い)割合$d$のオブジェクト，ある(若い)年齢$y$以前に，死んだ」
+ことが報告されている
+\begin{itemize}
+\item 注: あるオブジェクト$o$の年齢 $=$ $o$生成後に行われたメモリ割り当ての量
+(つまり，メモリ割り当て量で時間を測る)
+\end{itemize}
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{|l|l|c|c|}\hline
+著者 & 言語 & 死亡率($d$) & 年齢($y$) \\\hline
+Zorn & Common Lisp & 50-90\% & 10KB \\
+Sanson and Jones & Haskell & 75-95\% & 10KB \\
+Hayes & Cedar & 99\% & 721KB \\
+Appel & SML/NJ & 98\% & 可変 \\
+Barret and Zorn & C & 50\% & 10KB \\
+                & C & 90\% & 32KB \\\hline
+\end{tabular}
+\end{center}
+
+出典: Richard Jones and Rafael Lins. ``Garbage
+Collection. Algorithms for Automatic Memory
+Management'' Chapter 7.1
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Studies on (weak) generational hypothesis}
+\begin{itemize}
+\item studies show 
+  \ao{\it ``a (large) fraction $d$ of objects die
+  before a (young) age $y$''} in various languages
+
+\begin{itemize}
+\item note: an ``age'' of an object $o$ $=$
+  the total size of memory allocated after $o$ is created
+  (that is, \ao{\it the time is measured by the amount of memory allocation})
+\end{itemize}
+\end{itemize}
+
+\begin{center}
+  {\footnotesize
+\begin{tabular}{|l|l|c|c|}\hline
+authors & lang. & mortality rate ($d$) & age ($y$) \\\hline
+Zorn & Common Lisp & 50-90\% & 10KB \\
+Sanson and Jones & Haskell & 75-95\% & 10KB \\
+Hayes & Cedar & 99\% & 721KB \\
+Appel & SML/NJ & 98\% & varies \\
+Barret and Zorn & C & 50\% & 10KB \\
+                & C & 90\% & 32KB \\\hline
+\end{tabular}}
+\end{center}
+
+source: Richard Jones and Rafael Lins. ``Garbage
+Collection. Algorithms for Automatic Memory
+Management'' Chapter 7.1
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{「ほとんどが短命」と世代別GCの根拠}
+
+\begin{itemize}
+\item 例えば90\%が10KB以内に死ぬのであれば，
+\[ \mbox{最近10KBを走査した時のmark-cons比} \approx 0.1 \]
+\item 一方，生きているオブジェクトの2〜3倍のヒープサイズを使う場合，
+\[ \mbox{全てを走査した時のmark-cons比} \approx 1/3 \mbox{〜} 1/2 > 0.1 \]
+\end{itemize}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{``most objects die young'' and a rational of generational GCs}
+
+\begin{itemize}
+\item say 90\% die younger than 10KB, then
+\[ \mbox{mark-cons ratio when traversing most recent 10KB} \approx \ao{0.1} \]
+\item if we use heap 2-3 times larger than the live objects,
+  \[ \mbox{the ratio when traversing the entire heap} \approx
+    \ao{1/3 \mbox{〜} 1/2} > 0.1 \]
+\end{itemize}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+\begin{frame}
+\frametitle{注:}
+\begin{itemize}
+\item 「論理的には」Weak Generational Hypothesis 
+  (ほとんどが短命)というだけでは，
+\[ \mbox{若い領域のmark-cons比} < \mbox{全領域のmark-cons比} \]
+の根拠として不十分
+\begin{itemize}
+\item cf. Baker. {\it ``Infant mortality and
+  generational garbage collection''} ACM SIGPLAN
+  Newsletter. 28(4). Pages 55-57
+\item 「ほとんどが短命」だが，
+  どの世代のオブジェクトも「同様の確率で死んでいる」
+  寿命分布があることを指摘
+  (指数的な寿命の分布$=$放射性元素の崩壊と同じモデル)
+\end{itemize}
+
+\item 論理的には
+「若いオブジェクトの時間あたりの死亡率 
+  $<$ ある程度生き延びたオブジェクトの時間あたりの死亡率」
+が根拠であり，実際にそれが成り立っていると考えられる
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{課題2: 世代別GCが正しく動作するには?}
+\begin{itemize}
+\item あくまで見つけるべきは，
+  「ルートから(老若問わず)全部のポインタをたどって」
+  到達可能な，若いオブジェクト
+\item 古いオブジェクトを無視するだけではダメ
+\begin{center}
+\only<1>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/need_remset_1.pdf}}%
+\only<2>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/need_remset_2.pdf}}%
+\only<3>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/need_remset_3.pdf}}%
+\end{center}
+\item<2-> 解: プログラム実行中にできる「老 $\rightarrow$ 若」
+というポインタを「全部」記録しておき
+それらをルートと見なす．
+\item<3-> 注: ルートから到達不能でも，回収されないことがある．
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Problem 2: how to make it correct?}
+\begin{itemize}
+\item we need to find
+  all young objects reachable from the root,
+  through ``\ao{\it all pointers, young or old}''
+
+\item simply ignoring old objects won't work
+\begin{center}
+\only<1>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/need_remset_1.pdf}}%
+\only<2>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/need_remset_2.pdf}}%
+\only<3>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/need_remset_3.pdf}}%
+\end{center}
+\item<2-> solution:
+  \ao{\it record ``all'' pointers from ``old $\rightarrow$ young''}
+  during the execution and consider them as part of the root
+
+\item<3-> note: some may not be reclaimed,
+  despite being unreachable from the root
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{書き込みバリア (write barrier)}
+\begin{itemize}
+\item すべての「老 $\rightarrow$ 若」ポインタを
+捕捉するためにmutatorのアクションに介入する
+\item 介入が必要なmutatorのアクション:
+\begin{eqnarray*}
+&& \mbox{古い(かもしれない)オブジェクトのフィールド} \\
+&& \leftarrow \mbox{新しい(かもしれない)オブジェクト}  
+\end{eqnarray*}
+という代入文
+
+\item OCamlで言えば，
+{\small
+\begin{tabular}{|l|l|l|}\hline
+式の例          & 説明 & 補足の要否 \\\hline
+{\tt o.x <- a} & {\footnotesize mutableなフィールドの更新} & 要 \\
+{\tt \{ x = \ldots; \ldots \}} 
+& {\footnotesize レコード etc.の生成} & 不要 \\
+{\tt let b = o.x} & {\footnotesize 変数の初期化} & 不要 \\\hline
+\end{tabular}}
+「ほとんど関数型」な言語では稀にしか発生しないと期待
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Write barrier}
+\begin{itemize}
+\item an intervention in mutator actions to capture
+  all ``old $\rightarrow$ young'' pointers
+\item mutator actions that need an intervention:
+  assignments:
+\ao{
+  \begin{eqnarray*}
+    \mbox{(possibly) old object's field} &
+       \leftarrow & \mbox{(possibly) young object}
+  \end{eqnarray*}}
+
+\item in OCaml, 
+{\small
+\begin{tabular}{|l|l|l|}\hline
+expression          & description & need intervention? \\\hline
+{\tt o.x <- a} & {\footnotesize update a mutable field} & yes \\
+{\tt \{ x = \ldots; \ldots \}} 
+& {\footnotesize create a record etc.} & no \\
+{\tt let b = o.x} & {\footnotesize initialize a variable} & no \\\hline
+\end{tabular}}
+\item 
+hopefully they rarely occur in ``mostly functional'' languages
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{Write Barrierの実装(1) Remembered Set}
+\begin{itemize}
+\item 特に工夫のないwrite barrier
+\begin{lstlisting}
+o.x <- a;   
+\end{lstlisting}
+に対し，
+\begin{lstlisting}
+if (generation(a) < generation(o)) {
+  if (o @$\not\in$@ R) add(R, o)
+}
+\end{lstlisting}
+\item Remembered Set方式
+\item オーバーヘッド大
+  \begin{itemize}
+  \item {\tt generation($\cdot$)}の計算(コピーGCでもアドレスの比較)
+  \item {\tt o} $\in$ {\tt R}のチェック
+  \item {\tt R}の管理
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Implementing Write Barrier (1) Remembered Set}
+\begin{itemize}
+\item given
+\begin{lstlisting}
+o.x <- a;   
+\end{lstlisting}
+we do
+\begin{lstlisting}
+if (generation(a) < generation(o)) {
+  if (o @$\not\in$@ R) add(R, o)
+}
+\end{lstlisting}
+\item the overhead is large
+  \begin{itemize}
+  \item obtain {\tt generation($\cdot$)} (address comparison in copying GC)
+  \item check if {\tt o} $\in$ {\tt R}
+  \item manage {\tt R}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{Write Barrierの実装(2) カードマーキング}
+\begin{itemize}
+\item 基本アイデア: 書き込みがあったアドレスを無条件に記録
+\item ヒープを，「カード」と呼ばれる連続領域に区切る
+  \begin{itemize}
+  \item カード: アドレスの上位何bitかが共通の領域
+    \begin{itemize}
+    \item 例えば64 bitアドレスの上位57 bitが共通
+    \item $\rightarrow$ カード1枚 $2^7 = 128$バイト
+    \end{itemize}
+  \end{itemize}
+\begin{center}
+\only<1>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/card_marking_1.pdf}}%
+\only<2>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/card_marking_2.pdf}}%
+\only<3>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/card_marking_3.pdf}}%
+\end{center}
+\item<3-> \ao{各カードに書き込みがあったかどうか}だけ記録する
+  (1バイト/カード; \ao{カードマーク})
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Implementing Write Barrier (2) Card Marking}
+\begin{itemize}
+\item basic idea: unconditionally record addresses pointers are written to
+\item partition the heap into constant-sized ``cards''
+  \begin{itemize}
+  \item a card: a region whose addresses share a number of most significant bits
+    \begin{itemize}
+    \item e.g., share the highest 57 of 64 bit addresses
+    \item $\rightarrow$ a single card $2^7 = 128$ bytes
+    \end{itemize}
+  \end{itemize}
+\begin{center}
+\only<1>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/card_marking_1.pdf}}%
+\only<2>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/card_marking_2.pdf}}%
+\only<3>{\includegraphics[width=0.7\textwidth]{out/pdf/svg/card_marking_3.pdf}}%
+\end{center}
+\item<3-> record only whether \ao{each card receives any pointer write}
+  (1 byte/card; \ao{card mark})
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{カードマーキングのオーバーヘッド}
+\begin{itemize}
+\item 例: 以下の更新に対し，
+\begin{lstlisting}
+o->x <- y;
+\end{lstlisting}
+「{\tt \&o->x}を含むカードに書き込みあった」ことを無条件に記録
+\begin{lstlisting}
+@$C$@[(&o->x) >> 9] = 1;
+\end{lstlisting}
+$C$は，ヒープ先頭アドレスheap, カードマークの先頭アドレスcardsとして，
+\begin{lstlisting}
+@$C$@[heap >> 9] == card
+\end{lstlisting}
+を満たすアドレス．
+\begin{center}
+\includegraphics[width=0.5\textwidth]{out/pdf/svg/card_marking_3.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{The overhead of card-marking}
+\begin{itemize}
+\item e.g.: given the following pointer update,
+\begin{lstlisting}
+o->x <- y;
+\end{lstlisting}
+unconditionally record ``a card containing {\tt \&o->x} is written''
+\begin{lstlisting}
+@$C$@[(&o->x) >> 9] = 1;
+\end{lstlisting}
+$C$ is the base address to obtain the card address. that is,
+\begin{lstlisting}
+@$C$@[heap >> 9] == card
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{out/pdf/svg/card_marking_3.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{カードマーキング法の利点と欠点}
+\begin{itemize}
+\item write barrierのオーバーヘッド小
+($C$をレジスタに保持できれば，3命令程度)
+\begin{lstlisting}
+@$C$@[(&o->x) >> 9] = 1;
+\end{lstlisting}
+\item カードの大きさ次第で，メモリオーバーヘッド調節可
+  (例: 128バイトなら，1/128)
+\item 「書き込みがあったカード」だけを効率的に列挙できない．
+  全カード($\propto$ ヒープ)を見る必要がある
+\item カードのどこかに書き込みがあったら，
+  そのカードすべてをルートと見なす必要がある
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Card-marking : Pros and Cons}
+\begin{itemize}
+\item a small write barrier overhead
+(if you hold $C$ in a register, it takes three RISC instructions)
+\begin{lstlisting}
+@$C$@[(&o->x) >> 9] = 1;
+\end{lstlisting}
+\item memory overhead adjustable by adjusting card size
+  (e.g. a card is 128 bytes $\rightarrow$ 1/128)
+\item you cannot efficiently list written cards; you must check
+  all cards ($\propto$ heap)
+\item when any address of a card is written, we must consider
+  all addresses of the card a root
+\end{itemize}
+\end{frame}
+\fi
+
+
+\iffalse
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\section{マーク\&スイープGCのトピック}
+\fi
+\ifeng
+\section{Topics on Mark\&Sweep GCs}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\subsection{空き領域管理 / Free Area Management}
+\fi
+\ifeng
+\subsection{空き領域管理 / Free Area Management}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{空き領域管理・探索}
+\begin{itemize}
+\item コピーGC以外のあらゆる方式(マーク\&スイープGC, 
+  参照カウント, malloc/free)では，空き領域は連続していない
+\item $\rightarrow$ 空き領域の把握・管理が必要
+\item 目標:
+  \begin{itemize}
+  \item メモリ割り当て速度:
+    メモリ割り当て要求に応じたサイズの空き領域を素早く見つける
+  \item メモリ利用効率:
+    空いている領域はなるべく使う
+  \end{itemize}
+\item 基本データ構造: フリーリスト(空き領域のリスト)
+\begin{center}
+\only<1>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_1.pdf}}%
+\only<2>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}}%
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Managing and finding free space}
+\begin{itemize}
+\item in any method except for copying GC
+  (mark\&sweep GC, reference counting, malloc/free),
+  free space are not contiguous
+\item $\rightarrow$ tracking and managing free blocks is required
+\item goal:
+  \begin{itemize}
+  \item good allocation speed:
+    quickly find a region that fits the request size
+  \item good memory utilization:
+    do not waste available space
+  \end{itemize}
+\item basic data structure: free list (list of free blocks)
+\begin{center}
+\only<1>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_1.pdf}}%
+\only<2>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}}%
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{フリーリスト}
+\begin{itemize}
+\item 空き領域のリスト
+\begin{lstlisting}
+typedef struct cell {
+  struct cell * next; 
+  size_t sz;
+  /* 必要ならばその他の情報 */
+} cell;
+cell * free_list;
+\end{lstlisting}
+
+\item 割り当て(malloc) $\approx$
+  \begin{enumerate}
+  \item 要求サイズ以上の空き領域の(線型)探索
+  \item 領域が余ったら余りをまたリストへ
+  \end{enumerate}
+
+\item 回収(free) $\approx$
+  \begin{enumerate}
+  \item 開放されたセルをリストへ戻す(問題: そのサイズは?)
+  \item 開放されたセルとアドレスが隣接しているセルがあったら統合
+    (coalescing)
+  \end{enumerate}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}
+\end{center}
+
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Free list}
+\begin{itemize}
+\item list of free blocks (or cells)
+\begin{lstlisting}
+typedef struct cell {
+  struct cell * next; 
+  size_t sz;
+  /* other info as necessary */
+} cell;
+cell * free_list;
+\end{lstlisting}
+
+\item allocation (malloc) $\approx$
+  \begin{enumerate}
+  \item (linearly) search for a cell large enough for the requested size
+  \item if a free space remains in the cell, put it back to the free list
+  \end{enumerate}
+
+\item reclamation (free) $\approx$
+  \begin{enumerate}
+  \item put it back to the free list (issue: how to know its size?)
+  \item if the cell just freed is adjacent to another free cell,
+    merge them (coalescing)
+  \end{enumerate}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}
+\end{center}
+
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{単純な方式の問題}
+\begin{itemize}
+\item 割り当て: 
+  \begin{itemize}
+  \item それなりに走査が必要
+  \item $\rightarrow$ 
+    サイズごとに別れたフリーリスト(segregated free lists)
+  \end{itemize}
+\item 回収: 
+  \begin{itemize}
+  \item coalescing可能かを調べるオーバーヘッド
+  \item 回収されたセルのサイズ
+  \item $\rightarrow$ 
+    大きな塊(ページ)単位で同じサイズ専用にする
+    (Big Bags of Pages; BiBOP)
+  \end{itemize}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}
+\end{center}
+
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Issues in the simple method}
+\begin{itemize}
+\item allocation: 
+  \begin{itemize}
+  \item needs to traverse a fair amount of cells (until you find a cell that fits)
+  \item $\rightarrow$ 
+    make many free lists, one for a fixed size (\ao{\it segregated free lists})
+  \end{itemize}
+\item reclamation: 
+  \begin{itemize}
+  \item needs to check if coalescing is possible
+  \item needs to know the size of the freed cell
+  \item $\rightarrow$
+    manage memory in a larger unit (\ao{\it page}) and dedicate
+    a page to a single size (\ao{\it Big Bags of Pages; BiBOP})
+  \end{itemize}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}
+\end{center}
+
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{サイズごとのフリーリスト}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item 小さなサイズ(e.g., 2Kバイト以下)について，
+  代表的なサイズのフリーリストを作る
+\item それ以上大きな空き領域はすべてひとつのリストにまとめる
+\item 例: 
+  \begin{itemize}
+  \item 16, 32, 48, 64, \ldots, 448, 512, 672, 800, 1024, 1344, 2048
+  \item 2048バイト以上すべて
+  \end{itemize}
+\end{itemize}    
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/segregated_free_lists.pdf}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Segregated free lists}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item for small sizes (e.g., $<$ 2KB),
+  make a free list for various representative sizes 
+\item a single list for large sizes
+\item ex: 
+  \begin{itemize}
+  \item 16, 32, 48, 64, \ldots, 448, 512, 672, 800, 1024, 1344, 2048
+  \item 2048 bytes or larger
+  \end{itemize}
+\end{itemize}    
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/segregated_free_lists.pdf}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{割り当てシーケンスの例}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \ao{色}\aka{付}\ao{き}\aka{部}\ao{分}\aka{:} 
+  小さいオブジェクト用の速いパス
+\item \ao{青部分:} サイズ(sz)がコンパイル時の定数であれば，
+  原理的には(コンパイラの定数畳み込みで)除去可能な部分
+\item \aka{赤部分:} 本質部分．リストを一回手繰る(6-7命令)
+\item 注: マルチスレッド環境では
+  \begin{itemize}
+  \item {\tt free\_lists}をスレッドごとに持たせる, または
+  \item \aka{{\tt free\_lists}の読み出し〜更新}を不可分に
+    (スケーラビリティ阻害)
+  \end{itemize}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\begin{lstlisting}
+void ** free_lists;
+
+void * malloc(size_t sz) {
+  @\ao{\tt if (SMALL(sz)) \{}@
+    @\ao{\tt size\_t idx = bytes\_to\_idx(sz);}@
+    @\aka{\tt cell * a = free\_lists[idx];}@
+    @\aka{\tt if (a) \{}@
+      @\aka{\tt free\_lists[idx] = a->next;}@
+      @\aka{\tt return a;}@
+    } else {
+      return malloc_slow(sz);
+    }
+  } else {
+    return malloc_slow(sz);
+  }
+}
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Allocation sequence}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \ao{C}\aka{o}\ao{l}\aka{o}\ao{r}\aka{e}\ao{d}\aka{:} 
+  a fast path for small objects
+\item \ao{blue:} the overhead removable if the size (sz)
+  is a compile-time constant 
+\item \aka{red:} the essential cost. traverse a list once (6-7 instructions)
+\item note: in multithreaded programs, we either have to
+  \begin{itemize}
+  \item let each thread have its own {\tt free\_lists}, or
+  \item atomically perform \aka{the read-modify-write on {\tt free\_lists}}
+    (this hinders scalability)
+  \end{itemize}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\begin{lstlisting}
+void ** free_lists;
+
+void * malloc(size_t sz) {
+  @\ao{\tt if (SMALL(sz)) \{}@
+    @\ao{\tt size\_t idx = bytes\_to\_idx(sz);}@
+    @\aka{\tt cell * a = free\_lists[idx];}@
+    @\aka{\tt if (a) \{}@
+      @\aka{\tt free\_lists[idx] = a->next;}@
+      @\aka{\tt return a;}@
+    } else {
+      return malloc_slow(sz);
+    }
+  } else {
+    return malloc_slow(sz);
+  }
+}
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{Big Bags of Pages}
+\begin{columns}
+\begin{column}{0.65\textwidth}
+\begin{itemize}
+\item ヒープをある固定サイズのブロック(ページ)に分けて管理
+  \begin{itemize}
+  \item ページ: アドレスの上位bitを共有するアドレスの集合
+  \item 例: 64 bitアドレス，上位52 bit共有 $\rightarrow$ 
+    $2^{12}=4096$バイト/ページ
+  \end{itemize}
+\item 1つのページは，
+  \begin{itemize}
+  \item まるごと空き，または
+  \item 一つのサイズのオブジェクト専用(e.g., 48バイト専用)
+  \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/bibop.pdf}
+\end{center}
+\end{column}
+\end{columns}
+
+\begin{itemize}
+\item Coalescing: 
+  「1ページまるごと空いた」場合だけ，他のサイズに流用
+  \begin{itemize}
+  \item $\rightarrow$ 各ページごとに空きセル数を数えるだけで良い
+  \end{itemize}
+\item サイズもオブジェクト毎に持たせる必要なし
+\end{itemize}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Big Bags of Pages}
+\begin{columns}
+\begin{column}{0.65\textwidth}
+\begin{itemize}
+\item manage the heap by dividing it into constant-sized blocks (page)
+  \begin{itemize}
+  \item a page: a set of addresses sharing a number of highest bits
+  \item e.g. 64 bit addresses, sharing the highest 52 bits $\rightarrow$ 
+    $2^{12}=4096$ bytes/page
+  \end{itemize}
+\item each page is either
+  \begin{itemize}
+  \item completely free or
+  \item used only for a single size (e.g., only for 48 bytes)
+  \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/bibop.pdf}
+\end{center}
+\end{column}
+\end{columns}
+
+\begin{itemize}
+\item Coalescing:
+  repurpose a page only when the page becomes completely empty
+  \begin{itemize}
+  \item $\rightarrow$ only need to count the number of free cells in the page
+  \end{itemize}
+\item does not require per-object size field either
+\end{itemize}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\subsection{マーク\&スイープGCの性能改善}
+\fi
+\ifeng
+\subsection{Improving mark\&sweep GCs}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{マーク\&スイープGCの性能改善}
+\begin{itemize}
+\item 全体構成:
+  \begin{enumerate}
+  \item \ao{マークフェーズ:} ルートからポインタをたどり，
+    到達可能なオブジェクトに\ao{印をつける}
+  \item \ao{スイープフェーズ:} 
+    印のついていないオブジェクトを回収 $\rightarrow$
+    \ao{フリーリストに戻す}
+  \end{enumerate}
+\item 基本的な工夫:
+  \begin{itemize}
+  \item サイズごとのフリーリスト
+  \item BiBOPによる管理
+  \item \ao{マークビットとオブジェクトの分離}
+  \item \ao{遅延スイープ}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Improving performance of mark\&sweep GC}
+\begin{itemize}
+\item overall structure:
+  \begin{enumerate}
+  \item \ao{mark phase:} traverses pointers from the root,
+    \ao{marking} reached objects along the way
+  \item \ao{sweep phase:} 
+    reclaims unmarked objects $\rightarrow$
+    \ao{pushes them back to an appropriate free list}
+  \end{enumerate}
+\item basics:
+  \begin{itemize}
+  \item segregated free lists
+  \item BiBOP
+  \item \ao{mark bits separated from objects}
+  \item \ao{lazy sweep}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\subsubsection{マークビットとオブジェクトの分離}
+\fi
+\ifeng
+\subsubsection{Separated Mark Bits}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{マークビットとオブジェクトの分離}
+\begin{itemize}
+\item マークフェーズで「到達可能」の印をどこにつけるか?
+\item 方法1: オブジェクト内の1ワード
+\item \ao{方法2: オブジェクト外の領域にまとめて持つ}
+  \begin{itemize}
+  \item 具体的にはどこ? ページヘッダ．
+    そのページ内のオブジェクトの分をまとめて持つ(1 バイト/オブジェクト)
+\begin{lstlisting}
+mark(void * o) {
+  page * page = o & 0xFFF...000; /* ページの先頭アドレス */
+  page->header->mark[(o & 0x000...FFF) >> 4] = 1;
+}
+\end{lstlisting}
+\item ポイント: 書き込まれるキャッシュラインの数が減る
+\end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Separated mark bits}
+\begin{itemize}
+\item question: where do you put the mark bit of an object?
+\item Method 1: use a word within an object
+\item \ao{Method 2: use a separate space dedicated for mark-bits
+    outside objects}
+  \begin{itemize}
+  \item where is the separate space, exactly?
+    $\rightarrow$ page header;
+    holds mark bits of all the objects in the page together
+    (1 byte/object)
+\begin{lstlisting}
+mark(void * o) {
+  page * page = o & 0xFFF...000; /* page header address */
+  page->header->mark[(o & 0x000...FFF) >> 4] = 1;
+}
+\end{lstlisting}
+\item point: gather spaces that are written
+\end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\subsubsection{遅延スイープ}
+\fi
+\ifeng
+\subsubsection{Lazy Sweep}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{遅延スイープ}
+\begin{itemize}
+\item スイープの目的: 空き領域の回収
+\item 自然には，空き領域を適切なサイズのフリーリストに戻す(BiBOP法)
+\item \ao{遅延スイープ:}
+  フリーリストの構築を，メモリ割り当てで必要になるまで遅らせる
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Lazy sweep}
+\begin{itemize}
+\item why do we need to sweep: reclaim space that has become free
+\item naturally, you would put them back to an appropriate free list (cf. BiBOP)
+\item \ao{lazy sweep:}
+  defer this operation until you need to allocate them
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{スイープフェーズの全体像}
+\begin{itemize}
+\item マークフェーズ終了後，ページは3種類に分類できる
+  \begin{itemize}
+  \item 空ページ: 到達したオブジェクト0
+  \item 一部空ページ: 到達したオブジェクト$>0$, 到達しなかったオブジェクト$>0$
+  \item 満杯ページ: 到達しなかったオブジェクト$=0$
+  \end{itemize}
+
+\item スイープの実際: 素直には，
+\begin{lstlisting}
+for (全ページ p) {
+  if (p が空) {
+    pを空ページリストにつなぐ;
+    /* 任意サイズのページとして再利用可能 */
+  } else if (p が一部空) {
+    sz = そのページ内のオブジェクトのサイズ;
+    @\ao{\tt p中の空き領域をszバイト用のフリーリストにつなぐ;}@
+  }
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Overview of the sweep phase}
+\begin{itemize}
+\item after a mark phase is finished, a page is either
+  \begin{itemize}
+  \item empty: zero objects have been reached
+  \item partial: $>0$ objects have been reached, $>0$ objects have not been reached
+  \item full: zero objects have not been reached
+  \end{itemize}
+
+\item a naive implementation of a sweep phase: 
+\begin{lstlisting}
+for (all pages p) {
+  if (p is empty) {
+    put p in the empty page list;
+    /* can be repurposed for any size */
+  } else if (p is partial) {
+    sz = the size of objects in the page;
+    @\ao{\tt put free cells in p to the free list fo sz bytes;}@
+  }
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{遅延スイープ}
+\begin{itemize}
+\item フリーリストの構築をすぐに行わない
+\item 各サイズ用の「回収リスト」につなぐ
+\begin{lstlisting}
+for (全ページ p) {
+  if (p が空) {
+    pを空ページリストにつなぐ;
+    /* 任意サイズ用の空領域として再利用可能 */
+  } else if (p が一部空) {
+    sz = そのページ内のオブジェクトのサイズ;
+    @\ao{\tt pをszバイト用の「回収リスト」につなぐ;}@
+  }
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Lazy sweep}
+\begin{itemize}
+\item does not rebuild free lists immediately
+\item instead puts the page into the list of ``to-reclaim'' pages
+\begin{lstlisting}
+for (all pages p) {
+  if (p is empty) {
+    put p in the empty page list;
+    /* can be repurposed for any size */
+  } else if (p is partial) {
+    sz = the size of objects in the page;
+    @\ao{\tt put p into the reclaim list for sz bytes;}@
+  }
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{回収リスト}
+\begin{itemize}
+\item 空き領域が1つ以上含まれる，完全に空ではないページのリスト
+\item フリーリスト同様，サイズごとに作る
+\item メモリ割り当て時，フリーリストが空だった時に回収リストからセルを補充
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Reclaim list}
+\begin{itemize}
+\item list of pages that have at least one free cell
+\item like free lists, there is a list per size
+\item when an allocation finds the free list empty,
+  look at the reclaim list and if there is any page,
+  move free cells of a page into the free list
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{なぜスイープを遅延させる?}
+\begin{itemize}
+\item 仕事を「後回し」にしてるだけ? それだけではない
+
+\item Coalescingの機会向上:
+  \begin{itemize}
+  \item 何回か後のGCまでに使われず，それまでに空ページになるかもしれない
+  \end{itemize}
+  
+\item 参照の時間局所性改善:
+  \begin{itemize}
+  \item フリーリスト充填のためのメモリ参照と，
+  実際にmutatorに使われるまでの時間を短くする
+  \end{itemize}
+
+\item スイープの時間を少しでも短くする
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{What's the point?}
+\begin{itemize}
+\item simply deferring the task you need to do anyway? not exactly so
+
+\item make more coalescing opportunities:
+  \begin{itemize}
+  \item after a few GCs, a page may become empty
+    before it needs to be reused for allocation
+  \end{itemize}
+  
+\item improve temporal locality of references:
+  \begin{itemize}
+  \item by touching free cells to put them back to free list,
+    closely before they are used by the mutator
+  \end{itemize}
+
+\item shorten the pause time due to the sweep phase
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\subsection{保守的GC}
+\fi
+\ifeng
+\subsection{Conservative GC}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{保守的GC (Conservative GC)}
+\begin{itemize}
+\item \ao{保守的}GC 
+  \begin{itemize}
+  \item $\approx$ C/C++など，GCを前提に設計されていない言語用のGC
+  \item $\approx$ 
+    各語がポインタか否かわからない
+    (わからない時は「保守的に」ポインタと見なす)前提でのGC
+  \end{itemize}
+\item 反対語: \ao{正確な(accurate)}GC
+  \begin{itemize}
+  \item 正確といっても，「死んでいる(以降アクセスされない)」ゴミが全部とれるわけではない
+  \item 正確・保守的GCの意味は
+    「ポインタの判別(pointer identification)」が正確か保守的かということ
+  \item 正確なGCを行う言語では例えば，
+    ある語を見ただけでポインタか否かがわかるようなデータ表現を使う
+    \begin{itemize}
+    \item 例: 最下位bit $= 0$ (ポインタ), $= 1$ (非ポインタ)
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Conservative GC}
+\begin{itemize}
+\item \ao{\it conservative} GC 
+  \begin{itemize}
+  \item<1-> $\approx$ GC for languages designed without assuming GC,
+    such as C/C++
+  \item<2-> $\approx$
+    GC in the presence of words that may or may not be pointers
+    (conservatively assumed to be pointers)
+  \end{itemize}
+\item<3-> antonym: \ao{\it accurate} GC
+  \begin{itemize}
+  \item does not necessarily reclaim all dead (no longer used) objects
+  \item \ao{accurate} or \ao{conservative} refers to whether 
+    ``pointer identifications'' are accurate or not
+  \item languages that implement an accurate GC
+    normally use a data representation in which
+    looking at a single word can tell you whether it is a pointer or not
+    \begin{itemize}
+    \item ex: the last bit $= 0$ (pointer), $= 1$ (non-pointer)
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{C/C++言語の基本的な困難: ポインタの曖昧さ}
+\begin{itemize}
+\item ポインタとそれ以外のデータの厳密な区別がつかない．
+ある語に書かれていた「$7596272344674820427$ 
+($1011010010110101101100001011100110110000101110111011000010100101_2$)」は，
+  \begin{itemize}
+  \item 7596272344674820427番地に割り当てられたオブジェクトへのポインタ?
+  \item 整数の7596272344674820427
+  \item 文字列の一部(``Kawasaki'')
+  \item 倍精度浮動小数点($6.549545\ldots\times 10^{199}$)
+  \item \ldots
+  \end{itemize}
+のいずれであるかはっきりしない(曖昧)
+
+\item 基本:
+  \begin{itemize}
+  \item ある語が，現在割り当て中のアドレス範囲と一致したら，それへのポインタと仮定
+  \item 本当はポインタでないものがポインタと間違われることもある
+  \item それによる被害(リーク)を防ぐアイデア $\rightarrow$ \ao{Blacklisting}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{A challenge in C/C++: pointer ambiguity}
+\begin{itemize}
+\item a pointer and a non-pointers cannot be told apart;
+a word ``$7596272344674820427$ 
+($10110100101101011011 \cdots 011000010100101_2$)''
+can be any of the following
+  \begin{itemize}
+  \item a pointer to an object at address 7596272344674820427,
+  \item an integer 7596272344674820427,
+  \item a part of a string (``Kawasaki''),
+  \item a double precision floating point number
+    ($6.549545\ldots\times 10^{199}$), 
+  \item \ldots
+  \end{itemize}
+
+\item<2-> the basic principle:
+  \begin{itemize}
+  \item \ao{\it if a word is an address of a block being used,
+    it is assumed to be the pointer to it}
+  \item a non-pointer may be misidentified as a pointer
+  \item a method to minimize the loss (leak) caused by
+    misidentified pointers
+    $\rightarrow$ \ao{blacklisting}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{Blacklisting}
+\begin{itemize}
+\item<1-> マークフェーズ中に以下のような語$p$ (\ao{「要注意アドレス」})を記憶しておく(Blacklisting)
+  \begin{itemize}
+  \item<2-> $p$は現在割り当て中のアドレス\ao{ではない}
+  \item<2-> $p$は，将来割り当て対象になりそう(現在のヒープの一部である)
+  \end{itemize}
+\item<3-> そのような$p$は\ao{当面，割り当ての対象から外す}
+
+\item<4-> 「$p$が割り当てられない」時点で損害だが，
+  $p$を割り当てて，$p$およびそこから到達可能なものが全て回収できなくなるのは大損害
+\end{itemize}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_0.pdf}}%
+\only<2>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_1.pdf}}%
+\only<3->{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_2.pdf}}%
+\end{center}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Blacklisting}
+\begin{itemize}
+\item<1-> during marking, record (``blacklist'') words $p$
+  (\ao{suspicious addresses}) satisfying:
+  \begin{itemize}
+  \item<2-> address $p$ is currently \ao{\it not} used and
+  \item<2-> $p$ is a subject of future allocation
+    (i.e., an address within the current heap)
+  \end{itemize}
+\item<3-> do not use such $p$'s for \ao{\it future allocation}
+
+\item<4-> note that we already lose (a memory associated with) $p$,
+  but it would be much worse and devastating to allocate $p$ and make
+  \aka{\it $p$ and all objects reachable from $p$} 
+  uncollectable \aka{\it (the domino effect)}
+\end{itemize}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_0.pdf}}%
+\only<2>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_1.pdf}}%
+\only<3->{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_2.pdf}}%
+\end{center}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{その他の保守的GCのtips}
+\begin{itemize}
+\item \url{http://hboehm.info/gc/gcinterface.html} 参照
+\item {\tt GC\_MALLOC\_ATOMIC} : 
+  \begin{itemize}
+  \item {\tt GC\_MALLOC}と同じだが，「この中にポインタは含めません」宣言
+    (文字列，数値の配列など)
+  \item ポインタ誤認の確率を減らす
+  \item markの量を減らす
+  \end{itemize}
+\item {\tt GC\_MALLOC\_IGNORE\_OFF\_PAGE} : 「最初の512バイト以降にはポインタは含めません」宣言
+  
+\item いらないデータに対するポインタはこまめにNULLに
+  \begin{itemize}
+  \item データ構造中のポインタ
+  \item 一つが誤認されて生き残ったときの「道連れ」をなくす
+  \end{itemize}
+
+\item データのリンク構造の工夫
+  \begin{itemize}
+  \item ポインタの誤認によって「たくさんが道連れに」なりにくデータ構造
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Other tips in conservative GC}
+\begin{enumerate}
+\item see \url{http://hboehm.info/gc/gcinterface.html}
+\item \ao{\tt GC\_MALLOC\_ATOMIC} : 
+  \begin{itemize}
+  \item same as \ao{\tt GC\_MALLOC}, except you indicate (declare)
+    you never put pointers in it (good for strings and numerical arrays)
+  \item reduce the probability of pointer misidentification
+  \item reduce the space that must be traversed 
+  \end{itemize}
+\item \ao{\tt GC\_MALLOC\_IGNORE\_OFF\_PAGE} :
+  declares ``you never put pointers except in the first 512 bytes''
+  
+\item clear pointers no longer necessary with NULL
+  \begin{itemize}
+  \item pointers within a data structure
+  \item prevent the domino effect
+    when a single object is mistakenly kept alive
+  \end{itemize}
+
+\item tips in how you link data structures
+  \begin{itemize}
+  \item data structures less prone to the domino effect
+    due to a pointer misidentification
+  \end{itemize}
+\end{enumerate}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{道連れになりやすい・にくいデータ構造}
+\begin{itemize}
+\item リンクリスト，木構造，グラフなどの作り方
+\item (NG): 大きな構造体同士が直接リンクしあう
+\item (GOOD): リンク構造(峰)と(大きな)データ本体を分ける
+$\rightarrow$ 本体が誤認されても道連れはおきない
+\begin{center}
+\only<1>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/avoid_retention_1.pdf}}%
+\only<2>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/avoid_retention_2.pdf}}%
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Data structure (not) prone to the domino effect}
+\begin{itemize}
+\item suppose you make link lists, trees and graphs
+\item \aka{(NG):} directly link large nodes with payload 
+\item \ao{(GOOD):} separate the structure linking nodes
+  \ao{\it (the spine)} and the payloads
+  $\rightarrow$ misidentifying a payload does not lead
+  to another object
+\begin{center}
+\only<1>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/avoid_retention_1.pdf}}%
+\only<2>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/avoid_retention_2.pdf}}%
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\section{インクリメンタルGC}
+\fi
+\ifeng
+\section{Incremental GC}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{インクリメンタルGC}
+\begin{itemize}
+\item 走査型GCの「停止時間」を短くするGC
+  \begin{itemize}
+  \item 実時間性や応答性を必要とするアプリケーション
+  \end{itemize}
+\item 停止時間 $\approx$ 到達可能オブジェクトすべてをマークする時間
+\item インクリメンタルGCは，到達可能オブジェクトの走査を，
+  「細切れ」に行って，停止時間を短くする
+  \begin{itemize}
+  \item 1GB「一気に」走査せずに，10MBずつ100回に分けて走査
+  \end{itemize}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{out/pdf/svg/incremental_basic.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Incremental GC}
+\begin{itemize}
+\item<1-> objective: \ao{\it reduce the ``pause time''} of traversing GC
+  \begin{itemize}
+  \item good for applications that need real time or interactive responses
+  \end{itemize}
+\item<1-> recall that pause time $\approx$ time to traverse all reachable objects
+\item<2-> how: by traversing reachable objects
+  \ao{\it ``a little bit at a time''}
+  \begin{itemize}
+  \item instead of traversing 1 GB in one stroke,
+    traverse 10 MB at a time, 100 times
+  \end{itemize}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{out/pdf/svg/incremental_basic.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{インクリメンタルGCの難しさ}
+\begin{itemize}
+\item (GC目線で) GCがグラフを走査している間に，グラフが変化する
+\begin{center}
+\includegraphics[width=0.8\textwidth]{out/pdf/svg/incremental_basic_1.pdf}
+\end{center}
+
+\item それでも，「ルートから到達可能」なオブジェクトを見逃さないためには?
+\item グラフ走査の基本に立ち返って考える
+\item 以降の前提:
+  \begin{itemize}
+  \item mutatorは1つ(1スレッドのアプリケーション)
+  \item mutatorとcollectorは同じスレッド内で「交互に」動く
+    \begin{itemize}
+    \item メモリ割り当て要求時にGCが少し動く
+    \end{itemize}
+  \item $\rightarrow$ 
+    両者が別スレッドであればおきるような競合は考えない
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Challenges in incremental GC}
+\begin{itemize}
+\item (from GC's view point)
+  \ao{\it the object graph changes while GC is traversing it}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{out/pdf/svg/incremental_basic_1.pdf}
+\end{center}
+
+\item how to guarantee it does not miss any reachable object?
+\item $\Rightarrow$ we'll get back to the basics of graph traversal
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Assumptions for later discussions}
+\begin{itemize}
+\item only a single mutator (the app is single-threaded)
+\item the mutator and the collector run
+  \ao{\it ``alternately'' (not at the same time)}
+  \begin{itemize}
+  \item the collector does a little bit of its work upon a memory allocation 
+  \end{itemize}
+\item i.e.,
+  we do not consider race conditions that would happen
+  when they are truly concurrent
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{グラフの走査 : 基本}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item マーク\&スイープでもコピーでも，本質的には同じ
+\item データ構造の詳細を省略して書くと:
+\begin{lstlisting}
+@$F$@ = { ルート };
+while (Fが空でない) {
+  o = pop(@$F$@);
+  for (o内のポインタp)
+    if (!marked(p)) {
+      mark(p);
+      add(@$F$@, p);
+    }
+}
+\end{lstlisting}
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\only<1>{\includegraphics[width=\textwidth]{out/pdf/svg/frontier_1.pdf}}%
+\only<2>{\includegraphics[width=\textwidth]{out/pdf/svg/frontier_2.pdf}}%
+\end{column}
+\end{columns}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+  \frametitle{Graph traversal : basics}
+  \begin{itemize}
+  \item traversing GC $\approx$ graph traversal
+  \item the principle is the same whether it's mark\&sweep or copying
+  \end{itemize}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+  \begin{itemize}
+\item omitting details, it is:
+\begin{lstlisting}
+@$F$@ = { root };
+while (F is not empty) {
+  o = pop(@$F$@);
+  for (all pointers p in o)
+    if (!marked(p)) {
+      mark(p);
+      add(@$F$@, p);
+    }
+}
+\end{lstlisting}
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\only<1>{\includegraphics[width=\textwidth]{out/pdf/svg/frontier_1.pdf}}%
+\only<2>{\includegraphics[width=\textwidth]{out/pdf/svg/frontier_2.pdf}}%
+\end{column}
+\end{columns}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{鍵となるデータ: 最前線}
+\begin{itemize}
+\item $F$ : 最前線(frontier)
+\item \ao{自身は訪問されたが，子供はまだ訪問されていない(可能性がある)}オブジェクトの集合
+\item 実際のデータ構造
+  \begin{itemize}
+  \item マーク\&スイープ : マークスタック
+  \item コピーGC : to spaceの一部
+  \end{itemize}
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[width=0.45\textwidth]{out/pdf/svg/ms_frontier.pdf}
+&    
+\includegraphics[width=0.45\textwidth]{out/pdf/svg/copy_frontier.pdf} \\
+マーク\&スイープ
+&
+コピー
+\end{tabular}
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Key data : the frontier}
+\begin{itemize}
+\item \ao{$F$ : frontier}
+\item the set of objects
+  \ao{that have been visited but whose children may have not}
+\item the actual data structure
+  \begin{itemize}
+  \item mark\&sweep : mark stack
+  \item copying : a part of the to space 
+  \end{itemize}
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[width=0.45\textwidth]{out/pdf/svg/ms_frontier.pdf}
+&    
+\includegraphics[width=0.45\textwidth]{out/pdf/svg/copy_frontier.pdf} \\
+mark\&sweep
+&
+copying
+\end{tabular}
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{インクリメンタルGCが解決すべき問題}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{lstlisting}
+@$F$@ = { ルート };
+while (Fが空でない) {
+  o = pop(@$F$@);
+  for (o内のポインタp)
+    if (!marked(p)) {
+      mark(p);
+      add(@$F$@, p);
+    }
+  @\ao{\tt if (何度か回った)}@
+    @\ao{// この間にグラフが書き換わる}@
+    @\ao{\tt resume\_mutator();}@
+}
+\end{lstlisting}
+\end{column}
+\begin{column}{0.6\textwidth}
+  \begin{itemize}
+  \item 通常のGC : 上記whileループが終了するまでmutatorが動かない
+    $\rightarrow$ オブジェクトグラフも書き換わらない
+  \item インクリメンタルGC : 
+    \begin{itemize}
+    \item 上記whileループを何度か回ったら，mutatorに制御を返す
+    \item \ldots またしばらくしたら続きをやる
+    \item つまり，\ao{whileループのiteration間でグラフが書き換わっている}
+      ことにどう対処するかという問題
+    \end{itemize}
+  \end{itemize}
+\end{column}  
+\end{columns}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{The issue that an incremental GC must address}
+\begin{columns}
+\begin{column}{0.45\textwidth}
+\begin{lstlisting}
+@$F$@ = { root };
+while (F is not empty) {
+  o = pop(@$F$@);
+  for (all pointers p in o)
+    if (!marked(p)) {
+      mark(p);
+      add(@$F$@, p);
+    }
+  @\aka{\tt if (has iterated a few times)}@
+    @\aka{// the graph changes below}@
+    @\aka{\tt resume\_mutator();}@
+}
+\end{lstlisting}
+\end{column}
+\begin{column}{0.6\textwidth}
+  \begin{itemize}
+  \item \ao{ordinary GC:} the while loop runs until the end
+    keeping the mutator stopped
+    $\rightarrow$ the object graph does not change during the loop
+  \item \aka{incremental GC:}
+    \begin{itemize}
+    \item \aka{\it the collector gets interrupted by the mutator
+      every once in a while}
+    \item \ldots\ and continues after a while
+    \item that is, the issues is
+      how to do with the fact that
+      \aka{\it the graph may change between iterations of the while loop}
+    \end{itemize}
+  \end{itemize}
+\end{column}  
+\end{columns}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{3色 (tri-color)アブストラクション}
+\begin{itemize}
+\item 走査を，オブジェクトに「色を塗る」操作で例える
+\begin{itemize}
+\item \fbox{黒} : 自分も，その子供も訪問された
+\item \fbox{灰色} : 自分は訪問された，子供はまだ ($\iff \mbox{自分} \in F$)
+\item \fbox{白} : 自分も訪問されていない
+\end{itemize}
+
+\item 3色を用いたグラフ走査の記述
+\begin{center}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{lstlisting}
+ルートを灰色に;
+while (灰色がいる) {
+  o = 灰色オブジェクトを一個選び，黒に塗る;
+  for (o内のポインタp)
+    if (pが差すオブジェクト白)
+      それを灰色に塗る;
+  @\ao{mutatorによるグラフ書き換え;}@
+}    
+\end{lstlisting}
+\end{column}
+\begin{column}{0.5\textwidth}
+\includegraphics[width=0.6\textwidth]{out/pdf/svg/frontier.pdf}
+\end{column}
+\end{columns}
+\end{center}
+
+\item アルゴリズムの正しさ:
+\begin{quote}
+\ao{灰色がなくなった時，ルートから到達可能なオブジェクトは全て黒(白は到達不能)}
+\end{quote}
+
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\newcommand{\blackbox}{\fcolorbox{black}{black}{\shiro{black}}}
+\newcommand{\graybox}{\fcolorbox{black}{gray}{\shiro{gray}}}
+\newcommand{\whitebox}{\fcolorbox{black}{white}{white}}
+
+\begin{frame}[fragile]
+\frametitle{The tri-color abstraction}
+\begin{itemize}
+\item likens a graph traversal to coloring its nodes
+\item visiting an object $\approx$ coloring an object
+\begin{itemize}
+\item \blackbox : the object and its children have been visited
+\item \graybox : it has been visited but its children may not
+\item \whitebox : it has not been visited
+\end{itemize}
+\item the graph traversal using the tri-color abstraction
+\begin{center}
+\begin{columns}
+\begin{column}{0.57\textwidth}
+\begin{lstlisting}
+gray the root;
+while (there is a gray object) {
+  o = pick a gray object and blacken it;
+  for (all pointers in o)
+    if (p points to a white object)
+      gray it;
+  @\aka{the mutator changes the graph;}@  }    
+\end{lstlisting}
+\end{column}
+\begin{column}{0.43\textwidth}
+\includegraphics[width=0.5\textwidth]{out/pdf/svg/frontier.pdf}
+\end{column}
+\end{columns}
+\end{center}
+
+\item correctness of the algorithm:
+  \ao{\it when there are no gray objects,
+    all objects reachable from the root are black
+    (i.e., white objects are unreachable)}
+
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{問題が生ずるグラフの書き換え}
+\begin{columns}
+\begin{column}{0.7\textwidth}
+\begin{itemize}
+\item 直感的には\aka{問題は，
+  「黒$\rightarrow$白」というポインタ}を作られてしまうこと
+\begin{itemize}
+\item 黒: GCがすでに「処理済み」と思っているオブジェクト
+\item 白: このまま発見されなければ回収されてしまうオブジェクト
+\end{itemize}
+% \item \ao{$\Rightarrow$ 「黒$\rightarrow$白ポインタ」
+%     ができる瞬間を補足して防ぐ}
+\item \ao{$\Rightarrow$ 「黒$\rightarrow$白ポインタ」
+    が決して出来ないようにする}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.3\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/black_to_white.pdf}
+\end{center}
+\end{column}
+\end{columns}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{A problematic mutation to the graph}
+\begin{columns}
+\begin{column}{0.7\textwidth}
+\begin{itemize}
+\item intuitively, \aka{\it the issue seems the mutator
+    may create ``black $\rightarrow$ white'' pointers}
+\begin{itemize}
+\item \blackbox : GC thinks it has ``done'' with it
+\item \whitebox : going to be reclaimed, unless found in other paths
+\end{itemize}
+% \item \ao{$\Rightarrow$ 「黒$\rightarrow$白ポインタ」
+%     ができる瞬間を補足して防ぐ}
+\item \ao{$\Rightarrow$ prevent ``black $\rightarrow$ white pointers''
+    from being created}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.3\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/black_to_white.pdf}
+\end{center}
+\end{column}
+\end{columns}
+
+\end{frame}
+\fi
+
+
+\iffalse
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{黒$\rightarrow$白を防ぐアプローチ}
+
+\begin{columns}
+\begin{column}{0.8\textwidth}
+
+\begin{enumerate}
+\item 方法1: \fbox{白}をmutatorに渡さない
+  \begin{itemize}
+  \item mutatorが\fbox{白}を読みだしそうになったらその瞬間それを\fbox{灰色}に
+  \end{itemize}
+\item 方法2: 「\fbox{黒}$\rightarrow$\fbox{白}」ができる瞬間，
+\begin{enumerate}
+\item 方法2-1: \fbox{白}を灰色にする (\fbox{黒}$\rightarrow$\fbox{灰色}にする)
+  \begin{itemize}
+  \item 利点: 最前線が常に「前進」する
+  \item 利点: コピーGCと共存しやすい(後述)
+  \item 欠点: 回収率が低い. $o$に再び書き込みが起きて$p$が到達不能になっても，
+    (そのGCでは)回収されない
+  \end{itemize}
+\item 方法2-2: \fbox{黒}を灰色に戻す (\fbox{灰色}$\rightarrow$\fbox{白}にする)
+  \begin{itemize}
+  \item 利点: 回収率が高い
+  \item 欠点: 最前線が「後退」する
+  \end{itemize}
+\end{enumerate}
+\end{enumerate}
+
+\end{column}
+\begin{column}{0.2\textwidth}
+\vskip2cm
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/shade_white.pdf}
+
+\includegraphics[width=\textwidth]{out/pdf/svg/shade_black.pdf}
+\end{center}
+
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{黒$\rightarrow$白を防ぐアプローチ}
+「\fbox{黒}$\rightarrow$\fbox{白}」ができる瞬間を捕捉
+\begin{columns}
+\begin{column}{0.75\textwidth}
+\begin{enumerate}
+\item 方法1: \fbox{白}を灰色にする (\fbox{黒}$\rightarrow$\fbox{灰色}にする)
+  \begin{itemize}
+  \item 利点: 最前線が常に「前進」する
+  \item 利点: コピーGCと共存しやすい(後述)
+  \item 欠点: 回収率が低い. $o$に再び書き込みが起きて$p$が到達不能になっても，
+    (そのGCでは)回収されない
+  \end{itemize}
+\item 方法2: \fbox{黒}を灰色に戻す (\fbox{灰色}$\rightarrow$\fbox{白}にする)
+  \begin{itemize}
+  \item 利点: 回収率が高い
+  \item 欠点: 最前線が「後退」する
+  \end{itemize}
+\end{enumerate}
+\end{column}
+
+\begin{column}{0.25\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/shade_white.pdf}
+
+\includegraphics[width=\textwidth]{out/pdf/svg/shade_black.pdf}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Two approaches to preventing black$\rightarrow$white}
+capture the point where ``\blackbox$\rightarrow$\whitebox''
+is about to be created
+\begin{columns}
+\begin{column}{0.75\textwidth}
+\begin{enumerate}
+\item approach \#1:
+  gray the \whitebox (make \blackbox$\rightarrow$\graybox)
+  \begin{itemize}
+  \item pros: the frontier always progresses
+  \item pros: easier to work with for copying GCs
+  \item cons: reclaim less objects.
+    if $p$ becomes unreachable due to another update to $o$,
+    it won't be reclaimed (by the current GC)
+  \end{itemize}
+\item approach \#2:
+  get the \blackbox back to gray
+  (make \graybox$\rightarrow$\whitebox)
+  \begin{itemize}
+  \item pros: reclaim more objects
+  \item cons: the frontier retreats
+  \end{itemize}
+\end{enumerate}
+\end{column}
+
+\begin{column}{0.25\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/shade_white.pdf}
+
+\includegraphics[width=\textwidth]{out/pdf/svg/shade_black.pdf}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% \begin{frame}
+% \frametitle{黒$\rightarrow$白を補足してどうするか}
+% 「\fbox{黒}$\rightarrow$\fbox{白}」ができる操作が行われるとき，
+% \begin{columns}
+% \begin{column}{0.8\textwidth}
+% \begin{enumerate}
+% \item 方法1: \fbox{白}を灰色にする (\fbox{黒}$\rightarrow$\fbox{灰色}にする)
+%   \begin{itemize}
+%   \item 利点: 最前線が常に「前進」する
+%   \item 利点: コピーGCと共存しやすい(後述)
+%   \item 欠点: 回収率が低い. $o$に再び書き込みが起きて$p$が到達不能になっても，
+%     (そのGCでは)回収されない
+%   \end{itemize}
+% \item 方法2: \fbox{黒}を灰色に戻す (\fbox{灰色}$\rightarrow$\fbox{白}にする)
+%   \begin{itemize}
+%   \item 利点: 回収率が高い
+%   \item 欠点: 最前線が「後退」する
+%   \end{itemize}
+% \end{enumerate}
+% \end{column}
+% \begin{column}{0.2\textwidth}
+
+% \begin{center}
+% \includegraphics[width=\textwidth]{out/pdf/svg/shade_white.pdf}
+
+% \includegraphics[width=\textwidth]{out/pdf/svg/shade_black.pdf}
+% \end{center}
+
+% \end{column}
+% \end{columns}
+% \end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{捕捉が必要なアクション}
+素直にはポインタが動くあらゆるアクションを捕捉する必要がある
+\begin{itemize}
+\item オブジェクトのフィールドへポインタを書き込む\ao{(write barrier)}
+\begin{lstlisting}
+o->x = p
+\end{lstlisting}
+\item ルートへポインタを書き込む $\equiv$ 変数へポインタを書き込む
+  \ao{(read barrier)}
+\begin{lstlisting}
+p = o->x
+\end{lstlisting}
+\end{itemize}
+
+後者は頻度が大きいので避けるケースも有り(実例2: Boehm GC)
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+  \frametitle{Mutator actions that need to be captured}
+  naively all pointer movements must be captured
+\begin{itemize}
+\item write a pointer into an object field \ao{(write barrier)}
+\begin{lstlisting}
+o->x = p
+\end{lstlisting}
+\item write a pointer into a root $\equiv$
+  write a pointer to a variable
+  \ao{(read barrier)}
+\begin{lstlisting}
+p = o->x
+\end{lstlisting}
+\end{itemize}
+
+the latter is so frequent that
+some approaches avoid them (example \#2: Boehm GC)
+
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{実例1: Appel-Ellis-Li}
+\begin{itemize}
+\item コピーGC $+$ インクリメンタル
+\item 方法1に基づく．より正確には以下を保って動く:
+
+\begin{quote}
+\ao{mutatorは決して白へのポインタを入手しない}
+\end{quote}
+\item どのように保つか?
+  \begin{itemize}
+  \item \ao{灰色オブジェクトのフィールド読み出しを補足(read barrier)}
+  \end{itemize}
+\item 灰色オブジェクトがいる領域 $\subset$ scan 〜 free
+  からの読み出しを仮想記憶のページ保護を用いて補足
+\begin{center}
+\includegraphics[width=0.5\textwidth]{out/pdf/svg/appel_ellis_li_1.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Example \#1: Appel-Ellis-Li}
+\begin{itemize}
+\item copying GC $+$ incremental
+\item based on the approach \# 1. more precisely, maintain the following
+  invariant
+
+\begin{quote}
+\ao{the mutator never sees a pointer to white}
+\end{quote}
+\item how?
+  \begin{itemize}
+  \item \ao{intervene in reading a field from gray objects (read barrier)}
+  \end{itemize}
+\item read-protect 
+  the region of gray objects $\subset$ scan $\sim$ free,
+  by the virtual memory primitive of operating systems
+\begin{center}
+\includegraphics[width=0.5\textwidth]{out/pdf/svg/appel_ellis_li_1.pdf}
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{Appel-Ellis-Li : Read Barrierの実際}
+\begin{itemize}
+\item 灰色オブジェクトのフィールドが読み込まれたら，
+  それを含むページ内のオブジェクトを黒にする
+  ($=$ それらのオブジェクトをスキャンする
+  $\rightarrow$ それらが指しているオブジェクトは灰色になる)
+\begin{lstlisting}
+trap_read_from_grey(a) {
+  page = aを含むページ;
+  for (pageに含まれるオブジェクトo) {
+    scan(o); // oの子供をコピー
+  }
+  unprotect(page);
+}    
+\end{lstlisting}
+\end{itemize}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/appel_ellis_li_1.pdf}}%
+\only<2>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/appel_ellis_li_2.pdf}}%
+\end{center}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Appel-Ellis-Li : the read barrier in action}
+\begin{itemize}
+\item when a field of a gray object is read,
+  blacken objects in the page containing it
+  ($=$ scan those objects $\rightarrow$ they become gray)
+\begin{lstlisting}
+trap_read_from_grey(a) {
+  page = the page including a;
+  for (all objects o in the page) {
+    scan(o); // copy o's children
+  }
+  unprotect(page);
+}    
+\end{lstlisting}
+\end{itemize}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/appel_ellis_li_1.pdf}}%
+\only<2>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/appel_ellis_li_2.pdf}}%
+\end{center}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{補足 : コピーGCとの相性}
+\begin{itemize}
+\item コピーGCにおいては，GC中コピー済み(灰または黒)
+  オブエクトのコピーが2つ存在する(from spaceとto space)
+\item immutableなオブジェクトならどちらを見ても問題はないが，
+  mutableなオブジェクトの場合「どちらを見るか」を決める必要がある
+\item いずれはto spaceを見るのだから，
+  「from spaceは決して見ない」とするのが自然
+\item $\rightarrow$ 白(from space)ポインタ自体をmutatorに渡さない(見せない)
+  とするのが自然
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{out/pdf/svg/why_read_barrier.pdf}
+\end{center}
+\end{itemize}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Remark : it's easier for copying GC}
+\begin{itemize}
+\item during a copying GC, there are two versions of each visited 
+  object (one in the from space and the other in the to space)
+\item immutable objects do not care which one the mutator sees,
+  but mutable ones do
+\item it will eventually see the one in to space anyways,
+  so it's natural to maintain ``it never sees the one in the from space''
+\item $\rightarrow$ it's natural to let the mutator never
+  see (get a pointer to) a white object
+
+  \begin{center}
+\includegraphics[width=0.7\textwidth]{out/pdf/svg/why_read_barrier.pdf}
+\end{center}
+\end{itemize}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{実例2: Boehm GC}
+\begin{itemize}
+\item 保守的GC ($\rightarrow$ マーク\&スイープ) $+$ インクリメンタル
+\item 保つ条件:
+  \begin{itemize}
+  \item 「ルートでない黒オブジェクト $\rightarrow$ 白」ポインタを作らない
+  \end{itemize}
+
+\item どうやって?
+  \begin{itemize}
+  \item \ao{「オブジェクトのフィールドに対する書き込み」}
+    を捕捉\ao{(write barrier)}
+  \end{itemize}
+
+\item 注: 
+  \aka{「ルート(黒かもしれない) $\rightarrow$白」}というポインタは
+  できうる
+  \begin{itemize}
+  \item 防ごうと思うと, ルートへの書き込み
+    $\rightarrow$ オブジェクトの\aka{読み出し}を捕捉する必要がある
+  \item オーバーヘッドが大きすぎるので, 別途対処(後述)
+  \end{itemize}
+  
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Example \#2: Boehm GC}
+\begin{itemize}
+\item conservative GC ($\rightarrow$ mark\&sweep) $+$ incremental
+\item invariants:
+  \begin{itemize}
+  \item ``non-root \blackbox $\rightarrow$ \whitebox''
+    pointers never exist
+  \end{itemize}
+
+\item how?
+  \begin{itemize}
+  \item capture
+    \ao{\it ``writing to an object field'' (write barrier)}
+  \end{itemize}
+
+\item remark: 
+  \aka{``root $\rightarrow$ white''} pointers \ao{\it may} exist
+  \begin{itemize}
+  \item prevention requires us to capture
+    writing to the root
+    $\rightarrow$ \aka{\it reading} from an object 
+  \item the overhead is so large that it deserves
+    a separate treatment (covered later)
+  \end{itemize}
+  
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{Boehm GCのwrite barrier}
+\begin{itemize}
+\item やはり仮想記憶を用い(C/C++用では唯一の選択肢)，
+  オブジェクトへの書き込みを補足
+\item 書き込まれたオブジェクトを灰色へ戻す
+  \begin{itemize}
+  \item マークスタックへ挿入
+  \end{itemize}
+\item Read barrierは行わない
+  $\rightarrow$ 「ルート(黒) $\rightarrow$ 白」
+  というポインタは許容(放置)する
+\item マークフェーズの終わりに改めて，ルートから走査し直す(再走査)
+\item 再走査中はmutatorを止める$\rightarrow$
+  潜在的には停止時間が長くなりうる
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Write barrier in Boehm GC}
+\begin{itemize}
+\item capture writing into objects by
+  virtual memory (the only choice in C/C++)
+\item gray the ``written-to'' object 
+  \begin{itemize}
+  \item push it onto the mark stack
+  \end{itemize}
+\item no read barriers
+  $\rightarrow$ ``root (black) $\rightarrow$ white''
+  pointers are allowed
+\item at the end of a mark phase, it traverses from the root again
+\item during this second traversal,
+  the mutator is stopped $\rightarrow$
+  it may cause a long pause time
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{補足: もう少し厳密な正しさの証明}
+\begin{itemize}
+\item 「黒$\rightarrow$白」というポインタが問題なのはわかるが，
+それさえ防げばOKというのは自明ではない
+\item 改めて，示すべき命題: 以下のアルゴリズム終了時点で，
+\begin{quote}
+\ao{ルートから到達可能$\rightarrow$黒}
+\end{quote}
+
+\begin{lstlisting}
+ルートを灰色に;
+while (灰色がいる) {
+  o = 灰色オブジェクトを一個選び，黒に塗る;
+  for (o内のポインタp)
+    if (pが差すオブジェクト白)
+      それを灰色に塗る;
+  @\aka{mutatorによるグラフ書き換え;}@
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Appendix: a more rigorous correctness proof}
+\begin{itemize}
+\item while it is clear ``black$\rightarrow$white'' pointers cause a problem,
+  it is not trivial that preventing them is sufficient to solve the problem
+\item the proposition to prove: after the following algorithm finished,
+\begin{quote}
+\ao{reachable from the root $\rightarrow$ black}
+\end{quote}
+
+\begin{lstlisting}
+gray the root;
+while (there are gray objects) {
+  o = pick and blacken a gray object;
+  for (pointers p in o)
+    if (p points to a white object)
+      gray it;
+  @\aka{the mutator changes the graph;}@
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{鍵となる条件}
+\begin{itemize}
+\item GC, mutatorの実行中「常に」以下が成り立つ
+
+\begin{quote}
+\ao{(I): ルートから到達可能な「白」オブジェクトは，ある「灰色」オブジェクトから到達可能}
+\end{quote}
+\item これが言えたとすると，
+  \begin{tabular}{ll}
+&    (I)かつ終了状態(灰色は存在しない) \\
+ $\rightarrow$ & ルートから到達可能な「白」オブジェクトは存在しない\\
+ $\rightarrow$ & 「白」オブジェクトは回収可能
+  \end{tabular}
+となり正しさが示される．後は(I)を示せばよい
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{The key invariant}
+\begin{itemize}
+\item the following ``always'' holds during the execution (GC or mutator)
+
+\begin{quote}
+  \ao{(I): all ``white'' objects reachable from the root are
+    reachable from some ``gray'' objects}
+\end{quote}
+\item if this is true,
+  \begin{tabular}{ll}
+&    (I) and the termination condition (i.e. there are no grays) \\
+ $\rightarrow$ & no white objects are reachable from the root \\
+ $\rightarrow$ & white objects can be reclaimed
+  \end{tabular}
+and we are done. the only remaining task is to prove (I).
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{(I)の証明}
+\begin{itemize}
+\item $w$をルートから到達可能な白オブジェクトとする
+\begin{center}
+\includegraphics[width=0.7\textwidth]{out/pdf/svg/reachabile_implies_black_1.pdf}
+\end{center}
+\item ルートは黒または灰色で，
+  かつ黒$\rightarrow$白ポインタは存在しない($\ast$)から，
+  ルートから$w$に至るパス$P$中に，灰色オブジェクトがひとつ以上ある．証明終わり.
+\begin{center}
+\includegraphics[width=0.7\textwidth]{out/pdf/svg/reachabile_implies_black_2.pdf}
+\end{center}
+\item $\ast$ : mutatorだけでなく，
+  GCが「黒$\rightarrow$白ポインタを作らない」ことも
+  証明の必要があるがそれは易しいので省略
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Proof of (I)}
+\begin{itemize}
+\item say $w$ is a white object reachable from the root
+\begin{center}
+\includegraphics[width=0.7\textwidth]{out/pdf/svg/reachabile_implies_black_1.pdf}
+\end{center}
+\item since the root is always black or gray and
+  there are no ``black $\rightarrow$ white'' pointers ($\ast$),
+  there must be a gray object
+  on each path $P$ from the root to $w$ (QED).
+\begin{center}
+\includegraphics[width=0.7\textwidth]{out/pdf/svg/reachabile_implies_black_2.pdf}
+\end{center}
+\item $(\ast)$ : you need to show that not only the mutator but
+  also the collector never creates ``black $\rightarrow$ white''
+  pointers.  it's easy and left as an exercise.
+\end{itemize}
+\end{frame}
+\fi
+
+
+\iffalse
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\section{参照カウントの変種}
+\fi
+\ifeng
+\section{Variants of Reference Counting}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{参照数変更が必要な操作(I)}
+\begin{itemize}
+\item ポインタが変数に代入(束縛)されるあらゆる場面で必要
+\item 注: 以下はNULLポインタの検査を省略している
+\end{itemize}
+
+\begin{itemize}
+\item 変数の代入
+\begin{lstlisting}
+p = e; /* e->rc++; p->rc--; if (p->rc == 0) free(p); */
+\end{lstlisting}
+\item 変数初期化
+\begin{lstlisting}
+void * p = e;  /* e->rc++; */
+\end{lstlisting}
+\item オブジェクトのフィールドへ代入
+\begin{lstlisting}
+o->p = e;    /* e->rc++; o->p->rc--; if (o->p->rc == 0) free(o->p); */
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifeng
+\begin{frame}[fragile]
+\frametitle{When reference counts must be updated (I)}
+\begin{itemize}
+\item whenever a pointer is assigned (bound) to a variable
+\item remark: we omit NULL checks below
+\end{itemize}
+
+\begin{itemize}
+\item assign to a variable
+\begin{lstlisting}
+p = e; /* e->rc++; p->rc--; if (p->rc == 0) free(p); */
+\end{lstlisting}
+\item initialize a variable
+\begin{lstlisting}
+void * p = e;  /* e->rc++; */
+\end{lstlisting}
+\item assign to an object field
+\begin{lstlisting}
+o->p = e;    /* e->rc++; o->p->rc--; if (o->p->rc == 0) free(o->p); */
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{参照数変更が必要な操作 (II)}
+
+\begin{itemize}
+\item 関数への引数渡し
+\begin{lstlisting}
+f(e); /* e->rc++ */
+\end{lstlisting}
+\item 変数がdeadになる(以降使われなくなる)
+\begin{lstlisting}
+foo() {
+  object * p = e;
+  ... p->x ...
+  /* 以降pはdead(使われない). 
+     p->rc--; if (p->rc == 0) free(p) */
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifeng
+\begin{frame}[fragile]
+\frametitle{When reference counts must be updated (II)}
+
+\begin{itemize}
+\item pass an argument to a function
+\begin{lstlisting}
+f(e); /* e->rc++ */
+\end{lstlisting}
+\item a variable becomes dead (no longer used)
+\begin{lstlisting}
+foo() {
+  object * p = e;
+  ... p->x ...
+  /* p becomes dead (no longer used)
+     p->rc--; if (p->rc == 0) free(p) */
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{参照カウントのオーバーヘッド}
+\begin{itemize}
+\item つまり，オブジェクトを書き換えていなくても，
+  参照数はしょっちゅう書き換わる
+\begin{lstlisting}
+list * p = 0;
+for (p = head; p; p = p->next) {
+  ...
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifeng
+\begin{frame}[fragile]
+\frametitle{The overhead of reference counting}
+\begin{itemize}
+\item A reference count changes constantly, even when
+  you do not modify objects
+\begin{lstlisting}
+list * p = 0;
+for (p = head; p; p = p->next) {
+  ...
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\subsection{遅延参照カウント}
+\fi
+\ifeng
+\subsection{Deferred reference counting}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{遅延参照カウント}
+\begin{itemize}
+\item 要点: \ao{ルート(局所変数・大域変数)からの参照を数えない.}
+  オブジェクトからの参照だけを数える
+\item 利点: 
+  \ao{オブジェクトのフィールドへの代入時だけ，参照数を変更}すればよい
+\item 欠点: 
+  参照数フィールド({\tt rc})は，ルートからの参照を含まないため，
+  「{\tt rc == 0} $\Rightarrow$ 到達不能」は成り立たない
+\item $\therefore$ {\tt rc == 0} $\rightarrow$ ゴミ候補として，
+  表(Zero Count Table; ZCT)へ登録
+\item 時折ルートをスキャンして，本当に参照数0の (ZCTにあり，
+  ルートからさされていない)ものを回収
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifeng
+\begin{frame}
+\frametitle{Deferred reference counting}
+\begin{itemize}
+\item In a nutshell: \ao{do not count references from the root (global/local variables);}
+  only count references from other objects
+\item pros: 
+  reference counts need to be updated \ao{only when updating an object}
+\item cons:
+  a reference count field ({\tt rc}) of an object does not count references from the root, so
+  ``{\tt rc == 0} $\Rightarrow$ unreachable'' does not hold
+\item $\therefore$ {\tt rc == 0} $\rightarrow$
+  \ao{register it to a table (Zero Count Table; ZCT) as a ``possible garbage''}
+\item scan the root from time to time and reclaim objects whose
+  reference counts are truly zero (i.e., in ZCT and not referenced from the root)
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{遅延参照カウント}
+\begin{itemize}
+\item オブジェクトのフィールド更新時
+\begin{lstlisting}
+o->p = e;    
+\end{lstlisting}
+\begin{lstlisting}
+if (o->p) {
+  o->p->rc--;
+  if (o->p->rc == 0) add(o->p, ZCT);
+  e->rc++;
+  remove(e, ZCT);
+}
+\end{lstlisting}
+
+\item 時折(e.g., メモリ割り当て時に空き領域が見つからない)
+\begin{lstlisting}
+R = ルート中のポインタ全て;
+ZCTに含まれ，Rに含まれないオブジェクトを開放;
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Deferred reference counting in action}
+\begin{itemize}
+\item when updating an object field
+\begin{lstlisting}
+o->p = e;    
+\end{lstlisting}
+\begin{lstlisting}
+if (o->p) {
+  o->p->rc--;
+  if (o->p->rc == 0) add(o->p, ZCT);
+  e->rc++;
+  remove(e, ZCT);
+}
+\end{lstlisting}
+
+\item from time to time (e.g., when an allocator cannot find a space upon allocation request)
+\begin{lstlisting}
+R = all pointers in the root;
+reclaim objects in ZCT and not in R;
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\subsection{Sticky参照カウント}
+\fi
+\ifeng
+\subsection{Sticky reference counting}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{Sticky参照カウント}
+\begin{itemize}
+\item 問題: 参照数は最大いくつになりうるのか?
+\begin{eqnarray*}
+\mbox{理論的な最大値} 
+& = & \frac{\mbox{ヒープサイズ}}{\mbox{ポインタサイズ}}
+  \end{eqnarray*}
+$\Rightarrow$ ポインタとほぼ同じだけのbit数 (e.g., 64 bit)が必要
+
+\item Sticky参照カウント
+  \begin{itemize}
+  \item 参照数のbit数を制限(e.g., 4 bit, つまり 1 \ldots 15, および``16以上(sticky)'')
+  \item 一旦オーバーフローしたら(``sticky''になったら)参照カウントは，
+    stickyのまま
+  \item 走査型GCとの併用が前提(循環ゴミを回収するのにどのみち必要)
+  \item 一旦stickyになったら，走査型GC後に本当の参照数が回復できる
+    (その時点でオーバーフローしていなければ)
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Sticky reference counting}
+\begin{itemize}
+\item An issue: how many bits are needed for a reference count?
+\item $\equiv$ how large could a reference count become?
+\begin{eqnarray*}
+\mbox{A theoretical maximum} 
+& = & \frac{\mbox{heap size}}{\mbox{size of a pointer}}
+\end{eqnarray*}
+$\Rightarrow$
+need as many bits as a pointer (e.g., 64 bits)
+
+\item To avoid this, sticky reference counting
+  \ao{\it limits the number of bits of a reference count}
+  (e.g., 4 bit, which can represent 1 \ldots 15, and ``$\geq 16$ (sticky)'')
+  \begin{itemize}
+  \item once a counter overflows, it stays ``sticky''
+  \item assume it is used with a traversing GC (which is necessary to collect cyclic garbage anyways)
+  \item after a counter overflows, the real count can be recovered by a traversing GC
+    (unless overflowed at that point)
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\subsection{1 bit参照カウント / 1 bit reference counting}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{1 bit参照カウント}
+\begin{itemize}
+\item sticky参照カウントで，\ao{参照数を1 bit}にしたもの
+\item 1 bit $=$ 参照数1または2以上 (sticky)の区別
+\item さらに，参照数はオブジェクトに持つ必要はなく，
+  \ao{「ポインタ内」に持たせる}ことができる
+\end{itemize}
+\end{frame}
+\fi
+
+\ifeng
+\begin{frame}[fragile]
+\frametitle{1 bit reference counting}
+\begin{itemize}
+\item a special case of sticky reference counting, which uses only \ao{1 bit} for a reference count
+\item 1 bit only distinguishes ``1'' and ``$\geq 2$''
+\item in addition, a reference count does not have to be in an object but can be in \ao{pointers}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{1 bit参照カウントの基本}
+\begin{itemize}
+\item 用語
+  \begin{itemize}
+  \item \ao{unique}ポインタ: 参照数1のオブジェクトへのポインタ
+  \item \aka{shared}ポインタ: 参照数2以上のオブジェクトへのポインタ
+  \end{itemize}
+\item 不変条件: あるオブジェクトを指すポインタの数は以下のどちらか
+  \begin{itemize}
+  \item \ao{unique} 1個 + \aka{shared} 0個
+  \item \ao{unique} 0個 + \aka{shared} 任意個
+  \end{itemize}
+  \begin{center}
+\includegraphics[width=0.6\textwidth]{out/pdf/svg/onebit.pdf}
+  \end{center}
+\end{itemize}
+\end{frame}
+\fi
+
+
+\ifeng
+\begin{frame}[fragile]
+\frametitle{1 bit reference counting : basics}
+\begin{itemize}
+\item terminology
+  \begin{itemize}
+  \item \ao{unique} pointer: a pointer to an object whose reference count $=$ 1
+  \item \aka{shared} pointer: a pointer to an object whose reference count $\geq 2$
+  \end{itemize}
+\item invariant: pointers to an object are either
+  \begin{itemize}
+  \item 1 \ao{unique} + 0 \aka{shared}
+  \item 0 \ao{unique} + any \aka{shared}'s
+  \end{itemize}
+  \begin{center}
+\includegraphics[width=0.6\textwidth]{out/pdf/svg/onebit.pdf}
+  \end{center}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{1 bit参照カウントの動き(1)}
+\begin{itemize}
+\item 代入:
+\begin{lstlisting}
+p = q;    
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.4\textwidth]{out/pdf/svg/onebit_assign_1.pdf}
+\end{center}
+\item unique/sharedをポインタの最下位ビットで区別(unique=0, shared=1)するとする
+\begin{lstlisting}
+if ((p & 1) == 0) free(p);
+p = q = (q | 1);
+\end{lstlisting}
+\item 正しいが，これでは回収できるオブジェクトは稀
+\end{itemize}
+\end{frame}
+\fi
+
+\ifeng
+\begin{frame}[fragile]
+\frametitle{1 bit reference counting in action (1)}
+\begin{itemize}
+\item assignment:
+\begin{lstlisting}
+p = q;    
+\end{lstlisting}
+\begin{center}
+\includegraphics[width=0.4\textwidth]{out/pdf/svg/onebit_assign_1.pdf}
+\end{center}
+\item assume unique/shared pointers are distinguished by the last bit (unique=0, shared=1)
+\begin{lstlisting}
+if ((p & 1) == 0) free(p);
+p = q = (q | 1);
+\end{lstlisting}
+\item correct but rarely effective
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{1 bit参照カウントの動き(2)}
+\begin{itemize}
+\item 変数qが代入{\tt p = q}以降dead(参照されない)とすると，
+代入に際して特別な操作は不要
+\begin{center}
+\includegraphics[width=0.4\textwidth]{out/pdf/svg/onebit_assign_2.pdf}
+\end{center}
+\item 
+\begin{lstlisting}
+if ((p & 1) == 0) free(p);
+p = q;
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+\ifeng
+\begin{frame}[fragile]
+\frametitle{1 bit reference counting in action (2)}
+\begin{itemize}
+\item upon an assignment {\tt p = q},
+  no particular operation is necessary if a variable {\tt q} is not used thereafter 
+\begin{center}
+\includegraphics[width=0.4\textwidth]{out/pdf/svg/onebit_assign_2.pdf}
+\end{center}
+\item 
+\begin{lstlisting}
+if ((p & 1) == 0) free(p);
+p = q;
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+\fi
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\section{C/C++用のGCライブラリ}
+\fi
+\ifeng
+\section{A GC library for C/C++}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{C/C++用のGCライブラリ}
+\begin{itemize}
+\item 保守的GC (conservative GC)
+\item \url{http://hboehm.info/gc/}
+\item 通称 Boehm GC (設計者: Hans Boehm, Alan Demers, Mark Weiser)
+\item C/C++のmalloc/calloc/newの代わりに呼ぶだけでGCしてくれる
+  \begin{itemize}
+  \item malloc, calloc, new $\rightarrow$ {\tt GC\_MALLOC}
+  \item free $\rightarrow$ 呼ばない
+  \item C++用のインタフェース(newの置き換え)もある
+  \end{itemize}
+\item $\alpha$ (メモリ使用量) 調節 $\rightarrow$ 
+{\tt GC\_set\_free\_space\_divisor($d$)}
+\item 他の関数: {\tt gc.h}を読んで見よ
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{A GC library for C/C++}
+\begin{itemize}
+\item conservative GC
+\item \url{http://hboehm.info/gc/}
+\item normally called Boehm GC (inventor: Hans Boehm, Alan Demers, Mark Weiser)
+\item replace malloc/calloc/new of C/C++ and
+  you get GC!
+  \begin{itemize}
+  \item {\tt malloc, calloc} $\rightarrow$ {\tt GC\_MALLOC}
+  \item {\tt free} $\rightarrow$ don't
+  \item C++ {\tt new }$T$ $\rightarrow$ {\tt new (GC)} $T$ (check manual)
+  \end{itemize}
+\item adjust $\alpha$ (memory usage) $\rightarrow$ 
+  {\tt GC\_set\_free\_space\_divisor($d$)}
+  (consult manual for the meaning of $d$)
+\item other functions: read {\tt gc.h}
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{演習の目的}
+\begin{itemize}
+\item とにかくありがたく使って効果を見てみる
+\item 割り当てのコスト，GCの回数などを計測
+\item \ao{使用メモリを増やせば割り当てのコスト減少}を観測
+\end{itemize}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{The goal of the exercise}
+\begin{itemize}
+\item just try and see it's working (you will appreciate it)
+\item measure cost per allocation, the occurrences of GCs, etc.
+\item observe \ao{the cost will reduce when you use more memory}
+\end{itemize}
+\end{frame}
+\fi
+
+
+\end{document}
+
+
+

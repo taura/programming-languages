@@ -1,0 +1,2938 @@
+\documentclass[12pt,dvipdfmx]{beamer}
+\usepackage{pgfpages}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.eps}
+\usepackage{listings,jlisting}
+\usepackage{fancybox}
+\usepackage{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% \ifeng \ifjp
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newif\ifen
+\entrue
+%\enfalse
+\newif\ifja
+%\jatrue
+\jafalse
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% themes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetheme{Boadilla}
+%% no navigation bar
+% default boxes Bergen Boadilla Madrid Pittsburgh Rochester
+%% tree-like navigation bar
+% Antibes JuanLesPins Montpellier
+%% toc sidebar
+% Berkeley PaloAlto Goettingen Marburg Hannover Berlin Ilmenau Dresden Darmstadt Frankfurt Singapore Szeged
+%% Section and Subsection Tables
+% Copenhagen Luebeck Malmoe Warsaw
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% innerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \useinnertheme{circles}       % default circles rectangles rounded inmargin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% outerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% outertheme
+% \useoutertheme{default}       % default infolines miniframes smoothbars sidebar sprit shadow tree smoothtree
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% colorthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usecolortheme{seahorse}
+%% special purpose
+% default structure sidebartab 
+%% complete 
+% albatross beetle crane dove fly seagull 
+%% inner
+% lily orchid rose
+%% outer
+% whale seahorse dolphin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% fontthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usefonttheme{serif}  
+% default professionalfonts serif structurebold structureitalicserif structuresmallcapsserif
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% generally useful beamer settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+% do not show navigation
+\setbeamertemplate{navigation symbols}{}
+% show page numbers
+\setbeamertemplate{footline}[frame number]
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% define some colors for convenience
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\mido}[1]{{\color{green}#1}}
+\newcommand{\mura}[1]{{\color{purple}#1}}
+\newcommand{\ore}[1]{{\color{orange}#1}}
+\newcommand{\ao}[1]{{\color{blue}#1}}
+\newcommand{\aka}[1]{{\color{red}#1}}
+
+\setbeamercolor{ex}{bg=cyan!20!white}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% how to typset code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstset{language = C,
+numbers = left,
+numberstyle = {\tiny \emph},
+numbersep = 10pt,
+breaklines = true,
+breakindent = 40pt,
+frame = tlRB,
+frameround = ffft,
+framesep = 3pt,
+rulesep = 1pt,
+rulecolor = {\color{blue}},
+rulesepcolor = {\color{blue}},
+flexiblecolumns = true,
+keepspaces = true,
+basicstyle = \ttfamily\scriptsize,
+identifierstyle = ,
+commentstyle = ,
+stringstyle = ,
+showstringspaces = false,
+tabsize = 4,
+escapechar=\@,
+}
+
+\ifja
+\title{プログラミング言語 (9)
+  \\ 字句解析器(lexer)と構文解析器(parser)}
+\fi
+\ifen
+\title{Programming Language (9)
+  \\ lexers and parsers}
+\fi
+\institute{}
+\author{田浦}
+\date{}
+
+\AtBeginSection[] % Do nothing for \section*
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+\AtBeginSubsection[] % Do nothing for \section*
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection,currentsubsection]
+\end{frame}
+}
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% \begin{frame}
+% \frametitle{目次}
+% \tableofcontents
+% \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}
+\frametitle{はじめに}
+\begin{itemize}
+\item あらゆるプログラミング言語処理系は，
+  最初にプログラムを読み込み，文法のチェックを行う
+  \begin{itemize}
+  \item 字句解析器(\ao{\it ``lexer''}または\ao{\it ``tokenizer''})
+  \item 構文解析器(\ao{\it ``parser''})
+  \end{itemize}
+\item それらは，「言語処理系」でなくてもあらゆる場面で必要
+  \begin{itemize}
+  \item Web Page (HTMLやXML)の読み込み
+  \item CSV, SVG, \ldots ファイル\ldots
+  \item ソフトのconfig file\ldots
+  \end{itemize}
+\item それらを「さっと作れる」ことは実践的にも重要なスキル
+  \begin{itemize}
+  \item アドホックに文字列処理をやるだけではきっとうまく行かない
+  \item そのための便利なツール(生成器)がある
+  \item 一度使っておいて損はない!
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}
+\frametitle{Introduction}
+\begin{itemize}
+\item All programming language implementations
+  first read a program and check its grammar
+  \begin{itemize}
+  \item lexical analyzer (\ao{\it ``lexer''} or \ao{\it ``tokenizer''})
+  \item syntax checker (\ao{\it ``parser''})
+  \end{itemize}
+\item they are necessary not only in programming language implementations
+  but in many other circumstances
+  \begin{itemize}
+  \item web pages (HTML or XML)
+  \item CSV, SVG, \ldots files \ldots
+  \item config files of software \ldots
+  \end{itemize}
+\item it's an important skill to be able to make them quickly 
+  \begin{itemize}
+  \item you'd better not process strings in an ad-hoc manner
+  \item there are useful tools to make them (\ao{\it parser generators})
+  \item it never hurts to have an experience with them
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+\begin{frame}
+\frametitle{本授業残りのロードマップ}
+\begin{enumerate}
+\item 字句解析器，構文解析器生成ツールを使いこなす
+  \begin{enumerate}
+  \item OCaml : ocamllexとocamlyacc
+  \item Python : ply
+  \end{enumerate}
+\item それを利用して，ミニ処理系を簡単に作っちゃえ!
+\end{enumerate}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}
+\frametitle{字句解析と構文解析}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item 字句解析器 $\approx$ 
+  \begin{itemize}
+  \item 「文字」の列 $\rightarrow$ 「字句」($\approx$単語)の列
+  \item 字句にならない文字の列が来たらエラー
+  \end{itemize}
+
+\item 構文解析器 $\approx$ 
+  \begin{itemize}
+  \item 「字句」の列 $\rightarrow$ 「文」 (式, 文, プログラム全体など)
+  \item 文にならない字句の列が来たらエラー
+  \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/lex_parse.pdf}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}
+\frametitle{Lexer and parser}
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\begin{itemize}
+\item lexer $\approx$ 
+  \begin{itemize}
+  \item converts a sequence of ``characters''
+    $\rightarrow$ a sequence of ``tokens'' ($\approx$ words) 
+  \item rejects when characters do not constitute a valid token
+  \end{itemize}
+
+\item parser $\approx$ 
+  \begin{itemize}
+  \item converts a sequence of ``tokens''
+    $\rightarrow$ a ``sentence'' (expression, statement, whole program, etc.)
+  \item rejects tokens that constitute a valid sentence
+  \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.45\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/lex_parse.pdf}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}
+\frametitle{プログラミング言語の例}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{out/pdf/svg/lex_parse2.pdf}
+\end{center}
+
+\end{frame}
+\fi
+
+\ifja
+\begin{frame}
+\frametitle{An example in a programming language}
+
+\begin{center}
+\includegraphics[width=0.7\textwidth]{out/pdf/svg/lex_parse2.pdf}
+\end{center}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}
+\frametitle{字句と構文をどう定義するか?}
+\begin{itemize}
+\item 通常，
+\begin{itemize}
+\item 字句: \ao{正規表現}
+\item 構文: \ao{文脈自由文法}
+\end{itemize}
+という枠組みを使って定義する
+
+\item 宣言的な記述から，
+プログラム(字句解析器，構文解析器)を生成するツールがある
+
+\item 「習うより慣れろ」実例から入る
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}
+\frametitle{How to define a token and a sentence?}
+\begin{itemize}
+\item normally, we define
+\begin{itemize}
+\item tokens: by \ao{\it regular expression (regex)}
+\item sentences: by \ao{\it context free grammar (CFG)}
+\end{itemize}
+
+\item there are tools that generate
+  lexers and parsers
+  from their declarative descriptions (\ao{\it lexer/parser generators})
+
+\item ``practice makes perfect.'' Let's see it working
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifen
+\begin{frame}
+  \frametitle{lexer/parser generators}
+  \begin{itemize}
+  \item there are many tools for many languages
+    \begin{itemize}
+    \item C/C++ : lex (flex) and yacc (bison)
+    \item OCaml : ocamllex and ocamlyacc (menhir)
+    \item Python : a whole bunch of tools, e.g., 
+      in \url{https://wiki.python.org/moin/LanguageParsing}
+      and \url{https://tomassetti.me/parsing-in-python/}
+    \end{itemize}
+  \item I will give you  a parser code that
+    converts source language into XML, which you can then read
+    using the XML library in the language you are using
+  \item the parser will be written in Python using 
+    \href{https://tatsu.readthedocs.io/en/stable/index.html}{Tatsu}
+  \item details to be announced later (hopefully in a few days \ldots)
+  \end{itemize}
+\end{frame}
+\fi
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}[fragile]
+\frametitle{ocamllex : 字句解析器生成ツール}
+
+\begin{itemize}
+\item ocamllexの入力 $=$ \ao{.mll}
+ファイル (OCaml風だが同じではない)
+\item 例 ({\tt calc\_lex.mll})
+\begin{lstlisting}
+{ @\ao{\tt (* 前置き: 任意のOCamlコード．無くても可 *)}@
+type token = 
+  NUM of (int)
+| PLUS
+| EOF
+}
+
+@\ao{\tt (* 本題 *)}@
+rule lex = parse
+| [' ' '\t' '\n'] { lex lexbuf }        (* 空白を読み飛ばす *)
+| "+"             { PLUS }
+| ['0'-'9']+ as s { NUM(int_of_string s) }
+| eof             { EOF }
+
+{ @\ao{\tt (* 任意のOCamlコード．無くても可 *)}@
+
+}
+\end{lstlisting}
+\end{itemize}
+
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{\ao{\tt ocamllex} : lexer generator}
+
+\begin{itemize}
+\item input to {\tt ocamllex} $=$ \ao{.mll} file
+  (similar to but different from OCaml)
+\item ex. ({\tt calc\_lex.mll})
+\begin{lstlisting}
+{ @\ao{\tt (* {\it preamble: any OCaml code; can be omitted} *)}@
+type token = 
+  NUM of (int)
+| PLUS
+| EOF
+}
+
+@\ao{\tt (* {\it the real part} *)}@
+rule lex = parse
+| [' ' '\t' '\n'] { lex lexbuf }        (* @{\it skip whitespaces}@ *)
+| "+"             { PLUS }
+| ['0'-'9']+ as s { NUM(int_of_string s) }
+| eof             { EOF }
+
+{ @\ao{\tt (* {\it any OCaml code; can be omitted} *)}@
+
+}
+\end{lstlisting}
+\end{itemize}
+
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{.mllファイルの形式}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{lstlisting}
+{ 
+  任意のOCamlコード
+  通常は，「字句」のデータ型を定義
+}  
+
+(* 規則 *)
+@\ao{\tt let {\it id} = 正規表現}@
+  ...
+
+@\ao{\tt rule lex = parse}@
+@\ao{\tt | 正規表現  \{ 式 \}}@
+| 正規表現  { 式 }
+   ...
+| 正規表現  { 式 }
+
+{ 
+  任意のOCamlコード
+}  
+\end{lstlisting}
+\end{column}
+
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item \ao{{\tt |}「正規表現  \{ 式 \}」} の意味:
+\begin{beamercolorbox}[wd=0.9\textwidth]{ex}
+\vskip1mm
+入力の先頭辞(prefix)が「正規表現」にマッチしたら，
+「式」を評価して返す(それがひとつの字句)
+\vskip1mm
+\end{beamercolorbox}
+
+\item \ao{「正規表現 as 変数名」} で，
+  規則中で，マッチした文字列を変数で参照できる
+\begin{lstlisting}
+| ['0'-'9']+ as @\ao{\tt s}@ { NUM(int_of_string @\ao{\tt s}@) }
+\end{lstlisting}
+
+\item 後に使う正規表現に名前を付けられる
+\begin{lstlisting}
+let digit = ['0'-'9']
+\end{lstlisting}
+\begin{lstlisting}
+| digit+ as @\ao{\tt s}@ { NUM(int_of_string @\ao{\tt s}@) }
+\end{lstlisting}
+
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{.mll file format}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{lstlisting}
+{ 
+  @{\it any OCaml code}@
+  @{\it typically type definition for tokens}@
+}  
+
+(* @{\it define regexes}@ *)
+@\ao{\tt let {\it id} = {\it regex}}@
+  ...
+
+(* @{\it rule}@ *)
+@\ao{\tt rule lex = parse}@
+| @{\it regex}@ { @{\it expr}@ }
+| @{\it regex}@ { @{\it expr}@ }
+   ...
+| @{\it regex}@ { @{\it expr}@ }
+
+{ 
+  @{\it any OCaml code}@
+}  
+\end{lstlisting}
+\end{column}
+
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item semantics of \ao{``{\tt | {\it regex } \{ {\it expr} \}}''} :
+\begin{beamercolorbox}[wd=0.9\textwidth]{ex}
+  \vskip1mm
+  {\it when a prefix of the input matches {\rm ``regex''},
+    evaluate {\rm ``expr''} and make it a token}
+\vskip1mm
+\end{beamercolorbox}
+
+\item ``{\it regex} as \ao{\it var}'' binds
+  the matched string to the variable {\it var}
+\begin{lstlisting}
+| ['0'-'9']+ as @\ao{\tt s}@ { NUM(int_of_string @\ao{\tt s}@) }
+\end{lstlisting}
+
+\item you can name regular expressions for later use
+\begin{lstlisting}
+let digit = ['0'-'9']
+...
+| digit+ as @\ao{\tt s}@ { NUM(int_of_string @\ao{\tt s}@) }
+\end{lstlisting}
+
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{ocamllexの正規表現の例}
+\begin{itemize}
+\item 
+\begin{tabular}{|l|l|}\hline
+正規表現 & 意味(マッチする文字列) \\\hline
+\ao{\tt \_} & 任意の1文字(アンダースコア) \\
+\ao{\tt 'a'} & {\tt a} \\
+\ao{\tt [ 'a' 'b' 'c' ]} & {\tt a, b, c} どれか \\
+\ao{\tt ['0'-'9']} & {\tt 0, 1, \ldots, 9} どれか \\
+\ao{\tt "abc"} & {\tt abc} \\
+\ao{\tt "abc"|"def"} & {\tt abc} または {\tt def} \\
+\ao{\tt "abc"*} & {\tt abc}が0回以上繰り返された文字列 \\
+\ao{\tt "abc"+} & {\tt abc}が1回以上繰り返された文字列 \\
+\ao{\tt ("abc"|"def")+} & ({\tt abc} または {\tt def})が1回以上 \\
+\ao{\tt eof} & 入力の終わり \\\hline
+\end{tabular}
+
+\item 一覧は
+\url{http://caml.inria.fr/pub/docs/manual-ocaml-400/manual026.html}
+(英語)または
+\url{http://ocaml.jp/archive/ocaml-manual-3.06-ja/manual026.html}
+(日本語)を見ましょう
+
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{ocamllex regex examples}
+\begin{itemize}
+\item 
+\begin{tabular}{|l|l|}\hline
+regex & semantics (strings that match it) \\\hline
+\ao{\tt \_} & any character \\
+\ao{\tt 'a'} & {\tt a} \\
+\ao{\tt [ 'a' 'b' 'c' ]} & {\tt a, b,} or {\tt c} \\
+\ao{\tt ['0'-'9']} & any of {\tt 0, 1, \ldots, 9} \\
+\ao{\tt "abc"} & {\tt abc} \\
+\ao{\tt "abc"|"def"} & {\tt abc} or {\tt def} \\
+\ao{\tt "abc"*} & zero or more repetitions of {\tt abc} \\
+\ao{\tt "abc"+} & one or more repetitions of {\tt abc} \\
+\ao{\tt ("abc"|"def")+} & one or more ({\tt abc} or {\tt def}) \\
+\ao{\tt eof} & end of input \\\hline
+\end{tabular}
+
+\item see
+\url{http://caml.inria.fr/pub/docs/manual-ocaml-400/manual026.html}
+(English)
+or 
+\url{http://ocaml.jp/archive/ocaml-manual-3.06-ja/manual026.html}
+(Japanese)
+for more
+
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{参考: 正規表現のフォーマル(本質的)な定義}
+\begin{itemize}
+\item 列を構成する文字(アルファベット)の集合を$A$とする
+\item 以下が$A$上の正規表現
+
+\begin{tabular}{|cl|p{5cm}|}\hline
+正規表現 & & 意味(マッチする文字列) \\\hline
+\ao{$\epsilon$} & & 空文字列 \\
+\ao{$a$} & {\footnotesize ($a \in A$)} & $a$ \\
+\ao{$RS$} & {\footnotesize ($R$, $S$は正規表現)} & $R$にマッチする文字列と$S$にマッチする文字列の連接 \\
+\ao{$R$ $|$ $S$} & {\footnotesize ($R$, $S$は正規表現)} & $R$または$S$にマッチする文字列 \\
+\ao{$R*$} & {\footnotesize ($R$は正規表現)} & $R$にマッチする文字列の0回以上の繰り返し \\\hline
+\end{tabular}
+
+\item 必要に応じて括弧を使う (例: {\tt (abc|def)+})
+\item 前述のあらゆる例は上記の組み合わせ(またはその省略記法)
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}
+\frametitle{Note: a formal definition of regular expressions}
+\begin{itemize}
+\item let $A$ be the set of characters constituing a sequence (\ao{\it alphabet})
+\item the following is \ao{\it regular expressions over $A$}
+
+\begin{tabular}{|cl|p{5cm}|}\hline
+expression & & semantics (strings that match it) \\\hline
+\ao{$\epsilon$} & & empty string \\
+\ao{$a$} & {\footnotesize ($a \in A$)} & $a$ \\
+\ao{$RS$} & {\footnotesize ($R$, $S$ : regex)}
+             & concatination of strings matching $R$
+               and strings matching $S$ \\
+  \ao{$R$ $|$ $S$} & {\footnotesize ($R$, $S$ : regex)}
+             & strings matching $R$ or $S$ \\
+  \ao{$R*$} & {\footnotesize ($R$ : regex)}
+             & zero or more repetitions of a string matching $R$ \\\hline
+\end{tabular}
+
+\item use parens as necessary (例: {\tt (abc|def)+})
+\item all previous examples are combinations of the above
+  (or an abbreviation thereof)
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{ocamllexが生成するファイルと関数}
+\begin{itemize}
+\item ocamllexは字句解析の定義ファイル(.mll)から，OCamlのファイル(.ml)を生成する
+\begin{lstlisting}
+$ @\ao{\tt ocamllex calc\_lex.mll}@
+6 states, 267 transitions, table size 1104 bytes
+$ ls
+@\mura{\tt calc\_lex.ml}@  calc_lex.mll
+\end{lstlisting} %$
+\item .mlファイル内に関数\ao{\tt lex}が定義される(.mll内の
+\ao{\tt rule \underline{lex} = parse \ldots}に対応)
+\begin{lstlisting}
+$ ocaml -init calc_lex.ml
+        OCaml version 4.01.0
+
+# @\ao{\tt lex}@ ;;
+- : @\ao{\tt Lexing.lexbuf -> token = <fun>}@
+\end{lstlisting} %$
+\item \ao{\tt Lexing.lexbuf} は，文字を読み出すためのバッファ
+($\approx$Cの{\tt FILE*})．
+mutableなrecord
+\item \ao{\tt lex} {\it buf} は，{\it buf}の先頭から文字列を消費し，
+  字句を返す
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{A file and function generated by ocamllex}
+\begin{itemize}
+\item ocamllex generates an OCaml file (.ml) from a lexer definition file (.mll)
+\begin{lstlisting}
+$ @\ao{\tt ocamllex calc\_lex.mll}@
+6 states, 267 transitions, table size 1104 bytes
+$ ls
+@\mura{\tt calc\_lex.ml}@  calc_lex.mll
+\end{lstlisting} %$
+\item the \mura{\tt .ml} file defines a function \ao{\tt lex} (as
+\ao{\tt rule \underline{lex} = parse \ldots} was in the {\tt .mll})
+\begin{lstlisting}
+$ ocaml -init calc_lex.ml
+        OCaml version 4.01.0
+
+# @\ao{\tt lex}@ ;;
+- : @\ao{\tt Lexing.lexbuf -> token = <fun>}@
+\end{lstlisting} %$
+\item \ao{\tt Lexing.lexbuf} is a type of buffers to read characters from
+($\approx$ {\tt FILE*} of C);
+a mutable record
+\item \ao{\tt lex {\it buf}} consumes characters from {\it buf} and returns a token
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{{\tt Lexing.lexbuf}の作り方いろいろ}
+\begin{itemize}
+\item 文字列から
+\begin{lstlisting}
+@\ao{\tt Lexing.from\_string}@ "12+34* 56"
+\end{lstlisting}
+\item 標準入力から
+\begin{lstlisting}
+@\ao{\tt Lexing.from\_channel}@ stdin
+\end{lstlisting}
+\item ファイルから
+\begin{lstlisting}
+@\ao{\tt Lexing.from\_channel}@ (open_in "exp.txt")
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{Creating a {\tt Lexing.lexbuf} buffer}
+\begin{itemize}
+\item from a string
+\begin{lstlisting}
+@\ao{\tt Lexing.from\_string}@ "12+34* 56"
+\end{lstlisting}
+\item from a standard input
+\begin{lstlisting}
+@\ao{\tt Lexing.from\_channel}@ stdin
+\end{lstlisting}
+\item from a file
+\begin{lstlisting}
+@\ao{\tt Lexing.from\_channel}@ (open_in "exp.txt")
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{字句解析器使用例}
+\begin{columns}
+
+\begin{column}{0.6\textwidth}
+\begin{lstlisting}
+$ ocamllex calc_lex.mll 
+6 states, 267 transitions, table size 1104 bytes
+$ ocaml -init calc_lex.ml
+        OCaml version 4.01.0
+
+# let b = Lexing.from_string @\ao{"12 + 34+56"}@;;
+val b : Lexing.lexbuf =
+  { ... (省略) ... }
+# lex b;;
+- : token = @\ao{\tt NUM 12}@
+# lex b;;
+- : token = @\ao{\tt PLUS}@
+# lex b ;;
+- : token = @\ao{\tt NUM 34}@
+# lex b ;;
+- : token = @\ao{\tt PLUS}@
+# lex b;;
+- : token = @\ao{\tt NUM 56}@
+# lex b;;
+- : token = @\ao{\tt EOF}@
+\end{lstlisting} %$
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\begin{lstlisting}[basicstyle = \ttfamily\tiny,numbers = none]
+rule lex = parse
+| [' ' '\t' '\n'] { lex lexbuf }
+| "+"             { PLUS }
+| ['0'-'9']+ as s { NUM(int_of_string s) }
+| eof             { EOF }
+\end{lstlisting}
+\end{column}
+
+
+\end{columns}
+
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{Using a lexer}
+\begin{columns}
+
+\begin{column}{0.6\textwidth}
+\begin{lstlisting}
+$ ocamllex calc_lex.mll 
+6 states, 267 transitions, table size 1104 bytes
+$ ocaml -init calc_lex.ml
+        OCaml version 4.01.0
+
+# let b = Lexing.from_string @\ao{"12 + 34+56"}@;;
+val b : Lexing.lexbuf =
+  { ... (snip) ... }
+# lex b;;
+- : token = @\ao{\tt NUM 12}@
+# lex b;;
+- : token = @\ao{\tt PLUS}@
+# lex b ;;
+- : token = @\ao{\tt NUM 34}@
+# lex b ;;
+- : token = @\ao{\tt PLUS}@
+# lex b;;
+- : token = @\ao{\tt NUM 56}@
+# lex b;;
+- : token = @\ao{\tt EOF}@
+\end{lstlisting} %$
+\end{column}
+
+\begin{column}{0.4\textwidth}
+\begin{lstlisting}[basicstyle = \ttfamily\tiny,numbers = none]
+rule lex = parse
+| [' ' '\t' '\n'] { lex lexbuf }
+| "+"             { PLUS }
+| ['0'-'9']+ as s { NUM(int_of_string s) }
+| eof             { EOF }
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{ocamlyacc : 構文解析器生成ツール}
+\begin{columns}
+
+\begin{column}{0.4\textwidth}
+\hspace{1cm}\begin{lstlisting}
+/* 宣言 + 任意のOCamlコード*/
+%{
+  (* 任意のOCamlコード *)
+%}
+/* 字句の定義 */
+@\ao{\tt \%token <int> NUM}@
+@\ao{\tt \%token PLUS EOF}@
+
+/* 先頭記号とその型(必須) */
+@\mura{\tt \%start program}@
+@\mura{\tt \%type <int> program}@
+
+@\mido{\%\%}@  @\ore{/* 文法定義と評価規則 */}@
+expr : 
+| NUM            { $1 }
+| expr PLUS NUM  { $1 + $3 }
+
+program :
+| expr EOF       { $1 }
+
+@\mido{\%\%}@
+  (* 任意のOCamlコード *)
+\end{lstlisting} %$
+\end{column}
+
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item 入力 $=$ .mly ファイル
+\item 形式: \mido{\tt \%\%} で3分割
+  \begin{itemize}
+  \item 宣言 $+$ 任意のOCamlコード
+  \item \ore{文法定義と評価規則}
+  \item 任意のOCamlコード
+  \end{itemize}
+\item 宣言
+  \begin{itemize}
+  \item \ao{\tt \%token} : 全字句名と各字句に付随するデータの型
+  \item \mura{\tt \%start} : 先頭記号(入力全体に対応する記号)名
+  \item \mura{\tt \%type} : 
+    各記号が認識されたときに対応して返す型(先頭記号については必須)
+  \end{itemize}
+\item 注: .mllと.mly両方で字句の定義をしている
+  (マシなやり方は後述)
+\end{itemize}
+\end{column}
+
+\end{columns}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{ocamlyacc : parser generator}
+\begin{columns}
+
+\begin{column}{0.34\textwidth}
+\hspace{1cm}\begin{lstlisting}
+/* @{\it declarations + }@
+   @{\it any OCaml code}@ */
+%{  (* @{\it any OCaml code}@ *)
+%}
+/* @{\it token definitions}@ */
+@\ao{\tt \%token <int> NUM}@
+@\ao{\tt \%token PLUS EOF}@
+
+/* @{\it the start symbol and}@
+  @{\it its type (mandatory)}@ */
+@\mura{\tt \%start program}@
+@\mura{\tt \%type <int> program}@
+@\mido{\%\%}@  @\ore{/* {\it grammar definitions }}@
+     @\ore{{\it and evaluation rules} */}@
+expr : 
+| NUM           { $1 }
+| expr PLUS NUM { $1 + $3 }
+
+program :
+| expr EOF      { $1 }
+@\mido{\%\%}@
+  (* @{\it any OCaml code}@ *)
+\end{lstlisting} %$
+\end{column}
+
+\begin{column}{0.67\textwidth}
+\begin{itemize}
+\item input $=$ {\tt .mly} file
+\item format: separated by \mido{\tt \%\%} into 3 parts
+  \begin{itemize}
+  \item declarations $+$ any OCaml code
+  \item \ore{grammar defs and evaluation rules}
+  \item any OCaml code
+  \end{itemize}
+\item declarations
+  \begin{itemize}
+  \item \ao{\tt \%token} : token names and their types
+  \item \mura{\tt \%start} : the start symbol (the symbol representing the whole input)
+  \item \mura{\tt \%type} :
+    a type corresponding to a symbol
+    (mandatory for the start symbol)
+  \end{itemize}
+\item Remark: both {\tt .mll} and {\tt .mly} define tokens
+  (a better method comes later)
+\end{itemize}
+\end{column}
+
+\end{columns}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{ocamlyacc と menhir}
+\begin{itemize}
+\item ocamlyaccとほぼ互換で，新しいツールとしてmenhirがある
+\item この説明の範囲ではどちらでも同じ
+\item 演習ではocamlをインストールすれば自動的にインストールされるocamlyaccを使う
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{ocamlyaccの文法定義}
+
+\begin{columns}
+\begin{column}{0.55\textwidth}
+\begin{itemize}
+\item \ao{文脈自由文法}に沿った定義
+\item 例:
+\begin{lstlisting}
+expr :
+| ...
+| expr PLUS NUM  { ... }
+\end{lstlisting}
+の読み方:
+\begin{itemize}
+\item {\tt expr} {\small (にマッチする字句列)，}
+\item {\tt PLUS} {\small (1字句)}
+\item {\tt NUM} {\small (にマッチする字句列)，}
+\end{itemize}
+をつなげたものは，{\tt expr}である(にマッチする)．
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item {\tt |}で，複数の可能性があることを示す．
+\item {\tt \{ \ldots \}}は，「評価規則」(後述)
+\item 注:
+  \begin{itemize}
+  \item 右辺で自分自身を参照しても良い(再帰)
+  \item 複数の記号がお互いを参照していても良い(相互再帰)
+  \end{itemize}
+\end{itemize}
+
+\begin{center}
+\only<1>{\includegraphics[width=\textwidth]{out/pdf/svg/lex_parse_expr_1.pdf}}%
+%\only<2>{\includegraphics[width=\textwidth]{out/pdf/svg/lex_parse_expr_2.pdf}}
+\end{center}
+
+\end{column}
+\end{columns}
+
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{Grammar definition in ocamlyacc}
+
+\begin{columns}
+\begin{column}{0.45\textwidth}
+\begin{itemize}
+\item based on \ao{\it Context Free Grammar (CFG)}
+\item ex.
+\begin{lstlisting}
+expr :
+| ...
+| expr PLUS NUM  { ... }
+\end{lstlisting}
+reads that concatinating
+\begin{itemize}
+\item {\small (a string matching)} {\tt expr},
+\item {\small (a token)} {\tt PLUS}, and
+\item {\small (a string matchin)} {\tt NUM} 
+\end{itemize}
+will match (make a string matching) {\tt expr}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.6\textwidth}
+\begin{itemize}
+\item {\tt |} indicates there are multiple possibilities
+\item {\tt \{ \ldots \}} is an evaluation rule (later)
+\item Remarks:
+  \begin{itemize}
+  \item the righthand side can reference the symbol being defined itself (recursive definitions)
+  \item multiple symbols can refer to each other (mutually recursive definitions)
+  \end{itemize}
+\end{itemize}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/lex_parse_expr_1.pdf}}%
+%\only<2>{\includegraphics[width=\textwidth]{out/pdf/svg/lex_parse_expr_2.pdf}}
+\end{center}
+
+\end{column}
+\end{columns}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{文脈自由文法のフォーマルな定義}
+\begin{itemize}
+\item \ao{終端記号(字句)}の集合: $T$
+\item \ao{非終端記号}の集合: {\it NT}
+\item \ao{先頭記号}: $S \in \mbox{\it NT}$
+\item \ao{規則}の集合. 一つの規則は，
+\[ \mura{a = b_1 \; \cdots \; b_n} \]
+の形($n \geq 0$, $a \in \mbox{\it NT}$, $b_i \in \mbox{\it NT} \cup T$).
+\begin{itemize}
+\item この規則の意味:
+  \begin{itemize}
+  \item \mura{$b_1$にマッチする字句列,}
+  \item \mura{\ldots}
+  \item \mura{$b_n$にマッチする字句列,}
+  \end{itemize}
+\mura{をつなげた字句列は，$a$にマッチする}
+\end{itemize}
+\item おそらく言わずもがなだが厳密さのため:
+  \begin{itemize}
+  \item 上記で
+    $b_i$が字句の場合， 
+    $b_i$はその1字句(からなる字句列)に(のみ)マッチする
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}
+\frametitle{A formal definition of CFG}
+\begin{itemize}
+\item set of \ao{terminal symbols (tokens)}: $T$
+\item set of \ao{non-terminal symbols}: {\it NT}
+\item \ao{the start symbol}: $S \in \mbox{\it NT}$
+\item set of \ao{rules}. each rule is of a form
+\[ \mura{a = b_1 \; \cdots \; b_n} \]
+($n \geq 0$, $a \in \mbox{\it NT}$, $b_i \in \mbox{\it NT} \cup T$).
+\begin{itemize}
+\item which reads that concatinating 
+  \begin{itemize}
+  \item \mura{a token sequence matching $b_1$,}
+  \item \mura{\ldots}
+  \item \mura{a token sequence matching $b_n$,}
+  \end{itemize}
+\mura{will match (make a string matching) $a$}
+\end{itemize}
+\item just for the sake of formality:
+  \begin{itemize}
+  \item if $b_i$ is a token, $b_i$ matches
+    (a token sequence consisting only of) the token
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{評価規則}
+\begin{itemize}
+\item 任意のOCamlの式．
+  ただし， {\tt \$1, \$2, \ldots}などで，
+  右辺の対応する位置にある記号に対する値を参照できる
+
+\item 意味: \ao{入力中のある部分字句列が，
+    規則 $a = b_1\; \ldots \; b_n$
+    により$a$にマッチしたら，
+    対応する「評価規則」を計算し，その字句列に対応する値として保存する}
+
+\item 例:
+\begin{lstlisting}
+expr :
+|  ...
+| expr PLUS NUM  { $1 + $3 }
+\end{lstlisting}
+読み方: ある部分字句列が{\tt expr PLUS NUM}にマッチしたら，
+その部分字句列に対応する値は，
+\begin{itemize}
+\item 右辺1番目の{\tt expr}(にマッチした字句列)に対応する値
+\item 右辺3番目の{\tt NUM}(にマッチした字句)に対応する値
+\end{itemize}
+の和である
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{Evaluation rule}
+\begin{itemize}
+\item any OCaml expression,
+  which can use {\tt \$1, \$2, \ldots}
+  to reference values of the corresponding symbol on the righthand side
+
+\item semantics: \ao{if a subsequence of tokens
+    matches $a$ due to the rule
+    $a = b_1\; \ldots \; b_n$,
+    evaluate the corresponding
+    evaluation rule and associate the resulting value
+    with the subsequence}
+
+\item ex.
+\begin{lstlisting}
+expr :
+|  ...
+| expr PLUS NUM  { $1 + $3 }
+\end{lstlisting}
+reads that, if a subsequence of tokens matches
+{\tt expr PLUS NUM},
+the value of that subsequence is the sum of
+\begin{itemize}
+\item the value of (the string matching) the first term {\tt expr} and
+\item the value of (the string matching) the third term {\tt NUM}
+\end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{ocamlyaccが生成するファイル}
+\begin{itemize}
+\item ocamlyaccは.mlyから，\mura{2つのOCamlのファイル(.mlと.mli)}を生成する
+  \begin{itemize}
+  \item .mli って? $\Rightarrow$ 後述
+  \end{itemize}
+\begin{lstlisting}
+$ ocamlyacc calc_parse.mly
+$ ls
+@\mura{\tt calc\_parse.ml  calc\_parse.mli}@  calc_parse.mly
+\end{lstlisting} %$
+\item .mlファイル内に，\ao{先頭記号名}で，関数が定義される
+  \begin{itemize}
+  \item つまりここでは，
+    .mly内の\ao{\tt \%start program}に対応し，\ao{\tt program}
+    という関数が定義される
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{A file generated by ocamlyacc}
+\begin{itemize}
+\item ocamlyacc generates \mura{two OCaml files ({\tt .ml} and {\tt .mli})}
+  from a {\tt .mly} file
+  \begin{itemize}
+  \item what is {\tt .mli}? $\Rightarrow$ later
+  \end{itemize}
+\begin{lstlisting}
+$ ocamlyacc calc_parse.mly
+$ ls
+@\mura{\tt calc\_parse.ml  calc\_parse.mli}@  calc_parse.mly
+\end{lstlisting} %$
+\item a function is defined in {\tt .ml} with the name of \ao{the start symbol}
+  \begin{itemize}
+  \item that is, due to \ao{\tt \%start program} in the {\tt .mly} file,
+    a function \ao{\tt program} will be defined
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{ocamlyaccが生成する構文解析器(関数)}
+\begin{itemize}
+\item 
+\begin{lstlisting}
+$ ocaml -init calc_parse.ml
+        OCaml version 4.01.0
+
+# @\ao{\tt program ;;}@
+- : @\mura{(Lexing.lexbuf -> token)}@ -> Lexing.lexbuf -> @\ore{int}@ = <fun>
+\end{lstlisting} % $
+\item \mura{\tt Lexing.lexbuf -> token}は字句解析器の型
+\item \ore{\tt int}は，.mly内({\tt \%type <int> parse})で指定した型
+\item 構文解析器は，
+  \begin{itemize}
+  \item \mura{字句解析器}と文字バッファを受け取り，
+  \item 字句解析器によって，文字バッファから次々とtokenを取り出し，
+  \item token列全体が先頭記号とマッチするか計算し，
+  \item マッチしたら評価規則によって(token列全体に対応して)計算された値を返す
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{a parser (function) generated by ocamlyacc}
+\begin{itemize}
+\item 
+\begin{lstlisting}
+$ ocaml -init calc_parse.ml
+        OCaml version 4.01.0
+
+# @\ao{\tt program ;;}@
+- : @\mura{(Lexing.lexbuf -> token)}@ -> Lexing.lexbuf -> @\ore{int}@ = <fun>
+\end{lstlisting} % $
+\item \mura{\tt Lexing.lexbuf -> token} is the type of lexers
+\item \ore{\tt int} is what {\tt .mly} file ({\tt \%type <int> parse}) specified
+\item the parser
+  \begin{itemize}
+  \item takes a \mura{lexer} and a character buffer,
+  \item repeats calling the lexer to get tokens one after another from the character buffer, 
+  \item checks if the entire token sequence matches the start symbol, and
+  \item if it does, returns the value associated with the entire sequence
+    according to the evaluation rule 
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{字句解析と構文解析を合体させる}
+\begin{itemize}
+\item 以上で字句解析器(lex)と構文解析器(program)ができた
+\item 以下のようにして組み合わせて動くことを期待したくなる
+\begin{lstlisting}
+# program lex (Lexing.from_string "12+ 34 - 56")
+\end{lstlisting}
+
+\item 残念ながらそうは行かない．理由:
+  \begin{enumerate}
+  \item 両者は別々のファイルに書かれている．互いを参照するための「お作法」が必要
+  \item もっと面倒な理由:
+    .mllから生成された{\tt token}と，
+    .mlyから生成された{\tt token}を，
+    そのままでは「同じもの」と思ってくれない
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{Combining the lexer and the parser}
+\begin{itemize}
+\item a lexer ({\tt lex}) and a parser ({\tt program}) are now ready
+\item we would expect we can combine them as follows
+\begin{lstlisting}
+# program lex (Lexing.from_string "12+ 34 - 56")
+\end{lstlisting}
+
+\item this is not the case, unfortunately, because
+  \begin{enumerate}
+  \item they are written in seprate files, which must follow a rule to
+    refererence each other
+  \item a more complicated issue:
+    {\tt token} generated from {\tt .mll}
+    and {\tt token} generated from {\tt .mly}
+    are not considered the same thing
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{字句解析内のtoken $\neq$ 構文解析内のtoken}
+\begin{itemize}
+\item 
+\begin{itemize}
+\item .mll
+\begin{lstlisting}
+$ ocaml -init calc_lex.ml
+# lex;;
+- : Lexing.lexbuf -> @\aka{\tt token}@ = <fun>
+\end{lstlisting} %$
+このtokenは，{\tt calc\_lex.ml}中の{\tt token}
+\item .mly
+\begin{lstlisting}
+$ ocaml -init calc_parse.ml
+# program ;;
+- : (Lexing.lexbuf -> @\ao{\tt token}@) -> Lexing.lexbuf -> int = <fun>
+\end{lstlisting} %$
+こちらは{\tt calc\_parse.ml}中の{\tt token}
+\end{itemize}
+\item \aka{同じ名前でも別のもの．定義が一致していても別のもの}
+\item 一見理不尽だが，一般にOCamlでは，
+  他のファイル中の定義を参照するには，
+  お作法が必要なのでこうなる
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{{\tt token} in lexer $\neq$ {\tt token} in parser}
+\begin{itemize}
+\item 
+\begin{itemize}
+\item {\tt .mll}
+\begin{lstlisting}
+$ ocaml -init calc_lex.ml
+# lex;;
+- : Lexing.lexbuf -> @\aka{\tt token}@ = <fun>
+\end{lstlisting} %$
+this is {\tt token} in {\tt calc\_lex.ml}
+\item {\tt .mly}
+\begin{lstlisting}
+$ ocaml -init calc_parse.ml
+# program ;;
+- : (Lexing.lexbuf -> @\ao{\tt token}@) -> Lexing.lexbuf -> int = <fun>
+\end{lstlisting} %$
+this is {\tt token} in {\tt calc\_parse.ml}
+\end{itemize}
+\item \aka{they are different even if their names are the same;
+    they are different even if their definitions are ientical}
+\item it is inconvenient but , but OCaml in general requires 
+  appears unreasonable一見理不尽だが，一般にOCamlでは，
+  他のファイル中の定義を参照するには，
+  お作法が必要なのでこうなる
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{token定義の不一致の解決法}
+\begin{itemize}
+\item \ao{方針1:} .mllに対して，
+
+「お前はtokenを定義するな．.mlyにあるやつを使ってね」
+
+と指示する
+\item \ao{方針2:} .mlyに対して，
+
+「お前はtokenを定義するな．
+  .mllにあるやつを使ってね」
+
+と指示する
+\item どちらでもできるが，以下では一旦方針1を説明
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{How to solve the issue of separate token definitions}
+\begin{itemize}
+\item \ao{Method 1:} instruct {\tt .mll} 
+
+``you do not define token but use the one in {\tt .mly}''
+
+\item \ao{Method 2:} instruct {\tt .mly}
+
+``you do not define token but use the one in {\tt .mll}''
+
+\item you can do either one, but the following explains the method 1
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{token定義の不一致の解決法}
+
+\begin{itemize}
+\item {\tt calc\_lex.mll} を以下のように変更:
+\begin{lstlisting}
+{ 
+  @\ao{\tt (* ここにあったtoken定義を除去 *)}@
+  (* 以下のおまじないで， PLUSなどは 
+     calc_parse.ml 内のものを参照できる(する)
+     ようになる *)
+@\ao{\tt open Calc\_parse}@
+}
+rule lex = parse
+| [' ' '\t' '\n']  { lex lexbuf }
+| "+"              { PLUS }
+| ['0'-'9']+ as s  { NUM(int_of_string s) }
+| eof              { EOF }
+\end{lstlisting}
+
+\item 「おまじない」の意味は後に説明
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{How to solve the separate token definitions}
+
+\begin{itemize}
+\item change {\tt calc\_lex.mll} as follows:
+\begin{lstlisting}
+{ 
+  @\ao{\tt (* {\it remove token definition here} *)}@
+  (* {\it with the following magic, you now reference {\tt PLUS} etc. in}
+     {\tt calc_parse.ml} *)
+@\ao{\tt open Calc\_parse}@
+}
+rule lex = parse
+| [' ' '\t' '\n']  { lex lexbuf }
+| "+"              { PLUS }
+| ['0'-'9']+ as s  { NUM(int_of_string s) }
+| eof              { EOF }
+\end{lstlisting}
+
+\item I will explain the ``magic'' shrotly
+\end{itemize}
+\end{frame}
+\fi
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{合体して動かす実際の手順}
+\begin{itemize}
+\item それをやってもなお，残念ながら以下ではどれも動かない
+\begin{lstlisting}
+$ ocaml ocaml_lex.ml ocaml_parse.ml  # NG
+$ ocaml -init ocaml_lex.ml -init ocaml_parse.ml # NG
+\end{lstlisting} %$
+\item 理由: ocamlコマンドは\aka{複数の.mlファイルを受け付けない}
+\item ocamlコマンドは， 
+\aka{.mlファイルを直接実行するコマンドだと思わないほうが心の平穏を保てる}
+\item 事前にocamlcというコマンドで，
+  \ao{「コンパイル」したもの(.cmo)を渡す}のが基本
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{How to run programs consisting of multiple files}
+\begin{itemize}
+\item even with that, any of the following does not work
+\begin{lstlisting}
+$ ocaml ocaml_lex.ml ocaml_parse.ml  # NG
+$ ocaml -init ocaml_lex.ml -init ocaml_parse.ml # NG
+\end{lstlisting} %$
+\item reason: {\tt ocaml} command does not take \aka{\it multiple {\tt .ml} files}
+\item \aka{\it for your piece of mind, do not consider {\tt ocaml} 
+\aka{a command that directly executes an {\tt .ml} file}}
+\item you instead compile {\tt .ml} files with {\tt ocamlc} and pass
+  \ao{generated files (.cmo)}
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{合体して動かす実際の手順}
+\begin{itemize}
+\item 
+\begin{lstlisting}
+$ ocamllex calc_lex.mll
+$ ocamlyacc calc_parse.mly
+  @\ao{\tt \# ocamlcでコンパイル．以下の3ファイルの順序重要!}@
+  @\ao{\tt \# parseが先, lexが後}@
+$ @\ao{\tt ocamlc -c calc\_parse.mli calc\_parse.ml calc\_lex.ml}@
+  @\ao{\tt \# ocamlに.cmoを渡す}@
+$ @\ao{ocaml calc\_parse.cmo calc\_lex.cmo}@
+        OCaml version 4.01.0
+
+# Calc_parse.program;;
+- : (Lexing.lexbuf -> @\ao{\tt Calc\_parse.token}@) -> Lexing.lexbuf -> int = <fun>
+# Calc_lex.lex;;
+- : Lexing.lexbuf -> @\ao{\tt Calc\_parse.token}@ = <fun>
+\end{lstlisting}
+\item これでめでたく両者が「整合」
+\begin{lstlisting}
+# Calc_parse.program Calc_lex.lex (Lexing.from_string "12+34 + 56");;
+- : int = 102
+\end{lstlisting}
+
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{How to run programs consisting of multiple files}
+\begin{itemize}
+\item 
+\begin{lstlisting}
+$ ocamllex calc_lex.mll
+$ ocamlyacc calc_parse.mly
+  @\ao{\tt \# {\it compile with} ocamlc {\it (the order is important)!}}@
+  @\ao{\tt \# parse {\it must come before lex}}@
+$ @\ao{\tt ocamlc -c calc\_parse.mli calc\_parse.ml calc\_lex.ml}@
+  @\ao{\tt \# {\it pass .cmo} to ocaml}@
+$ @\ao{ocaml calc\_parse.cmo calc\_lex.cmo}@
+        OCaml version 4.01.0
+
+# Calc_parse.program;;
+- : (Lexing.lexbuf -> @\ao{\tt Calc\_parse.token}@) -> Lexing.lexbuf -> int = <fun>
+# Calc_lex.lex;;
+- : Lexing.lexbuf -> @\ao{\tt Calc\_parse.token}@ = <fun>
+\end{lstlisting}
+\item they finally combine successfully
+\begin{lstlisting}
+# Calc_parse.program Calc_lex.lex (Lexing.from_string "12+34 + 56");;
+- : int = 102
+\end{lstlisting}
+
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{要点}
+\begin{itemize}
+\item OCaml世界では，直接 .ml を実行するのは例外と思うが吉
+\item \ao{.mlを .cmo (バイトコード)にコンパイルし，ocamlに与える}のが基本
+\item そして，複数ファイルからなるプログラムの場合，それが「必須」になる
+\item .cmo を作るには，{\tt ocamlc -c}で「コンパイル」すればよいが，
+  引数(ないしコマンド実行)の\ao{順番が重要}
+\item ルール: 「依存するファイルを後に書く」
+  \begin{itemize}
+  \item {\tt calc\_lex.ml} が {\tt calc\_parse.ml} 
+    中のtokenを参照 $\rightarrow$ 
+    {\tt calc\_parse.ml calc\_lex.ml} の順
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{Summary}
+\begin{itemize}
+\item in OCaml, directly executing {\tt .ml} is an exception
+\item the norm is to \ao{\it compile {\tt .ml} into {\tt .cmo} (byte code) and give them to {\tt ocaml}}
+\item it is {\it ``must''} when a program consists of multiple files
+\item to create {\tt .cmo}, compile {\tt .ml} files with {\tt ocamlc -c}, but
+  their order in the command line is \ao{\it important}
+\item rule: a depender must come after dependees
+  \begin{itemize}
+  \item {\tt calc\_lex.ml} refererences {\tt token} defined in
+    {\tt calc\_parse.ml} $\rightarrow$ 
+    {\tt calc\_parse.ml calc\_lex.ml} 
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}[fragile]
+\frametitle{楽な方法 : ocamlbuild}
+\begin{itemize}
+\item OCaml専用のビルドツール
+\item 何してるかわからない長大なコマンド列が不愉快(だが一応便利)
+\begin{lstlisting}
+$ @\ao{\tt ocamlbuild calc\_lex.byte}@
+/usr/bin/ocamllex -q calc_lex.mll
+/usr/bin/ocamldep -modules calc_lex.ml > calc_lex.ml.depends
+/usr/bin/ocamlyacc calc_parse.mly
+/usr/bin/ocamldep -modules calc_parse.mli > calc_parse.mli.depends
+/usr/bin/ocamlc -c -o calc_parse.cmi calc_parse.mli
+/usr/bin/ocamlc -c -o calc_lex.cmo calc_lex.ml
+/usr/bin/ocamldep -modules calc_parse.ml > calc_parse.ml.depends
+/usr/bin/ocamlc -c -o calc_parse.cmo calc_parse.ml
+/usr/bin/ocamlc calc_parse.cmo calc_lex.cmo -o calc_lex.byte
+$ ls
+@\mura{\tt \_build/  calc\_lex.byte}@   calc_lex.mll  calc_parse.mly  
+  # 生成物は全て， _buildフォルダ内にある
+  # -I _buildという，またおまじない
+$ ocaml @\ao{\tt -I \_build}@ _build/calc_lex.cmo _build/calc_parse.cmo
+        OCaml version 4.01.0
+# 
+\end{lstlisting} %$
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{a convenient command : \ao{\tt ocamlbuild}}
+\begin{itemize}
+\item a build tool for OCaml
+\item a lengthy series of incomprehensible command lines
+  is unpleasant but still convenient
+\begin{lstlisting}
+$ @\ao{\tt ocamlbuild calc\_lex.byte}@
+/usr/bin/ocamllex -q calc_lex.mll
+/usr/bin/ocamldep -modules calc_lex.ml > calc_lex.ml.depends
+/usr/bin/ocamlyacc calc_parse.mly
+/usr/bin/ocamldep -modules calc_parse.mli > calc_parse.mli.depends
+/usr/bin/ocamlc -c -o calc_parse.cmi calc_parse.mli
+/usr/bin/ocamlc -c -o calc_lex.cmo calc_lex.ml
+/usr/bin/ocamldep -modules calc_parse.ml > calc_parse.ml.depends
+/usr/bin/ocamlc -c -o calc_parse.cmo calc_parse.ml
+/usr/bin/ocamlc calc_parse.cmo calc_lex.cmo -o calc_lex.byte
+$ ls
+@\mura{\tt \_build/  calc\_lex.byte}@   calc_lex.mll  calc_parse.mly  
+  # @{\it generated files are in}@ _build @{\it folder}@
+  # @{\it you still need}@ -I _build
+$ ocaml @\ao{\tt -I \_build}@ _build/calc_lex.cmo _build/calc_parse.cmo
+        OCaml version 4.01.0
+# 
+\end{lstlisting} %$
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}[fragile]
+\frametitle{ocamlmktop}
+
+\begin{itemize}
+\item {\tt *.cmo}を作った後，毎回
+\begin{lstlisting}
+$ ocaml -I _build _build/*.cmo
+        OCaml version 4.01.0
+#
+\end{lstlisting} %$
+のように，それらを指定してocamlを起動する代わりに，
+\begin{lstlisting}
+$ @\ao{\tt ocamlmktop}@ -o calc.top _build/*.cmo
+\end{lstlisting} %$
+として，それらの{\tt *.cmo}を「焼入れ」した，
+対話的処理系を指定した名前(上記では{\tt calc.top})
+で生成することができる
+\begin{lstlisting}
+$ ./calc.top @\ao{\tt -I \_build}@
+        OCaml version 4.01.0
+#
+\end{lstlisting} %$
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{ocamlmktop}
+
+\begin{itemize}
+\item after creating {\tt *.cmo}'s, you could give them to
+  {\tt ocaml} every time like
+\begin{lstlisting}
+$ ocaml -I _build _build/calc_lex.cmo _build/calc_parse.cmo
+        OCaml version 4.01.0
+#
+\end{lstlisting} %$
+but you can also generate an interactive command ({\tt calc.top} below)
+they are ``burned in'' as follows
+\begin{lstlisting}
+$ @\ao{\tt ocamlmktop}@ -o calc.top _build/*.cmo
+\end{lstlisting} %$
+
+\begin{lstlisting}
+$ ./calc.top @\ao{\tt -I \_build}@
+        OCaml version 4.01.0
+#
+\end{lstlisting} %$
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}[fragile]
+\frametitle{OCamlで複数ファイルからなるプログラムを作る際の最低限の知識のまとめ}
+
+\begin{itemize}
+\item 他のファイル (例: {\tt abc.ml}) 
+  で定義される名前(関数/変数名，型名，型のコンストラクタ名，etc.)
+  を参照する場合，
+  \begin{itemize}
+  \item 方法1: 参照するたびに名前を「{\tt Abc.}名前」のように参照する
+  \item 方法2: 先頭に，{\tt open Abc} と書く
+  \end{itemize}
+
+\item 前述したとおり，「依存関係」の順に ocamlc でコンパイルする
+
+\item ocamlや，ocamlmktopで生成した処理系は，
+{\tt *.cmi}や{\tt *.cmo}を探す場所を，
+{\tt -I}で指定する
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+  \frametitle{Summary of what you must know when developing
+    multi-file programs in OCaml}
+
+\begin{itemize}
+\item when you refer to a name (function/variable names, type names, constructor names, etc.) defined in another file (ex: {\tt abc.ml}) 
+  \begin{itemize}
+  \item method 1: qualify names like ``{\tt Abc.}{\it name}''
+  \item method 2: write {\tt open Abc} in the file that references them
+  \end{itemize}
+
+\item compile them with {\tt ocamlc}, in the order of dependencies
+
+\item {\tt ocaml} and programs generated by {\tt ocamlmktop}
+  specify with {\tt -I} directories to search for {\tt *.cmi} and {\tt *.cmo} 
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{文法定義でよく問題となる事項(1) 
+  \\ 左結合と右結合}
+\begin{itemize}
+\item 先の文法定義
+\begin{lstlisting}
+expr :
+| NUM
+| @\ao{\tt expr}@ PLUS @\ao{\tt NUM}@  { $1 + $3 }
+\end{lstlisting}
+は，以下ではいけないのだろうか?
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{lstlisting}[numbers=none]
+expr :
+| NUM
+| @\ao{\tt NUM}@ PLUS @\ao{\tt expr}@  { $1 + $3 }
+\end{lstlisting}
+\end{column}
+\begin{column}{0.4\textwidth}
+\begin{lstlisting}[numbers=none]
+expr :
+| NUM
+| @\ao{\tt expr}@ PLUS @\ao{\tt expr}@  { $1 + $3 }
+\end{lstlisting}
+\end{column}
+\end{columns}
+
+\item 元々の規則は，足し算($+$)が，「左結合(left associative)」
+であることを反映した規則
+\item 左結合:
+\[ a + b + c = ((a + b) + c) \]
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{Common issues in grammar definitions (1) 
+  \\ left and right associativity}
+\begin{itemize}
+\item what if we change the above grammar 
+\begin{lstlisting}
+expr :
+| NUM
+| @\ao{\tt expr}@ PLUS @\ao{\tt NUM}@  { $1 + $3 }
+\end{lstlisting}
+into this?
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{lstlisting}[numbers=none]
+expr :
+| NUM
+| @\ao{\tt NUM}@ PLUS @\ao{\tt expr}@  { $1 + $3 }
+\end{lstlisting}
+\end{column}
+\begin{column}{0.4\textwidth}
+\begin{lstlisting}[numbers=none]
+expr :
+| NUM
+| @\ao{\tt expr}@ PLUS @\ao{\tt expr}@  { $1 + $3 }
+\end{lstlisting}
+\end{column}
+\end{columns}
+
+\item the original rule reflects the fact that
+  addition ($+$) is ``left associative''
+\item left associative:
+\[ a + b + c = ((a + b) + c) \]
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{文法定義でよく問題となる事項(2) 
+  \\ 優先度の処理}
+
+\begin{itemize}
+\item {\tt *} (掛け算)を扱えるようにしたとする
+\item 以下では何かまずいか?
+\begin{lstlisting}
+expr :
+| NUM
+| expr PLUS NUM  { $1 + $3 }
+| @\ao{\tt expr MUL NUM}@  { $1 * $3 }
+\end{lstlisting}
+\item この定義では，
+\[ 3 + 4 * 5 = (3 + 4) * 5 = \aka{35} \]
+
+\item 「掛け算の方が足し算より強い」という規則を文法に反映させたい
+\[ 3 + 4 * 5 = 3 + (4 * 5) = 23 \]
+
+\item 適宜記号を追加して文法を変更する
+  \begin{itemize}
+  \item 「数」が{\tt *}で結合されて「項」(term)になり
+  \item 「項」が{\tt +}で結合されて「式」(expr)になる
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{Common issues in grammar definitions (2) 
+  \\ precedence}
+
+\begin{itemize}
+\item say we want to include {\tt *} (multiplication)
+\item any issue with the following?
+\begin{lstlisting}
+expr :
+| NUM
+| expr PLUS NUM  { $1 + $3 }
+| @\ao{\tt expr MUL NUM}@  { $1 * $3 }
+\end{lstlisting}
+\item with this definition
+\[ 3 + 4 * 5 = (3 + 4) * 5 = \aka{35} \]
+
+\item we like to incorporate the fact that
+  ``a multiplication binds its operands more strongly than an addition''
+\[ 3 + 4 * 5 = 3 + (4 * 5) = 23 \]
+
+\item one way is to introduce more symbols
+  \begin{itemize}
+  \item {\tt *} binds ``number''s to make a ``term''
+  \item {\tt +} then binds ``term''s to make an ``expr''
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{注:}
+
+\begin{itemize}
+\item ocamlyaccには，これらの問題を宣言的に解決する記法も用意されている
+  \begin{itemize}
+  \item {\tt \%left} (左結合)
+  \item {\tt \%right} (右結合)
+  \item それらを書く順番で優先度の高さを明示
+  \end{itemize}
+\item もしそれらを使いたければ，マニュアル参照
+\item でも，これらの記号の本当の意味がわからなければ，
+  素直に自分で記号を増やせば良い
+\end{itemize}
+\end{frame} 
+\fi
+
+\ifen
+\begin{frame}[fragile]
+\frametitle{Remark:}
+
+\begin{itemize}
+\item {\tt ocamlyacc} has mechanisms to solve these issues declaratively
+  \begin{itemize}
+  \item {\tt \%left} (left associative)
+  \item {\tt \%right} (right associative)
+  \item their order indicates their precedences
+  \end{itemize}
+\item refer to the manual if you want to use them
+\item if you don't know what they exactly mean,
+  a more straightforward approach is to introduce more symbols
+\end{itemize}
+\end{frame} 
+\fi
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{演習の構成}
+\begin{itemize}
+\item 3種類のサンプルファイル
+\item どれも「整数を足し算する式」だけを受け付ける
+\begin{enumerate}
+\item 字句解析器だけ(1ファイル)
+\item 字句解析器，構文解析，両者を使うOCamlプログラム(3ファイル)．
+  構文木を作らない
+\item 構文木定義，字句解析器，構文解析，両者を使うOCamlプログラム(4ファイル)．
+  構文木を作る．
+\end{enumerate}
+
+\item それらを拡張する
+  \begin{itemize}
+  \item 浮動小数点数
+  \item 引き算，掛け算，割り算(演算子の優先度処理)
+  \item 括弧
+  \item let式 (変数)
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{電卓からプログラミング言語へ}
+\begin{itemize}
+\item プログラミング言語$\approx$
+  \begin{itemize}
+  \item 電卓(基本的な数の演算)
+  \item $+$ 変数(計算結果に名前を付けて利用)
+  \item $+$ 関数
+  \item $+$ 数以外のデータ型
+  \end{itemize}
+\item そのためのステップ
+\begin{itemize}
+\item ステップ0: \ao{構文木}の導入(構文解析と評価の分離)
+\item ステップ1: \ao{変数(let)}の導入
+\item ステップ2: \ao{関数}の導入
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{構文木}
+\begin{itemize}
+\item 簡単な電卓であれば，
+  構文解析器が，文字列から直接その評価値を求められる
+\item 以下の評価規則もそれに相当する
+\begin{lstlisting}
+expr :
+| NUM           { $1 }
+| expr PLUS NUM { $1 +. $3 }
+\end{lstlisting} %$
+\begin{lstlisting}
+# parse_string "1.2 + 3.4 * 5.6" 
+- : float = 20.24
+\end{lstlisting}
+
+\item より複雑な場合，構文解析器は，
+  文字列を，適切なデータ構造\ao{(構文木)}に変換することに専念
+\item 別途，構文木から値を求める関数\ao{(評価器)}を作る
+  \begin{itemize}
+  \item  構文解析器 : 文字列 $\rightarrow$ 構文木
+  \item  評価器 : 構文木 $\rightarrow$ 評価値
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{構文木}
+\begin{itemize}
+\item 文字列を解析した結果を素直にデータ構造にしたもの
+\item 例: {\tt 1.2 + 3.4 * 5.6}の構文木:
+\begin{center}
+\includegraphics[width=0.2\textwidth]{out/pdf/svg/ast.pdf}
+\end{center}
+
+\item 一般に，$e_0 {\tt +} e_1$の構文木は:
+\begin{center}
+\includegraphics[width=0.2\textwidth]{out/pdf/svg/ast2.pdf}
+\end{center}
+
+\item OCamlでは，以下のようなバリアント型で自然に表現できる
+\begin{lstlisting}
+type expr = 
+   ...
+ | Plus of expr * expr
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{評価器}
+\begin{itemize}
+\item 多くのケースは，その部分式を再帰的に評価して，
+  それを元に(普段意識していないが知っているはずの言語の仕様に従い)，
+  全体の値を計算するだけ. 
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{out/pdf/svg/eval_ast.pdf}
+\end{center}
+
+\item 記号に書けば:
+\[ \mbox{eval\_expr } (e_0 + e_1) = (\mbox{eval\_expr } e_0) + (\mbox{eval\_expr } e_1) \]
+
+\item OCamlでは:
+\begin{lstlisting}
+let rec eval_expr e = 
+  match e with
+     ...
+   | Plus (e0, e1) -> (eval_expr e0) + (eval_expr e1)
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{変数}
+\begin{itemize}
+\item {\tt x + 1}の値を評価するには，
+  (当たり前だが){\tt x}の値を知る必要がある
+\item \aka{もはや構文木だけでその値が決まるわけではない}
+\[ \mbox{\aka{NG: }} \mbox{評価器 : 構文木} \rightarrow \mbox{値} \]
+
+\item {\tt let x = 1.1 + 2.2 in x + 4.4} を評価するには，
+  \begin{itemize}
+  \item {\tt 1.1 + 2.2}を評価し，
+  \item その結果: \ao{\tt x = 3.3であることをどこかに覚えて}おき，
+  \item その元で，{\tt x + 4.4}を評価する
+  \end{itemize}
+\item 変数の値を覚えておく\ao{「どこか」}のことを\ao{「環境」}という
+  \[ \ao{\mbox{評価器 : 構文木} \rightarrow \mbox{環境} \rightarrow \mbox{値}} \]
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{環境}
+\begin{itemize}
+\item 環境 : 「変数とその値」の組を覚えておくデータ構造．
+抽象的な表記:
+\[ \{ x \mapsto 3.3, y \mapsto 4.4 \} \]
+\item 環境を用いた，{\tt let x = 1.1 + 2.2 in x + 4.4}の評価:
+  \begin{eqnarray*}
+& & \mbox{\tt eval\_expr (let x = 1.1 + 2.2 in x + 4.4)}\; \{\} \\
+&=& \mbox{\tt eval\_expr (x + 4.4)}\; \{ {\tt x} \mapsto 3.3 \} \\
+&=& \mbox{\tt eval\_expr x}\; \{ {\tt x} \mapsto 3.3 \} + \mbox{\tt eval\_expr {\tt 4.4}}\; \{ {\tt x} \mapsto 3.3 \} \\
+&=& 3.3 + 4.4  \\
+&=& 7.7
+  \end{eqnarray*}
+
+\item 環境をデータ構造として実現するには色々な仕方があるが，
+  連想リストを使うのが簡単
+\begin{lstlisting}
+[ (x, 3.3); (y, 4.4) ]
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{関数}
+\begin{itemize}
+\item 関数呼び出し式の評価は，環境をうまく使えばすぐにできる
+\item {\tt f}がどこかで{\tt f x = x * x}と定義されているとする
+\item そのもとで，{\tt (f 3)}を評価することは，
+ $\{ {\tt x} \mapsto 3 \}$という環境下で，{\tt x * x}
+ を評価するのと同じ
+\item 一般に関数適用の評価は，以下で\ao{だいたい正解}
+
+\begin{eqnarray*}
+&& \mbox{\tt eval\_expr}\; (e_0 \; e_1)\; e \\
+&=& \mbox{\tt let f = eval\_expr $e_0$ in} \\
+& & \mbox{\tt let v = eval\_expr $e_1$ in} \\
+&& \mbox{\tt eval\_expr}\; (f\mbox{の定義式})\; \{ f\mbox{の引数} \mapsto v \}
+\end{eqnarray*}
+
+\item 評価結果としての関数は，引数名と定義式の組として表せば良い
+\[ \ao{\mbox{関数} = \mbox{引数名, 定義式(の構文木)の組}} \]
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{\ao{だいたい}とは?}
+\begin{itemize}
+\item 関数がトップレベルに限らない，
+  任意の場所で定義される言語ではもう少し複雑
+\item 関数が，「自身が定義された時の環境」を覚えておく必要がある
+\item 例:
+\begin{lstlisting}
+let make_adder x = 
+  let f y = x + y in f
+;;
+let a11 = make_adder 1.1 in
+  @\ao{a11 2.2}@
+\end{lstlisting}
+\begin{itemize}
+\item \ao{\tt a11 2.2}を評価するのに，{\tt x + y}を環境
+$\{ {\tt y} \mapsto 2.2 \}$で評価するのではダメ
+({\tt x}の値が欠けている)
+
+\item この例では{\tt x = 1.1}で，
+  それは，{\tt a11}が生まれた(定義された)時(2行目)の値
+\item 関数は，「生まれた時の環境を覚えている」
+
+\[ \ao{\mbox{関数} = \mbox{引数名, 定義式(の構文木), 定義時の環境の組}} \]
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{付録: 正規表現と文脈自由文法についてもう少し}
+\begin{itemize}
+\item どちらも「アルファベット列」の集合を定義する枠組み
+  \begin{itemize}
+  \item ほんとに2つ必要?
+  \item 全てを正規表現で，または全てを文脈自由文法では書けないの?
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{正規表現は文脈自由文法に包含される}
+
+\begin{center}
+\begin{tabular}{|c|p{5cm}|}\hline
+正規表現         & 対応する文脈自由文法 \\\hline
+\ao{$\epsilon$}  & $A = $ \\
+\ao{$a$}         & $A = a$ \\
+\ao{$RS$}        & $A = R S$ \\
+\ao{$R$ $|$ $S$} & $A = R$, $A = S$ \\
+\ao{$R*$}        & $A = $, $A = A\; R$ \\\hline
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item 上の要領で，適宜新しい記号を導入していけば，
+任意の正規表現と等価な文脈自由文法を作ることが可能
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{文脈自由文法は本当に正規表現より強力か?}
+
+\begin{center}
+\begin{tabular}{|c|p{5cm}|}\hline
+正規表現         & 対応する文脈自由文法 \\\hline
+\ao{$\epsilon$}  & $A = $ \\
+\ao{$a$}         & $A = a$ \\
+\ao{$RS$}        & $A = R\;S$ \\
+\ao{$R$ $|$ $S$} & $A = R$, $A = S$ \\
+\ao{$R*$}        & $A = $, $A = A\; R$ \\\hline
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item 正規表現は文脈自由文法の規則の右辺に「ある」制限を課したもの．
+どんな制限か?
+\begin{itemize}
+\item 規則に再帰的な要素が一切なければ，正規表現で書ける
+\item 再帰的な定義が，
+  \begin{itemize}
+  \item $A = $, $A = A R$
+  \item $A = $, $A = R A$
+  \end{itemize}
+($R$は$A$に依存していない記号)という形のものだけであれば正規表現で書ける
+\item 「再帰がこの形しかない」ところに違いがありそう
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{文脈自由文法は正規表現に包含されるか?}
+\begin{itemize}
+\item アナロジー: 正規表現 $=$ ループはあるけど一般的な再帰がない
+\item たとえば一見，正規表現では書けなさそうに思えるもの
+\begin{itemize}
+\item $A = $, $A = a A b$
+\item $a^n b^n$ ($n \geq 0$)という文字列とマッチ
+\end{itemize}
+
+\item 本当に書けないことを証明しようとすると難しいが\ldots
+\end{itemize}  
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{$A = $, $A = a A b$は正規表現では書けない}
+
+\begin{itemize}
+\item そのような正規表現があったとしたら少なくともひとつ{\tt *}を
+  含む(さもなければマッチする文字列の長さはある一定値以下)
+\item そして，それにマッチする十分長い文字列は，その{\tt *}
+  の部分を1回以上は繰り返しているはず
+\item その部分を任意回繰り返したものもまたマッチする
+\item 十分大きな$k$に対して，$a^kb^k$のどこがその「部分」になりうるか?
+  \begin{itemize}
+  \item その部分が $a$ (または$b$)だけを含む
+    $\rightarrow$ そこだけを繰り返せば，$a$ (または$b$)の数が多くなってしまう
+
+\begin{tabular}{rl}
+              & $aa \cdots \fbox{$aaa$} \cdots aabb\cdots bb$ \\
+$\rightarrow$ & $aa \cdots \fbox{$aaa$}\fbox{$aaa$} \cdots aabb\cdots bb$
+\end{tabular}
+  \item その部分が $ab$ 両方を含む
+    $\rightarrow$ そこだけを繰り返せば，$a \cdots b \cdots a$
+    という文字列ができてしまう
+
+\begin{tabular}{rl}
+              & $aa \cdots \fbox{$aabbb$}\cdots bb$ \\
+$\rightarrow$ & $aa \cdots \fbox{$aabbb$}\fbox{$aabbb$}\cdots bb$
+\end{tabular}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+
+{\LARGE OCamlで複数ファイルからなるプログラムを，
+動かすときの理屈を一から理解するための付録}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{OCamlでの複数ファイルプログラム開発($\approx$分割コンパイル)}
+ここでの動機:
+\begin{itemize}
+\item ocamllex, ocamlyaccはそれぞれ，
+  字句定義，構文定義から，それを受け付けるOCamlのプログラム(.mlファイル)
+  を生成する
+\item 実際のアプリは，それらと，本体のOCamlプログラムを組み合わせて作る
+\item $\rightarrow$ 嫌でも複数ファイルからなるプログラムになる
+\item 知っておかないといけない規則は複雑かつ意外性に富んでおり，
+  イライラの元なので易しく解説
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{OCamlプログラムの3つの実行方法}
+
+まず有権者に訴えたいのは，
+OCamlプログラムには以下の3つの実行方法があるということ
+
+\begin{enumerate}
+\item \ao{直接実行，対話的実行} (ocaml)
+\item \ao{バイトコード}へコンパイル (ocamlc); 実行
+\item \ao{ネイティブコード}へコンパイル (ocamlopt); 実行
+\end{enumerate}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{単一ファイルなら簡単}
+
+\begin{itemize}
+\item 例: 以下のプログラム ({\tt hi.ml})
+\begin{lstlisting}
+Printf.printf "hello\n"
+\end{lstlisting}
+\end{itemize}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \ao{直接}
+\begin{lstlisting}
+$ ocaml hi.ml
+hello
+\end{lstlisting} % $
+
+\item \ao{対話的}
+\begin{lstlisting}
+$ ocaml
+# #use "hi.ml";;
+#
+\end{lstlisting} % $
+\begin{lstlisting}
+$ ocaml -init hi.ml
+# 
+\end{lstlisting} % $
+
+\end{itemize}
+\end{column}
+
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \ao{バイトコード}
+\begin{lstlisting}
+$ @\ao{\tt ocamlc hi.ml}@
+$ ls
+@\mura{\tt a.out* hi.cmi hi.cmo}@ hi.ml
+$ ./a.out
+hello
+\end{lstlisting} % $
+\item \ao{ネイティブコード}
+\begin{lstlisting}
+$ @\ao{\tt ocamlopt hi.ml}@
+$ ls
+@\mura{\tt a.out* hi.cmi hi.cmx}@ hi.ml @\ao{\tt hi.o}@
+$ ./a.out
+hello
+\end{lstlisting} %$
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{色々な生成物}
+\begin{center}
+\begin{tabular}{|l|p{6.5cm}|c|c|} \hline
+名前   & 説明 & ocamlc & ocamlopt \\\hline
+\mura{.cmi} & hi.mlの「インタフェース」($\approx$ hi.ml中で定義されている名前と型)
+ & ○ & ○ \\\hline
+\mura{.cmo} & hi.mlをバイトコード化した本体($\approx$ .oファイル)
+ & ○ &   \\\hline
+\mura{.cmx} & hi.mlをネイティブコード化したもの($\approx$ .oファイル)
+ &   & ○ \\\hline
+\mura{.o}   & 正真正銘のオブジェクトファイル
+ &   & ○ \\\hline
+\mura{a.out}  & 実行可能ファイル
+ & ○ & ○ \\\hline
+\end{tabular}
+\end{center}
+
+ディレクトリがかなり，とっ散らかります
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{{\tt -c}とか{\tt -o}とか}
+ocamlc, ocamloptとも，以下は普通のCコンパイラと同じ
+\begin{itemize}
+\item ``{\tt -o} ファイル名'' で出力ファイル名が指定できる
+\item ``{\tt -c}'' で，実行可能ファイルまで出さずに，
+  オブジェクトファイルまでで終了
+  \begin{itemize}
+  \item ocamlc : \{.cmi, .cmo\}
+  \item ocamlopt : \{.cmi, .cmx, .o\}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{複数ファイルへの第一歩}
+\begin{itemize}
+\item 例: 以下の2つのファイル． 同一ディレクトリにあるとする
+  \begin{itemize}
+  \item msg.ml
+\begin{lstlisting}
+let greeting = "hello"
+\end{lstlisting}
+\item hi.ml 
+\begin{lstlisting}
+Printf.printf "%s\n" @\ao{Msg.greeting}@
+\end{lstlisting}
+\end{itemize}
+
+\item hi.ml が msg.ml 内の greeting の定義を参照している
+  (\ao{前者が後者に依存している})
+
+\item 規則1:
+\begin{quote}
+\begin{beamercolorbox}[wd=0.9\textwidth]{ex}
+他のファイルで定義された名前(msg.mlの{\tt greeting})は，
+\ao{Msg.greeting} などとして参照する
+\end{beamercolorbox}
+\end{quote}
+\item \ao{「モジュール名.名前」}で参照
+\item 「モジュール名」$=$
+  ファイル名のbasename (.mlを除いた部分)を
+  capitalizeしたもの
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{open節}
+\begin{itemize}
+\item 「{\tt open} モジュール名」という句をファイル内に書いておけば，
+  名前だけで直接参照も可能
+\begin{lstlisting}
+@\ao{open Msg;;}@
+Printf.printf "%s\n" @\ao{greeting}@
+\end{lstlisting}
+
+\item 簡潔で良いが，
+  \begin{itemize}
+  \item 他人が読む場合どのモジュールの機能を呼んでいるのかわかりにくい
+  \item 全容がわからないモジュールを，安易にopenすると，
+    名前衝突の危険性がある
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{バイトコードの場合の手順}
+\begin{itemize}
+\item 方法1: 一度に全てコンパイル
+\begin{lstlisting}
+$ ls
+hi.ml  msg.ml
+$ @\ao{\tt ocamlc -o greet msg.ml hi.ml}@
+$ ls
+@\mura{\tt greet* hi.cmi  hi.cmo}@ hi.ml @\mura{\tt msg.cmi msg.cmo}@ msg.ml
+\end{lstlisting} % $
+
+\item 方法2: 一個ずつ(分割)コンパイル
+\begin{lstlisting}
+$ ls
+hi.ml  msg.ml
+$ @\ao{\tt ocamlc -c msg.ml}@                # -> msg.{cmi,cmo}
+$ @\ao{\tt ocamlc -c hi.ml}@                 # -> hi.{cmi,cmo}
+$ @\ao{\tt ocamlc -o greet msg.cmo hi.cmo}@  # -> greet
+$ ./greet 
+hello
+\end{lstlisting} %$
+
+\item 前者は，後者を一コマンドでやっているに過ぎない
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{失敗する手順とその理由}
+\begin{itemize}
+\item 失敗1: 複数一度にコンパイルする場合で，
+  依存関係を持つものを先に書くという失敗
+\begin{lstlisting}
+$ ocamlc hi.ml msg.ml 
+File "hi.ml", line 1, characters 21-33:
+Error: Unbound module Msg
+\end{lstlisting} % $
+
+\item 失敗2: 分割コンパイルする場合で，
+  他に依存しているものを最初にコンパイルするという失敗
+\begin{lstlisting}
+$ ls
+hi.ml  msg.ml
+$ @\ao{\tt ocamlc -c hi.ml}@
+File "hi.ml", line 1, characters 14-26:
+@\aka{\tt Error: Unbound module Msg}@
+\end{lstlisting}
+
+\item 規則2:
+\begin{quote}
+\begin{beamercolorbox}[wd=0.9\textwidth]{ex}
+\vskip1mm
+あるファイル(例: hi.ml)をコンパイルする際，
+それが参照するモジュールの .cmi (例: msg.cmi)
+が存在していなくてはならない
+\vskip1mm
+\end{beamercolorbox}
+\end{quote}
+
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{まとめると}
+
+hi.ml が msg.ml を参照している(に依存している)時，
+
+\begin{itemize}
+\item バイトコード
+\begin{tabular}{|l|l|}\hline
+  OK                 & NG  \\\hline
+{\tt \$ ocamlc msg.ml hi.ml}  & {\tt \$ ocamlc hi.ml msg.ml} \\\hline
+{\tt \$ ocamlc -c msg.ml}     & {\tt \$ ocamlc -c hi.ml}     \\
+{\tt \$ ocamlc -c hi.ml}      & {\tt \$ ocamlc -c msg.ml}    \\\hline
+\end{tabular}
+\item ネイティブコード(理屈は全く同じ)
+\begin{tabular}{|l|l|}\hline
+  OK                 & NG  \\\hline
+{\tt \$ ocamlopt msg.ml hi.ml}  & {\tt \$ ocamlopt hi.ml msg.ml} \\\hline
+{\tt \$ ocamlopt -c msg.ml}     & {\tt \$ ocamlopt -c hi.ml}     \\
+{\tt \$ ocamlopt -c hi.ml}      & {\tt \$ ocamlopt -c msg.ml}    \\\hline
+\end{tabular}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{対話的処理系(ocaml)の場合}
+
+\begin{itemize}
+\item ステップ1: ocamlcで，全部.cmoにコンパイルする(依存関係に気をつけて)
+\item ステップ2: 
+\begin{lstlisting}
+$ ocaml msg.cmo hi.cmo
+# 
+\end{lstlisting} %$
+\item ここでも依存関係のないものから並べる．以下はNG
+\begin{lstlisting}
+$ ocaml hi.cmo msg.cmo 
+File "_none_", line 1:
+Error: Reference to undefined global `Msg'
+\end{lstlisting} %$
+\item ocamlcを使わずに，
+.ml だけで話を済ませることができないか，
+と願ってもそんなものはない
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{ocamlmktop}
+\begin{itemize}
+\item ocamlmktop というコマンドで，.cmoファイルを組み込んだ
+対話的処理系を作れる
+\begin{lstlisting}
+$ @\ao{\tt ocamlmktop -o greet msg.cmo hi.cmo}@
+$ ./greet 
+hello
+        OCaml version 4.01.0
+# 
+\end{lstlisting}
+
+\item 依存関係の順に，.cmoファイルを毎回並べるなんて下衆の極み，
+という人向け
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{話はまだ終わりぢゃないヨ : インタフェース}
+\begin{itemize}
+\item OCamlには，2種類のソースファイル(.mlと.mli)がある
+  \begin{itemize}
+  \item .ml : 実装 ($\approx$ Cの.c)
+  \item \ao{.mli} : インタフェース ($\approx$ Cの.h)
+  \end{itemize}
+\item .mli には，対応する.mlで定義されている名前のうち，
+  「外に見せたいもの(だけ)」の型(だけ)を書く
+\item 例: 
+  \begin{itemize}
+  \item {\tt msg.ml}
+\begin{lstlisting}
+let real_mind = "you a** h*le"
+let greeting = "glad to see you"
+\end{lstlisting}
+  \item {\tt msg.mli} ({\tt real\_mind}は見せない)
+\begin{lstlisting}
+val greeting : string
+\end{lstlisting}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{.mliは何のためのもの?}
+\begin{itemize}
+\item モジュールのドキュメント
+\item モジュールの実装の詳細を隠蔽
+\item $\rightarrow$ 
+  あるモジュールのユーザが，
+  明示的に「外部に見せる」
+  ことにした機能だけに依存していることを保証する
+\item $\rightarrow$ 
+  後から実装を変えやすく，変えても他へ影響を与えずに動く可能性を高くする
+\item ソフトウェアの作り方として推奨される
+\item だがここではそれとは関係なく，
+  ocamlyaccが.mliを生成するので，
+  それに対処するために仕方なく説明している
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{.mli のある・なしでコンパイラの挙動が違う}
+\begin{itemize}
+\item \ao{原則は，}
+\mura{.mli}から\mura{.cmi}が生まれ，
+\ao{.ml}から\ao{.cmo}が生まれる
+\item 
+\begin{lstlisting}
+$ ocamlc a.ml  
+\end{lstlisting} % $
+は，
+\begin{enumerate}
+\item a.mli が存在\ao{しない}場合
+  \begin{itemize}
+  \item a.cmi, a.cmo の\ao{両方}を生む
+  \item a.cmi は a.ml で定義される名前を「全部見せます」なものになる
+  \end{itemize}
+\item a.mli が存在\ao{する}場合
+  \begin{itemize}
+  \item a.cmi がなければエラー
+    (事前にa.mliから作っとけ!)
+  \item あれば，.mlと.cmiの整合性をチェックしながらコンパイル
+  \end{itemize}
+\end{enumerate}
+\end{itemize}
+規則3:
+
+\begin{quote}
+\begin{beamercolorbox}[wd=0.9\textwidth]{ex}
+\vskip1mm
+あるファイル(例: msg.ml)をコンパイルする際，
+対応するインタフェースファイル(例: msg.mli)が存在するならば，
+それをコンパイルしたもの(例: msg.cmi)が
+存在しなくてはならない
+\vskip1mm
+\end{beamercolorbox}
+\end{quote}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{.mliを含めた正しいコンパイル手順}
+\begin{itemize}
+\item 例: 6個のファイル a.\{mli,ml\}, b.\{mli,ml\}, 
+  c.ml, d.ml
+\item まず依存関係を調べる．図のようだったとする
+
+\item 方法1: 一度にコンパイル
+\begin{lstlisting}
+$ ocamlc -o program b.mli a.mli b.ml a.ml d.ml c.ml
+\end{lstlisting} %$
+
+\item 方法2: 一個ずつコンパイル
+\begin{lstlisting}
+$ ocamlc -c b.mli 
+$ ocamlc -c a.mli 
+$ ocamlc -c b.ml 
+$ ocamlc -c a.ml 
+$ ocamlc -c d.ml 
+$ ocamlc -c c.ml
+$ ocamlc -o program b.cmo a.cmo d.cmo c.cmo
+\end{lstlisting} %$
+
+\item 処理系と対話したければ，
+\begin{lstlisting}
+$ ocaml b.cmo a.cmo d.cmo c.cmo
+\end{lstlisting} %$
+または，
+\begin{lstlisting}
+$ ocamlmktop -o program b.cmo a.cmo d.cmo c.cmo
+$ ./program
+\end{lstlisting} %$
+
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{ocamlbuildの動き}
+
+\begin{itemize}
+\item 使い方
+\begin{lstlisting}
+$ ocamlbuild @{\it name}@.byte
+\end{lstlisting} %$
+\item {\it name}.ml というファイルを見つける
+\item それが依存するモジュール，それがまた依存するモジュール，\ldots
+という具合に依存関係を調べる(ocamldep)
+\item 依存関係の順にコンパイルし，
+{\it name}.byte という，バイトコードを作る
+\item 
+\begin{lstlisting}
+$ ocamlbuild @{\it name}@.native
+\end{lstlisting} %$
+とすると，ネイティブコードを作る
+\item 対話的処理系は作れない
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{token定義の不一致の解決法}
+\begin{itemize}
+\item 方針1: .mllに対して，「tokenは.mlyにあるやつを使ってね」と指示する
+  \begin{itemize}
+  \item .mll 中のtokenの定義を消す
+  \item そして，
+    \begin{itemize}
+    \item 具体的方法1: 最初に，{\tt open Calc\_parse}と書いて，
+      モジュール名なしで，{\tt Calc\_parse}中の名前を参照できるようにする(前述)
+    \item 具体的方法1': tokenを参照する際， {\tt Calc\_parse.PLUS}，
+      {\tt Calc\_parse.MINUS}のように，モジュール名をつけて参照する
+    \end{itemize}
+  \end{itemize}
+
+\item 方針2: .mlyに対して，「tokenは.mllにあるやつを使ってね」と指示する
+  \begin{itemize}
+  \item 具体的方法2: ocamlyaccの代わりにmenhirを使う．
+    menhirに「{\tt --external-tokens} モジュール名」オプションを渡す
+\begin{lstlisting}
+$ menhir --external-tokens Calc_lex calc_parse.mly    
+\end{lstlisting} %$
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{不一致の解決法: 方法1 (再掲)}
+\begin{itemize}
+\item {\tt calc\_lex.mll} を以下のように変更:
+\item {\tt Calc\_parse}をopenし，
+{\tt calc\_parse.ml}内のトークン名を参照
+\begin{lstlisting}
+{ 
+open Calc_parse
+}
+rule lex = parse
+| [' ' '\t' '\n']  { lex lexbuf }
+| "+"              { PLUS }
+| "-"              { MINUS }
+| ['0'-'9']+ as s  { NUM(int_of_string s) }
+| eof              { EOF }
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{不一致の解決法: 方法1'}
+\begin{itemize}
+\item {\tt calc\_lex.mll} を以下のように変更
+\item トークン名が{\tt calc\_parse.ml}
+で定義されることを反映して，
+すべて，{\tt Calc\_parse.PLUS} などで参照
+\begin{lstlisting}
+{ 
+}
+rule lex = parse
+| [' ' '\t' '\n']  { lex lexbuf }
+| "+"              { Calc_parse.PLUS }
+| "-"              { Calc_parse.MINUS }
+| ['0'-'9']+ as s  { Calc_parse.NUM(int_of_string s) }
+| eof              { Calc_parse.EOF }
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{不一致の解決法: 方法2}
+\begin{itemize}
+\item 手順:
+\begin{lstlisting}
+$ menhir --external-tokens Calc_lex calc_parse.mly 
+\end{lstlisting} %$
+\item .mllと.mlyで実質同じtoken定義を書かないといけないことには変わりないので，
+  あまり推奨されない
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{合体の手順: 方法1, 1'の場合}
+\begin{itemize}
+\item 
+\begin{lstlisting}
+$ ocamllex calc_lex.mll
+$ menhir calc_parse.mly
+# lexがparseに依存しているので，parseが先, lexが後
+$ ocamlc -c calc_parse.mli calc_parse.ml calc_lex.ml 
+$ ocaml calc_parse.cmo calc_lex.cmo
+        OCaml version 4.01.0
+
+# Calc_parse.program;;
+- : (Lexing.lexbuf -> @\ao{\tt Calc\_parse.token}@) -> Lexing.lexbuf -> int = <fun>
+# Calc_lex.lex;;
+- : Lexing.lexbuf -> @\ao{\tt Calc\_parse.token}@ = <fun>
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{正しい手順: 方法2の場合}
+
+\begin{itemize}
+\item 
+\begin{lstlisting}
+$ ocamllex calc_lex.mll
+6 states, 267 transitions, table size 1104 bytes
+  # calc_parse.ml にtokenの定義はcalc_lex.mlにあるぞと指示
+$ menhir --external-tokens Calc_lex calc_parse.mly
+  # lexが先, parseが後
+$ ocamlc -c calc_lex.ml calc_parse.mli calc_parse.ml
+$ ocaml calc_lex.cmo calc_parse.cmo 
+        OCaml version 4.01.0
+
+# Calc_parse.program;;
+- : (Lexing.lexbuf -> @\ao{\tt Calc\_lex.token}@) -> Lexing.lexbuf -> int = <fun>
+# Calc_lex.lex;;
+- : Lexing.lexbuf -> @\ao{\tt Calc\_lex.token}@ = <fun>
+\end{lstlisting} %$
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{ocamlbuildで，方法1, 1'の場合}
+\begin{itemize}
+\item 
+{\tt calc\_lex.mly}が{\tt calc\_parse.mll}に依存してるので，
+{\tt calc\_lex.byte}を作れといえば，{\tt calc\_parse.cmo}も作られる
+\begin{lstlisting}
+$ @\ao{\tt ocamlbuild -use-menhir calc\_lex.byte}@
+/usr/bin/ocamllex -q calc_lex.mll
+/usr/bin/ocamldep -modules calc_lex.ml > calc_lex.ml.depends
+menhir --raw-depend --ocamldep '/usr/bin/ocamldep -modules' calc_parse.mly > calc_parse.mly.depends
+menhir --ocamlc /usr/bin/ocamlc --infer calc_parse.mly
+/usr/bin/ocamldep -modules calc_parse.mli > calc_parse.mli.depends
+/usr/bin/ocamlc -c -o calc_parse.cmi calc_parse.mli
+/usr/bin/ocamlc -c -o calc_lex.cmo calc_lex.ml
+/usr/bin/ocamldep -modules calc_parse.ml > calc_parse.ml.depends
+/usr/bin/ocamlc -c -o calc_parse.cmo calc_parse.ml
+/usr/bin/ocamlc calc_parse.cmo calc_lex.cmo -o calc_lex.byte
+$ ocaml -I _build _build/*.cmo
+        OCaml version 4.01.0
+
+# 
+\end{lstlisting} %$
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+\frametitle{ocamlbuildで方法2の場合}
+\begin{itemize}
+\item {\tt calc\_parse.mly}が{\tt calc\_lex.mll}に依存してるので，
+{\tt calc\_parse.byte}を作れといえば，{\tt calc\_lex.cmo}も作られる
+\begin{lstlisting}
+$ @\ao{\tt ocamlbuild -use-menhir -yaccflags --external-tokens,Calc\_lex calc\_parse.byte}@
+menhir --raw-depend --ocamldep '/usr/bin/ocamldep -modules' calc_parse.mly > calc_parse.mly.depends
+menhir --ocamlc /usr/bin/ocamlc --external-tokens Calc_lex --infer calc_parse.mly
+/usr/bin/ocamldep -modules calc_parse.mli > calc_parse.mli.depends
+/usr/bin/ocamllex -q calc_lex.mll
+/usr/bin/ocamldep -modules calc_lex.ml > calc_lex.ml.depends
+/usr/bin/ocamlc -c -o calc_lex.cmo calc_lex.ml
+/usr/bin/ocamlc -c -o calc_parse.cmi calc_parse.mli
+/usr/bin/ocamldep -modules calc_parse.ml > calc_parse.ml.depends
+/usr/bin/ocamlc -c -o calc_parse.cmo calc_parse.ml
+/usr/bin/ocamlc calc_lex.cmo calc_parse.cmo -o calc_parse.byte
+$ ocaml -I _build _build/*.cmo
+        OCaml version 4.01.0
+
+# 
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+
+
+\end{document}
