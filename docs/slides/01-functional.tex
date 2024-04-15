@@ -268,12 +268,12 @@ s = s + a[i]  # do you mean 0 = a[i] ??
   \begin{itemize}
   \item []
 \begin{lstlisting}
-# a[b] + a[b+1] + ... + a[e-1]
-def sum_range(a, b, e):
-    if begin == end:
+# a[i] + a[i+1] + ... + a[j-1]
+def sum_range(a, i, j):
+    if i == j:
         return 0
     else:
-        return a[begin] + sum_range(a, begin + 1, end)
+        return a[i] + sum_range(a, i + 1, j)
 
 def sum_array(a):
     return sum_range(a, 0, len(a))
@@ -298,9 +298,9 @@ def sum_array(a):
   \item the observation
     \[ \mbox{sum of {\tt a[0:n]}} = \mbox{\tt a[0]} + \mbox{sum of {\tt a[1:n]}} \]
   \item \ldots and you can compute ``sum of {\tt a[1:n]}'' (almost) by a recursive call
-  \item to be precise, you define a function to compute sum of an array range {\tt a[b:e]} by
-    \[ \mbox{sum of {\tt a[b:e]}} = \mbox{\tt a[b]} + \mbox{sum of {\tt a[b+1:e]}} \]
-  \item one more thing is the base case (when {\tt b} $=$ {\tt e}, sum is zero)
+  \item to be precise, you define a function to compute sum of an array range {\tt a[i:j]} by
+    \[ \mbox{sum of {\tt a[i:j]}} = \mbox{\tt a[i]} + \mbox{sum of {\tt a[i+1:j]}} \]
+  \item one more thing is the base case (when {\tt i} $=$ {\tt j}, sum is zero)
   \end{itemize}
 \end{frame}
 
@@ -309,21 +309,21 @@ def sum_array(a):
   \frametitle{Note : a few more alternatives}
   \begin{itemize}
   \item 
-    \[ \mbox{sum of {\tt a[b:e]}} = \mbox{sum of {\tt a[b:e-1]}} + \mbox{\tt a[e-1]} \]
+    \[ \mbox{sum of {\tt a[i:j]}} = \mbox{sum of {\tt a[i:j-1]}} + \mbox{\tt a[j-1]} \]
   \item 
-    \[ \mbox{sum of {\tt a[b:e]}} = \mbox{sum of {\tt a[b:c]}} + \mbox{\tt a[c:e]} \]
-    where ${\tt c} = \left\lfloor ({\tt b} + {\tt e}) / 2 \right\rfloor$,
-    or any value that satisfies ${\tt b} < {\tt c} < {\tt e}$, for that matter
+    \[ \mbox{sum of {\tt a[i:j]}} = \mbox{sum of {\tt a[i:c]}} + \mbox{\tt a[c:j]} \]
+    where ${\tt c} = \left\lfloor ({\tt i} + {\tt j}) / 2 \right\rfloor$,
+    or any value that satisfies ${\tt i} < {\tt c} < {\tt j}$, for that matter
 
 \begin{lstlisting}
-def sum_range(a, b, e):
-    if b == e:
+def sum_range(a, i, j):
+    if i == j:
         return 0
-    elif b + 1 == e:
-        return a[b]
+    elif i + 1 == j:
+        return a[i]
     else:
-        c = (b + e) // 2
-        return sum_range(a, b, c) + sum_range(a, c, e)
+        c = (i + j) // 2
+        return sum_range(a, i, c) + sum_range(a, c, j)
 \end{lstlisting}
   \end{itemize}
 \end{frame}
