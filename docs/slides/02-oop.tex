@@ -231,7 +231,7 @@ class ellipse:
   ...
   # define @\ao{\it another}@ method named area
   def area(self):
-    return self.radius * self.radius * math.pi
+    return self.rx * self.ry * math.pi
   \end{lstlisting}
 \end{center}
 \end{frame}
@@ -296,24 +296,44 @@ for s in shapes:
 \end{frame}
 
 %%%%%%%%%%%%%%%%% 
-\begin{frame}
+\begin{frame}[fragile,allowframebreaks]
   \frametitle{Different approaches}
 
-  \begin{itemize}
+  \begin{enumerate}
   \item forgo static type checking and thus type safety
     (e.g., Python, javascript, Lisp, Smalltalk, \ldots)
+
+\begin{lstlisting}[language=python]
+shapes = [rect(...), ellipse(...), ...]
+for s in shapes:
+    ... s.area() ...
+\end{lstlisting}
+    
   \item disallow polymorphism altogether and make it (trivially) type-safe
     (e.g., Pascal)
-  \item do some (loose) static type checking but allow polymorphism
-    via unsafe casts between pointers (e.g., C/C++)
+
+\begin{lstlisting}[language=python]
+rects : @{\ao{\tt array of rect}}@ = [ rect(...), rect(...) ]
+for s : @{\ao{\tt rect}}@ in rects:
+    ... s.area() ...
+\end{lstlisting}
+  \item do some (loose) static type checking without guaranteeing type safety;
+    allow polymorphism via unsafe casts between pointers (e.g., C)
+
+\begin{lstlisting}[language=python]
+void * shapes[] = { (void *)rect(...), (void *)ellipse(...) };
+for s in shapes:
+    ... area(s) ...
+\end{lstlisting}
+
   \item allow polymorphism yet guarantee type safety via \ao{\it subtypes}
     \begin{itemize}
     \item \ao{\it $C$ is a subtype of $P$ ($C \leq P$)} $\equiv$
       a value of $C$ can be safely used wherever $P$ is expected
     \item allow $P \leftarrow C$
-      (assign a variable of type $P$ a value of type $C$)
+      (put a value of type $C$ in a variable of type $P$)
     \end{itemize}
-  \end{itemize}
+  \end{enumerate}
 \end{frame}
 
 
@@ -322,25 +342,23 @@ for s in shapes:
   \frametitle{Different approaches to subtyping}
 
   \begin{itemize}
-  \item \ao{\it subclass} vs. \ao{\it interface}
+  \item \ao{\it class} vs. \ao{\it interface}
     \begin{itemize}
-    \item a \ao{\it subclass} that {\it inherits, extends or derives from}
-      an existing class to make a subtype
-    \item an \ao{\it interface} (or {\it trait, abstract class}, etc.)
-      and a \ao{\it (concrete) class} that {\it implements or conforms to} it
+    \item subtype relations hold between two \ao{\it classes}
+    \item subtype relations hold between an \ao{\it interface} (or {\it trait, abstract class}, etc.) and a \ao{\it class} that {\it implements or conforms to} it; or between two \ao{\it interfaces}
     \end{itemize}
   \end{itemize}
 
   \begin{center}
-    \includegraphics[width=0.35\textwidth]{out/pdf/svg/interface_1.pdf}
     \includegraphics[width=0.35\textwidth]{out/pdf/svg/interface_2.pdf}
+    \includegraphics[width=0.35\textwidth]{out/pdf/svg/interface_1.pdf}
   \end{center}
 
   \begin{itemize}
   \item \ao{\it nominal (explicit)} vs. \ao{\it structural} subtyping
     \begin{itemize}
-    \item nominal : subtype relation admitted only when so declared
-    \item structural : subtype relation admitted whenever appropriate
+    \item nominal : subtype relation exists only when so declared or a class is explicitly derived from the other
+    \item structural : subtype relation exists whenever safe
       (based on the structure)
     \end{itemize}
   \end{itemize}
@@ -362,6 +380,20 @@ for s in shapes:
 \begin{frame}
   \frametitle{A common framework}
   \begin{itemize}
+  \item a type checker, {\it before execution}, 
+    computes (or assumes given by the programmer)
+    the \ao{\it static type} of each expression/variable
+  \item for any \ao{\it assignment-like operations} $o = p$,
+    it gets \ao{\it static types} of $o$ ($= S$) and $p$ ($= T$)
+  \item the assignment is valid $\iff T \leq S$ 
+  \end{itemize}
+\end{frame}
+
+\iffalse
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{A common framework}
+  \begin{itemize}
   \item we (i.e., static type checker) like to guarantee that,
     \begin{itemize}
     \item for any expression $E$ whose \ao{\it static type} is $S$,
@@ -370,19 +402,22 @@ for s in shapes:
     \end{itemize}
   \item for which we have to guarantee that,
     for any \ao{\it assignment-like operations} $o = p$,
-    any value $p$ could take at runtime can be \ao{\it safely put} in anywhere $S$ is expected
-  \item we want to check it by comparing $p$'s static type ($T$) and $o$'s static type ($S$)
+    where $o$'s \ao{\it static type} is $S$, 
+    any value $p$ could take at runtime can be \ao{\it safely put}
+    in anywhere $S$ is expected
+  \item we want to check it by $p$'s static type ($T$) and $o$'s static type ($S$)
   \item this is precisely what we like to capture by
     \ao{\it subtype} relationship ($T \leq S$)
   \end{itemize}
 \end{frame}
-    
+\fi
+
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
   \frametitle{Note: assignment-like operations}
   \begin{itemize}
-  \item  $=$ any operation in which a value is
-    stored to a location of potentially different static type
+  \item  $\approx$ any operation in which the same value 
+    changes its static type
     \begin{itemize}
     \item assignment to a variable/structure/array element
     \item function calls (passing values to parameters)
@@ -399,8 +434,38 @@ for s in shapes:
   \item $\approx$
     any value of $T$ can be safely put anywhere $S$ is expected
   \item $\approx$
-    $T$ has all methods $S$ has 
-  \item (this is not exactly correct, but suffices for now)
+    \begin{enumerate}
+    \item $T$ has all methods $S$ has 
+    \item for each method,
+      the input type of the $T$'s version is a \ao{\it supertype} of $S$'s
+    \item for each method,
+      the return type of the $T$'s version is a \ao{\it subtype} of $S$'s
+    \end{enumerate}
+  \item note: $P$ is a \ao{\it supertype} of $Q \iff Q \leq P$
+    (i.e., $Q$ is a subtype of $P$)
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Specifically, \ldots}
+  \begin{itemize}
+  \item imagine the type checker checks expression:
+    \[ s.m(p) \]
+    where
+    \begin{itemize}
+    \item $s$'s static type is $S$
+    \item $S.m$'s input static type is $P$
+    \item $S.m$'s return static type is $A$
+    \end{itemize}
+  \item and imagine $s$ is assigned a value $t$ ($s = t$) elsewhere,
+    whose static type is $T$ 
+  \item then
+    \begin{itemize}
+    \item $T$ must have $m$ (obvious)
+    \item $T.m$'s input static type must be \ao{\it supertype} of $P$
+    \item $T.m$'s return static type must be \ao{\it subtype} of $A$
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
@@ -433,9 +498,10 @@ for s in shapes:
   \item<2-> A: one of the following
     \begin{enumerate}
     \item $S$ and $T$ are identical type
-    \item $S$ is a reference to a trait and $T$ is a reference to a {\tt struct} that {\it implements} $S$
+    \item $S$ is a reference to a \ao{\it trait}
+      and $T$ is a reference to a {\tt struct} that {\it implements} $S$
     \end{enumerate}
-  \item<3-> Q: so when does $T$ {\it implement} an interface $S$?
+  \item<3-> Q: so when does $T$ {\it implement} a trait  $S$?
   \item<4-> A:
     \begin{itemize}
     \item $T$ has all the methods specified in $S$, and 
