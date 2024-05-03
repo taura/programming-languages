@@ -1,6 +1,6 @@
 <!--- md --->
 
-#* Programming Languages (3) --- Generic functions and types
+#* Programming Languages (5) --- Generic functions and types
 
 <!--- end md --->
 
@@ -17,7 +17,7 @@ Enter your name and student ID.
 
 # Choose your language
 
-From this week and on, choose the language you are assigned to (see [this](https://docs.google.com/spreadsheets/d/1wl31o-vQ3K20rANd91khIq6svla4cKhiuTHds6r1m-w/edit#gid=0))
+From this week and on, choose the language you are assigned to
 
 Declare your choice in the following cell (leave the one you choose).  In this notebook, I will work on
 <!--- end md --->
@@ -61,19 +61,19 @@ Rust
 <!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="A function that takes a function" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- exec-include ./mk_version.py -D label="A function that takes a function" nb/source/pl05_generic_fun_type/include/pl05.ml --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-<!--- exec-include ./mk_version.py -D label="A function that takes a function" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- exec-include ./mk_version.py -D label="A function that takes a function" nb/source/pl05_generic_fun_type/include/pl05.jl --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="A function that takes a function" nb/source/pl03_generic_fun_type/include/pl03_a.go --->
+<!--- exec-include ./mk_version.py -D label="A function that takes a function" nb/source/pl05_generic_fun_type/include/pl05_a.go --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
-<!--- exec-include ./mk_version.py -D label="A function that takes a function" nb/source/pl03_generic_fun_type/include/pl03_a_rs/src/main.rs --->
+<!--- exec-include ./mk_version.py -D label="A function that takes a function" nb/source/pl05_generic_fun_type/include/pl05_a_rs/src/main.rs --->
 <!--- end code --->
 
 <!--- md label=prob,ans --->
@@ -103,19 +103,19 @@ Note: `next()` may return either a floating point number of a value that indicat
 <!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="A domain class for a floating point number" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- exec-include ./mk_version.py -D label="A domain class for a floating point number" nb/source/pl05_generic_fun_type/include/pl05.ml --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-<!--- exec-include ./mk_version.py -D label="A domain class for a floating point number" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- exec-include ./mk_version.py -D label="A domain class for a floating point number" nb/source/pl05_generic_fun_type/include/pl05.jl --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="A domain class for a floating point number" nb/source/pl03_generic_fun_type/include/pl03_a.go --->
+<!--- exec-include ./mk_version.py -D label="A domain class for a floating point number" nb/source/pl05_generic_fun_type/include/pl05_a.go --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
-<!--- exec-include ./mk_version.py -D label="A domain class for a floating point number" nb/source/pl03_generic_fun_type/include/pl03_a_rs/src/main.rs --->
+<!--- exec-include ./mk_version.py -D label="A domain class for a floating point number" nb/source/pl05_generic_fun_type/include/pl05_a_rs/src/main.rs --->
 <!--- end code --->
 
 
@@ -144,19 +144,19 @@ and return (x, f(x)) that attained the minimum value
 <!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="A minimizer for float -> float functions" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- exec-include ./mk_version.py -D label="A minimizer for float -> float functions" nb/source/pl05_generic_fun_type/include/pl05.ml --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-<!--- exec-include ./mk_version.py -D label="A minimizer for float -> float functions" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- exec-include ./mk_version.py -D label="A minimizer for float -> float functions" nb/source/pl05_generic_fun_type/include/pl05.jl --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="A minimizer for float -> float functions" nb/source/pl03_generic_fun_type/include/pl03_a.go --->
+<!--- exec-include ./mk_version.py -D label="A minimizer for float -> float functions" nb/source/pl05_generic_fun_type/include/pl05_a.go --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
-<!--- exec-include ./mk_version.py -D label="A minimizer for float -> float functions" nb/source/pl03_generic_fun_type/include/pl03_a_rs/src/main.rs --->
+<!--- exec-include ./mk_version.py -D label="A minimizer for float -> float functions" nb/source/pl05_generic_fun_type/include/pl05_a_rs/src/main.rs --->
 <!--- end code --->
 
 
@@ -172,20 +172,20 @@ Apply `minimize` to minimize function $f(x) = x(x-1)(x-2)$ in the interval $[0, 
 <!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="Apply float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- exec-include ./mk_version.py -D label="Apply float -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05.ml --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-<!--- exec-include ./mk_version.py -D label="Apply float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- exec-include ./mk_version.py -D label="Apply float -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05.jl --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="Apply float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_a.go --->
+<!--- exec-include ./mk_version.py -D label="Apply float -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05_a.go --->
 main()
 <!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
-<!--- exec-include ./mk_version.py -D label="Apply float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_a_rs/src/main.rs --->
+<!--- exec-include ./mk_version.py -D label="Apply float -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05_a_rs/src/main.rs --->
 main();
 <!--- end code --->
 
@@ -211,19 +211,19 @@ main();
 <!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="A somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- exec-include ./mk_version.py -D label="A somewhat generic float -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05.ml --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-<!--- exec-include ./mk_version.py -D label="A somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- exec-include ./mk_version.py -D label="A somewhat generic float -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05.jl --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="A somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_b.go --->
+<!--- exec-include ./mk_version.py -D label="A somewhat generic float -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05_b.go --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
-<!--- exec-include ./mk_version.py -D label="A somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_b_rs/src/main.rs --->
+<!--- exec-include ./mk_version.py -D label="A somewhat generic float -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05_b_rs/src/main.rs --->
 <!--- end code --->
 
 <!--- md label=prob,ans --->
@@ -237,20 +237,20 @@ Check the new `minimize` works for the same function $f(x) = x(x-1)(x-2)$ and th
 <!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="Apply a somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- exec-include ./mk_version.py -D label="Apply a somewhat generic float -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05.ml --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-<!--- exec-include ./mk_version.py -D label="Apply a somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- exec-include ./mk_version.py -D label="Apply a somewhat generic float -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05.jl --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="Apply a somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_b.go --->
+<!--- exec-include ./mk_version.py -D label="Apply a somewhat generic float -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05_b.go --->
 main()
 <!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
-<!--- exec-include ./mk_version.py -D label="Apply a somewhat generic float -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_b_rs/src/main.rs --->
+<!--- exec-include ./mk_version.py -D label="Apply a somewhat generic float -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05_b_rs/src/main.rs --->
 main();
 <!--- end code --->
 
@@ -298,19 +298,19 @@ y = triv_val(t) # should return "hello"
 <!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="Define a trivial generic type and a function" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- exec-include ./mk_version.py -D label="Define a trivial generic type and a function" nb/source/pl05_generic_fun_type/include/pl05.ml --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-<!--- exec-include ./mk_version.py -D label="Define a trivial generic type and a function" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- exec-include ./mk_version.py -D label="Define a trivial generic type and a function" nb/source/pl05_generic_fun_type/include/pl05.jl --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="Define a trivial generic type and a function" nb/source/pl03_generic_fun_type/include/pl03_b.go --->
+<!--- exec-include ./mk_version.py -D label="Define a trivial generic type and a function" nb/source/pl05_generic_fun_type/include/pl05_b.go --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
-<!--- exec-include ./mk_version.py -D label="Define a trivial generic type and a function" nb/source/pl03_generic_fun_type/include/pl03_b_rs/src/main.rs --->
+<!--- exec-include ./mk_version.py -D label="Define a trivial generic type and a function" nb/source/pl05_generic_fun_type/include/pl05_b_rs/src/main.rs --->
 <!--- end code --->
 
 <!--- md label=prob,ans --->
@@ -331,19 +331,19 @@ y = triv_val(t) # should return "hello"
 <!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="A generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- exec-include ./mk_version.py -D label="A generic T -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05.ml --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-<!--- exec-include ./mk_version.py -D label="A generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- exec-include ./mk_version.py -D label="A generic T -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05.jl --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="A generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_c.go --->
+<!--- exec-include ./mk_version.py -D label="A generic T -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05_c.go --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
-<!--- exec-include ./mk_version.py -D label="A generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_c_rs/src/main.rs --->
+<!--- exec-include ./mk_version.py -D label="A generic T -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05_c_rs/src/main.rs --->
 <!--- end code --->
 
 
@@ -362,20 +362,20 @@ $$\frac{(x-x_0)^2}{a^2} + \frac{(y-y_0)^2}{b^2} \leq 1$$
 <!--- end code --->
 
 <!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="Apply a generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.ml --->
+<!--- exec-include ./mk_version.py -D label="Apply a generic T -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05.ml --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-<!--- exec-include ./mk_version.py -D label="Apply a generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03.jl --->
+<!--- exec-include ./mk_version.py -D label="Apply a generic T -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05.jl --->
 <!--- end code --->
 
 <!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="Apply a generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_c.go --->
+<!--- exec-include ./mk_version.py -D label="Apply a generic T -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05_c.go --->
 main()
 <!--- end code --->
 
 <!--- code w label=ans kernel=rs --->
-<!--- exec-include ./mk_version.py -D label="Apply a generic T -> float minimizer" nb/source/pl03_generic_fun_type/include/pl03_c_rs/src/main.rs --->
+<!--- exec-include ./mk_version.py -D label="Apply a generic T -> float minimizer" nb/source/pl05_generic_fun_type/include/pl05_c_rs/src/main.rs --->
 main();
 <!--- end code --->
 

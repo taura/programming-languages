@@ -4,7 +4,8 @@
 
 install:
 	opam init --yes
-	eval $$(opam env) && opam install --yes jupyter jupyter-archimedes menhir
+	eval $$(opam env) && opam install --yes jupyter menhir
+# jupyter-archimedes 
 	~/.opam/default/bin/ocaml-jupyter-opam-genspec
 	jupyter kernelspec install --user --name ocaml-jupyter ~/.opam/default/share/jupyter
 
