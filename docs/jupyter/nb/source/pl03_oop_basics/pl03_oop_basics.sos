@@ -62,7 +62,7 @@ Declare your choice in the following cell (leave the one you choose).  In this n
 
 <!--- end md --->
 
-<!--- md label=prob,ans --->
+<!--- md --->
 # Class definition
 
 * A _class_ is a way to define a composite type along with some functions associated with it (_methods_)
@@ -96,24 +96,45 @@ Declare your choice in the following cell (leave the one you choose).  In this n
 <!--- code w points=1 kernel=python --->
 <!--- end code --->
 
-<!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl03_oop_basics/include/pl03.ml --->
+<!--- md label=ans --->
+**Go**
+<!--- end md --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl03_oop_basics/include/pl03.go --->
 <!--- end code --->
+
+<!--- md label=ans --->
+**Julia**
+
+* Note : type of fields (`:: Int`) are optional for Julia
+<!--- end md --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl03_oop_basics/include/pl03.jl --->
 <!--- end code --->
 
-<!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl03_oop_basics/include/pl03.go --->
+<!--- md label=ans --->
+**OCaml**
+
+* In OCaml, you define both types and methods in a single construct, class
+* We will do both in the next problem
+
+<!--- end md --->
+
+<!--- code w label=ans kernel=ml --->
 <!--- end code --->
+
+<!--- md label=ans --->
+**Rust**
+<!--- end md --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="Define data structure representing a rectangle and an ellipse" nb/source/pl03_oop_basics/include/pl03.rs --->
 <!--- end code --->
 
 
-<!--- md label=prob,ans --->
+<!--- md --->
 # Methods
 
 * _Methods_ are similar to functions, except that a method of the same name can be defined (i.e., implemented differently) for different classes
@@ -138,24 +159,44 @@ Declare your choice in the following cell (leave the one you choose).  In this n
 <!--- code w points=1 kernel=python --->
 <!--- end code --->
 
-<!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl03_oop_basics/include/pl03.ml --->
+<!--- md label=ans --->
+**Go**
+<!--- end md --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl03_oop_basics/include/pl03.go --->
 <!--- end code --->
+
+<!--- md label=ans --->
+**Julia**
+<!--- end md --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl03_oop_basics/include/pl03.jl --->
 <!--- end code --->
 
-<!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl03_oop_basics/include/pl03.go --->
+<!--- md label=ans --->
+**OCaml**
+
+* Note : `area` method can reference variables given to the constructor (`width, height, rx`, and `ry`), which makes OCaml implementation particularly concise
+* You don't have to write a separate data structure definition or a boilerplate code copying variables given to the constructor to the data structure
+
+<!--- end md --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl03_oop_basics/include/pl03.ml --->
 <!--- end code --->
+
+<!--- md label=ans --->
+**Rust**
+<!--- end md --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="Define a method that computes the area of rect/ellipse" nb/source/pl03_oop_basics/include/pl03.rs --->
 <!--- end code --->
 
 
-<!--- md label=prob,ans --->
+<!--- md --->
 # Subtypes and similar concepts (interface, trait, etc.)
 
 * Now that we have defined two different methods with the same name `area`, but it wouldn't be that useful, unless you can have _a_ variable that holds values of both types at different points of an execution
@@ -209,24 +250,52 @@ for s in shapes:
 <!--- code w points=1 kernel=python --->
 <!--- end code --->
 
-<!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl03_oop_basics/include/pl03.ml --->
+<!--- md label=ans --->
+**Go**
+
+* Note : you define an interface, `shape`, which says all classes (`struct` in Go) having `area()` method returning `float64` _implement_ this interface
+* You don't have to say `rect` or `ellipse` implements `shape` and can just put them in an array of shapes
+<!--- end md --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl03_oop_basics/include/pl03.go --->
 <!--- end code --->
+
+<!--- md label=ans --->
+**Julia**
+
+* Note : like OCaml, you don't have to do anything special to put `rect` and `ellipse` in the same array
+* But unlike OCaml, this is because Julia gives up static type checking
+<!--- end md --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl03_oop_basics/include/pl03.jl --->
 <!--- end code --->
 
-<!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl03_oop_basics/include/pl03.go --->
+<!--- md label=ans --->
+**OCaml**
+
+* Note : you don't have to do anything special to put `rect` and `ellipse` in the same array
+* This is because OCaml realizes that both `rect` and `ellipse` have exactly the same signature ($\approx$ method names and their types)
+<!--- end md --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl03_oop_basics/include/pl03.ml --->
 <!--- end code --->
+
+<!--- md label=ans --->
+**Rust**
+
+* Note : you define an interface, `shape`, which says classes (`struct` in Rust) implementing this interface must have `area()` method returning `f64`
+* Each time you define a struct, like `rect` or `ellipse`, whose instances you want to assign to a variable of `shape` type, you have to explicitly say this struct _implements_ `shape` (`impl Shape for Rect / Ellipse` does that)
+<!--- end md --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="Create an array/a list/a vector/a slice" nb/source/pl03_oop_basics/include/pl03.rs --->
 <!--- end code --->
 
 
-<!--- md label=prob,ans --->
+<!--- md --->
 # Working on mixed collections
 
 ##*P Scan an array of shapes
@@ -250,24 +319,40 @@ for s in shapes:
 <!--- code w points=1 kernel=python --->
 <!--- end code --->
 
-<!--- code w label=ans kernel=ml --->
-<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl03_oop_basics/include/pl03.ml --->
+<!--- md label=ans --->
+**Go**
+<!--- end md --->
+
+<!--- code w label=ans kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl03_oop_basics/include/pl03.go --->
 <!--- end code --->
+
+<!--- md label=ans --->
+**Julia**
+<!--- end md --->
 
 <!--- code w label=ans kernel=jl --->
 <!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl03_oop_basics/include/pl03.jl --->
 <!--- end code --->
 
-<!--- code w label=ans kernel=go --->
-<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl03_oop_basics/include/pl03.go --->
+<!--- md label=ans --->
+**OCaml**
+<!--- end md --->
+
+<!--- code w label=ans kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl03_oop_basics/include/pl03.ml --->
 <!--- end code --->
+
+<!--- md label=ans --->
+**Rust**
+<!--- end md --->
 
 <!--- code w label=ans kernel=rs --->
 <!--- exec-include ./mk_version.py -D label="Scan an array of shapes" nb/source/pl03_oop_basics/include/pl03.rs --->
 <!--- end code --->
 
 
-<!--- md label=prob,ans --->
+<!--- md --->
 # Static vs. dynamic type checking
 
 * What if you pass an array some of whose element do not have `area` method?
