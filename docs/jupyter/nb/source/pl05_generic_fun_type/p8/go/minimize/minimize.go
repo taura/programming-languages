@@ -1,13 +1,10 @@
-/*** if 0 */ 
 package main
 
 import (
     "fmt"
     "math/rand"
 )
-/*** endif */ 
-/*** if label == "A generic T -> float minimizer" */
-// does not work on Jupyter (use command line)
+
 type Generator [T any] interface {
     next() (T, bool)
 }
@@ -29,9 +26,7 @@ func minimize [T any] (f func (T) float64,
     }
     return min_x, min_y, i > 0
 }
-/*** endif */ 
-/*** if label == "Apply a generic T -> float minimizer" */
-// does not work on Jupyter (use command line)
+
 type EllipseGenerator struct {
     x0, y0, a, b float64
     n int
@@ -70,9 +65,8 @@ func main() {
     rg := mk_ellipse_generator(3.0, 3.0, 2.0, 1.0, 10000)
     xy, z, some := minimize[[2]float64](f, rg)
     if some {
-        fmt.Printf("%f %f %f\n", xy[0], xy[1], z);
+        fmt.Printf("(x, y) = (%f, %f), f(x, y) = %f\n", xy[0], xy[1], z);
     } else {
         fmt.Printf("\n");
     }
 }
-/*** endif */ 
