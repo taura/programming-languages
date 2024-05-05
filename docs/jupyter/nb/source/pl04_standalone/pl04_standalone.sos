@@ -1,0 +1,1134 @@
+<!--- md --->
+
+#* Programming Languages (4) --- Writing standalone programs using libraries
+
+<!--- end md --->
+
+<!--- md w --->
+
+Enter your name and student ID.
+
+ * Name:
+ * Student ID:
+
+<!--- end md --->
+
+<!--- md --->
+
+# Say your language
+
+Say the language you are assigned to.  I am working on
+<!--- end md --->
+
+<!--- md w points=1 --->
+Go
+Julia
+OCaml
+Rust
+<!--- end md --->
+
+<!--- md --->
+# Objective
+
+* In this notebook, you are going to learn *how to write a standalone program* in the language you chose, rather than a program in Jpyter
+
+* Jupyter is a great environment to learn what a particular programming language smells like without getting caught on installations, command lines, options, files, and so on
+* In the real world, however, you need to be able to develop a program that "does a job" for you and users
+* Also, real programs must use libraries not available by default and have multiple files that call each other, realities difficult to learn by Jupyter alone
+* There is also a minimum boilerplate each language imposes, such as the `main` function of C or a class definition that has `public static void main(String[] args)` in Java; some languages allow you to write arbitrary expressions in the program toplevel, while others require them to be inside the main function; you may miss such basics if you write your programs only in Jupyter
+* To avoid missing such basics for developing real programs, this notebook's goal is to learn how to develop a somewhat useful program with command lines and terminals
+
+* This notebook is going to walk you through skills you need to master, but it only serves as an explanation and a convenient page to save typing commands by bash cells
+* <font color="red">You are supposed to do your real work by SSH and command line terminals by yourself.  Cells in this page are given to make clear what you need to do (and to help you troubleshoot if anything goes wrong)</font>
+ * see see [How to access Jupyter environment](https://taura.github.io/programming-languages/html/jupyter.html?lang=en) for how to SSH to taulec environment
+ * if you have difficulty setting it up right away you could use Jupyter terminal for now
+* Editors
+ * emacs, nano, vim are available on taulec; just use them within SSH terminal
+ * you can run vscode on your computer and use Remote-SSH extension to open files on taulec
+<!--- end md --->
+
+<!--- md --->
+
+# Roadmap
+
+1. compile and execute a simplest program by command lines
+1. use a build system to streamline library installation and dependency management
+1. import a library so you can use it in your program
+
+* Along the way, I encourage you to acquire skills to search for libraries that fit whatever tasks you will do in future and know details about a particular library (e.g., functions and types available in them), rather than simply following instructions written here to accomplish this particular task
+
+* You are encouraged to do the following exercise using SSH and command line, rather than merely pressing SHIFT + ENTER 
+
+<!--- end md --->
+
+<!--- md --->
+# Compiling and executing a simplest program from a command line terminal
+
+* Go : go (compiler)
+* Julia : julia (compiler and interactive environment)
+* OCaml : ocamlc (compiler), ocaml (interactive and interactive environment)
+* Rust : rustc (compiler)
+
+<!--- end md --->
+
+<!--- md --->
+
+## Go
+
+* `go` is the command that does everything from compilation, execution, installation of the library, with its subcommands
+* `go build` is the subcommand to compile a program
+
+### Setting up
+
+* check if you can run `go` command
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+go version
+<!--- end code --->
+
+<!--- md --->
+* if it raises an error indicating `go` command is not found, add `~/go/bin` to your `PATH` environment variable
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+export PATH=~/go/bin:$PATH
+<!--- end code --->
+
+<!--- md --->
+* you can put the above in your `~/.profile` so it automatically happens when you login with SSH
+<!--- end md --->
+
+<!--- md --->
+* make sure you can now run `go` command and `which go` shows where it is
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+which go
+go version
+<!--- end code --->
+
+<!--- md --->
+
+### Compiling and executing a program
+
+* move to a working directory
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/00hello/go
+<!--- end code --->
+
+<!--- md --->
+* a simplest program
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat hello.go
+<!--- end code --->
+
+<!--- md --->
+* compile it
+<!--- end md --->
+<!--- code w kernel=bash --->
+go build hello.go
+<!--- end code --->
+
+<!--- md --->
+* execute it
+<!--- end md --->
+<!--- code w kernel=bash --->
+./hello
+<!--- end code --->
+
+<!--- md --->
+
+### Interactive environment
+
+* go is basically a batch-compiled language; there is no official interactive environment
+* Jupyter uses an external program called `gophernotes`, which unfortunately does not support the latest version of the go language
+* alternatively, you could use [The Go Playground](https://go.dev/play/) to interactively play with Go
+
+<!--- end md --->
+
+<!--- md --->
+
+## Julia
+
+* `julia` is the command that serves both as an interactive environment and a file executor
+* Julia does not separate compilation and execution; a program (whether it's from an interactive environment or in a file) is always parsed and gets executed immediately; everything is Just-In-Time compiled
+<!--- end md --->
+
+<!--- md --->
+
+### Setting up
+
+* check if you can run `julia` command
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+julia --version
+<!--- end code --->
+
+<!--- md --->
+* if it raises an error indicating `julia` command is not found, add `~/.juliaup/bin` to your `PATH` environment variable
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+export PATH=~/.juliaup/bin:$PATH
+<!--- end code --->
+
+<!--- md --->
+* you can put the above in your `~/.profile` so it automatically happens when you login with SSH
+<!--- end md --->
+
+<!--- md --->
+* make sure you can now run `julia` command and `which julia` shows where it is
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+which julia
+julia --version
+<!--- end code --->
+
+<!--- md --->
+
+### Compiling and executing a program
+
+* move to a working directory
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/00hello/jl
+<!--- end code --->
+
+<!--- md --->
+* a simplest program
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat hello.jl
+<!--- end code --->
+
+<!--- md --->
+* execute it
+<!--- end md --->
+<!--- code w kernel=bash --->
+julia hello.jl
+<!--- end code --->
+
+<!--- md --->
+
+### Interactive environment
+
+* `julia` is an interactive environment
+* don't execute it within Jupyter
+* do it in SSH terminal (recommended) or Jupyter terminal
+
+```
+$ julia
+   _       _ _(_)_     |  Documentation: https://docs.julialang.org
+  (_)     | (_) (_)    |
+   _ _   _| |_  __ _   |  Type "?" for help, "]?" for Pkg help.
+  | | | | | | |/ _` |  |
+  | | |_| | | | (_| |  |  Version 1.10.2 (2024-03-01)
+ _/ |\__'_|_|_|\__'_|  |  Official https://julialang.org/ release
+|__/                   |
+
+┌ Warning: Terminal not fully functional
+└ @ Base client.jl:422
+julia>
+```
+<!--- end md --->
+
+<!--- md --->
+
+## OCaml
+
+* `ocaml` is an interactive environment to which you input OCaml program interactively, somewhat similar to Jupyter
+* `ocamlc` is a compiler that converts OCaml program files to an executable file
+
+<!--- end md --->
+
+
+<!--- md --->
+
+### Setting up
+
+* check if you can run `ocamlc` command
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+ocamlc --version
+<!--- end code --->
+
+<!--- md --->
+* if it raises an error indicating `ocamlc` command is not found, execute the following in your shell
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+eval $(opam env)
+<!--- end code --->
+
+<!--- md --->
+* you can put the above in your `~/.profile` so it automatically happens when you login with SSH
+<!--- end md --->
+
+<!--- md --->
+* make sure you can now run `ocamlc` command and `which ocamlc` shows where it is
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+which ocamlc
+ocamlc --version
+<!--- end code --->
+
+<!--- md --->
+
+### Compiling and executing a program
+
+* move to a working directory
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/00hello/ml
+<!--- end code --->
+
+<!--- md --->
+* a simplest program
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat hello.ml
+<!--- end code --->
+
+<!--- md --->
+* compile it to get a standalone executable
+<!--- end md --->
+<!--- code w kernel=bash --->
+ocamlc hello.ml
+<!--- end code --->
+
+<!--- md --->
+* execute it
+<!--- end md --->
+<!--- code w kernel=bash --->
+./a.out
+<!--- end code --->
+
+<!--- md --->
+
+### Interactive environment
+
+* `ocaml` is an interactive environment
+* don't execute it within Jupyter
+* do it in SSH terminal (recommended) or Jupyter terminal
+
+```
+$ ocaml
+        OCaml version 4.13.1
+
+#
+```
+<!--- end md --->
+
+<!--- md --->
+
+## Rust
+
+* `rustc` is the command that compiles a Rust source file
+<!--- end md --->
+
+<!--- md --->
+
+### Setting up
+
+* check if you can run `rustc` command
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+rustc --version
+<!--- end code --->
+
+<!--- md --->
+* if it raises an error indicating `rustc` command is not found, execute the following in your shell
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+. ~/.cargo/env
+<!--- end code --->
+
+<!--- md --->
+* you can put the above in your `~/.profile` so it automatically happens when you login with SSH
+<!--- end md --->
+
+<!--- md --->
+* make sure you can now run `rustc` command and `which rustc` shows where it is
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+which rustc
+rustc --version
+<!--- end code --->
+
+<!--- md --->
+
+### Compiling and executing a program
+
+* move to a working directory
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/00hello/rs
+<!--- end code --->
+
+<!--- md --->
+* a simplest program
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat hello.rs
+<!--- end code --->
+
+<!--- md --->
+* compile it
+<!--- end md --->
+<!--- code w kernel=bash --->
+rustc hello.rs
+<!--- end code --->
+
+<!--- md --->
+* execute it
+<!--- end md --->
+<!--- code w kernel=bash --->
+./hello
+<!--- end code --->
+
+<!--- md --->
+
+### Interactive environment
+
+* rust is basically a batch-compiled language; there is no official interactive environment
+* Jupyter uses an external program called `evcxr_jupyter`
+* Alternatively, you could use [Rust Playground](https://play.rust-lang.org/?version=stable&mode=debug&edition=2021) to interactively play with Rust
+<!--- end md --->
+
+<!--- md --->
+# Build system
+
+* A build system is a program that helps you develop programs using external libraries and/or consisting of multiple files
+* OCaml, Go and Rust have their own build system, dune, go, and cargo, respectively
+* They have a command to create a project and build it
+
+<!--- end md --->
+
+<!--- md --->
+
+## go is Go's build system
+
+* `go` command also serves as go's build system
+* spend at least a few minutes to read the first few sections of [How to Write Go Code](https://go.dev/doc/code)
+
+* go to the directory,
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/01build_sys/go
+<!--- end code --->
+
+<!--- md --->
+* which contains only a file `_`
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+
+<!--- md --->
+* [create a project called foo](https://go.dev/doc/tutorial/create-module) by
+<!--- end md --->
+<!--- code w kernel=bash --->
+mkdir foo
+cd foo
+go mod init foo
+<!--- end code --->
+
+<!--- md --->
+* it just creates `go.mod` file
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls -lR
+<!--- end code --->
+
+<!--- md --->
+* create a file `foo.go` with the following content (using editor)
+```
+package main
+func main() {
+     println("hello world")
+}
+```
+
+* compile it by
+<!--- end md --->
+<!--- code w kernel=bash --->
+go build
+<!--- end code --->
+
+<!--- md --->
+* which will create `foo`; run it by
+<!--- end md --->
+<!--- code w kernel=bash --->
+./foo
+<!--- end code --->
+
+<!--- md --->
+
+## Julia has no particular build system
+
+* Julia has no build system, as it does not require a separate step to compile source files into an executable file
+* you always just-in-time compile your source files and run them immediately
+
+<!--- end md --->
+
+
+<!--- md --->
+
+## dune: OCaml's build system
+
+* [dune](https://dune.build/) is a build system for OCaml
+* spend at least a few minutes on its [document](https://dune.readthedocs.io/en/stable/), including [Quickstart](https://dune.readthedocs.io/en/stable/quick-start.html) section
+
+* install dune for you (<font color="red">do it from a terminal, not by SHIFT-ENTER below).  `$` below is a command prompt, not a part of your input
+```
+$ eval $(opam env)
+$ opam install dune
+```
+which says
+```
+Run eval $(opam env) to update the current shell environment
+```
+at the end.  Follow the instruction
+```
+$ eval $(opam env)
+```
+
+* go to the directory,
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/01build_sys/ml
+<!--- end code --->
+
+<!--- md --->
+* which contains only a file `_`
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+
+<!--- md --->
+* [create a project called foo](https://dune.readthedocs.io/en/stable/usage.html#initializing-a-project) by
+<!--- end md --->
+<!--- code w kernel=bash --->
+dune init proj foo
+<!--- end code --->
+
+<!--- md --->
+* let's find files in it
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls -lR
+<!--- end code --->
+
+<!--- md --->
+* foo/bin/main.ml is the source file you are going to add your program
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat foo/bin/main.ml
+<!--- end code --->
+
+<!--- md --->
+* go to the top level directory of the project
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd foo
+<!--- end code --->
+<!--- md --->
+* build the executable by
+<!--- end md --->
+<!--- code w kernel=bash --->
+eval $(opam env)
+dune build
+<!--- end code --->
+
+<!--- md --->
+* which will create ./_build/default/bin/main.exe; run it either by
+<!--- end md --->
+<!--- code w kernel=bash --->
+dune exec foo
+<!--- end code --->
+<!--- md --->
+or 
+<!--- end md --->
+<!--- code w kernel=bash --->
+./_build/default/bin/main.exe
+<!--- end code --->
+
+<!--- md --->
+
+## cargo: Rust's build system
+
+* [cargo](https://doc.rust-lang.org/book/ch01-03-hello-cargo.html) is the build system of Rust
+* spend a few minutes to read [Hello, Cargo!](https://doc.rust-lang.org/book/ch01-03-hello-cargo.html) section of the Rust book
+
+* go to the directory,
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/01build_sys/rs
+<!--- end code --->
+
+<!--- md --->
+* which contains only a file `_`
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls
+<!--- end code --->
+
+<!--- md --->
+* [create a project called foo](https://doc.rust-lang.org/book/ch01-03-hello-cargo.html) by
+<!--- end md --->
+<!--- code w kernel=bash --->
+cargo new foo
+<!--- end code --->
+
+<!--- md --->
+* which will create a directory `foo`; go to the directory
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd foo
+<!--- end code --->
+
+<!--- md --->
+* let's find files in it
+<!--- end md --->
+<!--- code w kernel=bash --->
+ls -lR
+<!--- end code --->
+
+<!--- md --->
+* `src/main.rs` is the source file you are going to add your program
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat src/main.rs
+<!--- end code --->
+
+<!--- md --->
+* build the executable by
+<!--- end md --->
+<!--- code w kernel=bash --->
+cargo build
+<!--- end code --->
+
+<!--- md --->
+* which will create `target/debug/foo`; run it either by
+<!--- end md --->
+<!--- code w kernel=bash --->
+cargo run
+<!--- end code --->
+<!--- md --->
+or
+<!--- end md --->
+<!--- code w kernel=bash --->
+./target/debug/foo
+<!--- end code --->
+
+<!--- md --->
+* we will later explain how to use external libraries from `main.rs`
+<!--- end md --->
+
+<!--- md --->
+
+# Using libraries
+
+* Your program rarely consists of only the code you wrote; you rely on many programs written by others, which are generally called "libraries"; they provide your program with functions, variables, classes, types, and so on
+* When you need a function that is general enough so you reasonably believe is available as a library and complex enough so you do not want to develop yourself, you search for a library implementing it
+* Having a confidence on finding an appropriate library (on the web), knowing what kind of functions/variables/classes it provides and how to use them, and correctly using it from your program is an important step toward mastering a language
+* Using a library in general entails
+  * searching for a library you want 
+  * installing it if necessary (e.g., Python's `pip` command or from a github)
+  * telling the compiler/interactive command where the library is, if it is installed at a place they don't know.  this is generally done via setting an environment variable (Python's `PYTHONPATH`), giving a command line, or setting a variable in the interactive environment (Python's `sys.path`)
+  * you write a statement or a command to import it in your program, so that your can mention its function, variables, etc. (Python's `import` statement)
+
+* Some libraries are _builtin_, in the sense that they do not require any of the above (e.g., Python's `open` function)
+* Some libraries are not builtin but _standard_, in the sense that they are already installed along with the language itself; you don't have to install it by yourself but just have to import it (e.g., Python's `re` module)
+* Some languages (OCaml, Go and Rust) have a build system that automatically install external libraries
+
+<!--- end md --->
+
+<!--- md --->
+## Libraries in Go
+
+### Builtin libraries
+
+* Go's builtin libraries are called `builtin` package.  See [builtin package](https://pkg.go.dev/builtin) to find names in them.  They are available automatically in any program
+* if you find a _name_ in the above page, you can use it by just _name_ in your program
+* for example, there is `func println(args ...Type)` in the above page, so you can just write
+```println(10)```
+in any program
+
+### Standard libraries
+
+* Go's [Standard library](https://pkg.go.dev/std) are packages that are installed with the Go system
+* your program refers to a _name_ in a package by saying in the beginning of a source file <font color="blue">import "_module-name_"</font> (notice that the name is double-quoted) and with <font color="blue">_module-name_._name_</font>
+
+* for example let's say you want to use `Abs` function in [math](https://pkg.go.dev/math) package. you write
+```
+import "math"
+```
+in the beginning of a file and 
+```
+math.Abs(-3)
+```
+
+### External libraries
+
+* See [Managing dependencies](https://go.dev/doc/modules/managing-dependencies) for general concepts
+* search [pkg.go.dev](https://pkg.go.dev/) for a library you want
+* once you find the package name, you import its repository name you can find on the right of the package page
+<font color="blue">import "_repository-name_"</font>
+in your source file; `go build` does the rest from downloading the library to compiling it to linking with it
+* moreover, the same scheme works for code not in [pkg.go.dev](https://pkg.go.dev/)
+* for example, if you search [pkg.go.dev](https://pkg.go.dev/) for `xmldom`, you find it's repository "github.com/subchen/go-xmldom" under Repository section on the right of the [go-xmldom](https://pkg.go.dev/github.com/subchen/go-xmldom). so just change your `foo.go` file to something like
+```
+package main
+import "github.com/subchen/go-xmldom"
+func main() {
+        xmldom.ParseXML("<a>123</a>")
+        println("hello world")
+}
+```
+to your source file.
+* install it by
+```
+go get github.com/subchen/go-xmldom
+```
+and you are done
+* `go build` compile it and link it with your program
+<!--- end md --->
+
+<!--- md --->
+## Libraries in Julia
+
+### Builtin libraries
+
+* Julia's builtin libraries are called `Core` and `Base` modules.  See `Base` tab in [Julia documentation page](https://docs.julialang.org/en/v1/) to find names in them.  They are available automatically in any program
+* if you find <font color="blue">Base._name_</font> in the above page, you can use it by just <font color="blue">_name_</font> in your program
+
+### Standard libraries
+
+* Julia's Standard Library in [Julia documentation](https://docs.julialang.org/en/v1/) are modules that are installed with the Julia system
+* your program refers to a _name_ in the standard library by saying in the beginning of a source file <font color="blue">import _module-name_</font> and by <font color="blue">_module-name_._name_</font>
+* alternatively, you can say
+<font color="blue">using _module-name_</font>
+in the beginning of your program and
+<font color="blue">_name_</font>
+without prefixing it with the module name
+
+* for example let's say you want to use `DateTime` function in [Dates](https://docs.julialang.org/en/v1/stdlib/Dates/) module. you either write
+
+1.
+```
+import Dates
+```
+in the beginning of a file and 
+```
+Dates.DateTime(2022)
+```
+
+2. or
+```
+using Dates
+```
+in the beginning of a file and just
+```
+DateTime(2022)
+```
+
+### External libraries in Julia
+
+* [Julia's general registry](https://github.com/JuliaRegistries/General); see [Julia Packages](https://julialang.org/packages/)
+* if you find a library you want, either in [JuliaHub](https://juliahub.com/ui/Packages) or [Julia Packages](https://juliapackages.com/), you can install it from julia interactive environment by
+```
+$ julia
+julia> import Pkg
+julia> Pkg.add("name")
+```
+* Example: let's say you want to use [LightXML](https://juliahub.com/ui/Packages/LightXML/a89nj/0.9.0) package
+* install it by
+```
+$ julia
+julia> import Pkg
+julia> Pkg.add("LightXML")
+```
+* in your program, write
+```
+import LightXML
+```
+or 
+```
+using LightXML
+```
+* with the former, you use various functions in the module with `LightXML.parse_file`, `LightXML.root`, etc. whereas with the latter simply with `parse_file`, `root`, etc.
+<!--- end md --->
+
+<!--- md --->
+## Libraries in OCaml
+
+### Builtin libraries
+
+* Builtin functions, types, etc. are in `Pervasives` module.  Names in the [pervasive module](https://v2.ocaml.org/releases/4.02/htmlman/libref/Pervasives.html) are available automatically in any program
+
+* Example: your program can use sin function just by `sin`, as it is in the [pervasive module](https://v2.ocaml.org/releases/4.02/htmlman/libref/Pervasives.html)
+
+### Standard libraries
+
+* [OCaml's standard libraries](https://v2.ocaml.org/releases/4.02/htmlman/libref/Pervasives.html) are modules that are installed with the OCaml system.
+
+* Your program doesn't have to do anything special to use entities (functions, types, etc.) in a standard module
+ * <font color="blue">_module-name_._name_</font> refers to <font color="blue">_name_</font> in module <font color="blue">_module-name_</font>
+ * or, add <font color="blue">`open` _module-name_</font> in the beginning of your program file and just _name_ refers to _name_ in the module
+
+* Example: you can use a variable `argv` in [Module sys](https://v2.ocaml.org/releases/4.02/htmlman/libref/Sys.html) either by
+```
+Sys.argv
+```
+or by having
+```
+open Sys;;
+```
+in the beginning of your program and
+```
+argv
+```
+
+### External libraries
+
+* Find a module you want to use in [opam](https://opam.ocaml.org/packages/)
+
+* If it is found, you can install it by `opam` command <font color="blue">opam install _module-name_
+
+* Once installed, the simplest way is to use it is `dune`
+
+* Example: let's use [markup](https://opam.ocaml.org/packages/markup/") module; find its [README.md at github](https://github.com/aantron/markup.ml) and [the documentation](http://aantron.github.io/markup.ml/)
+
+* go to the source directory
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/01build_sys/ml/foo
+<!--- end code --->
+<!--- md --->
+* modify `bin/dune` file, which should originally look like
+```
+(executable
+ (name main)
+ (libraries foo))
+```
+* confirm it 
+<!--- end md --->
+<!--- code w kernel=bash --->
+cat foo/bin/dune
+<!--- end code --->
+
+<!--- md --->
+* <font color="red">You must do the following steps in a terminal and a text editor</font>
+
+* add `markup` to the `(libraries foo)` clause in the `dune` file,  so it looks like
+```
+(executable
+ (name main)
+ (libraries foo markup))
+```
+* change the source file `bin/main.ml` so it looks like
+```
+Markup.parse_xml (Markup.string "<a>123</a>")
+```
+
+* install the library by doing
+```
+opam install markup
+```
+
+* build it again with `dune`
+<!--- end md --->
+<!--- code w kernel=bash --->
+dune build
+<!--- end code --->
+
+<!--- md --->
+* and run it, just to make sure it does not raise an error
+<!--- end md --->
+<!--- code w kernel=bash --->
+./_build/default/bin/main.exe 
+<!--- end code --->
+
+
+<!--- md --->
+## Libraries in Rust
+
+### Builtin libraries
+
+* Rust's builtin libraries are called [std::prelude module](https://doc.rust-lang.org/std/prelude/index.html).  From this page, you go to [v1](https://doc.rust-lang.org/std/prelude/v1/index.html) and [Module core::prelude::rust_2021](https://doc.rust-lang.org/core/prelude/rust_2021/index.html) for specific names available in all Rust programs
+* if you find a name such as crate::_module_::_module_::_name_ in the above pages, you can use it by just _name_ in your program
+* for example, there is `crate::option::Option::None` in [v1](https://doc.rust-lang.org/std/prelude/v1/index.html), so you can write
+```None```
+in any program
+
+### Standard libraries
+
+* Rust's [Crate std](https://docs.rs/rustc-std-workspace-std/latest/std/) is the set of modules and macros installed with the Rust system
+* navigating to a module, you can find entities such as structs, traits, functions of a module
+ * for example, [fs](https://docs.rs/rustc-std-workspace-std/latest/std/fs/index.html) is a module in the Crate `std`, where you can find entities such as a struct [File](https://docs.rs/rustc-std-workspace-std/latest/std/fs/struct.File.html) and a function [read](https://docs.rs/rustc-std-workspace-std/latest/std/fs/fn.read.html)
+* a module may contain another module (submodule)
+ * for example, [f64](https://docs.rs/rustc-std-workspace-std/latest/std/f64/index.html) module contains a submodule [consts](https://docs.rs/rustc-std-workspace-std/latest/std/f64/consts/index.html)
+* you can refer to an entity in a module either by its fully-qualified name starting from the toplevel name (such as `std`), to a module name (such as fs, f64), all the way down to the name of the entity.  there may be multiple module names in between.
+* your program refers to an entity by its fully-qualified name, such as
+```std::f64::consts::PI```
+(see [std::f64::consts::PI](https://docs.rs/rustc-std-workspace-std/latest/std/f64/consts/constant.PI.html)
+* or, you can refer to `std::f64::consts::PI` by saying
+```use std::f64::consts::PI```
+in the beginning of a program and with just
+```PI```
+* you can go the middle road; for example, you can also say
+```use std::f64```
+or
+```use std::f64::consts```
+in the beginning of a program and refer to `std::f64::consts::PI` by
+```f64::PI```
+or
+```consts::f64::PI```
+respectively
+
+### External libraries
+
+* [crates.io](https://crates.io/) is a repository you can search for a library you want
+* the concepts you have just learned above applied to external libraries, too
+* an external library is just a module contained in a crate other than std
+* once you find a module in [crates.io](https://crates.io/), the simplest way is to let `cargo` command do the job
+* add the name of the crate that contains the module you want to use to `Cargo.toml` file, under [dependencies] section
+* example: let's say you want to use [minidom](https://crates.io/crates/minidom) module
+* press the copy button on the right to copy a string that looks like
+```
+minidom = "0.14.0"
+```
+and paste it below [dependencies] in `Cargo.toml` file
+* alternatively you can just write
+```
+minidom = "*"
+```
+to indicate you want the latest version of the library
+* consult the document, by following [the link below "Documentation"](https://docs.rs/minidom/0.14.0/minidom/)
+* change the source file `foo.rs` so it looks like
+```
+use minidom::Element;
+
+fn main() {
+   let s = "<a xmlns=\"https://a.com\">123</a>";
+   let _root : Element = s.parse().unwrap();
+}
+```
+
+* build it with
+```
+cargo build
+```
+which does everything from downloading the source to compiling it to linking it with the code you write
+* execute it with either by
+```
+./target/debug/foo
+```
+or
+```
+cargo run
+```
+<!--- end md --->
+
+<!--- md --->
+#*P Show command line args (like `echo` command)
+
+* write a standalone program that prints the first argument given in the command line followed by a newline, just like the echo command (echo hello prints hello)
+* it must be written under `~/notebooks/pl04_standalone/p1/<lang>` directory, where &lt;lang&gt; is one of ml, jl, go and rs
+* always create `echo` folder under the above directory, either manually or by creating a project with the respective build system
+* as a result, the source file name must be
+  * Go    : `~/notebooks/pl04_standalone/p1/go/echo/echo.go`
+  * Julia : `~/notebooks/pl04_standalone/p1/jl/echo/echo.jl`
+  * OCaml : `~/notebooks/pl04_standalone/p1/ml/echo/bin/main.ml`
+  * Rust  : `~/notebooks/pl04_standalone/p1/rs/echo/src/main.rs`
+* after writing the program, compile and run it with one of the following
+<!--- end md --->
+
+<!--- md --->
+* Go
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/p1/go/echo
+go build
+./echo 123
+<!--- end code --->
+
+<!--- md --->
+* Julia
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/p1/jl/echo
+julia echo.jl 123
+<!--- end code --->
+
+<!--- md --->
+* OCaml 
+<!--- end md --->
+<!--- code w kernel=bash --->
+eval $(opam env)
+cd ~/notebooks/pl04_standalone/p1/ml/echo
+dune build
+./_build/default/bin/main.exe 123
+<!--- end code --->
+
+<!--- md --->
+* Rust
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/p1/rs/echo
+cargo build
+./target/debug/echo 123
+<!--- end code --->
+
+<!--- md --->
+* They all must print 123
+<!--- end md --->
+
+<!--- md --->
+#*P Read a file (like `cat` command)
+
+* write a standalone program that takes a filename in its command line and prints its content, just like `cat` command
+* filename convention is the same as p1. it must be written under `~/notebooks/pl04_standalone/p2/<lang>` directory, where &lt;lang&gt; is one of ml, jl, go and rs
+* always create `cat` folder under the above directory, either manually or by creating a project with the respective build system
+* as a result, the source file name must be
+  * Go    : `~/notebooks/pl04_standalone/p2/go/cat/cat.go`
+  * Julia : `~/notebooks/pl04_standalone/p2/jl/cat/cat.jl`
+  * OCaml : `~/notebooks/pl04_standalone/p2/ml/cat/bin/main.ml`
+  * Rust  : `~/notebooks/pl04_standalone/p2/rs/cat/src/main.rs`
+* create a file named `expr.xml` under the `cat` directory whose contents should be
+```
+<plus xmlns="https://expr.com">
+  <num>1</num>
+  <div>
+    <num>2</num>
+    <num>3</num>
+  </div>
+</plus>
+```
+* after writing the program, compile and run it with one of the following
+<!--- end md --->
+
+<!--- md --->
+* Go
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/p2/go/cat
+go build
+./cat expr.xml
+<!--- end code --->
+
+<!--- md --->
+* Julia
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/p2/jl/cat
+julia cat.jl expr.xml
+<!--- end code --->
+
+<!--- md --->
+* OCaml 
+<!--- end md --->
+<!--- code w kernel=bash --->
+eval $(opam env)
+cd ~/notebooks/pl04_standalone/p2/ml/cat
+dune build
+./_build/default/bin/main.exe expr.xml
+<!--- end code --->
+
+<!--- md --->
+* Rust
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/p2/rs/cat
+cargo build
+./target/debug/cat expr.xml
+<!--- end code --->
+
+<!--- md --->
+* They all must print the contents of `expr.xml`
+<!--- end md --->
+
+<!--- md --->
+#*P Read an XML string
+
+* write a standalone program that takes a filename in its command line and parses it into a DOM tree, using an appropriate XML parser
+  * Go : xmldom
+  * Julia : LightXML
+  * OCaml : markup
+  * Rust : minidom
+
+* filename convention is the same as p1. it must be written under `~/notebooks/pl04_standalone/p3/<lang>` directory, where &lt;lang&gt; is one of ml, jl, go and rs
+* always create `readxml` folder under the above directory, either manually or by creating a project with the respective build system
+* as a result, the source file name must be
+  * Go    : `~/notebooks/pl04_standalone/p3/go/readxml/readxml.go`
+  * Julia : `~/notebooks/pl04_standalone/p3/jl/readxml/readxml.jl`
+  * OCaml : `~/notebooks/pl04_standalone/p3/ml/readxml/bin/main.ml`
+  * Rust  : `~/notebooks/pl04_standalone/p3/rs/readxml/src/main.rs`
+* create `expr.xml` with the same contents as Problem 2
+```
+<plus xmlns="https://expr.com">
+  <num>1</num>
+  <div>
+    <num>2</num>
+    <num>3</num>
+  </div>
+</plus>
+```
+* after writing the program, compile and run it with one of the following
+<!--- end md --->
+
+<!--- md --->
+* Go
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/p3/go/readxml
+go build
+./readxml  expr.xml
+<!--- end code --->
+
+<!--- md --->
+* Julia
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/p3/jl/readxml
+julia readxml.jl expr.xml
+<!--- end code --->
+
+<!--- md --->
+* OCaml 
+<!--- end md --->
+<!--- code w kernel=bash --->
+eval $(opam env)
+cd ~/notebooks/pl04_standalone/p3/ml/readxml
+dune build
+./_build/default/bin/main.exe expr.xml
+<!--- end code --->
+
+<!--- md --->
+* Rust
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/p3/rs/readxml
+cargo build
+./target/debug/readxml expr.xml
+<!--- end code --->
+
+<!--- md --->
+* make sure they normally exit without raising an error
+<!--- end md --->
