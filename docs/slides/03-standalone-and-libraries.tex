@@ -245,27 +245,31 @@ escapechar=\@,
 \begin{frame}
   \frametitle{Importing a library to your program}
   \begin{itemize}
+  \item assume $M$ is a module name and $n$ a name defined in $M$
   \item OCaml :
     \begin{itemize}
-    \item {\it module-name.name-in-the-module} 
-    \item {\tt \ao{open} {\it module-name}} and {\it name-in-the-module}
+    \item call {\it M.n} 
+    \item {\tt \ao{open} {\it M}} and call {\it n}
     \end{itemize}
     
   \item Julia : 
     \begin{itemize}
-    \item {\tt \ao{import} {\it module-name}} and {\it module-name.name-in-the-module} 
-    \item {\tt \ao{using} {\it module-name}} and {\it name-in-the-module}
+    \item {\tt \ao{import} {\it M}} and call {\it M.n} 
+    \item {\tt \ao{using} {\it M}} and call {\it n}
     \end{itemize}
 
   \item Go :
     \begin{itemize}
-    \item {\tt \ao{import} "{\it module-name}"} and {\it module-name.name-in-the-module} 
+    \item {\tt \ao{import} "{\it M}"} and call {\it M.n} 
     \end{itemize}
 
-  \item Rust : 
+  \item Rust :
     \begin{itemize}
-    \item {\it crate-name}::{\it module-name}::{\it module-name}::\ldots::{\it name-in-the-module}
-    \item {\tt \ao{use} {\it crate-name}::{\it module-name}::{\it module-name}::\ldots::{\it name-in-the-module}} and \ao{\it name-in-the-module} 
+    \item a module may contain a module
+    \item assume $C$ is the name of a ``crate''
+    \item call {\tt {\it C}::$M_0$::$M_1$:: $\cdots$ ::{\it n}}
+    \item {\tt \ao{use} {\it C}::$M_0$::$M_1$:: $\cdots$ ::{\it n}}
+      and call \ao{\it n} 
     \item anywhere between the two
     \end{itemize}
   \end{itemize}

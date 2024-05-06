@@ -188,14 +188,12 @@ Parametric Polymorphism (aka Generic Types/Functions)}
 %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
   \frametitle{Motivation}
-  want to write
+  say want to write \ldots
   \begin{itemize}
   \item a function that \ao{\it sorts arrays of various types}
     (e.g., ints, floats, strings, structs, \ldots)
   \item a function that \ao{\it extracts elements from a list satisfying $p(x)$}
-  \item \ao{\it containers including
-    stacks, queues, trees, graphs, hashtables, etc.}
-    of various types, \ldots
+  \item \ao{\it stacks, queues, trees, graphs, hashtables, etc.}
   \item variety of \ao{\it graph algorithms (breadth-first search, depth-first search,
       connected components, partitioning, etc.)}
     that can/should work regardless of the exact data type of each node
@@ -226,27 +224,116 @@ Parametric Polymorphism (aka Generic Types/Functions)}
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
-  \frametitle{So that you don't get bogged down \ldots}
-  things are conceptually straightforward,
-  pains are around \aka{\it spelling out types};
-  \ao{\it just master the syntax}
+  \frametitle{Type expressions}
   \begin{itemize}
-  \item a type of \ao{\it functions taking an integer and returning a float}
+  \item things are conceptually straightforward
+  \item but pains are around \aka{\it spelling out types}
+  \item master the syntax of \ao{\it type expressions, parameterized types/functions, and instantiation thereof}
+  \end{itemize}
+\end{frame}
+
+  
+  
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Type expressions for functions}
+  ex. a type of \ao{\it functions taking an integer and returning a float}
+  \begin{itemize}
+  \item Go : \ao{\tt func (int64) float64}
+  \item Julia : \ao{\tt Function}
     \begin{itemize}
-    \item Go : {\tt func (int64) float64}
-    \item Julia : 
-    \item OCaml : {\tt int -> float}
-    \item Rust : {\tt fn (i64) -> f64}
+    \item cannot specify input/output types
+    \item you normally don't write it
     \end{itemize}
-  \item a type of typical containers, such as array/slice/vector of ints,
-    list of floats, etc.
-  \item \ao{\it for any type, satisfying an interface/trait, 
-    this function} takes a parameter of type (array of $T$)
-    and returns a value of type ($T$)
+  \item OCaml : \ao{\tt int -> float}
+    \begin{itemize}
+    \item you normally don't have to write it
+    \end{itemize}
+  \item Rust : \ao{\tt fn (i64) -> f64}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Type expressions for array-like data}
+  ex. (one-dimensional) array (or likes) of 64-bit floating point numbers
+  \begin{itemize}
+  \item Go :
+    \begin{itemize}
+    \item $n$-element array: \ao{\tt [{\it n}]float64} 
+    \item slice: \ao{\tt []float64} 
+    \end{itemize}
+  \item Julia : \ao{\tt Vector\{Float64\}}
+  \item OCaml : \ao{\tt float array}
+  \item Rust :
+    \begin{itemize}
+    \item $n$-element array : \ao{\tt [f64; {\it n}]} 
+    \item vector : \ao{\tt Vec<f64>}
+    \item slice: \ao{\tt [f64]} 
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Defining parameterized types}
+  ex. data type {\tt node}, parameterized by {\it any type} {\tt T} or {\tt 'a}
+  \begin{itemize}
+  \item Go : {\tt type Node \ao{[T any]} struct \{ \ldots\ \}}
+  \item Julia : {\tt struct Node\ao{\{T\}} \ldots\ end}
+  \item OCaml : {\tt class \ao{['a]} node \ldots\ = object \ldots\ end}
+  \item Rust : {\tt struct Node\ao{<T>} \{ \ldots\ \}}
+  \end{itemize}
+  and a version parameterized by {\it any subtype of S}
+  \begin{itemize}
+  \item Go : {\tt type Node \ao{[T {\it S}]} struct \{ \ldots\ \}}
+  \item Julia : {\tt struct Node\ao{\{T<:{\it S}\}} \ldots\ end}
+  \item OCaml : not possible
+  \item Rust : {\tt struct Node\ao{<T:{\it S}>} \{ \ldots\ \}}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Instantiating parameterized types}
+  ex. {\tt Node} of 64-bit integers
+  \begin{itemize}
+  \item Go : {\tt Node\ao{[int64]}}
+  \item Julia : {\tt Node\ao{\{Int64\}}}
+  \item OCaml : {\tt int node}
+  \item Rust : {\tt Node\ao{::<i64>}}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Defining parameterized functions}
+  ex. a function {\tt bfs}, which can work for {\it any type}
+  \begin{itemize}
+  \item Go : {\tt func bfs\ao{[T any]}(\ldots) \{ \ldots\ \}}
+  \item Julia : {\tt function bfs(\ldots) \ao{where T} \ldots\ end}
+  \item OCaml : {\tt let bfs \ldots\ = } (nothing special)
+  \item Rust : {\tt fn bfs\ao{<T>}(\ldots) \{ \ldots\ \}}
+  \end{itemize}
+  and a version that can work for {\it any subtype of $S$}
+  \begin{itemize}
+  \item Go : {\tt func bfs\ao{[T {\it S}]}(\ldots) \{ \ldots\ \}}
+  \item Julia : {\tt function bfs(\ldots) \ao{where \{T<:{\it S}\}} \ldots\ end}
+  \item OCaml : not possible 
+  \item Rust : {\tt fn bfs\ao{<T:{\it S}>}(\ldots) \{ \ldots\ \}}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Instantiating parameterized functions}
+  \begin{itemize}
+  \item Go : {\tt func bfs\ao{[int64]}(\ldots)\}}
+  \item Julia : {\tt function bfs(\ldots)}
+  \item OCaml : {\tt bfs \ldots} (nothing special)
+  \item Rust : {\tt fn bfs\ao{::<T>}(\ldots) \{ \ldots\ \}}
   \end{itemize}
 \end{frame}
 
 \end{document}
-
-
 
