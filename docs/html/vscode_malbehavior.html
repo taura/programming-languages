@@ -1,0 +1,170 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="ja">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <script src="js/lang.js"></script>
+
+    <title>(Mal)behavior of VSCode Remote SSH</title>
+
+    <style>
+      body {counter-reset: h2}
+      h2 {counter-reset: h3}
+      h3 {counter-reset: h4}
+      h4 {counter-reset: h5}
+      h5 {counter-reset: h6}
+
+      h2:before {counter-increment: h2; content: counter(h2) ". "}
+      h3:before {counter-increment: h3; content: counter(h2) "." counter(h3) ". "}
+      h4:before {counter-increment: h4; content: counter(h2) "." counter(h3) "." counter(h4) ". "}
+      h5:before {counter-increment: h5; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) ". "}
+      h6:before {counter-increment: h6; content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) ". "}
+
+      h2.nocount:before, h3.nocount:before, h4.nocount:before, h5.nocount:before, h6.nocount:before { content: ""; counter-increment: none } 
+
+      h1 {
+          font-size   : 14pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 15pt ;
+          
+          border-color     : #99A1AA;
+          background-color : #DDDDEE;
+      }
+
+      h2 {
+          font-size   : 13pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 15pt ;
+          
+          border-color     : #99A1AA;
+          background-color : #EEEEFF;
+      }
+
+      h3 {
+          font-size   : 12pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 1pt;
+          border-color     : #99A1AA;
+          background-color : #EEEEFF;
+      }
+
+      h4 {
+          font-size   : 10pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-style     : solid;
+          border-width     : 1pt 1pt 0pt 1pt;
+          border-color     : #99A1AA;
+          background-color : #FFFFFF;
+      }
+
+      div {
+          font-size   : 12pt;
+          font-family : serif;
+          margin      : 10pt;
+          padding     : 3pt 20pt;
+          border-color     : #99A1AA;
+      }
+
+      p {
+          font-size   : 12pt;
+          font-family : serif;
+          border-color     : #99A1AA;
+      }
+
+      ul {
+          font-size   : 12pt;
+          font-family : serif;
+          border-color     : #99A1AA;
+      }
+
+      pre {
+          background-color:#efe;
+      }
+
+    </style>
+
+  </head>
+
+  <body onload="main()">
+
+  <body>
+
+    <h1>(Mal)behavior of VSCode Remote SSH</h1>
+    
+    <h2>Introduction</h2>
+    <div>
+      <p>
+        Today, we experienced an issue that Jupyterhub became unusable.  I said that it perhaps had something to do with the fact that so many of you are using remote SSH extension of VSCode.  I examined it and I am now almost confident that it was the culprit.  I implemented a workaround, so it should not happen again, but my workaround may cause another problem; please keep reading if you are working with VSCode Remote SSH extension.
+      </p>
+    </div>
+      
+    <h2>The (mal)behavior of VSCode Remote SSH extension</h2>
+
+    <div>
+      <p>
+        The issue was that, if you connect to a server using VSCode Remote SSH extension and then disconnect from it, some processes are left running uselessly consuming some amount of memory.  As far as I can tell they don&lsquo;t know when to quit and stay forever.  This happens regardless whether you gracefully "Close Remote Connection" or close the VSCode window.  As time goes by, such processes pile up and eventually exhaust the entire memory of the server.</p>
+
+      <p>Below I demonstrate such processes are piling up when you repeat making and closing connections.  The right window repeatedly runs "pstree u24099" to show the tree of processes run by user u24099.</p>
+
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/U9KUIgNJhAM?si=kPmz7uaIdXK4MfF-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      
+    </div>
+      
+    <h2>The workaround</h2>
+    <div>
+      <p>So I just made a monitoring script that keeps watching processes and killing those that "should not be running."  The issue is how to know if a process "should not be running."  By heuristics based on observation, it kills processes that meet the following conditions.</p>
+      <ol>
+        <li> effective user ID is one of you (more precisely, u24???)</li>
+        <li> parent process ID is 1</li>
+        <li> command is not /usr/lib/systemd</li>
+      </ol>
+
+      <p>
+        The first one is obvious.
+      </p>
+      <p>The most important is the second condition.  The observed problem was that, even though the sshd process (the process that runs on the server while you are connecting via SSH) exits after you close the remote SSH connection, its descendant processes (bash and dozens of VSCode-related processes) keep running.  In Linux (Unix), when a process loses its parent and thus becomes an "orphan" process, the process ID 1 (called init) becomes its nominal parent.  I use this as a sign that it should be killed (note that, if I kill an orphan process, its children in turn become orphans, which will then be killed in the next shot).</p>
+      <p>Here is a demonstration showing those left-over processes are killed by the monitoring process.  The left window runs a process that kills all such processes every five seconds.
+      </p>
+
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/4l2rreJ4wls?si=LnWJnG7tNQo0fZgl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      
+      <p>It&lsquo;s not that all orphan processes should be killed.  There may be a process that is orphan but still doing something useful (those produced by disconnected SSH are clearly not).  As a matter of fact, /usr/lib/systemd seems to start running and immediately becomes an orphan upon you connect via SSH, but orderly exits after you close the remote connection.  Third condition avoids shooting this very process.</p>
+    </div>
+
+    <h2>What you should know</h2>
+    <div>
+      <p>You don&lsquo;t have to know the exact details of what the monitoring process is doing or run such monitoring processes by youself.  I am taking care of all.  What you should know is that, as will be clear from the above description, it is not 100% guaranteed that there will never be a misfire by this monitoring process.  You may be using another software that correctly manages orphan processes you don&lsquo;t want to be shot.
+      </p>
+      <p>
+        If you feel your (useful) processes repeatedly die while you are actively using them, please let me know with description of the problem.
+      </p>
+    </div>
+
+    <h2>Final words</h2>
+    <div>
+      <p>There is nothing special in this (taulec) environment.
+        It means that it should be happening whenever Remote SSH extension of VSCode is used anywhere and by anybody ...
+        After writing this, I thought it is very surprising if this is indeed the case and the bug is left unnoticed or not fixed.
+        By a quick Googling I came across <a href="https://github.com/microsoft/vscode-remote-release/issues/6894" target="_blank" rel="noopener">this thread,</a> which says it is the expected behavior and it will shutdown after eight hours.
+        It says it (intentionally) keeps running for eight hours in case the user reconnects shortly.
+        Well, we could wait for eight hours and see what happens, but the demonstration showed a fresh process tree gets created even when I immediately reconnect, and this will be the reason why the server quickly runs out of memory.
+        If waiting for eight hours is the expected behavior, spawning a fresh process tree again upon reconnect is definitely not.
+        Let me know if you find a better information about the issue.
+        Even better, after confirming this is indeed acknowledged as a unsolved issue, don't you become the one who fixes it for the world.
+      </p>
+    </div>
+
+    
+  </body>
+</html>
