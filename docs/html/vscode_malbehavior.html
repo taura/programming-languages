@@ -113,7 +113,7 @@
 
     <div>
       <p>
-        The issue was that, if you connect to a server using VSCode Remote SSH extension and then disconnect from it, some processes are left running uselessly consuming some amount of memory.  As far as I can tell they don&lsquo;t know when to quit and stay forever.  This happens regardless whether you gracefully "Close Remote Connection" or close the VSCode window.  As time goes by, such processes pile up and eventually exhaust the entire memory of the server.</p>
+        The issue was that, if you connect to a server using VSCode Remote SSH extension and then disconnect from it, some processes are left running uselessly consuming some amount of memory.  As far as I can tell they don&rsquo;t know when to quit and stay forever.  This happens regardless whether you gracefully "Close Remote Connection" or close the VSCode window.  As time goes by, such processes pile up and eventually exhaust the entire memory of the server.</p>
 
       <p>Below I demonstrate such processes are piling up when you repeat making and closing connections.  The right window repeatedly runs "pstree u24099" to show the tree of processes run by user u24099.</p>
 
@@ -139,12 +139,12 @@
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/4l2rreJ4wls?si=LnWJnG7tNQo0fZgl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       
-      <p>It&lsquo;s not that all orphan processes should be killed.  There may be a process that is orphan but still doing something useful (those produced by disconnected SSH are clearly not).  As a matter of fact, /usr/lib/systemd seems to start running and immediately becomes an orphan upon you connect via SSH, but orderly exits after you close the remote connection.  Third condition avoids shooting this very process.</p>
+      <p>It&rsquo;s not that all orphan processes should be killed.  There may be a process that is orphan but still doing something useful (those produced by disconnected SSH are clearly not).  As a matter of fact, /usr/lib/systemd seems to start running and immediately becomes an orphan upon you connect via SSH, but orderly exits after you close the remote connection.  Third condition avoids shooting this very process.</p>
     </div>
 
     <h2>What you should know</h2>
     <div>
-      <p>You don&lsquo;t have to know the exact details of what the monitoring process is doing or run such monitoring processes by youself.  I am taking care of all.  What you should know is that, as will be clear from the above description, it is not 100% guaranteed that there will never be a misfire by this monitoring process.  You may be using another software that correctly manages orphan processes you don&lsquo;t want to be shot.
+      <p>You don&rsquo;t have to know the exact details of what the monitoring process is doing or run such monitoring processes by youself.  I am taking care of all.  What you should know is that, as will be clear from the above description, it may backfire; it may shoot necessary processes.  You may be using another software that correctly manages orphan processes you don&rsquo;t want to be shot.
       </p>
       <p>
         If you feel your (useful) processes repeatedly die while you are actively using them, please let me know with description of the problem.
