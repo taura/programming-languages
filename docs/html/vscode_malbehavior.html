@@ -139,7 +139,7 @@
 
       <iframe width="560" height="315" src="https://www.youtube.com/embed/4l2rreJ4wls?si=LnWJnG7tNQo0fZgl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       
-      <p>It&rsquo;s not that all orphan processes should be killed.  There may be a process that is orphan but still doing something useful (those produced by disconnected SSH are clearly not).  As a matter of fact, /usr/lib/systemd seems to start running and immediately becomes an orphan upon you connect via SSH, but orderly exits after you close the remote connection.  Third condition avoids shooting this very process.</p>
+      <p>It&rsquo;s not that all orphan processes should be killed.  There may be a process that is orphan but still doing something useful (those produced by VSCode Remote SSH extension are clearly not).  As a matter of fact, /usr/lib/systemd seems to start running and immediately becomes an orphan upon you connect via SSH, but orderly exits after you close the remote connection.  Third condition avoids shooting this very process.</p>
     </div>
 
     <h2>What you should know</h2>
@@ -147,21 +147,21 @@
       <p>You don&rsquo;t have to know the exact details of what the monitoring process is doing or run such monitoring processes by youself.  I am taking care of all.  What you should know is that, as will be clear from the above description, it may backfire; it may shoot necessary processes.  You may be using another software that correctly manages orphan processes you don&rsquo;t want to be shot.
       </p>
       <p>
-        If you feel your (useful) processes repeatedly die while you are actively using them, please let me know with description of the problem.
+        <font color="red">If you observe your (useful) processes repeatedly die while you are actively using them, please let me know with description of the problem.</font>
       </p>
     </div>
 
     <h2>Final words</h2>
     <div>
-      <p>There is nothing special in this (taulec) environment.
+      <p>There is nothing special in this (taulec.zapto.org) environment.
         It means that it should be happening whenever Remote SSH extension of VSCode is used anywhere and by anybody ...
-        After writing this, I thought it is very surprising if this is indeed the case and the bug is left unnoticed or not fixed.
+        After writing this, I thought it would be very surprising if this is indeed the case and the bug is left unnoticed or not fixed.
         By a quick Googling I came across <a href="https://github.com/microsoft/vscode-remote-release/issues/6894" target="_blank" rel="noopener">this thread,</a> which says it is the expected behavior and it will shutdown after eight hours.
         It says it (intentionally) keeps running for eight hours in case the user reconnects shortly.
-        Well, we could wait for eight hours and see what happens, but the demonstration showed a fresh process tree gets created even when I immediately reconnect, and this will be the reason why the server quickly runs out of memory.
+        Well, we could wait for eight hours and see what happens, but the demonstration showed a fresh process tree gets created even when I immediately reconnect, and this will be the reason why the server quickly ran out of memory during the lecture.
         If waiting for eight hours is the expected behavior, spawning a fresh process tree again upon reconnect is definitely not.
         Let me know if you find a better information about the issue.
-        Even better, after confirming this is indeed acknowledged as a unsolved issue, don't you become the one who fixes it for the world.
+        Even better, after confirming this is indeed acknowledged as a unsolved issue, <font color="blue"><i>don&rsquo;t you want to become the one who fixes it for the world?</i></font>
       </p>
     </div>
 
