@@ -1099,7 +1099,7 @@ cargo build
 <!--- code w kernel=bash --->
 cd ~/notebooks/pl04_standalone/p3/go/readxml
 go build
-./readxml  expr.xml
+./readxml expr.xml
 <!--- end code --->
 
 <!--- md --->
@@ -1130,5 +1130,114 @@ cargo build
 <!--- end code --->
 
 <!--- md --->
-* make sure they normally exit without raising an error
+* make sure your program
+  * normally exits without raising an error if given a valid XML file
+  * raises an error if given a non-existing XML file
+* the behavior given a file containing an invalid (slightly broken) XML expression can be up to the behavior of underlying XML library (some raise an error, others automatically skip or fix broken parts)
+<!--- end md --->
+
+
+
+<!--- md --->
+#*P Split it into multiple files
+
+* split the program you just wrote into two files
+  * `readxml.{go,jl,ml,rs}`, which contains a function `readxml` that takes a filename and returns a DOM tree
+  * `readxml2.{go,jl}` or `main.{ml,rs}`, which contains a `main` function (Go or Rust) or a toplevel expression (Julia or OCaml) that calls `readxml` function
+
+* filename convention is the same as p1. it must be written under `~/notebooks/pl04_standalone/p4/<lang>` directory, where &lt;lang&gt; is one of ml, jl, go and rs
+* always create `readxml` folder under the above directory, either manually or by creating a project with the respective build system
+* as a result, the source file name must be
+  * Go    : `~/notebooks/pl04_standalone/p4/go/readxml/{readxml,readxml2}.go`
+  * Julia : `~/notebooks/pl04_standalone/p4/jl/readxml/{readxml,readxml2}.jl`
+  * OCaml : `~/notebooks/pl04_standalone/p4/ml/readxml/bin/{readxml,main}.ml`
+  * Rust  : `~/notebooks/pl04_standalone/p4/rs/readxml/src/{readxml,main}.rs`
+* create `expr.xml` with the same contents as Problem 2 and 3
+```
+<plus xmlns="https://expr.com">
+  <num>1</num>
+  <div>
+    <num>2</num>
+    <num>3</num>
+  </div>
+</plus>
+```
+* after writing the program, compile and run it with one of the following
+<!--- end md --->
+
+<!--- md --->
+* Go
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/p4/go/readxml2
+go build
+./readxml expr.xml
+<!--- end code --->
+
+<!--- md --->
+* Julia
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/p4/jl/readxml2
+julia readxml.jl expr.xml
+<!--- end code --->
+
+<!--- md --->
+* OCaml 
+<!--- end md --->
+<!--- code w kernel=bash --->
+eval $(opam env)
+cd ~/notebooks/pl04_standalone/p4/ml/readxml2
+dune build
+./_build/default/bin/main.exe expr.xml
+<!--- end code --->
+
+<!--- md --->
+* Rust
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl04_standalone/p4/rs/readxml2
+cargo build
+./target/debug/readxml expr.xml
+<!--- end code --->
+
+<!--- md --->
+## Hints
+
+* First separate your program into `readxml` function and its caller _in the same file_ and make sure it works
+* Only then start splitting them into the two files
+* What it takes to call a function defined in another file depends on the language
+* Consult appropriate sections of the language manual, but here are some hints
+
+### Go
+
+* If both files are in the same package (i.e., have the same `package main` at the head of the file), things are straightforward
+* You can just call `readxml` from `main` and `go build` will take care of the rest
+* Things get trickier if you put them in separate packages, a topic we do not go into any further
+
+### Julia
+
+* All it takes is to `include("readxml.jl")` in the other file, whose effect is as if you put the contents of the file in place
+* You can then just call `readxml`
+* You could put them into separate "modules", in which case you have to qualify names in another module (we don't get into it)
+
+### OCaml
+
+* All names defined in `readxml.ml` are put in `Readxml` module
+* You refer to names (e.g., `readxml` function) in the `Readxml` module by `Readxml.readxml`
+
+### Rust
+
+* All names defined in `readxml.rs` are put in `readxml` module
+* To use anything in `readxml` module in another file (`main.rs`),
+  * you put in `main.rs`
+```
+pub use readxml
+```
+  * you also have to say in `readxml.rs` that the function `readxml` is "public" (callable from outside the module)
+```
+pub fn readxml(...) { ... }
+```
+
+
 <!--- end md --->
