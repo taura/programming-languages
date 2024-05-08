@@ -1171,7 +1171,7 @@ cargo build
 <!--- code w kernel=bash --->
 cd ~/notebooks/pl04_standalone/p4/go/readxml2
 go build
-./readxml expr.xml
+./readxml2 expr.xml
 <!--- end code --->
 
 <!--- md --->
@@ -1179,7 +1179,7 @@ go build
 <!--- end md --->
 <!--- code w kernel=bash --->
 cd ~/notebooks/pl04_standalone/p4/jl/readxml2
-julia readxml.jl expr.xml
+julia readxml2.jl expr.xml
 <!--- end code --->
 
 <!--- md --->
@@ -1198,7 +1198,7 @@ dune build
 <!--- code w kernel=bash --->
 cd ~/notebooks/pl04_standalone/p4/rs/readxml2
 cargo build
-./target/debug/readxml expr.xml
+./target/debug/readxml2 expr.xml
 <!--- end code --->
 
 <!--- md --->
@@ -1238,6 +1238,28 @@ pub use readxml
 ```
 pub fn readxml(...) { ... }
 ```
+<!--- end md --->
 
+<!--- md --->
+# Before you submit ...
+
+* Make sure you remove unnecessary files before you submit this assignment
+* If you press submit, it basically tries to submit everything under this directory, including files you created by `{go,dune,cargo} build` as well as all the libraries you installed or automatically installed
+* This causes errors due to too large submissions (> 100MB)
+* so make sure you do the following before you submit
+  * remove the executable under `00hello/<lang>`
+  * in each `{01build_sys,p1,p2,p3,p4}/<lang>/<project_name>`, run `{go,dune,cargo} clean` (whichever applies to your language); they will remove those produced files
+* before you submit, run
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+du -a
+<!--- end code --->
+
+<!--- md --->
+and see the total size of the directory.
+
+* make sure the last line is < 1000
+* otherwise find a large file in the output of `du -a` and do an appropriate command from the above
 
 <!--- end md --->
