@@ -1,0 +1,4 @@
+(executable
+ (public_name readxml_sep)
+ (name main)
+ (libraries readxml_sep markup))
