@@ -7,6 +7,7 @@ nb_srcs :=
 nb_srcs += $(wildcard nb/source/pl06_*/*.sos)
 
 aux_srcs :=
+aux_srcs += $(wildcard nb/source/pl06_*/??/Makefile)
 #aux_srcs += $(wildcard nb/source/pl04_*/00hello/??/hello.??)
 #aux_srcs += $(wildcard nb/source/pl04_*/01build_sys/??/_)
 #aux_srcs += $(wildcard nb/source/pl04_*/p?/??/_)
