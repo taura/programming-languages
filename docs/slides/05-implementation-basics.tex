@@ -279,10 +279,10 @@ escapechar=\@,
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifja
-\section{どのように機械語に変換するか}
+\section{CPUと機械語 : 概要}
 \fi
 \ifen
-\section{How to translate a source to machine code?}
+\section{CPU and machine code : An overview}
 \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -298,6 +298,7 @@ escapechar=\@,
   \item it {\it is} just another programming language
   \item it has many features present in programming languages
     \begin{tabular}{|l|l|}\hline
+      source & machine code \\\hline
       expressions & arithmetic instructions \\
       if statement & compare / conditional jump instructions \\
       variables & \ao{\it registers} and \ao{\it memory} \\
@@ -423,7 +424,7 @@ learn details and other instructions from the exercise
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
-  \frametitle{How to read instructions and operands}
+  \frametitle{How to read instructions and operands (GNU assembler)}
   \begin{itemize}
   \item e.g., {\tt addq} instructios takes two operands
 \begin{lstlisting}
