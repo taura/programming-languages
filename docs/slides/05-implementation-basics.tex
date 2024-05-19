@@ -302,7 +302,7 @@ escapechar=\@,
       expressions & arithmetic instructions \\
       if statement & compare / conditional jump instructions \\
       variables & \ao{\it registers} and \ao{\it memory} \\
-      tructs and arrays & memory and load/store instructions \\\hline
+      structs and arrays & memory and load/store instructions \\\hline
     \end{tabular}
   \end{itemize}
   \begin{quote}
@@ -442,7 +442,7 @@ and its effect is
 \begin{lstlisting}
 subq @{\it x}@,@{\it y}@ @$\equiv$@ @{\it y}@ = @{\it y}@ - @{\it x}@
 \end{lstlisting}
-\item \aka{\it operand order actually depends on assembler}
+\item \aka{\it syntax and operand order actually depend on the assembler}
 \end{itemize}
 \end{frame}
 
@@ -486,7 +486,9 @@ subq @{\it x}@,@{\it y}@ @$\equiv$@ @{\it y}@ = @{\it y}@ - @{\it x}@
     \begin{itemize}
     \item \ao{\tt mulq (\%rdi),\%rax} : reads address specified by {\tt \%rdi} and multiply {\tt \%rax} by it
     \item \ao{\tt movq \%rax,(\%rdi)} : writes the value of {\tt \%rax} to the address specified by {\tt \%rdi}
-    \item \ao{\tt leaq 4(\%rdi),\%rax} : {\tt \%rax = \%rdi + 4}; this instruction does not read/write memory
+    \item \ao{\tt leaq 4(\%rdi),\%rax} : {\tt \%rax = \%rdi + 4};
+      this instruction looks like reading/writing memory, but
+      it is actually just a peculiar arithmetic (common in address calculation)
     \end{itemize}
   \end{itemize}
 \end{frame}
