@@ -378,10 +378,10 @@ $$\frac{(x-x_0)^2}{a^2} + \frac{(y-y_0)^2}{b^2} \leq 1$$
 * always create `minimize` folder under the above directory, either manually or by creating a project with the respective build system
 * as a result, the source file name must be
 
-  * Go    : `~/notebooks/pl05_generic_fun_type/p7/go/minimize/minimize.go`
-  * Julia : `~/notebooks/pl05_generic_fun_type/p7/jl/minimize/minimize.jl`
-  * OCaml : `~/notebooks/pl05_generic_fun_type/p7/ml/minimize/bin/main.ml`
-  * Rust  : `~/notebooks/pl05_generic_fun_type/p7/rs/minimize/src/main.rs`
+  * Go    : `~/notebooks/pl05_generic_fun_type/p8/go/minimize/minimize.go`
+  * Julia : `~/notebooks/pl05_generic_fun_type/p8/jl/minimize/minimize.jl`
+  * OCaml : `~/notebooks/pl05_generic_fun_type/p8/ml/minimize/bin/main.ml`
+  * Rust  : `~/notebooks/pl05_generic_fun_type/p8/rs/minimize/src/main.rs`
 * after writing the program, compile and run it with one of the following
 <!--- end md --->
 
@@ -389,7 +389,7 @@ $$\frac{(x-x_0)^2}{a^2} + \frac{(y-y_0)^2}{b^2} \leq 1$$
 * Go
 <!--- end md --->
 <!--- code w kernel=bash --->
-cd ~/notebooks/pl05_generic_fun_type/p7/go/minimize
+cd ~/notebooks/pl05_generic_fun_type/p8/go/minimize
 go build
 ./minimize
 <!--- end code --->
@@ -398,7 +398,7 @@ go build
 * Julia
 <!--- end md --->
 <!--- code w kernel=bash --->
-cd ~/notebooks/pl05_generic_fun_type/p7/jl/minimize
+cd ~/notebooks/pl05_generic_fun_type/p8/jl/minimize
 julia minimize.jl
 <!--- end code --->
 
@@ -407,7 +407,7 @@ julia minimize.jl
 <!--- end md --->
 <!--- code w kernel=bash --->
 eval $(opam env)
-cd ~/notebooks/pl05_generic_fun_type/p7/ml/minimize
+cd ~/notebooks/pl05_generic_fun_type/p8/ml/minimize
 dune build
 ./_build/default/bin/main.exe
 <!--- end code --->
@@ -416,7 +416,7 @@ dune build
 * Rust
 <!--- end md --->
 <!--- code w kernel=bash --->
-cd ~/notebooks/pl05_generic_fun_type/p7/rs/minimize
+cd ~/notebooks/pl05_generic_fun_type/p8/rs/minimize
 cargo build
 ./target/debug/minimize
 <!--- end code --->

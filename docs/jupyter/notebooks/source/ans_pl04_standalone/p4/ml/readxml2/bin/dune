@@ -1,0 +1,4 @@
+(executable
+ (public_name readxml2)
+ (name main)
+ (libraries readxml2 markup))
