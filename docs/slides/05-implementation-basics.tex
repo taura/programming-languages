@@ -83,6 +83,7 @@
 \newcommand{\ore}[1]{{\color{orange}#1}}
 \newcommand{\ao}[1]{{\color{blue}#1}}
 \newcommand{\aka}[1]{{\color{red}#1}}
+\newcommand{\hai}[1]{{\color{gray}#1}}
 
 \setbeamercolor{ex}{bg=cyan!20!white}
 
@@ -383,6 +384,157 @@ repeat:
 \section{A glance at x86 machine (assembly) code}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{The first glance}
+  \begin{itemize}
+  \item []
+\begin{lstlisting}[escapechar=!,basicstyle=\tt\tiny]
+        .globl  go_0pl06.Many__args
+        .type   go_0pl06.Many__args, @function
+go_0pl06.Many__args:
+.LFB0:
+        .cfi_startproc
+        cmpq    %fs:112, %rsp
+        jb      .L3
+.L2:
+        movq    48(%rsp), %rax
+        addq    40(%rsp), %rax
+        addq    32(%rsp), %rax
+        addq    24(%rsp), %rax
+        addq    16(%rsp), %rax
+        addq    8(%rsp), %rax
+        addq    %r9, %rax
+        addq    %r8, %rax
+        addq    %rcx, %rax
+        addq    %rdx, %rax
+        addq    %rsi, %rax
+        addq    %rdi, %rax
+        ret
+.L3:
+        movl    $0, %r10d
+        movl    $48, %r11d
+        call    __morestack
+        ret
+        jmp     .L2
+        .cfi_endproc
+.LFE0:
+        .size   go_0pl06.Many__args, .-go_0pl06.Many__args
+        .globl  go.pl06..types    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Unimportant lines}
+  \begin{columns}
+    \begin{column}{0.41\textwidth}
+  \begin{itemize}
+  \item []
+\begin{lstlisting}[escapechar=!,basicstyle=\tt\tiny]
+    !{\hai{\tt .globl  go\_0pl06.Many\_\_args}}!
+    !{\hai{\tt .type   go\_0pl06.Many\_\_args, ...}}!
+!{\ao{\tt go\_0pl06.Many\_\_args:}}!
+!{\ao{\tt .LFB0:}}!
+    !{\hai{\tt .cfi\_startproc}}!
+    cmpq    %fs:112, %rsp
+    jb      !\ao{\tt .L3}!
+!{\ao{\tt .L2:}}!
+    movq    48(%rsp), %rax
+    addq    40(%rsp), %rax
+    addq    32(%rsp), %rax
+    addq    24(%rsp), %rax
+    addq    16(%rsp), %rax
+    addq    8(%rsp), %rax
+    addq    %r9, %rax
+    addq    %r8, %rax
+    addq    %rcx, %rax
+    addq    %rdx, %rax
+    addq    %rsi, %rax
+    addq    %rdi, %rax
+    ret
+!{\ao{\tt .L3:}}!
+    movl    $0, %r10d
+    movl    $48, %r11d
+    call    __morestack
+    ret
+    jmp     !\ao{\tt .L2}!
+    !{\hai{\tt .cfi\_endproc}}!
+!{\ao{\tt .LFE0:}}!
+    !{\hai{\tt .size   go\_0pl06.Many\_\_args, ...}}!
+    !{\hai{\tt .globl  go.pl06..types}}!
+\end{lstlisting}
+\end{itemize}
+\end{column}
+    \begin{column}{0.59\textwidth}
+      \begin{itemize}
+      \item indented lines beginning with a dot
+        (e.g., \hai{\tt .file, .section, .ascii, .text, .globl, } \ldots)
+        are not instructions and \hai{\it largely not interesting or import}
+      \item lines with a symbol followed by a colon
+        (e.g., \ao{\tt .L2:, .LFE0:, go\_0pl06.Many\_\_args:,} \ldots)
+        are \ao{\it labels} and used for the target of jump instructions
+        or call instructions
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Where to look}
+  \begin{columns}
+    \begin{column}{0.41\textwidth}
+  \begin{itemize}
+  \item []
+\begin{lstlisting}[escapechar=!,basicstyle=\tt\tiny]
+    !{\hai{\tt .globl  go\_0pl06.Many\_\_args}}!
+    !{\hai{\tt .type   go\_0pl06.Many\_\_args, ...}}!
+!{\ao{\tt go\_0pl06.Many\_\_args:}}!
+.LFB0:
+    !{\hai{\tt .cfi\_startproc}}!
+    cmpq    %fs:112, %rsp
+    jb      .L3
+.L2:
+    movq    48(%rsp), %rax
+    addq    40(%rsp), %rax
+    addq    32(%rsp), %rax
+    addq    24(%rsp), %rax
+    addq    16(%rsp), %rax
+    addq    8(%rsp), %rax
+    addq    %r9, %rax
+    addq    %r8, %rax
+    addq    %rcx, %rax
+    addq    %rdx, %rax
+    addq    %rsi, %rax
+    addq    %rdi, %rax
+    ret
+.L3:
+    movl    $0, %r10d
+    movl    $48, %r11d
+    call    __morestack
+    ret
+    jmp     .L2
+    !{\hai{\tt .cfi\_endproc}}!
+.LFE0:
+    !{\hai{\tt .size   go\_0pl06.Many\_\_args, ...}}!
+    !{\hai{\tt .globl  go.pl06..types}}!
+\end{lstlisting}
+\end{itemize}
+\end{column}
+    \begin{column}{0.59\textwidth}
+      \begin{itemize}
+      \item focus on lines having \ao{\it instructins}
+      \item instructions for a function start with a label
+        \ao{\it similar to} the function name, but it may not be exactly the same (name mangling)
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \begin{frame}
   \frametitle{Registers}
 \begin{itemize}
@@ -493,6 +645,7 @@ subq @{\it x}@,@{\it y}@ @$\equiv$@ @{\it y}@ = @{\it y}@ - @{\it x}@
   \end{itemize}
 \end{frame}
 
+    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
   \frametitle{Things to watch in the exercise}
