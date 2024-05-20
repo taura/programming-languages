@@ -387,42 +387,46 @@ repeat:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
   \frametitle{The first glance}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
   \begin{itemize}
   \item []
 \begin{lstlisting}[escapechar=!,basicstyle=\tt\tiny]
-        .globl  go_0pl06.Many__args
-        .type   go_0pl06.Many__args, @function
-go_0pl06.Many__args:
+    .file   "add123.go"
+    .section    .go_export,"",@progbits
+
+      ...
+
+    .text
+    .globl  go_0pl06.Add123
+    .type   go_0pl06.Add123, @function
+go_0pl06.Add123:
 .LFB0:
-        .cfi_startproc
-        cmpq    %fs:112, %rsp
-        jb      .L3
+    .cfi_startproc
+    cmpq    %fs:112, %rsp
+    jb      .L3
 .L2:
-        movq    48(%rsp), %rax
-        addq    40(%rsp), %rax
-        addq    32(%rsp), %rax
-        addq    24(%rsp), %rax
-        addq    16(%rsp), %rax
-        addq    8(%rsp), %rax
-        addq    %r9, %rax
-        addq    %r8, %rax
-        addq    %rcx, %rax
-        addq    %rdx, %rax
-        addq    %rsi, %rax
-        addq    %rdi, %rax
-        ret
+    leaq    123(%rdi), %rax
+    ret
 .L3:
-        movl    $0, %r10d
-        movl    $48, %r11d
-        call    __morestack
-        ret
-        jmp     .L2
-        .cfi_endproc
+    movl    $0, %r10d
+    movl    $0, %r11d
+    call    __morestack
+    ret
+    jmp     .L2
+    .cfi_endproc
 .LFE0:
-        .size   go_0pl06.Many__args, .-go_0pl06.Many__args
-        .globl  go.pl06..types    
+    .size   go_0pl06.Add123, .-go_0pl06.Add123
+    .globl  go.pl06..types
+
+      ...
 \end{lstlisting}
 \end{itemize}
+\end{column}
+\end{columns}
+\begin{center}
+looks scary?
+\end{center}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -433,37 +437,34 @@ go_0pl06.Many__args:
   \begin{itemize}
   \item []
 \begin{lstlisting}[escapechar=!,basicstyle=\tt\tiny]
-    !{\hai{\tt .globl  go\_0pl06.Many\_\_args}}!
-    !{\hai{\tt .type   go\_0pl06.Many\_\_args, ...}}!
-!{\ao{\tt go\_0pl06.Many\_\_args:}}!
-!{\ao{\tt .LFB0:}}!
-    !{\hai{\tt .cfi\_startproc}}!
+    !\hai{\tt .file   "add123.go"}!
+    !\hai{\tt .section    .go\_export,"",@progbits}!
+
+      ...
+
+    !\hai{\tt .text}!
+    !\hai{\tt .globl  go\_0pl06.Add123}!
+    !\hai{\tt .type   go\_0pl06.Add123, @function}!
+!\ao{\tt go\_0pl06.Add123:}!
+!\ao{\tt .LFB0:}!
+    !\hai{\tt .cfi\_startproc}!
     cmpq    %fs:112, %rsp
-    jb      !\ao{\tt .L3}!
-!{\ao{\tt .L2:}}!
-    movq    48(%rsp), %rax
-    addq    40(%rsp), %rax
-    addq    32(%rsp), %rax
-    addq    24(%rsp), %rax
-    addq    16(%rsp), %rax
-    addq    8(%rsp), %rax
-    addq    %r9, %rax
-    addq    %r8, %rax
-    addq    %rcx, %rax
-    addq    %rdx, %rax
-    addq    %rsi, %rax
-    addq    %rdi, %rax
+    jb      !\mura{.L3}!
+!\ao{\tt .L2:}!
+    leaq    123(%rdi), %rax
     ret
-!{\ao{\tt .L3:}}!
+!\ao{\tt .L3:}!
     movl    $0, %r10d
-    movl    $48, %r11d
+    movl    $0, %r11d
     call    __morestack
     ret
-    jmp     !\ao{\tt .L2}!
-    !{\hai{\tt .cfi\_endproc}}!
-!{\ao{\tt .LFE0:}}!
-    !{\hai{\tt .size   go\_0pl06.Many\_\_args, ...}}!
-    !{\hai{\tt .globl  go.pl06..types}}!
+    jmp     !\mura{.L2}!
+    !\hai{\tt .cfi\_endproc}!
+!\ao{\tt .LFE0:}!
+    !\hai{\tt .size   go\_0pl06.Add123, ...}!
+    !\hai{\tt .globl  go.pl06..types}!
+
+      ...
 \end{lstlisting}
 \end{itemize}
 \end{column}
@@ -490,37 +491,34 @@ go_0pl06.Many__args:
   \begin{itemize}
   \item []
 \begin{lstlisting}[escapechar=!,basicstyle=\tt\tiny]
-    !{\hai{\tt .globl  go\_0pl06.Many\_\_args}}!
-    !{\hai{\tt .type   go\_0pl06.Many\_\_args, ...}}!
-!{\ao{\tt go\_0pl06.Many\_\_args:}}!
+
+
+
+
+
+
+
+
+!\ao{\tt go\_0pl06.Add123:}!
 .LFB0:
-    !{\hai{\tt .cfi\_startproc}}!
+
     cmpq    %fs:112, %rsp
     jb      .L3
 .L2:
-    movq    48(%rsp), %rax
-    addq    40(%rsp), %rax
-    addq    32(%rsp), %rax
-    addq    24(%rsp), %rax
-    addq    16(%rsp), %rax
-    addq    8(%rsp), %rax
-    addq    %r9, %rax
-    addq    %r8, %rax
-    addq    %rcx, %rax
-    addq    %rdx, %rax
-    addq    %rsi, %rax
-    addq    %rdi, %rax
+    leaq    123(%rdi), %rax
     ret
 .L3:
     movl    $0, %r10d
-    movl    $48, %r11d
+    movl    $0, %r11d
     call    __morestack
     ret
     jmp     .L2
-    !{\hai{\tt .cfi\_endproc}}!
+
 .LFE0:
-    !{\hai{\tt .size   go\_0pl06.Many\_\_args, ...}}!
-    !{\hai{\tt .globl  go.pl06..types}}!
+
+
+
+      ...
 \end{lstlisting}
 \end{itemize}
 \end{column}
@@ -576,7 +574,7 @@ learn details and other instructions from the exercise
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
-  \frametitle{How to read instructions and operands (GNU assembler)}
+  \frametitle{How to read instructions and operands (of GNU assembler)}
   \begin{itemize}
   \item e.g., {\tt addq} instructios takes two operands
 \begin{lstlisting}
@@ -594,7 +592,6 @@ and its effect is
 \begin{lstlisting}
 subq @{\it x}@,@{\it y}@ @$\equiv$@ @{\it y}@ = @{\it y}@ - @{\it x}@
 \end{lstlisting}
-\item \aka{\it syntax and operand order actually depend on the assembler}
 \end{itemize}
 \end{frame}
 
@@ -637,34 +634,62 @@ subq @{\it x}@,@{\it y}@ @$\equiv$@ @{\it y}@ = @{\it y}@ - @{\it x}@
   \item ex.
     \begin{itemize}
     \item \ao{\tt mulq (\%rdi),\%rax} : reads address specified by {\tt \%rdi} and multiply {\tt \%rax} by it
-    \item \ao{\tt movq \%rax,(\%rdi)} : writes the value of {\tt \%rax} to the address specified by {\tt \%rdi}
-    \item \ao{\tt leaq 4(\%rdi),\%rax} : {\tt \%rax = \%rdi + 4};
+    \item \ao{\tt movq \%rax,8(\%rdi)} : writes the value of {\tt \%rax} to the address specified by {\tt \%rdi+8}
+    \item \ao{\tt leaq 16(\%rdi,8,\%rsi),\%rax} : {\tt \%rax = \%rdi + 8 * \%rsi + 16};
       this instruction looks like reading/writing memory, but
-      it is actually just a peculiar arithmetic (common in address calculation)
+      it is actually just a peculiar arithmetic
+      (common in address calculation but also used for integer addition)
     \end{itemize}
   \end{itemize}
 \end{frame}
 
-    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
-  \frametitle{Things to watch in the exercise}
+  \frametitle{Julia assembly syntax}
   \begin{itemize}
-  \item calling convention or ABI :
+  \item \aka{\it syntax and operand order actually differ between assemblers}
+  \item they are of course identical in the binary level
+  \item in particular, output from Julia ({\tt code\_native}) is different
+    \begin{itemize}
+    \item {\it destination-first syntax}
+      \[ {\tt addq}\; x,y \quad \equiv \quad x\; \verb!+=!\; y \]
+
+    \item address operands are more intuitive. ex.
+    \end{itemize}
+    {\small
+      \begin{tabular}{|l|l|}\hline
+        GNU                       & Julia \\\hline
+        {\tt mulq (\%rdi),\%rax}  & {\tt mulq \%rax,[\%rdi]} \\
+        {\tt movq \%rax,8(\%rdi)}  & {\tt movq [\%rdi+8],\%rax}      \\
+        {\tt leaq 16(\%rdi,8,\%rsi),\%rax} & {\tt leaq \%rax,[\%rdi+8*\%rsi+16]}      \\\hline
+      \end{tabular}}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Things to learn in the exercise}
+  \begin{enumerate}
+  \item {\bf calling convention or ABI :}
     function's incoming parameters and the return value
     are put in places (typically registers)
     predetermined by convention
-  \item observe where incoming parameters are by compiling simple functions like
+    
+  \item {\bf data representation :}
+    once you know where incoming parameters and return values are,
+    understand how data (integers, floating point numbers, structs,
+    pointers to something, arrays, etc.) are represented, 
+    by compiling simple functions that work on them. e.g.,
 \begin{lstlisting}
-f(int x, int y) = x + y      
+f(a, i) = a[i]
 \end{lstlisting}
-\item change parameter types and function body to know
-  \begin{itemize}
-  \item how data are represented (integers, floating point numbers, arrays, structs, etc.)
-  \item how various expressions are implemented
-    (arithmatic, array access, structure access, etc.) 
-  \end{itemize}
-\end{itemize}
+
+\item {\bf control flow :}
+  how various control flows (conditionals and loops) are implemented
+  
+\item {\bf function calls :}
+  how function calls are implemented
+\end{enumerate}
 \end{frame}
 
 \end{document}
