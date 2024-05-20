@@ -111,6 +111,97 @@ pre {
   </p>
 
   <ul>
+    <li class="en"><font color="blue">(2024/05/19)</font>
+      What I said during the exercise and when wrapping up today
+      <ol>
+        <li>
+          each language needs to set up an environment, which is described in
+          <tt>pl04_standalone</tt> notebook;
+          if you get a "command not found" type of error when compiling
+          the first program, go to that notebook and set things up
+          <ul>
+            <li>Go : <font color="blue"><tt>export PATH=~/go/bin:$PATH</tt></font></li>
+            <li>Julia : <font color="blue"><tt>export PATH=~/.juliaup/bin:$PATH</tt></font></li>
+            <li>OCaml : <font color="blue"><tt>eval $(opam env)</tt></font></li>
+            <li>Rust : <font color="blue"><tt>. ~/.cargo/env</tt></font></li>
+          </ul>
+          do it by inserting the line anywhere before
+          you execute the compilation command (in the same cell or another)
+        </li>
+        <li>make sure you record if you worked in the "worklog" sheet of
+          your team Excel book
+          <ul>
+            <li>add a line per event per person
+              (i.e., if you work together with four of you, add four lines)
+            </li>
+          </ul>
+        </li>
+        <li>Question #2 of Problem 7 (below) is inconsistent with
+          what the code actually does (my slip when modifying a problem)
+          <blockquote><font color="red">(WRONG)</font>
+            as the function computes <tt>sum_array_rec(n - 1) + n - 1</tt>, the value of <tt>n</tt> (or <tt>n - 1</tt>) must be saved somewhere during <tt>sum_array_rec(n - 1)</tt>; where is it saved?
+          </blockquote>
+          replace it with:
+          <blockquote><font color="blue">(CORRECTED)</font>
+            as the function computes <tt>sum_array_rec(a, p, r) + sum_array_rec(a, r, q)</tt>, arguments passed to the second call (whichever is done second) must be somehow preserved during the first call, and the return value of the first call must be somehow preserved during the second call.  for example, if the compiler decides to perform <tt>sum_array_rec(a, p, r)</tt> first, <tt>a, r, and q</tt> must be preserved during the first call and the return value of <tt>sum_array_rec(a, p, r)</tt> must be preserved during the second call. where are they saved?
+          </blockquote>
+        </li>
+        <li>
+          you may be having trouble with Julia,
+          presumably due to upgrading Julia version;
+          if that is the case, please let me know or
+          post in the Slack channel (see the announcment
+          "Slack Channel for this lecture" in UTOL),
+          with details (what you exactly did and what kind of error you exactly got)
+        </li>
+      </ol>
+    </li>
+
+
+    <li class="ja"><font color="blue">(2024/05/19)</font>
+      演習中及び最後に述べたこと再掲
+      <ol>
+        <li>
+          各言語環境の設定が必要で<tt>pl04_standalone</tt> notebook に述べられている;
+          最初のプログラムをコンパイルしようとして"command not found"
+          的なエラーが出たらそのnotebookを参照して設定してください
+          <ul>
+            <li>Go : <font color="blue"><tt>export PATH=~/go/bin:$PATH</tt></font></li>
+            <li>Julia : <font color="blue"><tt>export PATH=~/.juliaup/bin:$PATH</tt></font></li>
+            <li>OCaml : <font color="blue"><tt>eval $(opam env)</tt></font></li>
+            <li>Rust : <font color="blue"><tt>. ~/.cargo/env</tt></font></li>
+          </ul>
+          上記を, 最初のコンパイルコマンドを実行する前のどこでも
+          (同じセルでも別でも)よいので実行する
+        </li>
+        <li>作業した記録を各チームのExcel bookの
+          "worklog" シートに記録すること
+          <ul>
+            <li>やるごとに一人一行追加 (例えば4人で一緒にやったら4行追加)
+            </li>
+          </ul>
+        </li>
+        <li>Problem 7 の Question 2 はコードがやっていることとずれている
+          (問題を変更した際のミス)
+          <blockquote><font color="red">(誤)</font>
+            as the function computes <tt>sum_array_rec(n - 1) + n - 1</tt>, the value of <tt>n</tt> (or <tt>n - 1</tt>) must be saved somewhere during <tt>sum_array_rec(n - 1)</tt>; where is it saved?
+          </blockquote>
+          以下に差し替え
+          <blockquote><font color="blue">(正)</font>
+            as the function computes <tt>sum_array_rec(a, p, r) + sum_array_rec(a, r, q)</tt>, arguments passed to the second call (whichever is done second) must be somehow preserved during the first call, and the return value of the first call must be somehow preserved during the second call.  for example, if the compiler decides to perform <tt>sum_array_rec(a, p, r)</tt> first, <tt>a, r, and q</tt> must be preserved during the first call and the return value of <tt>sum_array_rec(a, p, r)</tt> must be preserved during the second call. where are they saved?
+          </blockquote>
+        </li>
+        <li>Juliaではさらにトラブルがあるかもしれません
+          (おそらくはJuliaのバージョンをupgradeしたことによると思われるもの).
+          もし該当すれば,
+          詳細(何をやってどんなエラーが出たか)とともに,
+          私に知らせるか, 授業用のSlackチャンネル (UTOLのお知らせ
+          "Slack Channel for this lecture"を見てください),
+          に投稿してください
+        </li>
+      </ol>
+    </li>
+    
     <li class="en"><font color="blue">(2024/05/19)</font> Plan for 05/20
       <ul>
         <li>indicate your presence in the <font color="blue"><tt>0520</tt></font> sheet of the same Excel book
