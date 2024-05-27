@@ -106,7 +106,7 @@ tabsize = 4,
 escapechar=\@,
 }
 
-\title{Programming Languages (5) \\
+\title{Programming Languages (6) \\
   Memory Management}
 \institute{}
 \author{Kenjiro Taura}
@@ -161,9 +161,9 @@ escapechar=\@,
   \item ideally, programming languages \ao{\it manage} them on behalf of the programmer;
     i.e.,
     \begin{itemize}
-    \item when creating a new object, find an available space
-    \item \ao{\it retain} the space as long as the object is still in use
-    \item \ao{\it reclaim/reuse} the space when the object is no longer used
+    \item when creating a new data, find an available space for it
+    \item \ao{\it retain} the space as long as the data is still ``in use''
+    \item \ao{\it reclaim/reuse} the space when the data is ``no longer used''
     \end{itemize}
 
   \item three approaches covered
@@ -182,6 +182,260 @@ escapechar=\@,
 \end{frame}
 \fi
 %%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{The Root of the Problem}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%% ENG %%%
+\ifeng
+\begin{frame}
+  \frametitle{Data representation}
+  \begin{itemize}
+  \item data in your program must be somehow represented in the machine code
+  \item some data (e.g., integers and floating point numbers)
+    can be trivially mapped to machine representations
+  \item less trivial is how to map
+    \begin{itemize}
+    \item multiword data (structs),
+    \item unknown-size or large data (e.g., arrays and strings),
+    \item mutable data,
+    \item recursive data (lists),
+    \item etc.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifeng
+\begin{frame}[fragile]
+  \frametitle{Two strategies}
+  \begin{itemize}
+  \item immediate
+    \begin{itemize}
+    \item []
+      \includegraphics[width=0.8\textwidth]{out/pdf/svg/data_representation_1.pdf}
+    \end{itemize}
+  \item indirect
+    \begin{itemize}
+    \item []
+      \includegraphics[width=0.8\textwidth]{out/pdf/svg/data_representation_4.pdf}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifeng
+\begin{frame}
+  \frametitle{Immediate representation}
+  \begin{itemize}
+  \item<1-> typically used for small data (integers, floating point numbers, characters, etc.)
+    that fit on a single register (e.g., 64 bits)
+  \item<2-> upon an assignment-like operation,
+    the whole data gets copied (cheap as data are small)
+  \end{itemize}
+
+  \begin{center}
+    \only<1>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_1.pdf}}%
+    \only<2>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_2.pdf}}%
+    \only<3>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_3.pdf}}%
+  \end{center}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifeng
+\begin{frame}
+  \frametitle{Indirect representation}
+  \begin{itemize}
+  \item<1-> typically used for multi-word data
+  \item<2-> upon an assignment-like operation, there are two choices
+    \begin{enumerate}
+    \item<3-> \ao{(by-value)} copies the whole data, or
+    \item<4-> \ao{(by-reference)} copies only the address \ao{({\it pointer})}
+      and \ao{\it share} data in memory
+    \end{enumerate}
+  \end{itemize}
+
+  \begin{center}
+    \only<1>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_4.pdf}}%
+    \only<2>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_5.pdf}}%
+    \only<3>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_6.pdf}}%
+    \only<4>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_7.pdf}}%
+  \end{center}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifeng
+\begin{frame}[fragile]
+  \frametitle{By-value vs. by-reference?}
+  \begin{itemize}
+  \item it affects behavior (semantics) of \ao{\it mutable} data; e.g.,
+\begin{lstlisting}
+p = Point{x=456, y=789};
+q = p;            // by-value or by-reference?
+p.x = 1000;
+print(q.x)        // 456 or 1000?
+\end{lstlisting}
+\item therefore, for \ao{\it mutable data, by-reference} is the only choice
+\item the choice does not affect the semantics of
+  \ao{\it immutable data}, so it is up to implementation
+\end{itemize}
+
+\begin{tabular}{c|c}
+  \includegraphics[width=0.48\textwidth]{out/pdf/svg/data_representation_6.pdf} 
+  & \includegraphics[width=0.48\textwidth]{out/pdf/svg/data_representation_7.pdf} \\
+  by-value & by-reference
+\end{tabular}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifeng
+\begin{frame}
+  \frametitle{Other data implemented typically passed-by-references}
+  \begin{itemize}
+  \item besides mutable data, other data types
+    whose assignment-like operations we want to implement by reference
+    include
+    \begin{itemize}
+    \item large data
+    \item recursive data
+    \item unknown-size data
+    \end{itemize}
+  \item why? $\Rightarrow$
+    we don't want to impose large copying overhead whenever such values
+    go through assignment-like operations
+  \item for examples, \ao{strings, arrays, trees, graphs,} etc.
+  \end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifeng
+\begin{frame}[fragile]
+  \frametitle{The root of the problem}
+  \begin{itemize}
+  \item were there no data implemented by reference,
+    memory management problem would be largely non-existent
+    \begin{itemize}
+    \item if a variable is gone, the data it points to is gone, too
+    \end{itemize}
+  \item the difficulty arises as soon as data are \ao{\it shared} (i.e.,
+    whose address may be held at multiple locations)
+    \begin{itemize}
+    \item yet it is essential/unavoidable to implement
+      mutable and/or implement large data efficiently, among others
+    \end{itemize}
+  \end{itemize}
+
+\begin{tabular}{c|c}
+  \includegraphics[width=0.48\textwidth]{out/pdf/svg/data_representation_6.pdf} 
+  & \includegraphics[width=0.48\textwidth]{out/pdf/svg/data_representation_7.pdf} \\
+  by-value & by-reference
+\end{tabular}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifeng
+\begin{frame}[fragile]
+  \frametitle{The fundamental problem}
+  \begin{itemize}
+  \item the problem is how to know which memory block can be safely reclaimed/reused
+    when
+    \begin{itemize}
+    \item there may be multiple pointers to a single memory block,
+    \item which allow arbitrary graph of memory blocks
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.7\textwidth]{out/pdf/svg/gc_basic_4.pdf}
+  \end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifeng
+\begin{frame}
+  \frametitle{A few remarks on ``by-reference'' vs. ``by-value''}
+  \begin{itemize}
+  \item some languages distinguish a data type ($T$)
+    from a reference (pointer) to $T$
+    \begin{itemize}
+    \item C/C++ : pointer ({\tt {\it T}*})
+    \item Go : pointer ({\tt *{\it T}})
+    \item Rust : box ({\tt Box::<{\it T}>}) and refernce ({\tt \&{\it T}})
+    \end{itemize}
+  \item in other languages, there are no such distinction
+    \begin{itemize}
+    \item OCaml, Julia, Python, etc.
+    \end{itemize}
+  \item no matter what the language looks like from the programmer's perspective, the fundamental problem is the same
+    \begin{itemize}
+    \item many (mutable, recursive, or large) data structures are
+      passed \ao{\it by reference},
+      leading to multiple references to a memory block
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+\ifja
+\begin{frame}[fragile]
+\frametitle{図解 (Q2)}
+
+\begin{center}
+  \includegraphics[width=\textwidth]{out/pdf/lsvg/mm_quiz_1.pdf}
+\end{center}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Illustration (Q2)}
+
+  \begin{center}
+  \includegraphics[width=\textwidth]{out/pdf/lsvg/mm_quiz_1.pdf}
+  \end{center}
+
+\end{frame}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\begin{frame}[fragile]
+\frametitle{図解 (Q3)}
+
+\begin{center}
+  \includegraphics[width=\textwidth]{out/pdf/lsvg/mm_quiz_2.pdf}
+\end{center}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Illustration (Q3)}
+
+\begin{center}
+  \includegraphics[width=\textwidth]{out/pdf/lsvg/mm_quiz_2.pdf}
+\end{center}
+
+\end{frame}
+\fi
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifja
@@ -538,212 +792,6 @@ void destroy_list(list * n) {
   \end{itemize}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{The Root of the Problem}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%%% ENG %%%
-\ifeng
-\begin{frame}
-  \frametitle{Data representation}
-  \begin{itemize}
-  \item data in your program must be somehow represented in the machine code
-  \item some data (e.g., integers and floating point numbers)
-    can be trivially mapped to machine representations
-  \item less trivial is how to map
-    \begin{itemize}
-    \item multiword data (structs),
-    \item unknown-size or large data (e.g., arrays and strings),
-    \item mutable data,
-    \item recursive data (lists),
-    \item etc.
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifeng
-\begin{frame}[fragile]
-  \frametitle{Two strategies}
-  \begin{itemize}
-  \item immediate
-    \begin{itemize}
-    \item []
-      \includegraphics[width=0.8\textwidth]{out/pdf/svg/data_representation_1.pdf}
-    \end{itemize}
-  \item indirect
-    \begin{itemize}
-    \item []
-      \includegraphics[width=0.8\textwidth]{out/pdf/svg/data_representation_4.pdf}
-    \end{itemize}
-  \end{itemize}
-\end{frame}
-\fi
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifeng
-\begin{frame}
-  \frametitle{Immediate representation}
-  \begin{itemize}
-  \item<1-> typically used for small data (integers, floating point numbers, characters, etc.)
-    that fit on a single register (e.g., 64 bits)
-  \item<2-> upon an assignment-like operation,
-    the whole data gets copied (cheap as data are small)
-  \end{itemize}
-
-  \begin{center}
-    \only<1>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_1.pdf}}%
-    \only<2>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_2.pdf}}%
-    \only<3>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_3.pdf}}%
-  \end{center}
-
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifeng
-\begin{frame}
-  \frametitle{Indirect representation}
-  \begin{itemize}
-  \item<1-> typically used for multi-word data
-  \item<2-> upon an assignment-like operation, there are two choices
-    \begin{enumerate}
-    \item<3-> \ao{(by-value)} copies the whole data, or
-    \item<4-> \ao{(by-reference)} copies only the address and
-      \ao{\it share} data in memory
-    \end{enumerate}
-  \end{itemize}
-
-  \begin{center}
-    \only<1>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_4.pdf}}%
-    \only<2>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_5.pdf}}%
-    \only<3>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_6.pdf}}%
-    \only<4>{\includegraphics[width=\textwidth]{out/pdf/svg/data_representation_7.pdf}}%
-  \end{center}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifeng
-\begin{frame}[fragile]
-  \frametitle{By-value vs. by-reference?}
-  \begin{itemize}
-  \item it affects \ao{\it behavior (semantics) of mutable data}; e.g.,
-\begin{lstlisting}
-p = Point{x=456, y=789};
-q = p;            // by-value or by-reference?
-p.x = 1000;
-print(q.x)        // 456 or 1000?
-\end{lstlisting}
-\item therefore, for \ao{\it mutable data, by-reference} is the only choice
-\item the choice does not affect the semantics of
-  \ao{\it immutable data}, so it is up to implementation
-\end{itemize}
-
-\begin{tabular}{c|c}
-  \includegraphics[width=0.48\textwidth]{out/pdf/svg/data_representation_6.pdf} 
-  & \includegraphics[width=0.48\textwidth]{out/pdf/svg/data_representation_7.pdf} \\
-  by-value & by-reference
-\end{tabular}
-
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifeng
-\begin{frame}[fragile]
-  \frametitle{It is not exposing a pointer that is to blame}
-  \begin{itemize}
-  \item were there no by-reference data,
-    memory management problem would be largely non-existent
-    \begin{itemize}
-    \item if a variable is gone, the data it points to is gone, too
-    \end{itemize}
-  \item the difficulty arises as soon as data are \ao{\it shared} (i.e.,
-    whose address may be held by multiple locations)
-    \begin{itemize}
-    \item yet it is essential/unavoidable to implement
-      mutable and/or implement large data efficiently, among others
-    \end{itemize}
-  \end{itemize}
-
-\begin{tabular}{c|c}
-  \includegraphics[width=0.48\textwidth]{out/pdf/svg/data_representation_6.pdf} 
-  & \includegraphics[width=0.48\textwidth]{out/pdf/svg/data_representation_7.pdf} \\
-  by-value & by-reference
-\end{tabular}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifeng
-\begin{frame}[fragile]
-  \frametitle{The fundamental problem}
-  \begin{itemize}
-  \item the problem is how to know which memory block can be safely reclaimed/reused
-    when
-    \begin{itemize}
-    \item there may be multiple pointers to a single memory block,
-    \item which allow arbitrary graph of memory blocks
-    \end{itemize}
-  \end{itemize}
-  \begin{center}
-    \includegraphics[width=0.7\textwidth]{out/pdf/svg/gc_basic_4.pdf}
-  \end{center}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\iffalse
-\ifja
-\begin{frame}[fragile]
-\frametitle{図解 (Q2)}
-
-\begin{center}
-  \includegraphics[width=\textwidth]{out/pdf/lsvg/mm_quiz_1.pdf}
-\end{center}
-
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}[fragile]
-\frametitle{Illustration (Q2)}
-
-  \begin{center}
-  \includegraphics[width=\textwidth]{out/pdf/lsvg/mm_quiz_1.pdf}
-  \end{center}
-
-\end{frame}
-\fi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\ifja
-\begin{frame}[fragile]
-\frametitle{図解 (Q3)}
-
-\begin{center}
-  \includegraphics[width=\textwidth]{out/pdf/lsvg/mm_quiz_2.pdf}
-\end{center}
-
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}[fragile]
-\frametitle{Illustration (Q3)}
-
-\begin{center}
-  \includegraphics[width=\textwidth]{out/pdf/lsvg/mm_quiz_2.pdf}
-\end{center}
-
-\end{frame}
-\fi
-\fi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifja
