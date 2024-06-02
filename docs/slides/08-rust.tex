@@ -1,0 +1,1623 @@
+\documentclass[12pt,dvipdfmx]{beamer}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf}
+\DeclareGraphicsExtensions{.eps}
+\graphicspath{{out/}{out/tex/}{out/tex/gpl/}{out/tex/svg/}{out/tex/lsvg/}{out/tex/dot/}}
+% \graphicspath{{out/}{out/tex/}{out/pdf/}{out/eps/}{out/tex/gpl/}{out/tex/svg/}{out/pdf/dot/}{out/pdf/gpl/}{out/pdf/img/}{out/pdf/odg/}{out/pdf/svg/}{out/eps/dot/}{out/eps/gpl/}{out/eps/img/}{out/eps/odg/}{out/eps/svg/}}
+\usepackage{listings}
+\usepackage{fancybox}
+\usepackage{hyperref}
+\usepackage{color}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% themes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetheme{default} % Szeged
+%% no navigation bar
+% default boxes Bergen Boadilla Madrid Pittsburgh Rochester
+%% tree-like navigation bar
+% Antibes JuanLesPins Montpellier
+%% toc sidebar
+% Berkeley PaloAlto Goettingen Marburg Hannover Berlin Ilmenau Dresden Darmstadt Frankfurt Singapore Szeged
+%% Section and Subsection Tables
+% Copenhagen Luebeck Malmoe Warsaw
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% innerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \useinnertheme{circles}	% default circles rectangles rounded inmargin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% outerthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% outertheme
+% \useoutertheme{default}	% default infolines miniframes smoothbars sidebar sprit shadow tree smoothtree
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% colorthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usecolortheme{seahorse}
+%% special purpose
+% default structure sidebartab 
+%% complete 
+% albatross beetle crane dove fly seagull 
+%% inner
+% lily orchid rose
+%% outer
+% whale seahorse dolphin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% fontthemes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usefonttheme{serif}  
+% default professionalfonts serif structurebold structureitalicserif structuresmallcapsserif
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% generally useful beamer settings
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+\AtBeginDvi{\special{pdf:tounicode EUC-UCS2}}
+% do not show navigation
+\setbeamertemplate{navigation symbols}{}
+% show page numbers
+\setbeamertemplate{footline}[frame number]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% define some colors for convenience
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\mido}[1]{{\color{green}#1}}
+\newcommand{\mura}[1]{{\color{purple}#1}}
+\newcommand{\ore}[1]{{\color{orange}#1}}
+\newcommand{\ao}[1]{{\color{blue}#1}}
+\newcommand{\aka}[1]{{\color{red}#1}}
+
+\setbeamercolor{ex}{bg=cyan!20!white}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% customize beamer template
+%% https://www.opt.mist.i.u-tokyo.ac.jp/~tasuku/beamer.html
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\iffalse
+%\renewcommand{\familydefault}{\sfdefault}  % 英文をサンセリフ体に
+%\renewcommand{\kanjifamilydefault}{\gtdefault}  % 日本語をゴシック体に
+\usefonttheme{structurebold} % タイトル部を太字
+\setbeamerfont{alerted text}{series=\bfseries} % Alertを太字
+\setbeamerfont{section in toc}{series=\mdseries} % 目次は太字にしない
+\setbeamerfont{frametitle}{size=\Large} % フレームタイトル文字サイズ
+\setbeamerfont{title}{size=\LARGE} % タイトル文字サイズ
+\setbeamerfont{date}{size=\small}  % 日付文字サイズ
+
+\definecolor{UniBlue}{RGB}{0,150,200} 
+\definecolor{AlertOrange}{RGB}{255,76,0}
+\definecolor{AlmostBlack}{RGB}{38,38,38}
+\setbeamercolor{normal text}{fg=AlmostBlack}  % 本文カラー
+\setbeamercolor{structure}{fg=UniBlue} % 見出しカラー
+\setbeamercolor{block title}{fg=UniBlue!50!black} % ブロック部分タイトルカラー
+\setbeamercolor{alerted text}{fg=AlertOrange} % \alert 文字カラー
+\mode<beamer>{
+    \definecolor{BackGroundGray}{RGB}{254,254,254}
+    \setbeamercolor{background canvas}{bg=BackGroundGray} % スライドモードのみ背景をわずかにグレーにする
+}
+
+
+%フラットデザイン化
+\setbeamertemplate{blocks}[rounded] % Blockの影を消す
+\useinnertheme{circles} % 箇条書きをシンプルに
+\setbeamertemplate{navigation symbols}{} % ナビゲーションシンボルを消す
+\setbeamertemplate{footline}[frame number] % フッターはスライド番号のみ
+
+%タイトルページ
+\setbeamertemplate{title page}{%
+    \vspace{2.5em}
+    {\usebeamerfont{title} \usebeamercolor[fg]{title} \inserttitle \par}
+    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle \par}
+    \vspace{1.5em}
+    \begin{flushright}
+        \usebeamerfont{author}\insertauthor\par
+        \usebeamerfont{institute}\insertinstitute \par
+        \vspace{3em}
+        \usebeamerfont{date}\insertdate\par
+        \usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
+    \end{flushright}
+}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% how to typset code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\lstset{language = C,
+numbers = left,
+numberstyle = {\tiny \emph},
+numbersep = 10pt,
+breaklines = true,
+breakindent = 40pt,
+frame = tlRB,
+frameround = ffft,
+framesep = 3pt,
+rulesep = 1pt,
+rulecolor = {\color{blue}},
+rulesepcolor = {\color{blue}},
+flexiblecolumns = true,
+keepspaces = true,
+basicstyle = \ttfamily\scriptsize,
+identifierstyle = ,
+commentstyle = ,
+stringstyle = ,
+showstringspaces = false,
+tabsize = 4,
+escapechar=\@,
+}
+
+\title{Programming Languages (8) \\
+  Rust Memory Management}
+\institute{}
+\author{Kenjiro Taura}
+\date{}
+
+\AtBeginSection[]
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+\iffalse
+\AtBeginSubsection[]
+{
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents[currentsection,currentsubsection]
+\end{frame}
+}
+\fi
+
+\newcommand{\therustrule}{single-owner-multiple-borrowers}
+
+\begin{document}
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{frame}
+\frametitle{Contents}
+\tableofcontents
+\end{frame}
+
+\section{Overview}
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Rust's basic idea to memory management}
+  \begin{itemize}
+  \item Rust maintains that, for any live object, 
+    \begin{enumerate}
+    \item there is one and only one pointer that ``owns'' it
+      \mura{\it (the owner pointer)}
+    \item \ao{\it ``multiple borrowers''} :
+      there are arbitrary number of non-owning pointers
+      \ao{\it (borrowing pointers)}
+      pointing to it,
+      % but {\it they cannot outlive (live longer than) the data}
+      but {\it they cannot be dereferenced after the owning pointer goes away}
+    \end{enumerate}
+  % \item note: 2nd rule is inaccurate and will be restated later
+  \item $\Rightarrow$
+    {\it it can safely reclaim the data when the owning pointer goes away}
+  \end{itemize}
+  \begin{center}
+    {\large\it ``{\it \therustrule} rule''}
+
+    \includegraphics[width=0.4\textwidth]{out/pdf/svg/one_owner_multiple_borrowers_1.pdf}
+  \end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{The rules are enforced statically}
+  \begin{itemize}
+  \item Rust maintains the rule \ao{\it statically}
+    (as opposed to \aka{\it dynamically})
+  \item equivalently,
+    \begin{itemize}
+    \item \ao{\it compile-time} rather than at \aka{\it runtime}
+    \item \ao{\it before} execution not \aka{\it during} execution
+    \end{itemize}
+  \end{itemize}
+
+  called \ao{\it borrow checker}
+  
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Ways outside the basic rules}
+  to be sure, there are some ways to get around the rules
+  \begin{enumerate}
+  \item \ore{reference counting pointers} ($\approx$ multiple owning pointers)
+    \begin{itemize}
+    \item counts the number of owners {\it at runtime},
+      and reclaim the data when all these pointers are gone
+    \end{itemize}
+  \item \ore{unsafe/raw pointers} ($\approx$ totally up to you)
+  \end{enumerate}
+  they are not specific to Rust,
+  and we'll not cover them in the rest of this slide deck
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\section{Rust basics}
+%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Pointer-like data types in Rust}
+  given a type $T$ ({\tt i32}, struct, enum, \ldots), below are
+  types representing ``references (pointers) to $T$''\footnote{we use
+    pointers and references interchangeably}
+  \begin{enumerate}
+  \item \mura{\tt $T$} : \mura{owning} pointer to $T$
+  \item \mura{\tt Box<$T$>} ({\it box $T$}) : \mura{owning} pointer to $T$
+  \item \ao{\tt \&$T$} (pronounced {\it ``ref $T$''}) : 
+    \ao{borrowing pointer} to data of $T$ (through which you cannot modify it)
+  % \item \ao{\tt \&mut $T$} ({\it ``ref mute $T$}'') : 
+  %   \ao{mutable borrowing pointer} to data of $T$ (through which you can modify it)
+  \item \ore{\tt Rc<$T$>} and \ore{\tt Arc<$T$>} : 
+    shared (reference-counting) owning pointer to $T$
+  \item \ore{\tt *$T$} : unsafe pointer to $T$
+  \end{enumerate}
+
+  {\it following discussions are focused on
+    \mura{$T$},  \mura{\tt Box<$T$>}} and \ao{\tt \&$T$}.
+
+  \begin{center}
+    \includegraphics[width=0.35\textwidth]{out/pdf/svg/one_owner_multiple_borrowers_2.pdf}
+  \end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Pointer-making expressions}
+  given an expression $e$ of type $T$, below are expressions that
+  make pointers to the value of $e$
+  \begin{enumerate}
+  \item \mura{$e$} (of type \mura{$T$}) : an owning pointer
+  \item \mura{\tt Box::new($e$)} (of type \mura{\tt Box<$T$>})
+    : an owning pointer
+  \item \ao{\tt \&$e$} (of type \ao{\tt \&$T$})
+    : a borrowing pointer
+    % (through which you cannot modify the referent)
+  %\item \ao{\tt \&mut $e$} (of type \ao{\tt \&mut $T$})
+    % : a mutable borrowing pointer (through which you can modify the referent)
+  \end{enumerate}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{An example}
+  \begin{lstlisting}
+{
+  let @\mura{\tt a}@: S      = S{x: ...};   // @{\it allocate memory for {\tt S}}@
+                               // @{\it and make a owning pointer to it}@
+  let @\mura{\tt b}@: S      = @\mura{\tt a}@;           // @{\it an owning pointer}@
+  let @\mura{\tt c}@: Box<S> = @\mura{\tt Box::<S>::new(a)}@; // @{\it an owning pointer}@
+  let @\ao{\tt d}@: &S     = @\ao{\tt \&a}@;          // @{\it a borrowing pointer}@
+}
+\end{lstlisting}
+%  let c: &mut S = @\ao{\tt \&mut a}@; // @{\it make a borrowing pointer to {\tt a}}@
+
+  
+  \begin{itemize}
+  \item note: type of variables can be omitted (spelled out for clarity)
+  \item note: the above program violates several rules so it does not compile
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\section{Owning pointers}
+\subsection{Assignments of owning pointers}
+%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Assignments do {\it not copy}, but {\it move}, the reference}
+  \begin{itemize}
+  \item to maintain ``single-owner'' rule,
+    an assignment in Rust {\it moves} the value out of the righthand side,
+    disallowing further use of it
+    \begin{center}
+  {\tt{\footnotesize
+\begin{tabbing}
+012345\=aa\=aa\=\kill
+\>{\tt x = y;} \\
+\>// {\it {\tt y} can no longer be used}
+\end{tabbing}}}
+    \end{center}
+  \item e.g.,
+    \begin{columns}
+      \begin{column}{0.6\textwidth}
+  {\tt{\footnotesize
+\begin{tabbing}
+aa\=aa\=aa\=\kill
+fn foo() \{ \\
+\>let a = S\{x: ..., y: ...\}; \\
+\>\only<2->{... \ao{a.x} ...; // {\it OK, as expected}} \\
+\>\only<2->{... \ao{a.y} ...; // {\it OK, as expected}} \\
+\>\only<3->{\mura{// {\it the reference moves out from a}}} \\
+\>\only<3->{\mura{let b = a;}} \\
+\>\only<4->{\aka{a.x}; // {\it NG, the value has moved out}} \\
+\>\only<4->{\ao{b.x}; // {\it OK}} \\
+\} \\
+\end{tabbing}}}
+      \end{column}
+      \begin{column}{0.4\textwidth}
+\only<1-2>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/move_assignment_1.pdf}}%
+\only<3->{\includegraphics[width=0.6\textwidth]{out/pdf/svg/move_assignment_2.pdf}}
+      \end{column}
+    \end{columns}
+    
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Argument-passing also moves the reference}
+  \begin{itemize}
+  \item passing a value to a function also moves the reference out of the source
+    \begin{columns}
+      \begin{column}{0.6\textwidth}
+  {\tt{\footnotesize
+\begin{tabbing}
+aa\=aa\=aa\=\kill
+fn foo() \{ \\
+\>let a = S\{x: ..., y: ...\}; \\
+\>... \ao{a.x} ...; // {\it OK, as expected} \\
+\>... \ao{a.y} ...; // {\it OK, as expected} \\
+\>\only<2->{\mura{// {\it moves the reference out of a}}} \\
+\>\only<2->{\mura{f(a);}} \\
+\>\only<2->{\aka{a.x}; // {\it NG, the reference has moved}} \\
+\} \\
+\end{tabbing}}}
+\end{column}
+      \begin{column}{0.4\textwidth}
+\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/move_arg_passing_1.pdf}}%
+\only<2->{\includegraphics[width=0.6\textwidth]{out/pdf/svg/move_arg_passing_2.pdf}}
+      \end{column}
+    \end{columns}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Note: exceptions to ``assignment moves the reference''}
+  \begin{itemize}
+  \item you may think the moving assignment
+  {\tt{\footnotesize
+\begin{tabbing}
+012345\=aa\=aa\=\kill
+\>{\tt x = y;} \\
+\>// {\it y can no longer be used}
+\end{tabbing}}}
+contradicts what you have seen
+\item does it apply to a primitive type, say {\tt f64}?
+  {\tt{\footnotesize
+\begin{tabbing}
+aa\=aa\=aa\=\kill
+fn foo() \{ \\
+\>let a = 123.456; \\
+\>\mura{// {\it does the reference to 123.456 move out from a!?}} \\
+\>\mura{let b = a;} \\
+\>a + 0.789; // {\it if so, is this invalid!?} \\
+\} \\
+\end{tabbing}}}
+\item answer: no, it does \ao{\it not} apply to primitive types like {\tt i32}, {\tt f64}, etc.
+\item a more general answer: it does not apply to
+  data types that implement \ao{\tt Copy} trait
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{{\tt Copy} trait}
+  \begin{itemize}
+  \item define your struct with \ao{\tt \#[derive(Copy, Clone)]} like
+\begin{lstlisting}
+#[derive(Copy, Clone)]
+struct S { ... }  
+\end{lstlisting}
+\item and assignment or argument-passing of {\tt S}
+  makes a copy of the righthand side
+
+    \begin{columns}
+      \begin{column}{0.6\textwidth}
+  {\tt{\footnotesize
+\begin{tabbing}
+aa\=aa\=aa\=\kill
+fn foo() \{ \\
+\>let a = S\{x: ..., y: ...\}; \\
+\>a.x; // {\it OK, as expected} \\
+\>a.y; // {\it OK, as expected} \\
+\>\only<2->{\mura{// {\it the value is copied}}} \\
+\>\only<2->{\mura{let b = a;}} \\
+\>\only<3->{\ao{a.x;} // {\it OK}} \\
+\>\only<3->{\ao{b.x;} // {\it OK, too}} \\
+\} \\
+\end{tabbing}}}
+\end{column}
+\begin{column}{0.4\textwidth}
+\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/move_assignment_1.pdf}}%
+\only<2->{\includegraphics[width=0.6\textwidth]{out/pdf/svg/move_assignment_3.pdf}}
+      \end{column}
+    \end{columns}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Copy types and the single-owner rule}
+  \begin{itemize}
+  \item when a copy is made on every assignment or argument passing,
+    the single-owner rule is trivially maintained
+  \item below,
+    we will only discuss types not implementing {\tt Copy} trait
+    (\ao{\it non-Copy types})
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\subsection{{\tt Box<$T$>} type}
+%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{{\tt Box<$T$>} makes an owning pointer}
+  \begin{itemize}
+  \item making a pointer by \mura{\tt Box::new($v$)} moves the
+    reference out of $v$, too, and it becomes the owning pointer
+    \begin{columns}
+      \begin{column}{0.6\textwidth}
+  {\tt{\footnotesize
+\begin{tabbing}
+aa\=aa\=aa\=\kill
+fn foo() \{ \\
+\>let a = S\{x: ..., y: ...\}; \\
+\>a.x; // {\it OK, as expected} \\
+\>a.y; // {\it OK, as expected} \\
+\>\only<2->{\mura{\it // OK, now {\tt o} is the owning pointer}} \\
+\>\only<2->{\mura{let b = Box::new(a)}} \\
+\>\only<3->{\aka{a.x; // {\it NG, the value has moved out}}} \\
+\>\only<4->{\ao{(*b).x;} // \ao{\it OK}} \\
+\>\only<5->{\ao{b.x;} // \ao{\it OK. abbreviation of (*b).x}} \\
+\} \\
+\end{tabbing}}}
+\end{column}
+\begin{column}{0.4\textwidth}
+\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/move_assignment_1.pdf}}%
+\only<2->{\includegraphics[width=0.6\textwidth]{out/pdf/svg/move_assignment_2.pdf}}
+      \end{column}
+    \end{columns}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\iffalse
+\begin{frame}[fragile]
+  \frametitle{Make no mistake: making {\tt Box::new($v$)}
+    does not affect lifetime}
+  \begin{itemize}
+  \item {\tt a = Box::new($v$)} has no effect of making $v$ live longer
+  \item when {\tt a} goes out of scope, $v$ will be gone
+    \begin{lstlisting}
+fn foo() {
+  ...
+  {      
+    let a = S{...};
+    let p = Box::new(a);
+  } // --- S{...} will die here, too
+}  
+\end{lstlisting}
+just like
+    \begin{lstlisting}
+fn foo() {
+  ...
+  {      
+    let a = S{...};
+    let p = a;
+  } // --- S{...} will die here
+}  
+\end{lstlisting}
+  \end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Note: difference between $T$ and {\tt Box<$T$>}?}
+  \begin{itemize}
+  \item as you have seen, the effect of
+\begin{lstlisting}
+let b = a;      
+\end{lstlisting}
+and
+\begin{lstlisting}
+let b = Box::<T>::new(a);
+\end{lstlisting}
+look identical
+    
+\item as far as data lifetime is concerned,
+  it is in fact safe to think \mura{$T$} and \mura{\tt Box::<$T$>}
+  are identical
+  
+\item Rust have the distinction for
+  \begin{itemize}
+  \item specifying data layout
+  \item specifying where data are allocated (stack vs. heap)
+  \end{itemize}
+\end{itemize}
+\end{frame}
+    
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Data layout differences between $T$ and {\tt Box::<$T$>}}
+  \begin{itemize}
+  \item {\tt S} and {\tt U} below have different data layouts
+    \begin{itemize}
+    \item {\tt struct S \{ ..., p:\ao{$T$}, \}} ``embeds'' a $T$ into {\tt S}
+    \item {\tt struct U \{ ..., p:\mura{Box::<$T$>}, \}}
+      has {\tt p} point to a separately allocated $T$
+    \end{itemize}
+
+    \begin{center}
+      \includegraphics[width=0.11\textwidth]{out/pdf/svg/t_vs_boxt_1.pdf}
+      \hspace{1cm}
+      \includegraphics[width=0.3\textwidth]{out/pdf/svg/t_vs_boxt_2.pdf}
+    \end{center}
+    
+  \item in particular, {\tt Box::<$T$>} is essential to define recursive data structures
+    \begin{itemize}
+    \item {\tt struct S \{ ..., p:\ao{S}, \}} is not allowed, whereas
+    \item {\tt struct U \{ ..., p:\mura{Box::<U>}, \}} is
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Data layout differences between $T$ and {\tt Box::<$T$>}}
+  \begin{itemize}
+  \item the distinction is insignificant when discussing lifetimes
+    \begin{center}
+      \includegraphics[width=0.11\textwidth]{out/pdf/svg/t_vs_boxt_1.pdf}
+      \hspace{1cm}
+      \includegraphics[width=0.3\textwidth]{out/pdf/svg/t_vs_boxt_2.pdf}
+    \end{center}
+  \item in both cases, {\tt p} (yellow box) is gone exactly when
+    the enclosing structure is gone
+  \item Rust spec also says it allocates $T$ on stack and
+    move it to heap when {\tt Box<$T$>} is made
+  \item again, it has nothing to do with lifetime (unlike C/C++)
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{A (huge) implication of the single-owner rule}
+  \begin{itemize}
+  \item with only owning pointers ($T$ and {\tt Box<$T$>}), 
+    \begin{itemize}
+    \item you can make \ao{\it a tree of $T$}, 
+    \item but you \aka{\it cannot make a general graph of $T$}
+      (acyclic or cyclic),
+      where {\it a node may be pointed to by multiple nodes}
+    \end{itemize}
+  \item if you want to make a graph of $T$, you use either 
+    \begin{itemize}
+    \item {\tt \&$T$} to represent edges, or
+    \item {\tt Vec<$T$>} to represent nodes and {\tt Vec<(i32,i32)>}
+      to represent edges
+    \end{itemize}
+  \end{itemize}
+
+  \begin{center}
+\includegraphics[width=0.3\textwidth]{out/pdf/svg/rust_can_make_tree_but_not_graph_1.pdf}
+\includegraphics[width=0.3\textwidth]{out/pdf/svg/rust_can_make_tree_but_not_graph_2.pdf}
+  \end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{The (huge) implication to memory management}
+  \begin{itemize}
+  \item assume there are only owning pointers for now (forget about
+    borrowing pointers)
+  \item when
+    \begin{itemize}
+    \item a variable of owning pointer type goes out of scope or
+    \item a variable or field of owning pointer type is overwritten,
+    \end{itemize}
+    the entire tree rooted from the pointer can be safely reclaimed
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=0.3\textwidth]{out/pdf/svg/rust_can_make_tree_but_not_graph_1.pdf}
+  \end{center}
+\end{frame}
+
+
+
+  %%%%%%%%%%%%%%%%%
+  \iffalse
+\begin{frame}[fragile]
+  \frametitle{A (huge) implication of the single-owner rule (2)}
+  \begin{itemize}
+  \item with only owning pointers, {\it no two names in scope
+      ever refer to the same object} ({\it no aliasing})
+    
+  \item {\tt a} and {\tt b} below {\it never} refer to the same object
+    \begin{lstlisting}
+fn take_two(a : Box<@$T$@>, b : Box<@$T$@>) {
+  ...
+}        
+\end{lstlisting}
+
+\item a boon for the compiler
+\item a useful property to avoid mistakes, too
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%% 
+\section{Borrowing pointers ({\tt \&$T$})}
+%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Basics}
+  \begin{itemize}
+  \item you can make a borrowing pointer to $T$ ({\tt \&$T$})
+    from $T$ or {\tt Box<$T$>}
+  \item both the owning pointer and borrowing pointers can be used
+\begin{lstlisting}
+let a = S{x: .., y: ..};
+let b = &a;
+... a.x + b.x ... // OK
+\end{lstlisting}
+\item the issue is how to prevent a program
+  from \aka{\it dereferencing borrowing pointers
+    after its owning pointer is gone}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Borrowers rule in action}
+  \begin{itemize}
+  \item a borrowing pointer cannot be dereferenced
+    after its owning pointer is gone
+    % should not outlive the data it points to
+    % (note: inaccurate; we will restate it later)
+{\tt{\footnotesize
+\begin{tabbing}
+aa\=aa\=aa\=\kill
+fn foo() -> i32 \{ \\
+\>let c: \&S; // {\it a reference to S} \\
+\>\{ // {\it an inner block}              \\
+\>\>\only<2->{let b: \&S; // {\it another reference}} \\
+\>\>\only<3->{let a = S\{x: ...\}; // {\it allocate S}} \\
+\>\>\only<4->{// \ao{\it OK (both a and b live only until the end of the inner block)}} \\
+\>\>\only<4->{\ao{b = \&a;}} \\
+\>\>\only<5->{\aka{c = b; // {\it dangerous (c outlives a)}}} \\
+\>\} \only<6->{// {\it {\tt a} dies here, making {\tt c} a dangling pointer}} \\
+\>\only<7->{\aka{c.x} // \aka{\it NG (deref a dangling pointer)}} \\
+\} \\
+\end{tabbing}}}
+\end{itemize}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/borrowers_assignment_1.pdf}}%
+\only<2>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/borrowers_assignment_2.pdf}}%
+\only<3>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/borrowers_assignment_3.pdf}}%
+\only<4>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/borrowers_assignment_4.pdf}}%
+\only<5>{\includegraphics[width=0.5\textwidth]{out/pdf/svg/borrowers_assignment_5.pdf}}%
+\only<6->{\includegraphics[width=0.5\textwidth]{out/pdf/svg/borrowers_assignment_6.pdf}}%
+\end{center}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{A {\it mutable} borrowing reference ({\tt \&mut $T$})}
+  \begin{itemize}
+  \item you cannot modify data of type $T$
+    through ordinary borrowing references {\tt \&$T$}
+\begin{lstlisting}
+let a : S = S{x: 10, y: 20};
+let b : &S = &a;
+b.x = 100; // @\aka{\it NG}@
+\end{lstlisting}
+    \begin{itemize}
+    \item they are \ao{\it immutable} references
+    \end{itemize}
+  \item you can modify data through a mutable reference {\tt \&mut $T$}
+\begin{lstlisting}
+let @\ao{\tt mut}@ a : S = S{x: 10, y: 20};
+let b : &@\ao{\tt mut}@ S = &@\ao{\tt mut}@ a;
+b.x = 100; // @\ao{\it OK}@
+\end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Additional restrictions on {\tt \&mut $T$}}
+  \begin{itemize}
+  \item a stronger restriction is imposed on {\tt \&mut $T$}
+    \begin{itemize}
+    \item you cannot use the originating (owning) pointer
+      ($T$ or {\tt Box<$T$>}) or
+    \item derive other borrowing pointers (mutable or not)
+      from a mutable borrowing
+      reference ({\tt \&mut $T$})
+    \end{itemize}
+    where a mutable borrowing reference is {\it active} in scope
+  \item {\it active} $\approx$ may be used in future (omitting details)
+\begin{lstlisting}
+fn mut_ref() {      
+  let mut a = S{x: ...};
+  let @\ao{\tt m}@ = &mut a; // make a mutable ref to a
+  ... a.x ...;    // @\aka{\it NG: cannot use a (the originating pointer)}@
+  let d = &a;     // @\aka{\it NG: cannot borrow from a either}@
+  let c = m;      // @\aka{\it NG: cannot derive another reference}@
+  @\ao{\tt m.x}@             // --- m is active up to this point
+  ... a.x ...;    // @\ao{\it OK: as m no longer active here}@
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\iffalse
+\begin{frame}[fragile]
+  \frametitle{A mutable borrowing reference enjoys no aliasing, too
+    (even stronger one)}
+  \begin{itemize}
+  \item like an owning pointer, a mutable reference also enjoys
+    the no aliasing property
+  \item even more strongly, it cannot alias with other borrowing references
+    (mutable or not)
+  \item {\tt p} below cannot be an alias of any of others
+  \item {\tt q} and {\tt r} may be an alias of each other
+\begin{lstlisting}
+fn take_many(p: &mut @$T$@, q: &@$T$@, r: &@$T$@, a: @$T$@, b: Box<@$T$@>) {
+  ...
+}    
+\end{lstlisting}
+    
+\item discussions below are focused on memory management,
+  and apply both to immutable and mutable references
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%
+\iffalse
+\begin{frame}
+  \frametitle{Working with {\tt Box<$T$>} or {\tt \&$T$}}
+  \begin{itemize}
+  \item \mura{\tt Box<$T$>} and \ao{\tt \&$T$} are both pointers
+  \item you might naturally wonder which one to use when
+  \item generally,
+    use \mura{\tt Box<$T$>} to {\it link data structures together}
+  \item use \ao{\tt \&$T$} to {\it work on existing data structures
+    without any allocation or deallocation}
+  \item for this reason, many functions that take data structures as input
+    take \ao{\tt \&$T$}
+  \end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%% 
+\section{Borrow checking details}
+%%%%%%%%%%%%%%%%% 
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{A technical remark about borrowers rule}
+  \begin{itemize}
+  \item it's \ao{\it not a creation} of a dangling pointer,
+    {\it per se},
+    that is not allowed, but \aka{\it dereferencing} of it
+  \item 
+    \ao{\it a slightly modified code below compiles without an error},
+    despite that {\tt c} becomes a dangling pointer to {\tt a}
+    (as it is not dereferenced past {\tt a}'s lifetime)
+
+{\tt{\footnotesize
+\begin{tabbing}
+aa\=aa\=aa\=\kill
+fn foo() -> i32 \{ \\
+\>let c: \&S; // {\it a reference to S} \\
+\>\{ // {\it an inner block}              \\
+\>\>let b: \&S; // {\it another reference} \\
+\>\>let a = S\{x: ...\}; // {\it allocate S} \\
+\>\>// \ao{\it OK (both a and b live only until the end of the inner block)} \\
+\>\>\ao{b = \&a;} \\
+\>\>\aka{c = b; // {\it dangerous (c outlives a)}} \\
+\>\}// {\it {\tt a} dies here, making {\tt c} a dangling pointer} \\
+\>// c.x {\it don't deref c} \\
+\} \\
+\end{tabbing}}}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{A more precise statement of borrowers rule}
+  \begin{enumerate}
+  \item<1-> for each borrowing reference ({\tt \&$T$} or {\tt \&mut $T$} type),
+    Rust compiler
+    determines {\it the lifetime of data it points to \ao{(referent lifetime)}}
+    as part of its static type
+  \item<2-> assignment between borrowing pointers ($p = q$) 
+    equate their referent lifetimes 
+  \item<5-> dereferencing a borrowing pointer $p$ (e.g., {\tt $p$.x})
+    is allowed only within the $p$'s referent lifetime
+  \end{enumerate}
+
+  % 1-3
+  % 1-2
+  
+  \begin{columns}
+\iffalse    
+    \begin{column}{0.65\textwidth}
+{\tt{\footnotesize
+\begin{tabbing}
+aa\=aa\=aa\=\kill
+fn foo() -> i32 \{ \\
+\>let c: \&S; // \only<1-3>{\it $\rightarrow$ ??}\only<4->{\ao{\it $\rightarrow\alpha$}}\\
+\>\{ \\
+\>\>let b: \&S; // \only<1-2>{\it $\rightarrow$ ??}\only<3->{\ao{\it $\rightarrow\alpha$}}\\
+\>\>let a = S\{x: ...\}; \only<3->{// {\it lives until $\alpha$}} \\
+\>\>\ao{b = \&a;} \only<3->{// \ao{\it {\tt b}'s referent lifetime $=$ {\tt a}'s lifetime}}\only<1-2>{\phantom{// \ao{\it {\tt b}'s referent lifetime $=$ {\tt a}'s lifetime}}} \\
+\>\>\ao{c = b;} \only<4->{// \ao{\it {\tt c}'s referent lifetime $=$ {\tt b}'s referent lifetime}}\only<1-2>{\phantom{{\it {\tt c}'s referent lifetime $=$ {\tt b}'s referent lifetime}}}\only<1-3>{\phantom{// \ao{\it {\tt c}'s referent lifetime $=$ {\tt b}'s referent lifetime}}\only<1-2>{\phantom{{\it {\tt c}'s referent lifetime $=$ {\tt b}'s referent lifetime}}}} \\
+\>\} // {\it {\tt a} dies here ($\alpha$)} \\
+\>\aka{c.x} \only<6->{// \aka{\it NG (deref outside {\tt c}'s referent lifetime $= \alpha$)}}\only<1-5>{\phantom{// \aka{\it NG (deref outside {\tt c}'s referent lifetime $= \alpha$)}}} \\
+\} \\
+\end{tabbing}}}
+\end{column}
+\fi
+    \begin{column}{0.65\textwidth}
+{\tt{\footnotesize
+\begin{tabbing}
+aa\=aa\=aa\=\kill
+fn foo() -> i32 \{ \\
+\>let c: \&S; // \only<1-3>{\it $\rightarrow$ ??}\only<4->{\ao{\it $\rightarrow\alpha$}}\\
+\>\{ \\
+\>\>let b: \&S; // \only<1-2>{\it $\rightarrow$ ??}\only<3->{\ao{\it $\rightarrow\alpha$}}\\
+\>\>let a = S\{x: ...\}; \only<3->{// {\it lives until $\alpha$}} \\
+\>\>\ao{b = \&a;} \only<3->{// \ao{\it {\tt b}'s referent lifetime $=$ {\tt a}'s lifetime}}\only<1-2>{\phantom{// \ao{\it {\tt b}'s referent lifetime $=$ {\tt a}'s lifetime}}} \\
+\>\>\ao{c = b;} \only<4->{// \ao{\it {\tt c}'s referent lifetime $=$ {\tt b}'s referent lifetime}}\only<1-3>{\phantom{// \ao{\it {\tt c}'s referent lifetime $=$ {\tt b}'s referent lifetime}}} \\
+\>\} // {\it {\tt a} dies here ($\alpha$)} \\
+\>\aka{c.x} \only<6->{// \aka{\it NG (deref outside {\tt c}'s referent lifetime $= \alpha$)}}\only<1-5>{\phantom{// \aka{\it NG (deref outside {\tt c}'s referent lifetime $= \alpha$)}}} \\
+\} \\
+\end{tabbing}}}
+\end{column}
+
+\end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Programming with borrowing references}
+  \begin{itemize}
+  \item programs using borrowing references must help compilers
+    track their referent lifetimes
+  \item this must be done for functions called from unknown places,
+    function calls to unknown functions and data structures
+  \item to this end, the programmer sometimes must annotate 
+    \ao{\it reference types with their referent lifetimes}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{References in function parameters}
+  \begin{itemize}
+  \item problem:
+    how to check the validity of functions taking references
+\begin{lstlisting}
+fn p_points_q(p: &mut P, q: &Q) {
+  p.x = q; // @{\it OK?}@
+}
+\end{lstlisting}
+{\it without knowing all its callers}, and function calls passing references
+\begin{lstlisting}
+let c = ...;
+{
+  let a = Q{...};
+  let b = &a;
+  f(c, b);
+}  
+... @\aka{\tt c.x.y}@ ... // @{\it OK?}@
+\end{lstlisting}
+{\it without knowing the definition of {\tt f}?}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{References in function return values}
+  \begin{itemize}
+  \item problem: how to check the validity of functions returning references
+\begin{lstlisting}
+fn return_ref(...) -> &P {
+  ...
+  let p: &P = ...
+  ...
+  @\aka{\tt p}@ // @{\it OK?}@
+}
+\end{lstlisting}
+{\it without knowing its all callers}, and function calls receiving references
+from function calls
+\begin{lstlisting}
+fn receive_ref() {
+  ...
+  let p: &P = return_ref(...);
+  ...
+  @\aka{\tt p.x}@ // @{\it OK?}@
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{References in data structures}
+  \begin{itemize}
+  \item problem:
+    how to check the validity of dereferencing a pointer obtained from a data structure
+\begin{lstlisting}
+fn ref_from_struct() {
+  ...
+  let p: &P = a.p;
+  ...
+  @\aka{\tt p.x}@ // @{\it OK?}@
+}
+\end{lstlisting}
+
+\item what about functions taking data structures containing references
+  and returning another containing references, etc.?
+
+  \end{itemize}
+\end{frame}
+
+\iffalse
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Lifetime basics}
+  \begin{itemize}
+  \item a variable is valid until the end of the block it is declared in
+\begin{lstlisting}
+fn lifetime() {
+  let a = 123;
+  {
+    let b = 456;
+    {
+      let c = 789;
+      ...
+    } // @{\it c's lifetime (= $\gamma$) ends here}@
+  } // @{\it b's lifetime (= $\beta$) ends here}@
+} // @{\it a's lifetime (= $\alpha$) ends here}@
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Tracking lifetime of referents}
+  \begin{itemize}
+  \item a reference tracks lifetime of its referent (data it points to)
+\begin{lstlisting}
+fn lifetime_ref() -> i32 {
+  let a = 123;
+  let p: &S = &a; // @\ao{{\tt p} $\rightarrow \alpha$}@
+  let q: &S; let r: &S;
+  {
+    let b = 456;
+    @\ao{q = \&b;}@ // @\ao{{\tt q} $\rightarrow \beta$}@
+    {
+      let c = 789;
+      @\ao{r = \&c;}@ // @\ao{{\tt r} $\rightarrow \gamma$}@
+    } // @{\it c's lifetime (= $\gamma$) ends here}@
+  } // @{\it b's lifetime (= $\beta$) ends here}@
+  @\aka{\tt *r}@ // @\aka{NG; dereferencing a pointer $\rightarrow \gamma$}@
+} // @{\it a's lifetime (= $\alpha$) ends here}@
+\end{lstlisting}
+
+\item the goal is to enable this kind of reasoning
+  {\it across function calls and data structures}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Reasoning about lifetimes across functions}
+  \begin{itemize}
+  \item the goal is to accept or reject a program like this
+\begin{lstlisting}
+fn lifetime_ref() -> i32 {
+  let a = 123;
+  let r: &S;
+  {
+    let b = 456;
+    {
+      let c = 789;
+      @\ao{r = foo(\&a, \&b, \&c);}@ // @\ao{{\tt r} $\rightarrow ???$}@
+    } // @{\it c's lifetime (= $\gamma$) ends here}@
+  } // @{\it b's lifetime (= $\beta$) ends here}@
+  @\aka{\tt *r}@ // @\aka{\it OK? how to know if r is not dangling}@
+} // @{\it a's lifetime (= $\alpha$) ends here}@
+\end{lstlisting}
+\item the basic idea: attach lifetime information, called
+  \ao{\it lifetime parameters}, to reference types
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Annotation with lifetime parameters}
+  \begin{itemize}
+  \item to address this problem,
+    Rust's borrowing reference types ({\tt \&$T$} or {\tt \&mut $T$})
+    carry \ao{\it lifetime parameter} representing their referent lifetimes
+  \item every single reference type has it, though
+    the programmer can omit them in some places (e.g., local variables)
+  \item roughly, function parameters, return values, and
+    data structures fields must be explicitly annotated 
+  \end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{Reference type with a lifetime parameter}
+  \begin{itemize}
+  \item to address this problem,
+    Rust's borrowing reference types (\ao{\tt \&$T$} or \ao{\tt \&mut $T$})
+    carry \ao{\it lifetime parameter} representing their referent lifetimes
+  \item syntax:
+    \begin{itemize}
+    \item \ao{\tt \&'$a$ $T$} : reference to ``$T$ whose lifetime is {\tt '$a$}''
+    \item \ao{\tt \&'$a$ mut T} : ditto; except you can modify data through it
+    \end{itemize}
+\begin{center}
+\only<1>{\includegraphics[width=0.4\textwidth]{out/pdf/svg/lifetime_parameter_1.pdf}}%
+\only<2>{\includegraphics[width=0.4\textwidth]{out/pdf/svg/lifetime_parameter_2.pdf}}%
+\end{center}
+
+\item {\it every} reference carries a lifetime parameter,
+  though there are places you can omit them
+\item roughly, you must write them explicitly in function parameters,
+  return types, and struct/enum fields; and can omit them for local variables
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Attaching lifetime parameters to functions}
+  \begin{itemize}
+  \item the following does not compile
+\begin{lstlisting}
+fn foo(ra: &i32, rb: &i32, rc: &i32) -> &i32 {
+  ra
+}
+\end{lstlisting}
+\item with errors like
+
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+|
+| fn foo(ra: &i32, rb: &i32, rc: &i32) -> &i32 {
+|            ----      ----      ----     ^ expected named lifetime parameter
+|
+= help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `ra`, `rb`, or `rc`
+help: consider introducing a named lifetime parameter
+|
+| fn foo<'a>(ra: &'a i32, rb: &'a i32, rc: &'a i32) -> &'a i32 {
+|       ++++      ++           ++           ++          ++
+\end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Why do we need an annotation, {\it fundamentally?}}
+  \begin{itemize}
+  \item without any annotation, how to know whether this is safe, \mura{\it without knowing
+    the definition of {\tt foo}?}
+\begin{lstlisting}
+{      
+  let r : &i32;      
+  let a = 123;
+  {      
+    let b = 456;
+    {      
+      let c = 789;
+      r = foo(&a, &b, &c);
+    }
+  }
+  *r
+}
+\end{lstlisting}
+\item essentially, the compiler complains
+  ``tell me what kind of lifetime {\tt foo(\&a, \&b, \&c)} has''
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Attaching lifetime parameters to functions}
+  \begin{itemize}
+  \item syntax:
+\begin{lstlisting}
+fn @{\it f}@<'a,'b,'c,...>(@$p_0$@ : @$T_0$@, @$p_1$@ : @$T_1$@, ...) -> @$T_r$@ { ... }
+\end{lstlisting}
+$T_0, T_1, \cdots$ and $T_r$ may use {\tt 'a, 'b, 'c, \ldots} as lifetime parameters
+(e.g., {\tt \&'a i32})
+\item {\it f}{\tt <'a,'b,'c,...>} is a function that takes parameters of respective
+  lifetimes
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{One way to attach lifetime parameters}
+\begin{itemize}
+\item
+\begin{lstlisting}
+fn foo@\ao{\tt <'a>}@(ra: &@\ao{\tt 'a}@ i32, rb: &@\ao{\tt 'a}@ i32, rc: &@\ao{\tt 'a}@ i32) -> &@\ao{\tt 'a}@ i32
+\end{lstlisting}
+\item effect: the return value is assumed to point to the shortest
+  of the three
+\item why? generally, when Rust compiler finds {\tt foo($x$, $y$, $z$)},
+  it tries to determine {\tt 'a} so that it is contained
+  in the lifetime of all ($x$, $y$ and $z$)
+\item as a result, our program does not compile,
+  even if {\tt foo(\&a, \&b, \&c)} in fact returns {\tt \&a}
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+{    
+  let r: &i32;
+  let a = 123;
+  {
+    let b = 456;
+    {
+      let c = 789;
+      @\ao{r = foo(\&a, \&b, \&c);}@ // @\ao{{\tt 'a} $\leftarrow$ shortest of $\{\alpha, \beta, \gamma\} = \gamma$}@
+      // @{\it and {\tt r}'s type becomes {\tt \&$\gamma$ i32}}@
+    } // @{\it c's lifetime (= $\gamma$) ends here}@
+  } // @{\it b's lifetime (= $\beta$) ends here}@
+  @\aka{\tt *r}@ // @\aka{\it NG, as we are outside $\gamma$}@
+} // @{\it a's lifetime (= $\alpha$) ends here}@
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+      
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{An alternative}
+  \begin{itemize}
+  \item
+    \begin{lstlisting}
+fn foo<@\ao{\tt 'a},\aka{\tt 'b},\mido{\tt 'c}@>(ra: &@\ao{\tt 'a} i32@, rb: &@\aka{\tt 'b}@ i32, rc: &@\mido{\tt 'c}@ i32) -> &@\ao{\tt 'a}@ i32
+\end{lstlisting}
+\item signifies that the return value points to data
+  whose lifetime is {\tt ra}'s referent lifetime
+  (and has nothing to do with {\tt rb}'s or {\tt rc}'s)
+\item for {\tt foo($x$, $y$, $z$)},
+  Rust compiler tries to determine {\tt 'a} so it is contained
+  in the lifetime of $x$'s referent (therefore {\tt 'a} $= \alpha$)
+\item as a result, the program we are discussing compiles
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+{
+  let r: &i32;
+  let a = 123;
+  {
+    let b = 456;
+    {
+      let c = 789;
+      @\ao{r = foo(\&a, \&b, \&c);}@ // @\ao{{\tt 'a} $\rightarrow$ shortest of $\{\alpha\} = \alpha$}@
+      // @\ao{\it and {\tt r}'s type becomes {\tt \&$\alpha$ i32}}@
+    } // @{\it c's lifetime (= $\gamma$) ends here}@
+  } // @{\it b's lifetime (= $\beta$) ends here}@
+  @\aka{\tt *r}@ // @\aka{\it OK, as here is within $\alpha$}@
+} // @{\it a's lifetime (= $\alpha$) ends here}@
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Types with lifetime parameters capture/constrain the function's behavior}
+  \begin{itemize}
+  \item what if you try to fool the compiler by 
+\begin{lstlisting}
+fn foo<@\ao{\tt 'a},\aka{\tt 'b},\mido{\tt 'c}@>(ra: &@\ao{\tt 'a} i32@, rb: &@\aka{\tt 'b}@ i32, rc: &@\mido{\tt 'c}@ i32) -> &@\ao{\tt 'a}@ i32
+  rb
+}
+\end{lstlisting}
+\item the compiler rejects returning {\tt rb} (of type {\tt \&\aka{'b}})
+  when the function's return type is {\tt \&\aka{'a}}
+\item in general, \ao{\it the compiler allows assignments only between
+  references having the same lifetime parameter}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+  \frametitle{Another example (make a reference between inputs)}
+\begin{itemize}
+\item what if we rewrite
+\begin{lstlisting}
+    r = foo(&a, &b, &c);
+\end{lstlisting}
+into 
+\begin{lstlisting}
+    bar(&mut r, &a, &b, &c);
+\end{lstlisting}
+with {\tt bar} something like
+\begin{lstlisting}
+fn bar(r: &mut &i32, a: &i32, b: &i32, c: &i32) {
+ *r = a;
+}
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Make a reference between inputs}
+\begin{itemize}
+\item how to specify lifetime parameters so that
+  \begin{enumerate}
+  \item {\tt *r = a;} in {\tt bar}'s definition is allowed, and
+  \item we can dereference {\tt *r} at the end of the caller?
+  \end{enumerate}
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+{
+  let a = 123;
+  let mut r = &0;
+  {
+    let b = 456;
+    {
+      let c = 789;
+      @\ao{bar(\&mut r, \&a, \&b, \&c);}@ // @\ao{{\tt r} $\rightarrow$ ???}@
+    } // @{\it c's lifetime (= $\gamma$) ends here}@
+  } // @{\it b's lifetime (= $\beta$) ends here}@
+  @\aka{\tt *r}@ // @\aka{\it OK???}@
+} // @{\it a's lifetime (= $\alpha$) ends here}@
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+  \frametitle{Answer}
+\begin{itemize}
+\item again, we need to signify {\tt r} points to {\tt a} (and not {\tt b} or {\tt c} after {\tt bar(\&r, \&a, \&b, \&c)}
+\item a working lifetime parameter is the following
+\begin{lstlisting}
+fn bar<@\ao{\tt 'a}@,@\aka{\tt 'b}@,@\mido{\tt 'c}@>(r: &mut &@\ao{\tt 'a}@ i32, a: &@\ao{\tt 'a}@ i32,
+                 b: &@\aka{\tt 'b}@ i32, c: &@\mido{\tt 'c}@ i32) {
+  *r = a;
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{References in data structures}
+  \begin{itemize}
+  \item problem: how to check the validity of programs using
+    data structure containing a borrowing reference
+\begin{lstlisting}
+struct R {
+  p: &i32
+  ...
+}
+\end{lstlisting}
+and functions returning {\tt R}
+\begin{lstlisting}
+fn ret_r(a: &i32, b: &i32, c: &i32) -> R {
+  R{p: a}
+}    
+\end{lstlisting}
+or taking {\tt R} (or reference to it)
+\begin{lstlisting}
+fn take_r(r: &mut R, a: &i32, b: &i32, c: &i32) {
+  r.p = a;
+}    
+\end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{References in data structures}
+  \begin{itemize}
+  \item you cannot simply have a field of type {\tt \&$T$}
+    in struct/enum like this
+\begin{lstlisting}
+struct R {
+  p: &i32
+  ...
+}
+\end{lstlisting}
+\item you need to specify the lifetime parameter of {\tt p},
+  and signifies that {\tt R} takes a lifetime parameter
+\begin{lstlisting}
+struct R@\ao{\tt <'a>}@ {
+  p: &@\ao{\tt 'a}@ i32
+  ...
+}
+\end{lstlisting}
+\item {\tt R<'a>} represents \ao{\it {\tt R} whose {\tt p} field
+  points {\tt i32} whose lifetime is {\tt 'a}}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Attaching lifetime parameters to data structure}
+  \begin{itemize}
+  \item say we like to have data structures
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+struct T { x: i32 }
+struct S { p: &T }
+\end{lstlisting}
+and a function 
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+fn make_s(@\ao{\tt a: \&T}@, @\aka{\tt b: \&T}@) -> S { S{p: @\ao{\tt a}@} }
+\end{lstlisting}
+so that the following compiles
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+  let s;
+  let a = T{...};
+  {
+    let b = T{...};
+    s = make_s(&a, &b);
+  }
+  s.p.x
+\end{lstlisting}
+\item the compiler needs to verify {\tt s.p} points to {\tt a}, not {\tt b}
+\item we have to signify that by appropriate lifetime parameters
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Answer}
+  \begin{itemize}
+  \item define {\tt S<'a>} so
+    \begin{itemize}
+    \item its {\tt p}'s referent lifetime is {\tt 'a}
+    \end{itemize}
+\begin{lstlisting}
+struct S<'a> { p: &'a T }
+\end{lstlisting}
+\item define {\tt make\_s} so it returns {\tt S<'a>} 
+  where {\tt 'a} is the referent lifetime of its {\it first} parameter
+\begin{lstlisting}
+fn make_s(@\ao{\tt a: \&'a T}@, @\aka{\tt b: \&'b T}@) -> S<@\ao{\tt 'a}@> {
+  S{p: a}
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}[fragile]
+  \frametitle{A more complex example Rust cannot verify}
+  \begin{itemize}
+  \item say we now have data structures
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+struct T { x: i32 }
+struct S {
+  p: &T,
+  q: &T
+}    
+\end{lstlisting}
+and a function 
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+fn make_s(@\ao{\tt a: \&T}@, @\aka{\tt b: \&T}@) -> S { S{p: @\ao{\tt a}@, q: @\aka{\tt b}@} }
+\end{lstlisting}
+so that the following compiles
+\begin{lstlisting}[basicstyle=\ttfamily\tiny]
+  let s;
+  let a = T{...};
+  {
+    let b = T{...};
+    s = make_s(&a, &b);
+  }
+  s.p.x
+\end{lstlisting}
+\item again, the compiler needs to verify {\tt s.p} points to {\tt a}, not {\tt b}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{Answer that I thought should work but didn't}
+  \begin{itemize}
+  \item define {\tt S} so
+    \begin{itemize}
+    \item its {\tt p} points to {\tt T} of lifetime {\tt 'a} and
+    \item its {\tt q} points to {\tt T} of lifetime {\tt 'b}
+    \end{itemize}
+\begin{lstlisting}
+struct S<'a, 'b> {
+  p: &'a T,
+  q: &'b T
+}    
+\end{lstlisting}
+\item define {\tt make\_s} so it returns {\tt S<'a, 'b>}
+  where {\tt 'a} is the lifetime of its first parameter, like
+\begin{lstlisting}
+fn make_s(@\ao{\tt a: \&'a T}@, @\aka{\tt b: \&'b T}@) -> S<@\ao{\tt 'a}@, @\aka{\tt 'b}@> {
+  S{p: a, q: b}
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}[fragile]
+  \frametitle{The compiler complains}
+    \begin{lstlisting}
+[E0597] Error: `b` does not live long enough
+    [command_36:1:1]
+ 16 │   s = make_s(&a, &b);
+    .                  ---
+    .                   +--- borrowed value does not live long enough
+ 17 │ }
+    . _
+    . +--- `b` dropped here while still borrowed
+ 18 │ s.p.x
+    . -----
+    .   +----- borrow later used here
+  \end{lstlisting}
+  \begin{itemize}
+  \item I don't know what is the exact spec of Rust that
+  rejects this program, but I hypothesize that to dereference
+  {\tt s} for any field ({\tt p}), all fields must be alive
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\iffalse
+\begin{frame}[fragile]
+  \frametitle{Note}
+  \begin{itemize}
+\item if it was
+\begin{lstlisting}
+fn make_s(@\ao{\tt a: \&T}@, @\aka{\tt b: \&T}@) -> S { S{p: @\aka{\tt b}@, q: @\ao{\tt a}@} }
+\end{lstlisting}
+then a valid lifetime specification becomes
+\begin{lstlisting}
+fn make_s(@\ao{\tt a: \&'a T}@, @\aka{\tt b: \&'b T}@) -> @{\tt S<\aka{'b}, \ao{'a}>}@ {
+  S{p: @\aka{\tt b}@, q: @\ao{\tt a}@}
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%
+\section{Summary}
+%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{Why memory management is difficult}
+  \begin{itemize}
+  \item {\it every} language wants to prevent
+    \aka{\it dereferencing a pointer to an already-reclaimed memory block (dangling pointer)}
+  \item<2-> the problem would have been trivial if
+    {\it you could reclaim $v$'s referent as soon as $v$ goes out of scope}
+  \item<4-> this is not the case,
+    as \aka{\it $v$'s referent may still be reachable from other variables
+      when $v$ goes out of scope}
+  \end{itemize}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+{\tt{\footnotesize
+\begin{tabbing}
+aa\=aa\=aa\=\kill
+\only<5->{\aka{let p : \&T;}} \\
+\{ \\
+\>let v = T\{x: ...\}; \\
+\>... \\
+\>\only<5->{\aka{p = \&v;}} \\
+\} \only<3>{// \it OK to drop {\tt v}'s referent here?}\only<5->{// \it v never used below, but its referent is} \\
+\only<5->{... \aka{p.x} ...} \\
+\end{tabbing}}}
+\end{column}
+\begin{column}{0.4\textwidth}
+\begin{center}
+\only<1-2>{\includegraphics[width=\textwidth]{out/pdf/svg/dangling_1.pdf}}%
+\only<3-4>{\includegraphics[width=\textwidth]{out/pdf/svg/dangling_2.pdf}}%
+\only<5>{\includegraphics[width=\textwidth]{out/pdf/svg/dangling_3.pdf}}%
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{C vs. GC vs. Rust}
+  \begin{itemize}
+  \item<1-> C/C++ : it's up to you
+  \item<2-> GC : if it is reachable from other variables, I retain it for you
+  \item<3-> Rust : when $v$ goes out of scope,
+    \begin{enumerate}
+    \item I reclaim $T_v$, all data \ao{\it reachable from $v$ through owning pointers}
+    \item $T_v$ may be reachable from other variables via borrowing references,
+      but I nevertheless guarantees a reclaimed memory block is never accessed
+    \end{enumerate}
+  \end{itemize}
+
+  \begin{center}
+    \begin{tabular}{lll}
+      C/C++ & GC & Rust \\
+      \only<1->{\includegraphics[width=0.3\textwidth]{out/pdf/svg/C_GC_Rust_1.pdf}} &
+      \only<2->{\includegraphics[width=0.3\textwidth]{out/pdf/svg/C_GC_Rust_2.pdf}} &
+      \only<3->{\includegraphics[width=0.3\textwidth]{out/pdf/svg/C_GC_Rust_3.pdf}} 
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \frametitle{How Rust achieved it?}
+  \begin{itemize}
+  \item<1-> recall the ``single-owner rule,'' which guarantees there is
+    only one owning pointer to any node
+  \item<2-> $\Rightarrow$ there can be no \ao{\it owning} pointers
+    from outside $T_v$ to inside $T_v$
+  \item<3-> $\Rightarrow$ any such pointer must be a borrowing pointer
+  \item<4-> crucially, such a borrowing pointer must have a lifetime parameter
+    of the referent
+  \item<5-> as a result, a pointer that can reach $T_v$ cannot be dereferenced
+    after $v$ goes out of scope
+  \end{itemize}
+
+  \begin{center}
+\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/borrow_check_1.pdf}}%
+\only<2>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/borrow_check_2.pdf}}%
+\only<3>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/borrow_check_3.pdf}}%
+\only<4>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/borrow_check_4.pdf}}%
+\only<5>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/borrow_check_5.pdf}}%
+  \end{center}
+\end{frame}
+
+\iffalse
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{The general problem to solve}
+  \begin{itemize}
+  \item when you make a reference $p \rightarrow q$, how to guarantee
+    $p$ does not outlive $q$, or more precisely,
+    \aka{\it $p$ is not dereferenced after $q$ is gone}
+  \item how to ensure this in general, with functions and data structures?
+  \end{itemize}
+
+    \begin{center}
+\only<1>{\includegraphics[width=0.4\textwidth]{out/pdf/svg/borrow_checker_1.pdf}}%
+\only<2>{\includegraphics[width=0.4\textwidth]{out/pdf/svg/borrow_checker_2.pdf}}%
+\only<3->{\includegraphics[width=0.4\textwidth]{out/pdf/svg/borrow_checker_3.pdf}}
+  \end{center}
+\end{frame}
+\fi
+
+\end{document}
+
