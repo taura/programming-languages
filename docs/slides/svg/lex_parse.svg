@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="lex_parse.svg">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;">
+      <path
+         id="path3769"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.9899495"
+     inkscape:cx="328.71885"
+     inkscape:cy="752.94735"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     showguides="true"
+     inkscape:snap-global="true"
+     inkscape:window-width="1533"
+     inkscape:window-height="825"
+     inkscape:window-x="325"
+     inkscape:window-y="101"
+     inkscape:window-maximized="0"
+     inkscape:guide-bbox="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid2985" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="レイヤー 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3002"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Sans;font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion3004"><rect
+           id="rect3006"
+           width="145.46196"
+           height="49.497475"
+           x="121.21831"
+           y="43.219795" /></flowRegion><flowPara
+         id="flowPara3008" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3010"
+       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Sans;font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
+         id="flowRegion3012"><rect
+           id="rect3014"
+           width="129.29953"
+           height="68.690376"
+           x="30.304577"
+           y="34.128426" /></flowRegion><flowPara
+         id="flowPara3016" /></flowRoot>    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="43.63961"
+       y="50.702072"
+       id="text2997"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan2999"
+         x="43.63961"
+         y="50.702072">ご 注 文 は う さ ぎ さ ん で す か ?</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3001"
+       y="270.70209"
+       x="43.63961"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         y="270.70209"
+         x="43.63961"
+         id="tspan3003"
+         sodipodi:role="line">ご   注文   は   うさぎ   さん  です   か   ?</tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3005"
+       width="39.73243"
+       height="38.823803"
+       x="40.133785"
+       y="17.404602"
+       ry="0" />
+    <rect
+       ry="0"
+       y="17.404602"
+       x="90.133789"
+       height="38.823803"
+       width="39.73243"
+       id="rect3781"
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3783"
+       width="39.73243"
+       height="38.823803"
+       x="140.13379"
+       y="17.404602"
+       ry="0" />
+    <rect
+       ry="0"
+       y="17.404602"
+       x="190.13379"
+       height="38.823803"
+       width="39.73243"
+       id="rect3785"
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3787"
+       width="39.73243"
+       height="38.823803"
+       x="236.13379"
+       y="17.404602"
+       ry="0" />
+    <rect
+       ry="0"
+       y="17.404602"
+       x="280.13379"
+       height="38.823803"
+       width="39.73243"
+       id="rect3789"
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3791"
+       width="39.73243"
+       height="38.823803"
+       x="322.13379"
+       y="17.404602"
+       ry="0" />
+    <rect
+       ry="0"
+       y="17.404602"
+       x="370.13379"
+       height="38.823803"
+       width="39.73243"
+       id="rect3793"
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3795"
+       width="39.73243"
+       height="38.823803"
+       x="414.13379"
+       y="17.404602"
+       ry="0" />
+    <rect
+       ry="0"
+       y="17.404602"
+       x="462.13379"
+       height="38.823803"
+       width="39.73243"
+       id="rect3797"
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3799"
+       width="39.73243"
+       height="38.823803"
+       x="508.13379"
+       y="17.404602"
+       ry="0" />
+    <rect
+       ry="0"
+       y="17.404602"
+       x="554.13379"
+       height="38.823803"
+       width="39.73243"
+       id="rect3801"
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3803"
+       width="39.73243"
+       height="38.823803"
+       x="598.13379"
+       y="17.404602"
+       ry="0" />
+    <rect
+       y="236.32053"
+       x="283.95834"
+       height="40.083313"
+       width="109.98179"
+       id="rect3807"
+       style="fill:none;stroke:#000000;stroke-width:1.91668856;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <rect
+       y="235.95276"
+       x="221.39264"
+       height="40.81881"
+       width="41.016758"
+       id="rect3811"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3813"
+       width="72.955002"
+       height="40.432167"
+       x="419.78391"
+       y="236.1461" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3819"
+       width="41.016758"
+       height="40.81881"
+       x="685.39264"
+       y="235.95276" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans"
+       x="18"
+       y="226.36218"
+       id="text3883"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3885"
+         x="18"
+         y="226.36218"
+         style="font-size:24px;fill:#0000ff">接頭詞     名詞      助詞        名詞           名詞     助動詞     助詞   記号</tspan></text>
+    <rect
+       ry="0"
+       y="237.4046"
+       x="40.133789"
+       height="38.823803"
+       width="39.73243"
+       id="rect3887"
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <rect
+       y="236.22296"
+       x="105.73894"
+       height="40.27845"
+       width="84.923119"
+       id="rect3889"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <rect
+       y="236.1461"
+       x="517.78394"
+       height="40.432167"
+       width="72.955002"
+       id="rect3891"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3893"
+       width="41.016758"
+       height="40.81881"
+       x="619.39264"
+       y="235.95276" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="93.63961"
+       y="590.70209"
+       id="text3895"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3897"
+         x="93.63961"
+         y="590.70209">ご 注文 は うさぎ さん です か ?</tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:1.91668856;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3899"
+       width="109.98179"
+       height="40.083313"
+       x="273.95834"
+       y="556.32056" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3901"
+       width="41.016758"
+       height="40.81881"
+       x="227.39264"
+       y="555.95276" />
+    <rect
+       y="556.14612"
+       x="389.78391"
+       height="40.432167"
+       width="72.955002"
+       id="rect3903"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <rect
+       y="555.95276"
+       x="595.39264"
+       height="40.81881"
+       width="41.016758"
+       id="rect3905"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3907"
+       y="548.36218"
+       x="68"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:24px;fill:#0000ff"
+         y="548.36218"
+         x="68"
+         id="tspan3909"
+         sodipodi:role="line">接頭詞 名詞     助詞    名詞        名詞   助動詞 助詞 記号</tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2.26757145;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3911"
+       width="39.73243"
+       height="38.823803"
+       x="90.133789"
+       y="557.4046"
+       ry="0" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3913"
+       width="84.923119"
+       height="40.27845"
+       x="135.73894"
+       y="556.22296" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3915"
+       width="72.955002"
+       height="40.432167"
+       x="467.78391"
+       y="556.14612" />
+    <rect
+       y="555.95276"
+       x="549.39264"
+       height="40.81881"
+       width="41.016758"
+       id="rect3917"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 110,522.36218 30,-50 30,50"
+       id="path3919"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 320,522.36218 40,-50 50,50"
+       id="path3921"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 490,522.36218 30,-50 40,50"
+       id="path3923"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 360,472.36218 70,-50 90,50"
+       id="path3925"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 140,472.36218 130,-90 160,40"
+       id="path3927"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 270,382.36218 -20,150"
+       id="path3929"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.09350622;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3935"
+       width="69.906494"
+       height="23.947104"
+       x="110.04675"
+       y="468.36835" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="108"
+       y="488.36218"
+       id="text3931"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3933"
+         x="108"
+         y="488.36218"
+         style="font-size:24px;fill:#ff0000">名詞句</tspan></text>
+    <rect
+       y="468.36835"
+       x="330.04675"
+       height="23.947104"
+       width="69.906494"
+       id="rect3944"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.09350622;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3946"
+       y="488.36218"
+       x="328"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:24px;fill:#ff0000"
+         y="488.36218"
+         x="328"
+         id="tspan3948"
+         sodipodi:role="line">名詞句</tspan></text>
+    <rect
+       y="368.36835"
+       x="250.04675"
+       height="23.947104"
+       width="69.906494"
+       id="rect3976"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.09350622;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3978"
+       y="388.36218"
+       x="268"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:24px;fill:#ff0000"
+         y="388.36218"
+         x="268"
+         id="tspan3980"
+         sodipodi:role="line">文</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.09350622;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect3984"
+       width="69.906494"
+       height="23.947104"
+       x="390.04675"
+       y="408.36835" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="388"
+       y="428.36218"
+       id="text3986"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3988"
+         x="388"
+         y="428.36218"
+         style="font-size:24px;fill:#ff0000">動詞句</tspan></text>
+    <rect
+       y="468.36835"
+       x="490.04675"
+       height="23.947104"
+       width="69.906494"
+       id="rect3992"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.09350622;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text3994"
+       y="488.36218"
+       x="488"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:24px;fill:#ff0000"
+         y="488.36218"
+         x="488"
+         id="tspan3996"
+         sodipodi:role="line">動詞句</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="280"
+       y="622.36218"
+       id="text3998"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4000"
+         x="280"
+         y="622.36218"
+         style="font-size:16px;fill:#ff0000">注: 「動詞句」などのラベルは本気にしないでください</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="m 30,42.362183 c 0,0 -83.46615,-6.53385 -120,30 -36.53385,36.533847 -33.57435,100.366797 0,139.999997 33.574355,39.6332 120,40 120,40"
+       id="path4010"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="czzc" />
+    <path
+       sodipodi:nodetypes="czzc"
+       inkscape:connector-curvature="0"
+       id="path4194"
+       d="m 30,262.36218 c 0,0 -83.46615,-6.53385 -120,30 -36.53385,36.53385 -33.57435,180.3668 0,220 33.574355,39.6332 130,60 130,60"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend)" />
+    <rect
+       style="fill:#ffff00;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+       id="rect4196"
+       width="200"
+       height="50"
+       x="-162"
+       y="116.36218" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-161.42136"
+       y="155.14368"
+       id="text4002"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4004"
+         x="-161.42136"
+         y="155.14368">字句解析器</tspan></text>
+    <rect
+       y="376.36218"
+       x="-162"
+       height="50"
+       width="200"
+       id="rect4198"
+       style="fill:#ffff00;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+    <text
+       sodipodi:linespacing="125%"
+       id="text4006"
+       y="415.14368"
+       x="-161.42136"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         y="415.14368"
+         x="-161.42136"
+         id="tspan4008"
+         sodipodi:role="line">構文解析器</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="40"
+       y="82.362183"
+       id="text3063"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3065"
+         x="40"
+         y="82.362183"
+         style="font-size:24px">文字列</tspan></text>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3067"
+       y="302.36218"
+       x="40"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         style="font-size:24px"
+         y="302.36218"
+         x="40"
+         id="tspan3069"
+         sodipodi:role="line">字句列</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="140"
+       y="392.36218"
+       id="text3071"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3073"
+         x="140"
+         y="392.36218"
+         style="font-size:24px">構文</tspan></text>
+  </g>
+</svg>
