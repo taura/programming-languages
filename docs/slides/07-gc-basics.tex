@@ -678,8 +678,26 @@ f(object * p) {
 %%% ENG %%%
 \ifeng
 \begin{frame}
-  \frametitle{}
-  more advanced topics will be convered in later weeks
+  \frametitle{Shortcomings of GC}
+  \begin{itemize}
+  \item may be \mura{costly}
+    \begin{itemize}
+    \item what if a traversing GC visits 10GB of reachable objects,
+      to reclaim only 100MB of memory?
+    \end{itemize}
+  \item may \mura{pause the user program (mutator) for a long time}
+    \begin{itemize}
+    \item a traversing GC does not want the mutator to modify the
+      object graph while traversing it
+    \end{itemize}
+  \item may \mura{slow the user program}
+    \begin{itemize}
+    \item esp. by reference counting
+    \end{itemize}
+  \end{itemize}
+  
+  methods to overcome some of the issues
+  will be covered in later weeks
 \end{frame}
 \fi
 %%%%%%%%%%%
