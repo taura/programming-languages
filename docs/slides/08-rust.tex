@@ -208,7 +208,8 @@ escapechar=\@,
     {\it it can safely reclaim the data when the owning pointer goes away}
   \end{itemize}
   \begin{center}
-    {\large\it ``{\it \therustrule} rule''}
+    {\large\it ``\mura{single-owner}-\ao{multiple-borrowers} rule''}
+    \vskip5mm
 
     \includegraphics[width=0.4\textwidth]{out/pdf/svg/one_owner_multiple_borrowers_1.pdf}
   \end{center}
@@ -218,16 +219,18 @@ escapechar=\@,
 \begin{frame}
   \frametitle{The rules are enforced statically}
   \begin{itemize}
-  \item Rust maintains the rule \ao{\it statically}
+  \item Rust enforces the rules (or, detect violations thereof)
+    \ao{\it statically}
     (as opposed to \aka{\it dynamically})
-  \item equivalently,
     \begin{itemize}
     \item \ao{\it compile-time} rather than at \aka{\it runtime}
     \item \ao{\it before} execution not \aka{\it during} execution
     \end{itemize}
   \end{itemize}
 
-  called \ao{\it borrow checker}
+  \begin{center}
+    {\large\it ``borrow checker''}
+  \end{center}
   
 \end{frame}
 
@@ -320,11 +323,12 @@ escapechar=\@,
 %%%%%%%%%%%%%%%%% 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
-  \frametitle{Assignments do {\it not copy}, but {\it move}, the reference}
+  \frametitle{Assignments of owning pointers}
   \begin{itemize}
-  \item to maintain ``single-owner'' rule,
-    an assignment in Rust {\it moves} the value out of the righthand side,
-    disallowing further use of it
+  \item to maintain the ``single-owner'' rule,
+    an assignment of owning pointers in Rust
+    \aka{\it does not copy, but moves it}
+    out of the righthand side, disallowing further use of it
     \begin{center}
   {\tt{\footnotesize
 \begin{tabbing}
@@ -389,7 +393,7 @@ fn foo() \{ \\
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
-  \frametitle{Note: exceptions to ``assignment moves the reference''}
+  \frametitle{Exceptions to ``assignment moves the reference''}
   \begin{itemize}
   \item you may think the moving assignment
   {\tt{\footnotesize
@@ -399,15 +403,15 @@ fn foo() \{ \\
 \>// {\it y can no longer be used}
 \end{tabbing}}}
 contradicts what you have seen
-\item does it apply to a primitive type, say {\tt f64}?
+\item if it applies everywhere, does the following program violate it?
   {\tt{\footnotesize
 \begin{tabbing}
 aa\=aa\=aa\=\kill
-fn foo() \{ \\
+fn foo() -> f64 \{ \\
 \>let a = 123.456; \\
 \>\mura{// {\it does the reference to 123.456 move out from a!?}} \\
 \>\mura{let b = a;} \\
-\>a + 0.789; // {\it if so, is this invalid!?} \\
+\>a + 0.789 // {\it if so, is this invalid!?} \\
 \} \\
 \end{tabbing}}}
 \item answer: no, it does \ao{\it not} apply to primitive types like {\tt i32}, {\tt f64}, etc.
@@ -472,7 +476,8 @@ fn foo() \{ \\
   \frametitle{{\tt Box<$T$>} makes an owning pointer}
   \begin{itemize}
   \item making a pointer by \mura{\tt Box::new($v$)} moves the
-    reference out of $v$, too, and it becomes the owning pointer
+    reference out of $v$, too,
+    and \mura{\tt Box::new($v$)} becomes the owning pointer
     \begin{columns}
       \begin{column}{0.6\textwidth}
   {\tt{\footnotesize
@@ -531,7 +536,7 @@ fn foo() {
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
-  \frametitle{Note: difference between $T$ and {\tt Box<$T$>}?}
+  \frametitle{Difference between $T$ and {\tt Box<$T$>}?}
   \begin{itemize}
   \item as you have seen, the effect of
 \begin{lstlisting}
@@ -539,12 +544,12 @@ let b = a;
 \end{lstlisting}
 and
 \begin{lstlisting}
-let b = Box::<T>::new(a);
+let b = Box::new(a);
 \end{lstlisting}
 look identical
     
 \item as far as data lifetime is concerned,
-  it is in fact safe to think \mura{$T$} and \mura{\tt Box::<$T$>}
+  it is in fact safe to say \mura{$T$} and \mura{\tt Box<$T$>}
   are identical
   
 \item Rust have the distinction for
@@ -557,7 +562,7 @@ look identical
     
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
-  \frametitle{Data layout differences between $T$ and {\tt Box::<$T$>}}
+  \frametitle{Data layout differences between $T$ and {\tt Box<$T$>}}
   \begin{itemize}
   \item {\tt S} and {\tt U} below have different data layouts
     \begin{itemize}
@@ -572,18 +577,21 @@ look identical
       \includegraphics[width=0.3\textwidth]{out/pdf/svg/t_vs_boxt_2.pdf}
     \end{center}
     
-  \item in particular, {\tt Box::<$T$>} is essential to define recursive data structures
+  \item in particular, {\tt Box<$T$>} is essential to define recursive data structures
     \begin{itemize}
     \item {\tt struct S \{ ..., p:\ao{S}, \}} is not allowed, whereas
-    \item {\tt struct U \{ ..., p:\mura{Box::<U>}, \}} is
+    \item {\tt struct U \{ ..., p:\mura{Box<U>}, \}} is
     \end{itemize}
+  \item note: {\tt U} above can never be constructed; a recursive data
+    structure typically looks like
+    {\tt struct U \{ ..., p:\mura{Option<Box<U>>}, \}}
   \end{itemize}
 \end{frame}
 
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}
-  \frametitle{Data layout differences between $T$ and {\tt Box::<$T$>}}
+  \frametitle{Data layout differences between $T$ and {\tt Box<$T$>}}
   \begin{itemize}
   \item the distinction is insignificant when discussing lifetimes
     \begin{center}
@@ -591,7 +599,7 @@ look identical
       \hspace{1cm}
       \includegraphics[width=0.3\textwidth]{out/pdf/svg/t_vs_boxt_2.pdf}
     \end{center}
-  \item in both cases, {\tt p} (yellow box) is gone exactly when
+  \item in both cases, data of $T$ (yellow box) is gone exactly when
     the enclosing structure is gone
   \item Rust spec also says it allocates $T$ on stack and
     move it to heap when {\tt Box<$T$>} is made
@@ -628,14 +636,14 @@ look identical
 \begin{frame}
   \frametitle{The (huge) implication to memory management}
   \begin{itemize}
-  \item assume there are only owning pointers for now (forget about
+  \item if there are only owning pointers (i.e., no 
     borrowing pointers)
-  \item when
+  \item \ao{\it whenever an owning pointer is gone} (e.g., 
     \begin{itemize}
-    \item a variable of owning pointer type goes out of scope or
-    \item a variable or field of owning pointer type is overwritten,
+    \item a variable goes out of scope or
+    \item a variable or field is overwritten)\ao{\it ,}
     \end{itemize}
-    the entire tree rooted from the pointer can be safely reclaimed
+    \ao{\it the entire tree rooted from the pointer can be safely reclaimed}
   \end{itemize}
   \begin{center}
     \includegraphics[width=0.3\textwidth]{out/pdf/svg/rust_can_make_tree_but_not_graph_1.pdf}
@@ -672,9 +680,10 @@ fn take_two(a : Box<@$T$@>, b : Box<@$T$@>) {
 \begin{frame}[fragile]
   \frametitle{Basics}
   \begin{itemize}
-  \item you can make a borrowing pointer to $T$ ({\tt \&$T$})
-    from $T$ or {\tt Box<$T$>}
+  \item you can make any number of borrowing pointers
+    to $T$ ({\tt \&$T$}) from $T$ or {\tt Box<$T$>}
   \item both the owning pointer and borrowing pointers can be used
+    at the same time
 \begin{lstlisting}
 let a = S{x: .., y: ..};
 let b = &a;
