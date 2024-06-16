@@ -745,15 +745,18 @@ b.x = 100; // @\aka{\it NG}@
     \begin{itemize}
     \item they are \ao{\it immutable} references
     \end{itemize}
-  \item you can modify data through a mutable reference {\tt \&mut $T$}
+  \item you can modify data only through
+    {\it a mutable reference} ({\tt \&mut $T$})
 \begin{lstlisting}
 let @\ao{\tt mut}@ a : S = S{x: 10, y: 20};
 let b : &@\ao{\tt mut}@ S = &@\ao{\tt mut}@ a;
 b.x = 100; // @\ao{\it OK}@
 \end{lstlisting}
+\item the differene is largely orthogonal to memory management
   \end{itemize}
 \end{frame}
 
+\iffalse
 %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
   \frametitle{Additional restrictions on {\tt \&mut $T$}}
@@ -781,6 +784,7 @@ fn mut_ref() {
 \end{lstlisting}
 \end{itemize}
 \end{frame}
+\fi
 
 %%%%%%%%%%%%%%%%%
 \iffalse
