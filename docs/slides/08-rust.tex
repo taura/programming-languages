@@ -1366,7 +1366,7 @@ struct R {
 }
 \end{lstlisting}
 \item you need to specify the lifetime parameter of {\tt p},
-  and signifies that {\tt R} takes a lifetime parameter
+  and let {\tt R} take the lifetime parameter
 \begin{lstlisting}
 struct R@\ao{\tt <'a>}@ {
   p: &@\ao{\tt 'a}@ i32
@@ -1375,6 +1375,8 @@ struct R@\ao{\tt <'a>}@ {
 \end{lstlisting}
 \item {\tt R<'a>} represents \ao{\it {\tt R} whose {\tt p} field
   points {\tt i32} whose lifetime is {\tt 'a}}
+\item this way, a structure containing borrowing references
+  exposes there referent lifetimes to its user
 \end{itemize}
 \end{frame}
 
@@ -1459,7 +1461,7 @@ so that the following compiles
 
 %%%%%%%%%%%%%%%%% 
 \begin{frame}[fragile]
-  \frametitle{Answer that I thought should work but didn't}
+  \frametitle{Answer that I thought should work but doesn't}
   \begin{itemize}
   \item define {\tt S} so
     \begin{itemize}
@@ -1500,8 +1502,12 @@ fn make_s(@\ao{\tt a: \&'a T}@, @\aka{\tt b: \&'b T}@) -> S<@\ao{\tt 'a}@, @\aka
   \end{lstlisting}
   \begin{itemize}
   \item I don't know what is the exact spec of Rust that
-  rejects this program, but I hypothesize that to dereference
-  {\tt s} for any field ({\tt p}), all fields must be alive
+    rejects this program, but it is apparently that
+    Rust disallows {\it dereference of any struct
+      any lifetime parameter of which is invalid at the
+      point of dereference}
+  \item in this example, {\tt s : S<'a,'b>} and one of
+    its lifetime parameters ({\tt 'b}) is invalid at line 18
   \end{itemize}
 \end{frame}
 
@@ -1575,7 +1581,7 @@ aa\=aa\=aa\=\kill
     \begin{enumerate}
     \item I reclaim $T_v$, all data \ao{\it reachable from $v$ through owning pointers}
     \item $T_v$ may be reachable from other variables via borrowing references,
-      but I nevertheless guarantees a reclaimed memory block is never accessed
+      but I guarantee such references are never dereferenced
     \end{enumerate}
   \end{itemize}
 
@@ -1589,7 +1595,25 @@ aa\=aa\=aa\=\kill
   \end{center}
 \end{frame}
 
-%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{How Rust achieved it?}
+  \begin{itemize}
+  \item<1-> say two data structures $T_v$ rooted at variable $v$
+    and $T_p$ rooted at variable $p$
+  \item<2-> assume $v$ goes out of scope earlier than $p$
+  \item<3-> we wish to guarantee when $v$ goes out of scope, it is safe to reclaim the entire $T_v$
+  \item<4-> generally it is of course not the case, as
+    there may be pointers somewhere in $T_p$ $\rightarrow$ somewhere in $T_v$
+  \end{itemize}
+
+  \begin{center}
+\only<1-3>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/borrow_check_1.pdf}}%
+\only<4>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/borrow_check_6.pdf}}%
+  \end{center}
+\end{frame}
+
+%%%%%%%%%%%%%%%%% 
 \begin{frame}
   \frametitle{How Rust achieved it?}
   \begin{itemize}
@@ -1598,10 +1622,8 @@ aa\=aa\=aa\=\kill
   \item<2-> $\Rightarrow$ there can be no \ao{\it owning} pointers
     from outside $T_v$ to inside $T_v$
   \item<3-> $\Rightarrow$ any such pointer must be a borrowing pointer
-  \item<4-> crucially, such a borrowing pointer must have a lifetime parameter
-    of the referent
-  \item<5-> as a result, a pointer that can reach $T_v$ cannot be dereferenced
-    after $v$ goes out of scope
+  \item<4-> crucially, a borrowing pointer must have a lifetime parameter
+    (lifetime of the referent); say {\tt 'a}
   \end{itemize}
 
   \begin{center}
@@ -1609,9 +1631,29 @@ aa\=aa\=aa\=\kill
 \only<2>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/borrow_check_2.pdf}}%
 \only<3>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/borrow_check_3.pdf}}%
 \only<4>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/borrow_check_4.pdf}}%
-\only<5>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/borrow_check_5.pdf}}%
   \end{center}
 \end{frame}
+
+
+%%%%%%%%%%%%%%%%% 
+\begin{frame}
+  \frametitle{How Rust achieved it?}
+  \begin{itemize}
+  \item<1-> any structure containing borrowing pointers must carry these
+    parameters too, as part of its type (e.g., {\tt S<'a>})
+  \item<2-> assignment to such borrowing pointers determines $'a$
+    to end when the righthand side goes out of scope ($\alpha$ in the figure)
+  \item<3-> by {\tt 'a} $= \alpha$, 
+    the containing data structure ($T_p$, of type {\tt S<'a>})
+    cannot be dereferenced
+  \end{itemize}
+
+  \begin{center}
+\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/borrow_check_4.pdf}}%
+\only<2->{\includegraphics[width=0.6\textwidth]{out/pdf/svg/borrow_check_5.pdf}}%
+  \end{center}
+\end{frame}
+
 
 \iffalse
 %%%%%%%%%%%%%%%%% 
