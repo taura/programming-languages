@@ -799,8 +799,8 @@ invariant
 
 \item<4-> a key observation
 \begin{quote}
-  the time (cost) of a single GC
-  is roughly proportional to the amount of reached objects (i.e., $\propto r$)
+  \ao{the time (cost) of a single GC
+  is roughly proportional to the amount of reached objects (i.e., $\propto r$)}
 \end{quote}
   
 \end{itemize}
@@ -847,7 +847,7 @@ invariant
   \begin{itemize}
   \item the key observation
     \begin{quote}
-      the time (cost) of a single GC is roughly proportional to the amount of reached objects (i.e., $\propto r$)
+      \ao{the time (cost) of a single GC is roughly proportional to the amount of reached objects (i.e., $\propto r$)}
     \end{quote}
     ignores the cost of so-called ``sweep phase''
 
@@ -892,7 +892,7 @@ invariant
 \item important formula:
 \[ \mbox{allocation cost per byte} \propto \mbox{\ao{const.}} + \ao{\frac{r}{M - r}} \]
 
-\item \ao{$r/(M-1)$} is often
+\item \ao{$r/(M-r)$} is often
   called \ao{\it mark-cons ratio}. its origin:
   \begin{itemize}
   \item mark : the amount of work to \ao{\it mark} reachable objects
@@ -1695,997 +1695,6 @@ $C$ is the base address to obtain the card address. that is,
   all cards ($\propto$ heap)
 \item when any address of a card is written, we must consider
   all addresses of the card a root
-\end{itemize}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\ifja
-\section{マーク\&スイープGCのトピック}
-\fi
-\ifeng
-\section{Topics on Mark\&Sweep GCs}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\ifja
-\subsection{空き領域管理}
-\fi
-\ifeng
-\subsection{Free Area Management}
-\fi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}
-\frametitle{空き領域管理・探索}
-\begin{itemize}
-\item コピーGC以外のあらゆる方式(マーク\&スイープGC, 
-  参照カウント, malloc/free)では，空き領域は連続していない
-\item $\rightarrow$ 空き領域の把握・管理が必要
-\item 目標:
-  \begin{itemize}
-  \item メモリ割り当て速度:
-    メモリ割り当て要求に応じたサイズの空き領域を素早く見つける
-  \item メモリ利用効率:
-    空いている領域はなるべく使う
-  \end{itemize}
-\item 基本データ構造: フリーリスト(空き領域のリスト)
-\begin{center}
-\only<1>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_1.pdf}}%
-\only<2>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}}%
-\end{center}
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}
-\frametitle{Managing and finding free space}
-\begin{itemize}
-\item in any method except for copying GC
-  (mark\&sweep GC, reference counting, malloc/free),
-  free space are not contiguous
-\item $\rightarrow$ tracking and managing free blocks is required
-\item goal:
-  \begin{itemize}
-  \item good allocation speed:
-    quickly find a region that fits the request size
-  \item good memory utilization:
-    do not waste available space
-  \end{itemize}
-\item basic data structure: free list (list of free blocks)
-\begin{center}
-\only<1>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_1.pdf}}%
-\only<2>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}}%
-\end{center}
-\end{itemize}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}[fragile]
-\frametitle{フリーリスト}
-\begin{itemize}
-\item 空き領域のリスト
-\begin{lstlisting}
-typedef struct cell {
-  struct cell * next; 
-  size_t sz;
-  /* 必要ならばその他の情報 */
-} cell;
-cell * free_list;
-\end{lstlisting}
-
-\item 割り当て(malloc) $\approx$
-  \begin{enumerate}
-  \item 要求サイズ以上の空き領域の(線型)探索
-  \item 領域が余ったら余りをまたリストへ
-  \end{enumerate}
-
-\item 回収(free) $\approx$
-  \begin{enumerate}
-  \item 開放されたセルをリストへ戻す(問題: そのサイズは?)
-  \item 開放されたセルとアドレスが隣接しているセルがあったら統合
-    (coalescing)
-  \end{enumerate}
-
-\begin{center}
-\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}
-\end{center}
-
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}[fragile]
-\frametitle{Free list}
-\begin{itemize}
-\item list of free blocks (or cells)
-\begin{lstlisting}
-typedef struct cell {
-  struct cell * next; 
-  size_t sz;
-  /* other info as necessary */
-} cell;
-cell * free_list;
-\end{lstlisting}
-
-\item allocation (malloc) $\approx$
-  \begin{enumerate}
-  \item (linearly) search for a cell large enough for the requested size
-  \item if a free space remains in the cell, put it back to the free list
-  \end{enumerate}
-
-\item reclamation (free) $\approx$
-  \begin{enumerate}
-  \item put it back to the free list (issue: how to know its size?)
-  \item if the cell just freed is adjacent to another free cell,
-    merge them (coalescing)
-  \end{enumerate}
-
-\begin{center}
-\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}
-\end{center}
-
-\end{itemize}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}
-\frametitle{単純な方式の問題}
-\begin{itemize}
-\item 割り当て: 
-  \begin{itemize}
-  \item それなりに走査が必要
-  \item $\rightarrow$ 
-    サイズごとに別れたフリーリスト(segregated free lists)
-  \end{itemize}
-\item 回収: 
-  \begin{itemize}
-  \item coalescing可能かを調べるオーバーヘッド
-  \item 回収されたセルのサイズ
-  \item $\rightarrow$ 
-    大きな塊(ページ)単位で同じサイズ専用にする
-    (Big Bags of Pages; BiBOP)
-  \end{itemize}
-
-\begin{center}
-\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}
-\end{center}
-
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}
-\frametitle{Issues in the simple method}
-\begin{itemize}
-\item allocation: 
-  \begin{itemize}
-  \item needs to traverse a fair amount of cells (until you find a cell that fits)
-  \item $\rightarrow$ 
-    make many free lists, one for a fixed size (\ao{\it segregated free lists})
-  \end{itemize}
-\item reclamation: 
-  \begin{itemize}
-  \item needs to check if coalescing is possible
-  \item needs to know the size of the freed cell
-  \item $\rightarrow$
-    manage memory in a larger unit (\ao{\it page}) and dedicate
-    a page to a single size (\ao{\it Big Bags of Pages; BiBOP})
-  \end{itemize}
-
-\begin{center}
-\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}
-\end{center}
-
-\end{itemize}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}
-\frametitle{サイズごとのフリーリスト}
-\begin{columns}
-\begin{column}{0.4\textwidth}
-\begin{itemize}
-\item 小さなサイズ(e.g., 2Kバイト以下)について，
-  代表的なサイズのフリーリストを作る
-\item それ以上大きな空き領域はすべてひとつのリストにまとめる
-\item 例: 
-  \begin{itemize}
-  \item 16, 32, 48, 64, \ldots, 448, 512, 672, 800, 1024, 1344, 2048
-  \item 2048バイト以上すべて
-  \end{itemize}
-\end{itemize}    
-\end{column}
-\begin{column}{0.6\textwidth}
-\begin{center}
-\includegraphics[width=\textwidth]{out/pdf/svg/segregated_free_lists.pdf}
-\end{center}
-\end{column}
-\end{columns}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}
-\frametitle{Segregated free lists}
-\begin{columns}
-\begin{column}{0.4\textwidth}
-\begin{itemize}
-\item for small sizes (e.g., $<$ 2KB),
-  make a free list for various representative sizes 
-\item a single list for large sizes
-\item ex: 
-  \begin{itemize}
-  \item 16, 32, 48, 64, \ldots, 448, 512, 672, 800, 1024, 1344, 2048
-  \item 2048 bytes or larger
-  \end{itemize}
-\end{itemize}    
-\end{column}
-\begin{column}{0.6\textwidth}
-\begin{center}
-\includegraphics[width=\textwidth]{out/pdf/svg/segregated_free_lists.pdf}
-\end{center}
-\end{column}
-\end{columns}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}[fragile]
-\frametitle{割り当てシーケンスの例}
-\begin{columns}
-\begin{column}{0.5\textwidth}
-\begin{itemize}
-\item \ao{色}\aka{付}\ao{き}\aka{部}\ao{分}\aka{:} 
-  小さいオブジェクト用の速いパス
-\item \ao{青部分:} サイズ(sz)がコンパイル時の定数であれば，
-  原理的には(コンパイラの定数畳み込みで)除去可能な部分
-\item \aka{赤部分:} 本質部分．リストを一回手繰る(6-7命令)
-\item 注: マルチスレッド環境では
-  \begin{itemize}
-  \item {\tt free\_lists}をスレッドごとに持たせる, または
-  \item \aka{{\tt free\_lists}の読み出し〜更新}を不可分に
-    (スケーラビリティ阻害)
-  \end{itemize}
-\end{itemize}
-\end{column}
-
-\begin{column}{0.42\textwidth}
-\begin{lstlisting}
-void ** free_lists;
-
-void * malloc(size_t sz) {
-  @\ao{\tt if (SMALL(sz)) \{}@
-    @\ao{\tt size\_t idx = bytes\_to\_idx(sz);}@
-    @\aka{\tt cell * a = free\_lists[idx];}@
-    @\aka{\tt if (a) \{}@
-      @\aka{\tt free\_lists[idx] = a->next;}@
-      @\aka{\tt return a;}@
-    } else {
-      return malloc_slow(sz);
-    }
-  } else {
-    return malloc_slow(sz);
-  }
-}
-\end{lstlisting}
-\end{column}
-\end{columns}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}[fragile]
-\frametitle{Allocation sequence}
-\begin{columns}
-\begin{column}{0.5\textwidth}
-\begin{itemize}
-\item \ao{C}\aka{o}\ao{l}\aka{o}\ao{r}\aka{e}\ao{d}\aka{:} 
-  a fast path for small objects
-\item \ao{blue:} the overhead removable if the size (sz)
-  is a compile-time constant 
-\item \aka{red:} the essential cost. traverse a list once (6-7 instructions)
-\item note: in multithreaded programs, we either have to
-  \begin{itemize}
-  \item let each thread have its own {\tt free\_lists}, or
-  \item atomically perform \aka{the read-modify-write on {\tt free\_lists}}
-    (this hinders scalability)
-  \end{itemize}
-\end{itemize}
-\end{column}
-
-\begin{column}{0.42\textwidth}
-\begin{lstlisting}
-void ** free_lists;
-
-void * malloc(size_t sz) {
-  @\ao{\tt if (SMALL(sz)) \{}@
-    @\ao{\tt size\_t idx = bytes\_to\_idx(sz);}@
-    @\aka{\tt cell * a = free\_lists[idx];}@
-    @\aka{\tt if (a) \{}@
-      @\aka{\tt free\_lists[idx] = a->next;}@
-      @\aka{\tt return a;}@
-    } else {
-      return malloc_slow(sz);
-    }
-  } else {
-    return malloc_slow(sz);
-  }
-}
-\end{lstlisting}
-\end{column}
-\end{columns}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}[fragile]
-\frametitle{Big Bags of Pages}
-\begin{columns}
-\begin{column}{0.65\textwidth}
-\begin{itemize}
-\item ヒープをある固定サイズのブロック(ページ)に分けて管理
-  \begin{itemize}
-  \item ページ: アドレスの上位bitを共有するアドレスの集合
-  \item 例: 64 bitアドレス，上位52 bit共有 $\rightarrow$ 
-    $2^{12}=4096$バイト/ページ
-  \end{itemize}
-\item 1つのページは，
-  \begin{itemize}
-  \item まるごと空き，または
-  \item 一つのサイズのオブジェクト専用(e.g., 48バイト専用)
-  \end{itemize}
-\end{itemize}
-\end{column}
-\begin{column}{0.35\textwidth}
-\begin{center}
-\includegraphics[width=\textwidth]{out/pdf/svg/bibop.pdf}
-\end{center}
-\end{column}
-\end{columns}
-
-\begin{itemize}
-\item Coalescing: 
-  「1ページまるごと空いた」場合だけ，他のサイズに流用
-  \begin{itemize}
-  \item $\rightarrow$ 各ページごとに空きセル数を数えるだけで良い
-  \end{itemize}
-\item サイズもオブジェクト毎に持たせる必要なし
-\end{itemize}
-
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}[fragile]
-\frametitle{Big Bags of Pages}
-\begin{columns}
-\begin{column}{0.65\textwidth}
-\begin{itemize}
-\item manage the heap by dividing it into constant-sized blocks (page)
-  \begin{itemize}
-  \item a page: a set of addresses sharing a number of highest bits
-  \item e.g. 64 bit addresses, sharing the highest 52 bits $\rightarrow$ 
-    $2^{12}=4096$ bytes/page
-  \end{itemize}
-\item each page is either
-  \begin{itemize}
-  \item completely free or
-  \item used only for a single size (e.g., only for 48 bytes)
-  \end{itemize}
-\end{itemize}
-\end{column}
-\begin{column}{0.35\textwidth}
-\begin{center}
-\includegraphics[width=\textwidth]{out/pdf/svg/bibop.pdf}
-\end{center}
-\end{column}
-\end{columns}
-
-\begin{itemize}
-\item Coalescing:
-  repurpose a page only when the page becomes completely empty
-  \begin{itemize}
-  \item $\rightarrow$ only need to count the number of free cells in the page
-  \end{itemize}
-\item does not require per-object size field either
-\end{itemize}
-
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\ifja
-\subsection{マーク\&スイープGCの性能改善}
-\fi
-\ifeng
-\subsection{Improving mark\&sweep GCs}
-\fi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}
-\frametitle{マーク\&スイープGCの性能改善}
-\begin{itemize}
-\item 全体構成:
-  \begin{enumerate}
-  \item \ao{マークフェーズ:} ルートからポインタをたどり，
-    到達可能なオブジェクトに\ao{印をつける}
-  \item \ao{スイープフェーズ:} 
-    印のついていないオブジェクトを回収 $\rightarrow$
-    \ao{フリーリストに戻す}
-  \end{enumerate}
-\item 基本的な工夫:
-  \begin{itemize}
-  \item サイズごとのフリーリスト
-  \item BiBOPによる管理
-  \item \ao{マークビットとオブジェクトの分離}
-  \item \ao{遅延スイープ}
-  \end{itemize}
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}
-\frametitle{Improving performance of mark\&sweep GC}
-\begin{itemize}
-\item overall structure:
-  \begin{enumerate}
-  \item \ao{mark phase:} traverses pointers from the root,
-    \ao{marking} reached objects along the way
-  \item \ao{sweep phase:} 
-    reclaims unmarked objects $\rightarrow$
-    \ao{pushes them back to an appropriate free list}
-  \end{enumerate}
-\item basics:
-  \begin{itemize}
-  \item segregated free lists
-  \item BiBOP
-  \item \ao{mark bits separated from objects}
-  \item \ao{lazy sweep}
-  \end{itemize}
-\end{itemize}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\ifja
-\subsubsection{マークビットとオブジェクトの分離}
-\fi
-\ifeng
-\subsubsection{Separated Mark Bits}
-\fi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}[fragile]
-\frametitle{マークビットとオブジェクトの分離}
-\begin{itemize}
-\item マークフェーズで「到達可能」の印をどこにつけるか?
-\item 方法1: オブジェクト内の1ワード
-\item \ao{方法2: オブジェクト外の領域にまとめて持つ}
-  \begin{itemize}
-  \item 具体的にはどこ? ページヘッダ．
-    そのページ内のオブジェクトの分をまとめて持つ(1 バイト/オブジェクト)
-\begin{lstlisting}
-mark(void * o) {
-  page * page = o & 0xFFF...000; /* ページの先頭アドレス */
-  page->header->mark[(o & 0x000...FFF) >> 4] = 1;
-}
-\end{lstlisting}
-\item ポイント: 書き込まれるキャッシュラインの数が減る
-\end{itemize}
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}[fragile]
-\frametitle{Separated mark bits}
-\begin{itemize}
-\item question: where do you put the mark bit of an object?
-\item Method 1: use a word within an object
-\item \ao{Method 2: use a separate space dedicated for mark-bits
-    outside objects}
-  \begin{itemize}
-  \item where is the separate space, exactly?
-    $\rightarrow$ page header;
-    holds mark bits of all the objects in the page together
-    (1 byte/object)
-\begin{lstlisting}
-mark(void * o) {
-  page * page = o & 0xFFF...000; /* page header address */
-  page->header->mark[(o & 0x000...FFF) >> 4] = 1;
-}
-\end{lstlisting}
-\item point: gather spaces that are written
-\end{itemize}
-\end{itemize}
-\end{frame}
-\fi
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\ifja
-\subsubsection{遅延スイープ}
-\fi
-\ifeng
-\subsubsection{Lazy Sweep}
-\fi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}
-\frametitle{遅延スイープ}
-\begin{itemize}
-\item スイープの目的: 空き領域の回収
-\item 自然には，空き領域を適切なサイズのフリーリストに戻す(BiBOP法)
-\item \ao{遅延スイープ:}
-  フリーリストの構築を，メモリ割り当てで必要になるまで遅らせる
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}
-\frametitle{Lazy sweep}
-\begin{itemize}
-\item why do we need to sweep: reclaim space that has become free
-\item naturally, you would put them back to an appropriate free list (cf. BiBOP)
-\item \ao{lazy sweep:}
-  defer this operation until you need to allocate them
-\end{itemize}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}[fragile]
-\frametitle{スイープフェーズの全体像}
-\begin{itemize}
-\item マークフェーズ終了後，ページは3種類に分類できる
-  \begin{itemize}
-  \item 空ページ: 到達したオブジェクト0
-  \item 一部空ページ: 到達したオブジェクト$>0$, 到達しなかったオブジェクト$>0$
-  \item 満杯ページ: 到達しなかったオブジェクト$=0$
-  \end{itemize}
-
-\item スイープの実際: 素直には，
-\begin{lstlisting}
-for (全ページ p) {
-  if (p が空) {
-    pを空ページリストにつなぐ;
-    /* 任意サイズのページとして再利用可能 */
-  } else if (p が一部空) {
-    sz = そのページ内のオブジェクトのサイズ;
-    @\ao{\tt p中の空き領域をszバイト用のフリーリストにつなぐ;}@
-  }
-}    
-\end{lstlisting}
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}[fragile]
-\frametitle{Overview of the sweep phase}
-\begin{itemize}
-\item after a mark phase is finished, a page is either
-  \begin{itemize}
-  \item empty: zero objects have been reached
-  \item partial: $>0$ objects have been reached, $>0$ objects have not been reached
-  \item full: zero objects have not been reached
-  \end{itemize}
-
-\item a naive implementation of a sweep phase: 
-\begin{lstlisting}
-for (all pages p) {
-  if (p is empty) {
-    put p in the empty page list;
-    /* can be repurposed for any size */
-  } else if (p is partial) {
-    sz = the size of objects in the page;
-    @\ao{\tt put free cells in p to the free list fo sz bytes;}@
-  }
-}    
-\end{lstlisting}
-\end{itemize}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}[fragile]
-\frametitle{遅延スイープ}
-\begin{itemize}
-\item フリーリストの構築をすぐに行わない
-\item 各サイズ用の「回収リスト」につなぐ
-\begin{lstlisting}
-for (全ページ p) {
-  if (p が空) {
-    pを空ページリストにつなぐ;
-    /* 任意サイズ用の空領域として再利用可能 */
-  } else if (p が一部空) {
-    sz = そのページ内のオブジェクトのサイズ;
-    @\ao{\tt pをszバイト用の「回収リスト」につなぐ;}@
-  }
-}    
-\end{lstlisting}
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}[fragile]
-\frametitle{Lazy sweep}
-\begin{itemize}
-\item does not rebuild free lists immediately
-\item instead puts the page into the list of ``to-reclaim'' pages
-\begin{lstlisting}
-for (all pages p) {
-  if (p is empty) {
-    put p in the empty page list;
-    /* can be repurposed for any size */
-  } else if (p is partial) {
-    sz = the size of objects in the page;
-    @\ao{\tt put p into the reclaim list for sz bytes;}@
-  }
-}    
-\end{lstlisting}
-\end{itemize}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}
-\frametitle{回収リスト}
-\begin{itemize}
-\item 空き領域が1つ以上含まれる，完全に空ではないページのリスト
-\item フリーリスト同様，サイズごとに作る
-\item メモリ割り当て時，フリーリストが空だった時に回収リストからセルを補充
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}
-\frametitle{Reclaim list}
-\begin{itemize}
-\item list of pages that have at least one free cell
-\item like free lists, there is a list per size
-\item when an allocation finds the free list empty,
-  look at the reclaim list and if there is any page,
-  move free cells of a page into the free list
-\end{itemize}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}
-\frametitle{なぜスイープを遅延させる?}
-\begin{itemize}
-\item 仕事を「後回し」にしてるだけ? それだけではない
-
-\item Coalescingの機会向上:
-  \begin{itemize}
-  \item 何回か後のGCまでに使われず，それまでに空ページになるかもしれない
-  \end{itemize}
-  
-\item 参照の時間局所性改善:
-  \begin{itemize}
-  \item フリーリスト充填のためのメモリ参照と，
-  実際にmutatorに使われるまでの時間を短くする
-  \end{itemize}
-
-\item スイープの時間を少しでも短くする
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}
-\frametitle{What's the point?}
-\begin{itemize}
-\item simply deferring the task you need to do anyway? not exactly so
-
-\item make more coalescing opportunities:
-  \begin{itemize}
-  \item after a few GCs, a page may become empty
-    before it needs to be reused for allocation
-  \end{itemize}
-  
-\item improve temporal locality of references:
-  \begin{itemize}
-  \item by touching free cells to put them back to free list,
-    closely before they are used by the mutator
-  \end{itemize}
-
-\item shorten the pause time due to the sweep phase
-\end{itemize}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\ifja
-\section{保守的GC}
-\fi
-\ifeng
-\section{Conservative GC}
-\fi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}
-\frametitle{保守的GC (Conservative GC)}
-\begin{itemize}
-\item \ao{保守的}GC 
-  \begin{itemize}
-  \item $\approx$ C/C++など，GCを前提に設計されていない言語用のGC
-  \item $\approx$ 
-    各語がポインタか否かわからない
-    (わからない時は「保守的に」ポインタと見なす)前提でのGC
-  \end{itemize}
-\item 反対語: \ao{正確な(accurate)}GC
-  \begin{itemize}
-  \item 正確といっても，「死んでいる(以降アクセスされない)」ゴミが全部とれるわけではない
-  \item 正確・保守的GCの意味は
-    「ポインタの判別(pointer identification)」が正確か保守的かということ
-  \item 正確なGCを行う言語では例えば，
-    ある語を見ただけでポインタか否かがわかるようなデータ表現を使う
-    \begin{itemize}
-    \item 例: 最下位bit $= 0$ (ポインタ), $= 1$ (非ポインタ)
-    \end{itemize}
-  \end{itemize}
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}
-\frametitle{Conservative GC}
-\begin{itemize}
-\item \ao{\it conservative} GC 
-  \begin{itemize}
-  \item<1-> $\approx$ GC for languages designed without assuming GC,
-    such as C/C++
-  \item<2-> $\approx$
-    GC in the presence of words that may or may not be pointers
-    (conservatively assumed to be pointers)
-  \end{itemize}
-\item<3-> antonym: \ao{\it accurate} GC
-  \begin{itemize}
-  \item does not necessarily reclaim all dead (no longer used) objects
-  \item \ao{accurate} or \ao{conservative} refers to whether 
-    ``pointer identifications'' are accurate or not
-  \item languages that implement an accurate GC
-    normally use a data representation in which
-    looking at a single word can tell you whether it is a pointer or not
-    \begin{itemize}
-    \item ex: the last bit $= 0$ (pointer), $= 1$ (non-pointer)
-    \end{itemize}
-  \end{itemize}
-\end{itemize}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}
-\frametitle{C/C++言語の基本的な困難: ポインタの曖昧さ}
-\begin{itemize}
-\item ポインタとそれ以外のデータの厳密な区別がつかない．
-ある語に書かれていた「$7596272344674820427$ 
-($1011010010110101101100001011100110110000101110111011000010100101_2$)」は，
-  \begin{itemize}
-  \item 7596272344674820427番地に割り当てられたオブジェクトへのポインタ?
-  \item 整数の7596272344674820427
-  \item 文字列の一部(``Kawasaki'')
-  \item 倍精度浮動小数点($6.549545\ldots\times 10^{199}$)
-  \item \ldots
-  \end{itemize}
-のいずれであるかはっきりしない(曖昧)
-
-\item 基本:
-  \begin{itemize}
-  \item ある語が，現在割り当て中のアドレス範囲と一致したら，それへのポインタと仮定
-  \item 本当はポインタでないものがポインタと間違われることもある
-  \item それによる被害(リーク)を防ぐアイデア $\rightarrow$ \ao{Blacklisting}
-  \end{itemize}
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}
-\frametitle{A challenge in C/C++: pointer ambiguity}
-\begin{itemize}
-\item a pointer and a non-pointers cannot be told apart;
-a word ``$7596272344674820427$ 
-($10110100101101011011 \cdots 011000010100101_2$)''
-can be any of the following
-  \begin{itemize}
-  \item a pointer to an object at address 7596272344674820427,
-  \item an integer 7596272344674820427,
-  \item a part of a string (``Kawasaki''),
-  \item a double precision floating point number
-    ($6.549545\ldots\times 10^{199}$), 
-  \item \ldots
-  \end{itemize}
-
-\item<2-> the basic principle:
-  \begin{itemize}
-  \item \ao{\it if a word is an address of a block being used,
-    it is assumed to be the pointer to it}
-  \item a non-pointer may be misidentified as a pointer
-  \item a method to minimize the loss (leak) caused by
-    misidentified pointers
-    $\rightarrow$ \ao{blacklisting}
-  \end{itemize}
-\end{itemize}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}
-\frametitle{Blacklisting}
-\begin{itemize}
-\item<1-> マークフェーズ中に以下のような語$p$ (\ao{「要注意アドレス」})を記憶しておく(Blacklisting)
-  \begin{itemize}
-  \item<2-> $p$は現在割り当て中のアドレス\ao{ではない}
-  \item<2-> $p$は，将来割り当て対象になりそう(現在のヒープの一部である)
-  \end{itemize}
-\item<3-> そのような$p$は\ao{当面，割り当ての対象から外す}
-
-\item<4-> 「$p$が割り当てられない」時点で損害だが，
-  $p$を割り当てて，$p$およびそこから到達可能なものが全て回収できなくなるのは大損害
-\end{itemize}
-
-\begin{center}
-\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_0.pdf}}%
-\only<2>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_1.pdf}}%
-\only<3->{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_2.pdf}}%
-\end{center}
-
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}
-\frametitle{Blacklisting}
-\begin{itemize}
-\item<1-> during marking, record (``blacklist'') words $p$
-  (\ao{suspicious addresses}) satisfying:
-  \begin{itemize}
-  \item<2-> address $p$ is currently \ao{\it not} used and
-  \item<2-> $p$ is a subject of future allocation
-    (i.e., an address within the current heap)
-  \end{itemize}
-\item<3-> do not use such $p$'s for \ao{\it future allocation}
-
-\item<4-> note that we already lose (a memory associated with) $p$,
-  but it would be much worse and devastating to allocate $p$ and make
-  \aka{\it $p$ and all objects reachable from $p$} 
-  uncollectable \aka{\it (the domino effect)}
-\end{itemize}
-
-\begin{center}
-\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_0.pdf}}%
-\only<2>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_1.pdf}}%
-\only<3->{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_2.pdf}}%
-\end{center}
-
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}
-\frametitle{その他の保守的GCのtips}
-\begin{itemize}
-\item \url{http://hboehm.info/gc/gcinterface.html} 参照
-\item {\tt GC\_MALLOC\_ATOMIC} : 
-  \begin{itemize}
-  \item {\tt GC\_MALLOC}と同じだが，「この中にポインタは含めません」宣言
-    (文字列，数値の配列など)
-  \item ポインタ誤認の確率を減らす
-  \item markの量を減らす
-  \end{itemize}
-\item {\tt GC\_MALLOC\_IGNORE\_OFF\_PAGE} : 「最初の512バイト以降にはポインタは含めません」宣言
-  
-\item いらないデータに対するポインタはこまめにNULLに
-  \begin{itemize}
-  \item データ構造中のポインタ
-  \item 一つが誤認されて生き残ったときの「道連れ」をなくす
-  \end{itemize}
-
-\item データのリンク構造の工夫
-  \begin{itemize}
-  \item ポインタの誤認によって「たくさんが道連れに」なりにくデータ構造
-  \end{itemize}
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}
-\frametitle{Other tips in conservative GC}
-\begin{enumerate}
-\item see \url{http://hboehm.info/gc/gcinterface.html}
-\item \ao{\tt GC\_MALLOC\_ATOMIC} : 
-  \begin{itemize}
-  \item same as \ao{\tt GC\_MALLOC}, except you indicate (declare)
-    you never put pointers in it (good for strings and numerical arrays)
-  \item reduce the probability of pointer misidentification
-  \item reduce the space that must be traversed 
-  \end{itemize}
-\item \ao{\tt GC\_MALLOC\_IGNORE\_OFF\_PAGE} :
-  declares ``you never put pointers except in the first 512 bytes''
-  
-\item clear pointers no longer necessary with NULL
-  \begin{itemize}
-  \item pointers within a data structure
-  \item prevent the domino effect
-    when a single object is mistakenly kept alive
-  \end{itemize}
-
-\item tips in how you link data structures
-  \begin{itemize}
-  \item data structures less prone to the domino effect
-    due to a pointer misidentification
-  \end{itemize}
-\end{enumerate}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
-\begin{frame}
-\frametitle{道連れになりやすい・にくいデータ構造}
-\begin{itemize}
-\item リンクリスト，木構造，グラフなどの作り方
-\item (NG): 大きな構造体同士が直接リンクしあう
-\item (GOOD): リンク構造(峰)と(大きな)データ本体を分ける
-$\rightarrow$ 本体が誤認されても道連れはおきない
-\begin{center}
-\only<1>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/avoid_retention_1.pdf}}%
-\only<2>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/avoid_retention_2.pdf}}%
-\end{center}
-\end{itemize}
-\end{frame}
-\fi
-%%% ENG %%%
-\ifeng
-\begin{frame}
-\frametitle{Data structure (not) prone to the domino effect}
-\begin{itemize}
-\item suppose you make link lists, trees and graphs
-\item \aka{(NG):} directly link large nodes with payload 
-\item \ao{(GOOD):} separate the structure linking nodes
-  \ao{\it (the spine)} and the payloads
-  $\rightarrow$ misidentifying a payload does not lead
-  to another object
-\begin{center}
-\only<1>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/avoid_retention_1.pdf}}%
-\only<2>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/avoid_retention_2.pdf}}%
-\end{center}
 \end{itemize}
 \end{frame}
 \fi
@@ -3724,6 +2733,999 @@ and we are done. the only remaining task is to prove (I).
 \item $(\ast)$ : you need to show that not only the mutator but
   also the collector never creates ``black $\rightarrow$ white''
   pointers.  it's easy and left as an exercise.
+\end{itemize}
+\end{frame}
+\fi
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\section{マーク\&スイープGCのトピック}
+\fi
+\ifeng
+\section{Topics on Mark\&Sweep GCs}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\subsection{空き領域管理}
+\fi
+\ifeng
+\subsection{Free Area Management}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{空き領域管理・探索}
+\begin{itemize}
+\item コピーGC以外のあらゆる方式(マーク\&スイープGC, 
+  参照カウント, malloc/free)では，空き領域は連続していない
+\item $\rightarrow$ 空き領域の把握・管理が必要
+\item 目標:
+  \begin{itemize}
+  \item メモリ割り当て速度:
+    メモリ割り当て要求に応じたサイズの空き領域を素早く見つける
+  \item メモリ利用効率:
+    空いている領域はなるべく使う
+  \end{itemize}
+\item 基本データ構造: フリーリスト(空き領域のリスト)
+\begin{center}
+\only<1>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_1.pdf}}%
+\only<2>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}}%
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Managing and finding free space}
+\begin{itemize}
+\item in any method except for copying GC
+  (mark\&sweep GC, reference counting, malloc/free),
+  free space are not contiguous
+\item $\rightarrow$ tracking and managing free blocks is required
+\item goal:
+  \begin{itemize}
+  \item good allocation speed:
+    quickly find a region that fits the request size
+  \item good memory utilization:
+    do not waste available space
+  \end{itemize}
+\item basic data structure: free list (list of free blocks)
+\begin{center}
+\only<1>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_1.pdf}}%
+\only<2>{\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}}%
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{フリーリスト}
+\begin{itemize}
+\item 空き領域のリスト
+\begin{lstlisting}
+typedef struct cell {
+  struct cell * next; 
+  size_t sz;
+  /* 必要ならばその他の情報 */
+} cell;
+cell * free_list;
+\end{lstlisting}
+
+\item 割り当て(malloc) $\approx$
+  \begin{enumerate}
+  \item 要求サイズ以上の空き領域の(線型)探索
+  \item 領域が余ったら余りをまたリストへ
+  \end{enumerate}
+
+\item 回収(free) $\approx$
+  \begin{enumerate}
+  \item 開放されたセルをリストへ戻す(問題: そのサイズは?)
+  \item 開放されたセルとアドレスが隣接しているセルがあったら統合
+    (coalescing)
+  \end{enumerate}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}
+\end{center}
+
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Free list}
+\begin{itemize}
+\item list of free blocks (or cells)
+\begin{lstlisting}
+typedef struct cell {
+  struct cell * next; 
+  size_t sz;
+  /* other info as necessary */
+} cell;
+cell * free_list;
+\end{lstlisting}
+
+\item allocation (malloc) $\approx$
+  \begin{enumerate}
+  \item (linearly) search for a cell large enough for the requested size
+  \item if a free space remains in the cell, put it back to the free list
+  \end{enumerate}
+
+\item reclamation (free) $\approx$
+  \begin{enumerate}
+  \item put it back to the free list (issue: how to know its size?)
+  \item if the cell just freed is adjacent to another free cell,
+    merge them (coalescing)
+  \end{enumerate}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}
+\end{center}
+
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{単純な方式の問題}
+\begin{itemize}
+\item 割り当て: 
+  \begin{itemize}
+  \item それなりに走査が必要
+  \item $\rightarrow$ 
+    サイズごとに別れたフリーリスト(segregated free lists)
+  \end{itemize}
+\item 回収: 
+  \begin{itemize}
+  \item coalescing可能かを調べるオーバーヘッド
+  \item 回収されたセルのサイズ
+  \item $\rightarrow$ 
+    大きな塊(ページ)単位で同じサイズ専用にする
+    (Big Bags of Pages; BiBOP)
+  \end{itemize}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}
+\end{center}
+
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Issues in the simple method}
+\begin{itemize}
+\item allocation: 
+  \begin{itemize}
+  \item needs to traverse a fair amount of cells (until you find a cell that fits)
+  \item $\rightarrow$ 
+    make many free lists, one for a fixed size (\ao{\it segregated free lists})
+  \end{itemize}
+\item reclamation: 
+  \begin{itemize}
+  \item needs to check if coalescing is possible
+  \item needs to know the size of the freed cell
+  \item $\rightarrow$
+    manage memory in a larger unit (\ao{\it page}) and dedicate
+    a page to a single size (\ao{\it Big Bags of Pages; BiBOP})
+  \end{itemize}
+
+\begin{center}
+\includegraphics[width=0.9\textwidth]{out/pdf/svg/freelist_2.pdf}
+\end{center}
+
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{サイズごとのフリーリスト}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item 小さなサイズ(e.g., 2Kバイト以下)について，
+  代表的なサイズのフリーリストを作る
+\item それ以上大きな空き領域はすべてひとつのリストにまとめる
+\item 例: 
+  \begin{itemize}
+  \item 16, 32, 48, 64, \ldots, 448, 512, 672, 800, 1024, 1344, 2048
+  \item 2048バイト以上すべて
+  \end{itemize}
+\end{itemize}    
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/segregated_free_lists.pdf}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Segregated free lists}
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item for small sizes (e.g., $<$ 2KB),
+  make a free list for various representative sizes 
+\item a single list for large sizes
+\item ex: 
+  \begin{itemize}
+  \item 16, 32, 48, 64, \ldots, 448, 512, 672, 800, 1024, 1344, 2048
+  \item 2048 bytes or larger
+  \end{itemize}
+\end{itemize}    
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/segregated_free_lists.pdf}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{割り当てシーケンスの例}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \ao{色}\aka{付}\ao{き}\aka{部}\ao{分}\aka{:} 
+  小さいオブジェクト用の速いパス
+\item \ao{青部分:} サイズ(sz)がコンパイル時の定数であれば，
+  原理的には(コンパイラの定数畳み込みで)除去可能な部分
+\item \aka{赤部分:} 本質部分．リストを一回手繰る(6-7命令)
+\item 注: マルチスレッド環境では
+  \begin{itemize}
+  \item {\tt free\_lists}をスレッドごとに持たせる, または
+  \item \aka{{\tt free\_lists}の読み出し〜更新}を不可分に
+    (スケーラビリティ阻害)
+  \end{itemize}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\begin{lstlisting}
+void ** free_lists;
+
+void * malloc(size_t sz) {
+  @\ao{\tt if (SMALL(sz)) \{}@
+    @\ao{\tt size\_t idx = bytes\_to\_idx(sz);}@
+    @\aka{\tt cell * a = free\_lists[idx];}@
+    @\aka{\tt if (a) \{}@
+      @\aka{\tt free\_lists[idx] = a->next;}@
+      @\aka{\tt return a;}@
+    } else {
+      return malloc_slow(sz);
+    }
+  } else {
+    return malloc_slow(sz);
+  }
+}
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Allocation sequence}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item \ao{C}\aka{o}\ao{l}\aka{o}\ao{r}\aka{e}\ao{d}\aka{:} 
+  a fast path for small objects
+\item \ao{blue:} the overhead removable if the size (sz)
+  is a compile-time constant 
+\item \aka{red:} the essential cost. traverse a list once (6-7 instructions)
+\item note: in multithreaded programs, we either have to
+  \begin{itemize}
+  \item let each thread have its own {\tt free\_lists}, or
+  \item atomically perform \aka{the read-modify-write on {\tt free\_lists}}
+    (this hinders scalability)
+  \end{itemize}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.42\textwidth}
+\begin{lstlisting}
+void ** free_lists;
+
+void * malloc(size_t sz) {
+  @\ao{\tt if (SMALL(sz)) \{}@
+    @\ao{\tt size\_t idx = bytes\_to\_idx(sz);}@
+    @\aka{\tt cell * a = free\_lists[idx];}@
+    @\aka{\tt if (a) \{}@
+      @\aka{\tt free\_lists[idx] = a->next;}@
+      @\aka{\tt return a;}@
+    } else {
+      return malloc_slow(sz);
+    }
+  } else {
+    return malloc_slow(sz);
+  }
+}
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{Big Bags of Pages}
+\begin{columns}
+\begin{column}{0.65\textwidth}
+\begin{itemize}
+\item ヒープをある固定サイズのブロック(ページ)に分けて管理
+  \begin{itemize}
+  \item ページ: アドレスの上位bitを共有するアドレスの集合
+  \item 例: 64 bitアドレス，上位52 bit共有 $\rightarrow$ 
+    $2^{12}=4096$バイト/ページ
+  \end{itemize}
+\item 1つのページは，
+  \begin{itemize}
+  \item まるごと空き，または
+  \item 一つのサイズのオブジェクト専用(e.g., 48バイト専用)
+  \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/bibop.pdf}
+\end{center}
+\end{column}
+\end{columns}
+
+\begin{itemize}
+\item Coalescing: 
+  「1ページまるごと空いた」場合だけ，他のサイズに流用
+  \begin{itemize}
+  \item $\rightarrow$ 各ページごとに空きセル数を数えるだけで良い
+  \end{itemize}
+\item サイズもオブジェクト毎に持たせる必要なし
+\end{itemize}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Big Bags of Pages}
+\begin{columns}
+\begin{column}{0.65\textwidth}
+\begin{itemize}
+\item manage the heap by dividing it into constant-sized blocks (page)
+  \begin{itemize}
+  \item a page: a set of addresses sharing a number of highest bits
+  \item e.g. 64 bit addresses, sharing the highest 52 bits $\rightarrow$ 
+    $2^{12}=4096$ bytes/page
+  \end{itemize}
+\item each page is either
+  \begin{itemize}
+  \item completely free or
+  \item used only for a single size (e.g., only for 48 bytes)
+  \end{itemize}
+\end{itemize}
+\end{column}
+\begin{column}{0.35\textwidth}
+\begin{center}
+\includegraphics[width=\textwidth]{out/pdf/svg/bibop.pdf}
+\end{center}
+\end{column}
+\end{columns}
+
+\begin{itemize}
+\item Coalescing:
+  repurpose a page only when the page becomes completely empty
+  \begin{itemize}
+  \item $\rightarrow$ only need to count the number of free cells in the page
+  \end{itemize}
+\item does not require per-object size field either
+\end{itemize}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\subsection{マーク\&スイープGCの性能改善}
+\fi
+\ifeng
+\subsection{Improving mark\&sweep GCs}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{マーク\&スイープGCの性能改善}
+\begin{itemize}
+\item 全体構成:
+  \begin{enumerate}
+  \item \ao{マークフェーズ:} ルートからポインタをたどり，
+    到達可能なオブジェクトに\ao{印をつける}
+  \item \ao{スイープフェーズ:} 
+    印のついていないオブジェクトを回収 $\rightarrow$
+    \ao{フリーリストに戻す}
+  \end{enumerate}
+\item 基本的な工夫:
+  \begin{itemize}
+  \item サイズごとのフリーリスト
+  \item BiBOPによる管理
+  \item \ao{マークビットとオブジェクトの分離}
+  \item \ao{遅延スイープ}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Improving performance of mark\&sweep GC}
+\begin{itemize}
+\item overall structure:
+  \begin{enumerate}
+  \item \ao{mark phase:} traverses pointers from the root,
+    \ao{marking} reached objects along the way
+  \item \ao{sweep phase:} 
+    reclaims unmarked objects $\rightarrow$
+    \ao{pushes them back to an appropriate free list}
+  \end{enumerate}
+\item basics:
+  \begin{itemize}
+  \item segregated free lists
+  \item BiBOP
+  \item \ao{mark bits separated from objects}
+  \item \ao{lazy sweep}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\subsubsection{マークビットとオブジェクトの分離}
+\fi
+\ifeng
+\subsubsection{Separated Mark Bits}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{マークビットとオブジェクトの分離}
+\begin{itemize}
+\item マークフェーズで「到達可能」の印をどこにつけるか?
+\item 方法1: オブジェクト内の1ワード
+\item \ao{方法2: オブジェクト外の領域にまとめて持つ}
+  \begin{itemize}
+  \item 具体的にはどこ? ページヘッダ．
+    そのページ内のオブジェクトの分をまとめて持つ(1 バイト/オブジェクト)
+\begin{lstlisting}
+mark(void * o) {
+  page * page = o & 0xFFF...000; /* ページの先頭アドレス */
+  page->header->mark[(o & 0x000...FFF) >> 4] = 1;
+}
+\end{lstlisting}
+\item ポイント: 書き込まれるキャッシュラインの数が減る
+\end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Separated mark bits}
+\begin{itemize}
+\item question: where do you put the mark bit of an object?
+\item Method 1: use a word within an object
+\item \ao{Method 2: use a separate space dedicated for mark-bits
+    outside objects}
+  \begin{itemize}
+  \item where is the separate space, exactly?
+    $\rightarrow$ page header;
+    holds mark bits of all the objects in the page together
+    (1 byte/object)
+\begin{lstlisting}
+mark(void * o) {
+  page * page = o & 0xFFF...000; /* page header address */
+  page->header->mark[(o & 0x000...FFF) >> 4] = 1;
+}
+\end{lstlisting}
+\item point: gather spaces that are written
+\end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\subsubsection{遅延スイープ}
+\fi
+\ifeng
+\subsubsection{Lazy Sweep}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{遅延スイープ}
+\begin{itemize}
+\item スイープの目的: 空き領域の回収
+\item 自然には，空き領域を適切なサイズのフリーリストに戻す(BiBOP法)
+\item \ao{遅延スイープ:}
+  フリーリストの構築を，メモリ割り当てで必要になるまで遅らせる
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Lazy sweep}
+\begin{itemize}
+\item why do we need to sweep: reclaim space that has become free
+\item naturally, you would put them back to an appropriate free list (cf. BiBOP)
+\item \ao{lazy sweep:}
+  defer this operation until you need to allocate them
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{スイープフェーズの全体像}
+\begin{itemize}
+\item マークフェーズ終了後，ページは3種類に分類できる
+  \begin{itemize}
+  \item 空ページ: 到達したオブジェクト0
+  \item 一部空ページ: 到達したオブジェクト$>0$, 到達しなかったオブジェクト$>0$
+  \item 満杯ページ: 到達しなかったオブジェクト$=0$
+  \end{itemize}
+
+\item スイープの実際: 素直には，
+\begin{lstlisting}
+for (全ページ p) {
+  if (p が空) {
+    pを空ページリストにつなぐ;
+    /* 任意サイズのページとして再利用可能 */
+  } else if (p が一部空) {
+    sz = そのページ内のオブジェクトのサイズ;
+    @\ao{\tt p中の空き領域をszバイト用のフリーリストにつなぐ;}@
+  }
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Overview of the sweep phase}
+\begin{itemize}
+\item after a mark phase is finished, a page is either
+  \begin{itemize}
+  \item empty: zero objects have been reached
+  \item partial: $>0$ objects have been reached, $>0$ objects have not been reached
+  \item full: zero objects have not been reached
+  \end{itemize}
+
+\item a naive implementation of a sweep phase: 
+\begin{lstlisting}
+for (all pages p) {
+  if (p is empty) {
+    put p in the empty page list;
+    /* can be repurposed for any size */
+  } else if (p is partial) {
+    sz = the size of objects in the page;
+    @\ao{\tt put free cells in p to the free list fo sz bytes;}@
+  }
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}[fragile]
+\frametitle{遅延スイープ}
+\begin{itemize}
+\item フリーリストの構築をすぐに行わない
+\item 各サイズ用の「回収リスト」につなぐ
+\begin{lstlisting}
+for (全ページ p) {
+  if (p が空) {
+    pを空ページリストにつなぐ;
+    /* 任意サイズ用の空領域として再利用可能 */
+  } else if (p が一部空) {
+    sz = そのページ内のオブジェクトのサイズ;
+    @\ao{\tt pをszバイト用の「回収リスト」につなぐ;}@
+  }
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}[fragile]
+\frametitle{Lazy sweep}
+\begin{itemize}
+\item does not rebuild free lists immediately
+\item instead puts the page into the list of ``to-reclaim'' pages
+\begin{lstlisting}
+for (all pages p) {
+  if (p is empty) {
+    put p in the empty page list;
+    /* can be repurposed for any size */
+  } else if (p is partial) {
+    sz = the size of objects in the page;
+    @\ao{\tt put p into the reclaim list for sz bytes;}@
+  }
+}    
+\end{lstlisting}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{回収リスト}
+\begin{itemize}
+\item 空き領域が1つ以上含まれる，完全に空ではないページのリスト
+\item フリーリスト同様，サイズごとに作る
+\item メモリ割り当て時，フリーリストが空だった時に回収リストからセルを補充
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Reclaim list}
+\begin{itemize}
+\item list of pages that have at least one free cell
+\item like free lists, there is a list per size
+\item when an allocation finds the free list empty,
+  look at the reclaim list and if there is any page,
+  move free cells of a page into the free list
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{なぜスイープを遅延させる?}
+\begin{itemize}
+\item 仕事を「後回し」にしてるだけ? それだけではない
+
+\item Coalescingの機会向上:
+  \begin{itemize}
+  \item 何回か後のGCまでに使われず，それまでに空ページになるかもしれない
+  \end{itemize}
+  
+\item 参照の時間局所性改善:
+  \begin{itemize}
+  \item フリーリスト充填のためのメモリ参照と，
+  実際にmutatorに使われるまでの時間を短くする
+  \end{itemize}
+
+\item スイープの時間を少しでも短くする
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{What's the point?}
+\begin{itemize}
+\item simply deferring the task you need to do anyway? not exactly so
+
+\item make more coalescing opportunities:
+  \begin{itemize}
+  \item after a few GCs, a page may become empty
+    before it needs to be reused for allocation
+  \end{itemize}
+  
+\item improve temporal locality of references:
+  \begin{itemize}
+  \item by touching free cells to put them back to free list,
+    closely before they are used by the mutator
+  \end{itemize}
+
+\item shorten the pause time due to the sweep phase
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifja
+\section{保守的GC}
+\fi
+\ifeng
+\section{Conservative GC}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{保守的GC (Conservative GC)}
+\begin{itemize}
+\item \ao{保守的}GC 
+  \begin{itemize}
+  \item $\approx$ C/C++など，GCを前提に設計されていない言語用のGC
+  \item $\approx$ 
+    各語がポインタか否かわからない
+    (わからない時は「保守的に」ポインタと見なす)前提でのGC
+  \end{itemize}
+\item 反対語: \ao{正確な(accurate)}GC
+  \begin{itemize}
+  \item 正確といっても，「死んでいる(以降アクセスされない)」ゴミが全部とれるわけではない
+  \item 正確・保守的GCの意味は
+    「ポインタの判別(pointer identification)」が正確か保守的かということ
+  \item 正確なGCを行う言語では例えば，
+    ある語を見ただけでポインタか否かがわかるようなデータ表現を使う
+    \begin{itemize}
+    \item 例: 最下位bit $= 0$ (ポインタ), $= 1$ (非ポインタ)
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Conservative GC}
+\begin{itemize}
+\item \ao{\it conservative} GC 
+  \begin{itemize}
+  \item<1-> $\approx$ GC for languages designed without assuming GC,
+    such as C/C++
+  \item<2-> $\approx$
+    GC in the presence of words that may or may not be pointers
+    (conservatively assumed to be pointers)
+  \end{itemize}
+\item<3-> antonym: \ao{\it accurate} GC
+  \begin{itemize}
+  \item does not necessarily reclaim all dead (no longer used) objects
+  \item \ao{accurate} or \ao{conservative} refers to whether 
+    ``pointer identifications'' are accurate or not
+  \item languages that implement an accurate GC
+    normally use a data representation in which
+    looking at a single word can tell you whether it is a pointer or not
+    \begin{itemize}
+    \item ex: the last bit $= 0$ (pointer), $= 1$ (non-pointer)
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{C/C++言語の基本的な困難: ポインタの曖昧さ}
+\begin{itemize}
+\item ポインタとそれ以外のデータの厳密な区別がつかない．
+ある語に書かれていた「$7596272344674820427$ 
+($1011010010110101101100001011100110110000101110111011000010100101_2$)」は，
+  \begin{itemize}
+  \item 7596272344674820427番地に割り当てられたオブジェクトへのポインタ?
+  \item 整数の7596272344674820427
+  \item 文字列の一部(``Kawasaki'')
+  \item 倍精度浮動小数点($6.549545\ldots\times 10^{199}$)
+  \item \ldots
+  \end{itemize}
+のいずれであるかはっきりしない(曖昧)
+
+\item 基本:
+  \begin{itemize}
+  \item ある語が，現在割り当て中のアドレス範囲と一致したら，それへのポインタと仮定
+  \item 本当はポインタでないものがポインタと間違われることもある
+  \item それによる被害(リーク)を防ぐアイデア $\rightarrow$ \ao{Blacklisting}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{A challenge in C/C++: pointer ambiguity}
+\begin{itemize}
+\item a pointer and a non-pointers cannot be told apart;
+a word ``$7596272344674820427$ 
+($10110100101101011011 \cdots 011000010100101_2$)''
+can be any of the following
+  \begin{itemize}
+  \item a pointer to an object at address 7596272344674820427,
+  \item an integer 7596272344674820427,
+  \item a part of a string (``Kawasaki''),
+  \item a double precision floating point number
+    ($6.549545\ldots\times 10^{199}$), 
+  \item \ldots
+  \end{itemize}
+
+\item<2-> the basic principle:
+  \begin{itemize}
+  \item \ao{\it if a word is an address of a block being used,
+    it is assumed to be the pointer to it}
+  \item a non-pointer may be misidentified as a pointer
+  \item a method to minimize the loss (leak) caused by
+    misidentified pointers
+    $\rightarrow$ \ao{blacklisting}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{Blacklisting}
+\begin{itemize}
+\item<1-> マークフェーズ中に以下のような語$p$ (\ao{「要注意アドレス」})を記憶しておく(Blacklisting)
+  \begin{itemize}
+  \item<2-> $p$は現在割り当て中のアドレス\ao{ではない}
+  \item<2-> $p$は，将来割り当て対象になりそう(現在のヒープの一部である)
+  \end{itemize}
+\item<3-> そのような$p$は\ao{当面，割り当ての対象から外す}
+
+\item<4-> 「$p$が割り当てられない」時点で損害だが，
+  $p$を割り当てて，$p$およびそこから到達可能なものが全て回収できなくなるのは大損害
+\end{itemize}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_0.pdf}}%
+\only<2>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_1.pdf}}%
+\only<3->{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_2.pdf}}%
+\end{center}
+
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Blacklisting}
+\begin{itemize}
+\item<1-> during marking, record (``blacklist'') words $p$
+  (\ao{suspicious addresses}) satisfying:
+  \begin{itemize}
+  \item<2-> address $p$ is currently \ao{\it not} used and
+  \item<2-> $p$ is a subject of future allocation
+    (i.e., an address within the current heap)
+  \end{itemize}
+\item<3-> do not use such $p$'s for \ao{\it future allocation}
+
+\item<4-> note that we already lose (a memory associated with) $p$,
+  but it would be much worse and devastating to allocate $p$ and make
+  \aka{\it $p$ and all objects reachable from $p$} 
+  uncollectable \aka{\it (the domino effect)}
+\end{itemize}
+
+\begin{center}
+\only<1>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_0.pdf}}%
+\only<2>{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_1.pdf}}%
+\only<3->{\includegraphics[width=0.6\textwidth]{out/pdf/svg/blacklist_2.pdf}}%
+\end{center}
+
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{その他の保守的GCのtips}
+\begin{itemize}
+\item \url{http://hboehm.info/gc/gcinterface.html} 参照
+\item {\tt GC\_MALLOC\_ATOMIC} : 
+  \begin{itemize}
+  \item {\tt GC\_MALLOC}と同じだが，「この中にポインタは含めません」宣言
+    (文字列，数値の配列など)
+  \item ポインタ誤認の確率を減らす
+  \item markの量を減らす
+  \end{itemize}
+\item {\tt GC\_MALLOC\_IGNORE\_OFF\_PAGE} : 「最初の512バイト以降にはポインタは含めません」宣言
+  
+\item いらないデータに対するポインタはこまめにNULLに
+  \begin{itemize}
+  \item データ構造中のポインタ
+  \item 一つが誤認されて生き残ったときの「道連れ」をなくす
+  \end{itemize}
+
+\item データのリンク構造の工夫
+  \begin{itemize}
+  \item ポインタの誤認によって「たくさんが道連れに」なりにくデータ構造
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Other tips in conservative GC}
+\begin{enumerate}
+\item see \url{http://hboehm.info/gc/gcinterface.html}
+\item \ao{\tt GC\_MALLOC\_ATOMIC} : 
+  \begin{itemize}
+  \item same as \ao{\tt GC\_MALLOC}, except you indicate (declare)
+    you never put pointers in it (good for strings and numerical arrays)
+  \item reduce the probability of pointer misidentification
+  \item reduce the space that must be traversed 
+  \end{itemize}
+\item \ao{\tt GC\_MALLOC\_IGNORE\_OFF\_PAGE} :
+  declares ``you never put pointers except in the first 512 bytes''
+  
+\item clear pointers no longer necessary with NULL
+  \begin{itemize}
+  \item pointers within a data structure
+  \item prevent the domino effect
+    when a single object is mistakenly kept alive
+  \end{itemize}
+
+\item tips in how you link data structures
+  \begin{itemize}
+  \item data structures less prone to the domino effect
+    due to a pointer misidentification
+  \end{itemize}
+\end{enumerate}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\begin{frame}
+\frametitle{道連れになりやすい・にくいデータ構造}
+\begin{itemize}
+\item リンクリスト，木構造，グラフなどの作り方
+\item (NG): 大きな構造体同士が直接リンクしあう
+\item (GOOD): リンク構造(峰)と(大きな)データ本体を分ける
+$\rightarrow$ 本体が誤認されても道連れはおきない
+\begin{center}
+\only<1>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/avoid_retention_1.pdf}}%
+\only<2>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/avoid_retention_2.pdf}}%
+\end{center}
+\end{itemize}
+\end{frame}
+\fi
+%%% ENG %%%
+\ifeng
+\begin{frame}
+\frametitle{Data structure (not) prone to the domino effect}
+\begin{itemize}
+\item suppose you make link lists, trees and graphs
+\item \aka{(NG):} directly link large nodes with payload 
+\item \ao{(GOOD):} separate the structure linking nodes
+  \ao{\it (the spine)} and the payloads
+  $\rightarrow$ misidentifying a payload does not lead
+  to another object
+\begin{center}
+\only<1>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/avoid_retention_1.pdf}}%
+\only<2>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/avoid_retention_2.pdf}}%
+\end{center}
 \end{itemize}
 \end{frame}
 \fi
