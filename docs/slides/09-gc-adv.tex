@@ -714,8 +714,8 @@ invariant
   \end{itemize}
 \item copying GC cons:
   \begin{itemize}
-  \item copy is expensive, obviously
-  \item the free region must be reserved to accommodate objects copied
+  \item \mura{copy is expensive}, obviously
+  \item \mura{the free region must be reserved} to accommodate objects copied
     (low memory utilization)
     \begin{itemize}
     \item must ensure ``size of objects that may be copied''
@@ -723,7 +723,7 @@ invariant
     \item $\rightarrow$ ``from space'' $=$ ``to space''
     \end{itemize}
   \item pointers must be ``precisely'' distinguished from non-pointers
-    (\mura{ambiguous pointers} are not allowed)
+    (\mura{ambiguous pointers are not allowed})
     \begin{itemize}
     \item pointers are updated to the destinations of copies
     \item a disaster occurs if you update non-pointers
@@ -780,21 +780,22 @@ invariant
 \begin{frame}
 \frametitle{Memory allocation cost of traversing GCs}
 \begin{itemize}
-\item let's quantify the cost of
-  allocating a byte including GC's work
+\item let's quantify
+  \ao{the cost of
+    allocating a byte} including GC's work
   
 \item assume:
   \begin{itemize}
   \item heap size (size of a semi-space in case of copying GC) $= \ao{M}$
   \item reached objects $= \ao{r}$
-  \item {\footnotesize assume for the sake of argument it's {\it always} $r$}
+  \item assume for the sake of argument it's \ao{\it always $r$}
   \end{itemize}
 
 \item<3-> behavior at equilibrium: the program repeats:
   \begin{enumerate}
-  \item a GC occurs $\rightarrow$ scan (or copy) $r$ bytes,
+  \item a GC occurs $\rightarrow$ \ao{scan (or copy) $r$ bytes},
     to make a free space of $(M - r)$ bytes
-  \item allocate $(M - r)$ bytes without triggering a GC
+  \item \ao{allocate $(M - r)$ bytes} without triggering a GC
   \end{enumerate}
 
 \item<4-> a key observation
@@ -1026,7 +1027,8 @@ e.g., choose a constant $k > 1$ and set:
 \begin{itemize}
 \item in this setting,
   \begin{itemize}
-  \item cost: \[ \mbox{mark-cons ratio} = \frac{r}{k r - r} = \frac{1}{k - 1} \]
+  \item cost
+    \[ \mbox{mark-cons ratio} = \frac{r}{k r - r} = \frac{1}{k - 1} = \mbox{const} \]
   \item memory usage 
 \[ \propto \mbox{the size of reachable objects at a point during execution} \]
   \end{itemize}
