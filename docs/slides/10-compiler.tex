@@ -114,10 +114,10 @@ escapechar=\@,
 }
 
 \ifja
-\title{プログラミング言語 (8) \\ 言語処理系を作る}
+\title{プログラミング言語 (10) \\ 言語処理系を作る}
 \fi
 \ifen
-\title{Programming Language (8) \\ Making a compiler}
+\title{Programming Language (10) \\ Making a compiler}
 \fi
 \institute{}
 \author{田浦}
@@ -153,7 +153,10 @@ escapechar=\@,
 \tableofcontents
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifja
 \begin{frame}
 \frametitle{言語処理系実装の形態}
@@ -269,7 +272,7 @@ escapechar=\@,
 \end{frame}
 \fi
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifja
 \section{コンパイラの仕事}
 \fi
@@ -429,10 +432,20 @@ learn details and other instructions from the exercise
     \end{itemize}
   \end{itemize}
 \end{frame}
+\fi
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifja
+\section{コンパイルの基本}
+\fi
+\ifen
+\section{Compilation Basics}
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \begin{frame}
-  \frametitle{Major gaps you have to fill}
+  \frametitle{From high-level programming languages to machine code}
   \begin{itemize}
   \item a register $\approx$ a variable, but
     \begin{itemize}
@@ -852,13 +865,6 @@ double sq3(double c, long n) {
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifja
-\section{より一般の場合}
-\fi
-\ifen
-\section{More general cases}
-\fi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifja
 \begin{frame}[fragile]
   \frametitle{コード生成 --- 一般的には難しいところ}
   \begin{itemize}
@@ -886,7 +892,7 @@ Lstart:
 \begin{frame}[fragile]
   \frametitle{Things are more complex in general \ldots}
   \begin{itemize}
-  \item we've liberally assign registers to intermediate results,
+  \item we've liberally assigned registers to intermediate results,
     but \ldots
 \begin{lstlisting}
   double x = c;       /* x : @\ao{\tt xmm1}@ */
@@ -1003,7 +1009,7 @@ Lstart:
 
 \ifen
 \begin{frame}
-  \frametitle{What happens upon function calls}
+  \frametitle{ABI (What happens upon function calls?)}
   \begin{itemize}
   \item {\tt long f() \{ ... g(1,2,3,4,5,6,7,8); ... \}}
   \item
@@ -1014,11 +1020,11 @@ Lstart:
     \only<5>{during {\tt g}}
   \item []
 \begin{center}
-  \only<1>{\includegraphics[height=0.8\textheight]{out/pdf/lsvg/stack_1.pdf}}%
-  \only<2>{\includegraphics[height=0.8\textheight]{out/pdf/lsvg/stack_2.pdf}}%
-  \only<3>{\includegraphics[height=0.8\textheight]{out/pdf/lsvg/stack_3.pdf}}%
-  \only<4>{\includegraphics[height=0.8\textheight]{out/pdf/lsvg/stack_4.pdf}}%
-  \only<5>{\includegraphics[height=0.8\textheight]{out/pdf/lsvg/stack_5.pdf}}
+  \only<1>{\includegraphics[height=0.8\textheight]{out/pdf/svg/stack_1.pdf}}%
+  \only<2>{\includegraphics[height=0.8\textheight]{out/pdf/svg/stack_2.pdf}}%
+  \only<3>{\includegraphics[height=0.8\textheight]{out/pdf/svg/stack_3.pdf}}%
+  \only<4>{\includegraphics[height=0.8\textheight]{out/pdf/svg/stack_4.pdf}}%
+  \only<5>{\includegraphics[height=0.8\textheight]{out/pdf/svg/stack_5.pdf}}
 \end{center}
 \end{itemize}
 \end{frame}
