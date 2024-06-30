@@ -5,6 +5,7 @@
 
 nb_srcs :=
 nb_srcs += $(wildcard nb/source/pl08_*/*.sos)
+nb_srcs += $(wildcard nb/source/pl09_*/*.sos)
 
 aux_srcs :=
 #aux_srcs += $(wildcard nb/source/pl06_*/??/Makefile)
@@ -14,6 +15,15 @@ aux_srcs :=
 #aux_srcs += $(wildcard nb/source/*/img/*.png)
 aux_srcs += $(wildcard nb/source/*/img/*.svg)
 #aux_srcs += $(wildcard nb/source/*/misc/*.html)
+aux_srcs += $(wildcard nb/source/pl09_minc/parser/*.*)
+aux_srcs += $(wildcard nb/source/pl09_minc/parser/Makefile)
+aux_srcs += $(wildcard nb/source/pl09_minc/parser/example/*.*)
+aux_srcs += $(wildcard nb/source/pl09_minc/go/minc/*.*)
+aux_srcs += $(wildcard nb/source/pl09_minc/jl/minc/*.*)
+aux_srcs += $(wildcard nb/source/pl09_minc/ml/minc/?????*)
+aux_srcs += $(wildcard nb/source/pl09_minc/ml/minc/*/*)
+aux_srcs += $(wildcard nb/source/pl09_minc/rs/minc/*.*)
+aux_srcs += $(wildcard nb/source/pl09_minc/rs/minc/src/*.*)
 
 ans_aux_srcs :=
 # ans_aux_srcs += $(wildcard nb/source/pl04_*/01build_sys/??/*/*/*)
