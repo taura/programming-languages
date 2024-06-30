@@ -18,8 +18,9 @@ Enter your name and student ID.
 <a name="intro"> </a>
 # Introduction
 
-* This is a final assignment in which you build a compiler for a minimum subset of C language, dubbed 'minC'
-* This page explains how you should work on it
+* This is the instruction for those who choose Option A for the term report
+* You build a compiler for a minimum subset of C language, dubbed 'minC'
+* This page explains how you should work on it, but <font color="red">your actual work is supposed to be done mostly in terminal and text editor</font>
 
 <!--- end md --->
 
@@ -78,34 +79,33 @@ cat ex.xml
 <!--- end md --->
 
 <!--- md --->
-# {ml,jl,go,rs}/minc
+# {go,jl,ml,rs}/minc
 
-* in each language-specific directory (`ml, jl, go, rs`) , there is a toplevel directory `minc`
+* in each language-specific directory (`go, jl, ml, rs`) , there is a toplevel directory `minc`
 * the code given there is a skeleton of a compiler that reads an XML file, builds its abstract syntax tree, and finally calls the code generator
 * the code generator is currently almost empty and raises an exception when called
 * your main job in the assignment is to complete the code generator
+<!--- end md --->
 
-## OCaml
+<!--- md --->
+## Go
 
 ###* files
 
-* `ml/`
+* `go/`
   * `minc/`
-    * `libs/`
-      * `minc_ast.ml` --- abstract syntax tree (AST) definition
-      * `minc_parse.ml` --- XML -> AST converter
-      * `minc_cogen.ml` --- AST -> assembly code
-      * `dune` --- describes dependencies between them
-    * `bin/`
-      * `main.ml` --- the main file
+    * `minc_ast.go` --- abstract syntax tree (AST) definition
+    * `minc_parse.go` --- XML -> AST converter
+    * `minc_cogen.go` --- AST -> assembly code
+    * `minc.go` --- the main file
 
 ###* build
 <!--- end md --->
 
 <!--- code w kernel=bash --->
-cd ~/notebooks/pl09_minc/ml/minc
-eval $(opam env)
-dune build
+export PATH=~/go/bin:$PATH
+cd ~/notebooks/pl09_minc/go/minc
+go build
 <!--- end code --->
 
 <!--- md --->
@@ -117,7 +117,7 @@ dune build
 <!--- end md --->
 
 <!--- code w kernel=bash --->
-_build/default/bin/main.exe ../../parser/ex.xml ex.s
+./minc ../../parser/ex.xml ex.s
 <!--- end code --->
 
 <!--- md --->
@@ -125,7 +125,7 @@ _build/default/bin/main.exe ../../parser/ex.xml ex.s
 <!--- end md --->
 
 <!--- code w kernel=bash --->
-cat lib/minc_cogen.ml
+cat minc_cogen.go
 <!--- end code --->
 
 <!--- md --->
@@ -148,6 +148,7 @@ cat lib/minc_cogen.ml
 <!--- end md --->
 
 <!--- code w kernel=bash --->
+export PATH=~/.juliaup/bin:$PATH
 cd ~/notebooks/pl09_minc/jl/minc
 chmod +x minc.jl
 <!--- end code --->
@@ -178,23 +179,27 @@ cat minc_cogen.jl
 
 
 <!--- md --->
-## Go
+## OCaml
 
 ###* files
 
-* `go/`
+* `ml/`
   * `minc/`
-    * `minc_ast.go` --- abstract syntax tree (AST) definition
-    * `minc_parse.go` --- XML -> AST converter
-    * `minc_cogen.go` --- AST -> assembly code
-    * `minc.go` --- the main file
+    * `libs/`
+      * `minc_ast.ml` --- abstract syntax tree (AST) definition
+      * `minc_parse.ml` --- XML -> AST converter
+      * `minc_cogen.ml` --- AST -> assembly code
+      * `dune` --- describes dependencies between them
+    * `bin/`
+      * `main.ml` --- the main file
 
 ###* build
 <!--- end md --->
 
 <!--- code w kernel=bash --->
-cd ~/notebooks/pl09_minc/go/minc
-go build
+eval $(opam env)
+cd ~/notebooks/pl09_minc/ml/minc
+dune build
 <!--- end code --->
 
 <!--- md --->
@@ -206,7 +211,7 @@ go build
 <!--- end md --->
 
 <!--- code w kernel=bash --->
-./minc ../../parser/ex.xml ex.s
+_build/default/bin/main.exe ../../parser/ex.xml ex.s
 <!--- end code --->
 
 <!--- md --->
@@ -214,7 +219,7 @@ go build
 <!--- end md --->
 
 <!--- code w kernel=bash --->
-cat minc_cogen.go
+cat lib/minc_cogen.ml
 <!--- end code --->
 
 <!--- md --->
@@ -239,6 +244,7 @@ cat minc_cogen.go
 <!--- end md --->
 
 <!--- code w kernel=bash --->
+. ~/.cargo/env
 cd ~/notebooks/pl09_minc/rs/minc
 cargo build
 <!--- end code --->
@@ -273,6 +279,8 @@ cat src/minc_cogen.rs
 
 # test
 
+* your primary goal is to pass all the tests
+
 ##* files
 
 * `test/`
@@ -290,7 +298,7 @@ the `Makefile` does the following for each test program (`src/f00.c, src/f01.c,`
 1. execute the two executables and compare their outputs
 
 * in the `Makefile`
- * you must set the variable `mincc` to the path to your compiler (relative to the test directory)
+ * <font color=red>you must set the variable `mincc` to the path to your compiler (relative to the test directory)</font>
 ```
 mincc := ../ml/minc/_build/default/bin/main.exe
 ```
@@ -309,7 +317,16 @@ you can only test `src/f00.c`
 <!--- end md --->
 
 <!--- code w kernel=bash --->
+# make sure you set minc variable in Makefile
 cd ~/notebooks/pl09_minc/test
+make -n
+<!--- end code --->
+
+<!--- md --->
+to test a single file
+<!--- end md --->
+
+<!--- code w kernel=bash --->
 make -n srcs=src/f00.c
 <!--- end code --->
 
@@ -317,7 +334,13 @@ make -n srcs=src/f00.c
 
 * if the test fails, identify which file it failed for and how
 
-* it first converts the C source file into XML using minc_to_xml.py; if the test fails here, it's not your fault, unless you modified the grammar
+* use
+```
+make srcs=src/fXX.c
+```
+to run the test on the particular file that failed
+
+* on each file (`src/fXX.c`), it first converts the C source file into XML using `minc_to_xml.py`; if the test fails here, it's not your fault, unless you modified the grammar
 
 ```
 echo "# convert src/f00.c to xml/f00.xml"
@@ -331,7 +354,7 @@ echo "# compile xml/f00.xml to asm with your minC compiler"
 ../ml/minc/_build/default/bin/main.exe xml/f00.xml asm/f00.s
 ```
 
-if this fails, examine the original C source file (f00.c in the case above) and XML source file to examine what kind of source code makes it fail
+if this fails, examine the original C source file (`f00.c` in the case above) and XML source file to examine what kind of source code makes it fail
 
 * then it calls the gcc to compile the assembly you generated into an executable
 
@@ -340,7 +363,7 @@ echo "# generate the executable that calls f with your minC compiler"
 gcc -o minc/f00.exe -DTEST_NO=0 main.c asm/f00.s -O0 -g
 ```
 
-if you generate a syntactically invalid assembly code, gcc will complain here.  read the gcc error message, examine the assembly you generated (asm/f00.s in the case above) and understand why it failed
+if you generate a syntactically invalid assembly code, gcc will complain here.  read the gcc error message, examine the assembly you generated (`asm/f00.s` in the case above) and understand why it failed
 
 * then it calls executables generated by gcc as well as your minC compiler
 
@@ -350,7 +373,7 @@ echo "# run the executable generated by gcc"
 echo "# run the executable generated by your minC compiler"
 ./minc/f00.exe | tee out/f00.minc
 ```
-the gcc-generated executable is unlikely to fail.  if your compiler-generated executable fails, you might be able to see the reason just by looking aat the assembly code you generated; otherwise, run the executable with a debugger. GDB, for example, can step-execute an assembly program and allow you to examine the value of registers.
+the gcc-generated executable is unlikely to fail.  if your compiler-generated executable fails, you might be able to see the reason just by looking at the assembly code you generated; otherwise, run the executable with a debugger. GDB, for example, can step-execute an assembly program and allow you to examine the value of registers.
 
 * it finally compares the output of the two executables
 
