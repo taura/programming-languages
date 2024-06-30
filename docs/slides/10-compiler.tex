@@ -154,8 +154,6 @@ escapechar=\@,
 \end{frame}
 
 \iffalse
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifja
 \begin{frame}
@@ -171,6 +169,7 @@ escapechar=\@,
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}
 \frametitle{Various forms of language implementation}
@@ -235,6 +234,7 @@ escapechar=\@,
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}
   \frametitle{Why do you want to build a language, today?}
@@ -302,6 +302,7 @@ escapechar=\@,
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{High level language vs. machine code}
@@ -464,7 +465,7 @@ learn details and other instructions from the exercise
   \end{itemize}
 \end{frame}
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifja
 \begin{frame}[fragile]
   \frametitle{コード生成 --- 人間コンパイラ内観}
@@ -483,6 +484,7 @@ double sq(double c, long n) {
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Code generation by hand --- introspecting ``human compiler''}
@@ -546,6 +548,7 @@ Lend:
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Step 1 --- make all controls ``goto''s}
@@ -641,6 +644,7 @@ Lstart:
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Step 2 --- flatten all nested expressions to ``C $=$ A op B''}
@@ -721,6 +725,7 @@ double sq3(double c, long n) {
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Step 3 ---assign ``machine variables'' (registers or memory) to variables}
@@ -806,6 +811,7 @@ double sq3(double c, long n) {
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Step 4 --- convert them to machine instructions}
@@ -888,6 +894,7 @@ Lstart:
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Things are more complex in general \ldots}
@@ -927,6 +934,7 @@ Lstart:
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}
   \frametitle{A simplest general strategy for code generation by a compiler}
@@ -964,6 +972,7 @@ Lstart:
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}
   \frametitle{Register usage conventions (ABI)}
@@ -1007,6 +1016,7 @@ Lstart:
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}
   \frametitle{ABI (What happens upon function calls?)}
@@ -1054,6 +1064,7 @@ double integ(long n) {
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Code generation including function calls}
@@ -1105,6 +1116,7 @@ double integ3(long n) {    /*  n :  @\ao{\tt 0(\%rsp)}@ */
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{converting to ``goto''s and ``C = A op B''s}
@@ -1197,7 +1209,6 @@ double integ3(long n) {
 \end{itemize}
 \end{column}
 \end{columns}
-  
 \end{frame}
 
 
@@ -1264,6 +1275,7 @@ double integ3(long n) {
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}
   \frametitle{Spec overview}
@@ -1290,6 +1302,23 @@ double integ3(long n) {
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifen
+\begin{frame}
+  \frametitle{Structure of compilers}
+  \begin{itemize}
+  \item AST : data structure representing the program
+  \item IR : common representation portable across multiple source/target languages
+  \end{itemize}
+
+  \begin{center}
+    \only<1>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/inside_compiler_1.pdf}}%
+    \only<2>{\includegraphics[width=0.8\textwidth]{out/pdf/svg/inside_compiler_2.pdf}}%
+  \end{center}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \iffalse
 \ifen
 \begin{frame}
@@ -1313,6 +1342,7 @@ double integ3(long n) {
 \fi
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}
   \frametitle{Structure of the program}
@@ -1325,16 +1355,18 @@ double integ3(long n) {
   \item {\tt \{ml,jl,go,rs\}/minc/}
     \begin{itemize}
     \item {\tt minc\_ast.??} --- abstract syntax tree (AST) definition
-    \item {\tt minc\_parse.??} --- grammar definition
-    \item \ao{\tt minc\_cogen.??} --- code generation from AST
+    \item {\tt minc\_parse.??} --- XML $\rightarrow$ AST
+    \item \ao{\tt minc\_cogen.??} --- AST $\rightarrow$ assembly
     \item {\tt main.??} or {\tt minc.??} --- main driver
     \end{itemize}
   \item the exact location depends on the language
   \item your work will be mostly done in \ao{\tt minc\_cogen.??}
+  \item other parts are given
   \end{itemize}
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Abstract Syntax Tree (AST)}
@@ -1347,16 +1379,141 @@ double integ3(long n) {
     \item expression
     \item etc.
     \end{itemize}
+  \item also called \ao{\it parse tree}
   \item see {\tt minc\_ast.??}
+  \end{itemize}
+  \begin{columns}
+    \begin{column}{0.4\textwidth}
+\begin{lstlisting}
+while (x < 10) 
+  y++;
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.05\textwidth}
+      $\Rightarrow$
+    \end{column}
+    \begin{column}{0.3\textwidth}
+      \includegraphics[width=\textwidth]{out/pdf/svg/ast_while.pdf}
+    \end{column}
+  \end{columns}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifen
+\begin{frame}
+  \frametitle{Lexer and parser}
+  \begin{itemize}
+  \item lexer (lexical analyzer, tokenizer) : string $\rightarrow$ sequence of ``tokens'' (words)
+    \begin{itemize}
+    \item[] {\tt while (x < 10) y++;}
+    \item[] $\rightarrow$ \fbox{\tt while}
+      \fbox{\tt (}
+      \fbox{\tt x}
+      \fbox{\tt <}
+      \fbox{\tt 10}
+      \fbox{\tt )}
+      \fbox{\tt y}
+      \fbox{\tt ++}
+      \fbox{\tt ;}
+    \end{itemize}
+    
+  \item parser : sequence of tokens $\Rightarrow$ AST
+
+    \begin{columns}
+      \begin{column}{0.6\textwidth}
+        \fbox{\tt while}
+        \fbox{\tt (}
+        \fbox{\tt x}
+        \fbox{\tt <}
+        \fbox{\tt 10}
+        \fbox{\tt )}
+        \fbox{\tt y}
+        \fbox{\tt ++}
+        \fbox{\tt ;}        
+      \end{column}
+      \begin{column}{0.05\textwidth}
+        $\Rightarrow$
+      \end{column}
+      \begin{column}{0.2\textwidth}
+        \includegraphics[width=\textwidth]{out/pdf/svg/ast_while.pdf}
+      \end{column}
+    \end{columns}
   \end{itemize}
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifen
+\begin{frame}[fragile]
+  \frametitle{Implementing lexer and parser}
+  \begin{itemize}
+  \item first write a {\it grammar}, typically in the BNF notation
+  \item e.g., (part of C grammar)
+
+    \begin{itemize}
+    \item {\it statement} $=$ {\it while-statement} $|$ {\it if-statement} $|$ \ldots
+      
+    \item {\it while-statement} $=$ {\tt 'while'} {\tt '('} {\it expr} {\tt ')'} {\it statement}
+      
+    \item {\it expr} $=$ {\it number} $|$ {\it expr} {\tt '+'} {\it expr} $|$ \ldots
+
+    \item {\it number} $=$ {\it digit}* $|$ {\it digit}* {\tt .} {\it digit}* $|$ \ldots
+      
+    \item {\it digit} $=$ [0-9]
+    \item \ldots
+    \end{itemize}
+
+  \item based on the grammar, either
+    \begin{itemize}
+    \item write them by hand, or
+    \item use a \ao{\it lexser/parser generators}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifen
+\begin{frame}
+  \frametitle{Lexer/parser generators}
+  \begin{itemize}
+  \item \ao{\it lexer generator} generates a lexer
+    from a syntax of \ao{\it tokens} (variables, numbers, \ldots)
+  \item \ao{\it parser generator} generates a parser from
+    a syntax of higher-level constructs (expressions, statements, \ldots)
+  \item some grammar frameworks (PEG) specify them in a single framework
+  \end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifen
+\begin{frame}
+  \frametitle{Lexer/parser generators}
+  \begin{itemize}
+  \item many programming languages have lexer/parser generators for them
+    \begin{itemize}
+    \item \ao{lex/yacc (flex/bison)} : C/C++
+    \item \ao{ANTLR} : C, C++, Java, Python, JavaScript, Go, \ldots
+    \item \ao{ocamllex/menhir} : OCaml
+    \item \ao{tatsu} : Python
+    \item etc.
+    \end{itemize}
+  \item this exercise uses \ao{tatsu}, to generate a Python program that converts C source into XML
+    \begin{itemize}
+    \item the grammar is in \ao{\tt minc\_grammar.y}
+    \end{itemize}
+  \item each language reads the XML by the respective XML library you have used before
+  \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}
   \frametitle{Code generation ({\tt minc\_cogen}) --- basic structure}
   \begin{itemize}
-  \item takes a parse tree (AST) and returns machine code
+  \item takes an AST and returns machine code
     (a list of instructions)
   \item generate machine code for an AST 
     $\approx$ generate machine code of its components and properly arrange them
@@ -1378,6 +1535,7 @@ double integ3(long n) {
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Compiling an entire file}
@@ -1399,6 +1557,7 @@ let ast_to_insns_program defs ... =
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Compiling a function definition}
@@ -1425,6 +1584,7 @@ let ast_to_insns_def def ... =
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Compiling a statement (e.g., {\tt while} statement)}
@@ -1458,6 +1618,7 @@ let rec ast_to_insns_stmt stmt ...  =
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Compiling an expression (arithmetic)}
@@ -1499,6 +1660,7 @@ let rec ast_to_insns_expr expr ... =
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Compiling an expression (comparison)}
@@ -1532,6 +1694,7 @@ when {\tt \%rsi - \%rdi} $\leq$ 0 (less-than-or-equal)
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Compiling an expression (comparison)}
@@ -1567,10 +1730,10 @@ let rec ast_to_insns_expr expr ... =
 \end{lstlisting} %$
     \end{column}
   \end{columns}
-
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Compiling an expression (function call)}
@@ -1595,6 +1758,7 @@ let rec ast_to_insns_expr expr ... =
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Details we have been leaving out}
@@ -1608,6 +1772,8 @@ let rec ast_to_insns_expr expr ... =
 \end{itemize}
 \end{frame}
 \fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Determining where to save subexpressions}
@@ -1645,10 +1811,10 @@ let rec ast_to_insns_expr expr !\ao{$v$}! =
 \end{lstlisting}
     \end{column}    
   \end{columns}
-
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Locations to hold variables}
@@ -1676,6 +1842,7 @@ if (...) {
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Environment: records where variables are held}
@@ -1694,6 +1861,7 @@ if (...) {
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{{\tt ast\_to\_insns\_expr} receives an environment}
@@ -1714,6 +1882,7 @@ let rec ast_to_insns_expr expr !\ao{\it env}! !\ao{$v$}! =
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{{\tt ast\_to\_insns\_stmt} receives an environment too}
@@ -1739,6 +1908,7 @@ let rec ast_to_insns_stmt expr !\ao{\it env}! !\ao{$v$}! =
 \end{frame}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
   \frametitle{Implementing environment}
