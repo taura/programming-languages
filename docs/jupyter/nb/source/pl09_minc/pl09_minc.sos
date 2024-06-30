@@ -105,6 +105,10 @@ cat ex.xml
 <!--- code w kernel=bash --->
 export PATH=~/go/bin:$PATH
 cd ~/notebooks/pl09_minc/go/minc
+ls -lR
+<!--- end code --->
+
+<!--- code w kernel=bash --->
 go build
 <!--- end code --->
 
@@ -150,6 +154,10 @@ cat minc_cogen.go
 <!--- code w kernel=bash --->
 export PATH=~/.juliaup/bin:$PATH
 cd ~/notebooks/pl09_minc/jl/minc
+ls -lR
+<!--- end code --->
+
+<!--- code w kernel=bash --->
 chmod +x minc.jl
 <!--- end code --->
 
@@ -199,6 +207,10 @@ cat minc_cogen.jl
 <!--- code w kernel=bash --->
 eval $(opam env)
 cd ~/notebooks/pl09_minc/ml/minc
+ls -lR
+<!--- end code --->
+
+<!--- code w kernel=bash --->
 dune build
 <!--- end code --->
 
@@ -246,9 +258,12 @@ cat lib/minc_cogen.ml
 <!--- code w kernel=bash --->
 . ~/.cargo/env
 cd ~/notebooks/pl09_minc/rs/minc
-cargo build
+ls -lR
 <!--- end code --->
 
+<!--- code w kernel=bash --->
+cargo build
+<!--- end code --->
 
 <!--- md --->
 ###* run
