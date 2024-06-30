@@ -434,7 +434,7 @@ to, say,
 
 ## Baseline requirements (Level 1)
 
-* implement the compiler for minC (you will mainly write `minc_cogen.{ml,jl,go,rs}`)
+* implement the compiler for minC (you will mainly write `minc_cogen.{go,jl,ml,rs}`)
 * your code generator must be heavily commented (explain how it works, as if you are writing a report, except you write it in the source code)
 * pass all the tests, that is, the following command executes without an error
 <!--- end md --->
@@ -461,14 +461,51 @@ make -B -k
  * W : wrong result (your compiler produced an executable that terminates successfully, but the output result is different from that of gcc-generated executable)
 
 * members of each team must get togeter at least once to show their test results each other
-* you are encouraged to get together in other occassions to discuss progress and help each other
+* you are encouraged to get together with team members working on this option in other occassions to discuss progress and help each other (team members working on other options are not requierd to participate)
 <!--- end md --->
 
 <!--- md --->
 
-* submit your work through Jupyter (modify and add files in place under ~/notebooks/pl09_minc); make sure you execute the above cell (`make -B -k`)
-* submit "assignment-3 option 0" through UTOL
-* all the essential work is submitted through Juptyer and Excel; you only have to submit a brief text that says "I submitted pl09_minc to Jupyter" in the ITC-LMS
+* <font color=red>before submitting your work, make sure you clean up your working directory,</font>  in the manner described in [Writing standalone programs using libraries](https://taura.github.io/programming-languages/html/errata/pl04_standalone.sos.html)
+<!--- end md --->
+
+<!--- md --->
+* Go
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_minc/go/minc
+go clean
+<!--- end code --->
+
+<!--- md --->
+* OCaml
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_minc/ml/minc
+dune clean
+<!--- end code --->
+
+<!--- md --->
+* Rust
+<!--- end md --->
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_minc/rs/minc
+cargo clean
+<!--- end code --->
+
+<!--- md --->
+* <font color="red">also make sure you execute `make clean` in the test directory</font>
+<!--- end md --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_minc/test
+make clean
+<!--- end code --->
+
+<!--- md --->
+* submit your work through Jupyter (modify and add files in place under `~/notebooks/pl09_minc`); make sure you execute the above cell (`make -B -k`)
+* submit "Term Report Option A (pl09_minc; build a compiler)" through UTOL
+* all the essential work is submitted through Juptyer and Excel; you only have to submit a brief report to UTOL
 
 ## Extra points [Level 2+]
 
