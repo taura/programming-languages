@@ -313,9 +313,9 @@ the `Makefile` does the following for each test program (`src/f00.c, src/f01.c,`
 1. execute the two executables and compare their outputs
 
 * in the `Makefile`
- * <font color=red>you must set the variable `mincc` to the path to your compiler (relative to the test directory)</font>
+ * <font color=red>you must set the variable `minc` to the path to your compiler (relative to the test directory)</font>
 ```
-mincc := ../ml/minc/_build/default/bin/main.exe
+minc := ../ml/minc/_build/default/bin/main.exe
 ```
  * you can set the variable `srcs` to change the functions tested. the default is all the 75 files in `src/`
 ```
@@ -494,6 +494,8 @@ go clean
 
 <!--- md --->
 * OCaml
+  * ignore `Error: rmdir(_build): Directory not empty` if you see it (I don't know why it happens)
+  
 <!--- end md --->
 <!--- code w kernel=bash --->
 cd ~/notebooks/pl09_minc/ml/minc
