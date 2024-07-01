@@ -2245,7 +2245,7 @@ is about to be created
   \item pros: the frontier always progresses
   \item pros: easier to work with for copying GCs
   \item cons: reclaim less objects.
-    if $p$ becomes unreachable due to another update to $o$,
+    even if \whitebox becomes unreachable due to another update to \blackbox,
     it won't be reclaimed (by the current GC)
   \end{itemize}
 \item approach \#2:
@@ -2645,7 +2645,8 @@ while (there are gray objects) {
   for (pointers p in o)
     if (p points to a white object)
       gray it;
-  @\aka{the mutator changes the graph;}@
+  @\aka{the mutator changes the graph in such a way}@
+  @\aka{that does not create black $\rightarrow$ white pointer;}@
 }    
 \end{lstlisting}
 \end{itemize}
