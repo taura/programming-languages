@@ -448,18 +448,18 @@ learn details and other instructions from the exercise
 \begin{frame}
   \frametitle{From high-level programming languages to machine code}
   \begin{itemize}
+  \item an instruction can perform \aka{\it only a single operation}, so
+    nested expressions (e.g., {\tt a * x + b * y + c * z}) must be
+    broken down into a series of instructions
   \item a register $\approx$ a variable, but
     \begin{itemize}
-    \item you have only a fixed number of them,
-      so majority of values have to be stored in memory
+    \item you have \aka{\it only a fixed number of them},
+      so some values may have to be spilled on memory (esp. at function calls)
     \item function parameters and return values are on
       predetermined registers ({\it calling convention}
       or {\it Application Binary Interface})
     \end{itemize}
-  \item an instruction can perform only a single operation, so
-    nested expressions (e.g., {\tt a * x + b * y + c * z}) must be
-    broken down into a series of instructions
-  \item there are no structured control flows (for, while, if, etc.);
+  \item there are \aka{\it no structured control flows} (for, while, if, etc.);
     everything must be done by (conditional) jump instructions
     ($\approx$ ``goto'' statement)
   \end{itemize}
@@ -935,23 +935,6 @@ Lstart:
 \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-\ifen
-\begin{frame}
-  \frametitle{A simplest general strategy for code generation by a compiler}
-  \begin{itemize}
-  \item in general, memory (stack) must be used to hold intermediate results
-    $\Rightarrow$ simply, \ao{{\it ``always''} use stack}
-  \item a register is used only ``temporarily''
-    (to read an operand from memory, which is immediately used by an instruction)
-  \end{itemize}
-
-  \begin{center}
-    \includegraphics[width=0.5\textwidth]{out/pdf/lsvg/stack_1.pdf}
-  \end{center}
-\end{frame}
-\fi
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifja
 \begin{frame}
   \frametitle{レジスタ使用慣例 (ABI)}
@@ -1019,15 +1002,15 @@ Lstart:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}
-  \frametitle{ABI (What happens upon function calls?)}
+  \frametitle{ABI (How function call works)}
   \begin{itemize}
   \item {\tt long f() \{ ... g(1,2,3,4,5,6,7,8); ... \}}
   \item
     \only<1>{during {\tt f}}%
-    \only<2>{right before ``{\tt call g}'' {\tt {\scriptsize rdi=1, rsi=2, rdx=3, rcx=4, r8=5, r9=6}}}% 
-    \only<3>{right after ``{\tt call g}'' (when {\tt g} started)}%
+    \only<2>{right before ``{\tt call g}'' {\tt {\scriptsize rdi=1, rsi=2, rdx=3, rcx=4, r8=5, r9=6}}}
+    \only<3>{right after ``{\tt call g}'' (when {\tt g} started)}
     \only<4>{save callee-save registers {\tt g} uses}
-    \only<5>{during {\tt g}}
+    \only<5>{extend stack as needed to execute {\tt g}}
   \item []
 \begin{center}
   \only<1>{\includegraphics[height=0.8\textheight]{out/pdf/svg/stack_1.pdf}}%
@@ -1066,8 +1049,29 @@ double integ(long n) {
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
+\begin{frame}
+  \frametitle{A simplest general strategy for code generation}
+  \begin{itemize}
+  \item in general,
+    \begin{itemize}
+    \item there may be so many intermediate results that some have to be spilled on memory
+    \item values used after a function call must be saved on memory 
+    \end{itemize}
+    $\Rightarrow$ \ao{\it ``always''} using memory \ao{(stack)} is the simplest strategy
+  \item a register is used only ``temporarily''
+    (to read an operand from memory, which is immediately used by an instruction)
+  \end{itemize}
+
+  \begin{center}
+    \includegraphics[width=0.5\textwidth]{out/pdf/lsvg/stack_1.pdf}
+  \end{center}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifen
 \begin{frame}[fragile]
-  \frametitle{Code generation including function calls}
+  \frametitle{A simple code generation including function calls}
   \begin{itemize}
   \item []
 \begin{lstlisting}
@@ -1093,7 +1097,7 @@ double integ(long n) {
   \begin{itemize}
   \item []
 \begin{lstlisting}
-double integ3(long n) {    /*  n :  @\ao{\tt 0(\%rsp)}@ */
+double integ(long n) {     /*  n :  @\ao{\tt 0(\%rsp)}@ */
   double x = 0;            /*  x :  @\ao{\tt 8(\%rsp)}@ */
   double t0 = 1;           /* t0 : @\ao{\tt 16(\%rsp)}@ */
   double t1 = (double)n;   /* t1 : @\ao{\tt 24(\%rsp)}@ */
@@ -1123,7 +1127,37 @@ double integ3(long n) {    /*  n :  @\ao{\tt 0(\%rsp)}@ */
   \begin{itemize}
   \item []
 \begin{lstlisting}
-double integ3(long n) {    /*  n :  @\ao{\tt 0(\%rsp)}@ */
+double integ(long n) {     
+  double x = 0;            
+  double t0 = 1;           
+  double t1 = (double)n;   
+  double dx = t0 / t1;     
+  double s = 0;            
+  long i = 0;              
+  if (!(i < n)) goto Lend;
+ Lstart:
+  double t2 = f(x);        
+  s += t2;
+  x += dx;
+  i += 1;
+  if (i < n) goto Lstart;
+  Lend:
+  double t3 = s * dx;      
+  return t3;
+}
+\end{lstlisting}
+  \end{itemize}
+\end{frame}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifen
+\begin{frame}[fragile]
+  \frametitle{allocate memory slot for intermediate values}
+  \begin{itemize}
+  \item []
+\begin{lstlisting}
+double integ(long n) {     /*  n :  @\ao{\tt 0(\%rsp)}@ */
   double x = 0;            /*  x :  @\ao{\tt 8(\%rsp)}@ */
   double t0 = 1;           /* t0 : @\ao{\tt 16(\%rsp)}@ */
   double t1 = (double)n;   /* t1 : @\ao{\tt 24(\%rsp)}@ */
@@ -1154,7 +1188,7 @@ double integ3(long n) {    /*  n :  @\ao{\tt 0(\%rsp)}@ */
   \begin{itemize}
   \item []
 \begin{lstlisting}
-double integ3(long n) {
+double integ(long n) {
   /* n : 0(%rsp) */
   movq %rdi,0(%rsp)  
   # double x = 0;
@@ -1278,9 +1312,9 @@ double integ3(long n) {
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}
-  \frametitle{Spec overview}
+  \frametitle{MinC (``Minimum C'') spec overview}
   \begin{itemize}
-  \item this will be your final report if you choose option 0
+  \item this will be your final report if you choose option A
   \item all expressions have type \ao{\tt long (8 byte integers)}
     \begin{itemize}
     \item no \mura{\tt typedef}s
@@ -1307,8 +1341,9 @@ double integ3(long n) {
 \begin{frame}
   \frametitle{Structure of compilers}
   \begin{itemize}
-  \item AST : data structure representing the program
-  \item IR : common representation portable across multiple source/target languages
+  \item \ao{Abstract Syntax Tree (AST) :} data structure representing the program
+  \item \ao{Intermediate Representatin (IR) :}
+    common representation portable across multiple source/target languages
   \end{itemize}
 
   \begin{center}
@@ -1448,7 +1483,7 @@ while (x < 10)
 \begin{frame}[fragile]
   \frametitle{Implementing lexer and parser}
   \begin{itemize}
-  \item first write a {\it grammar}, typically in the BNF notation
+  \item first write a \ao{\it grammar}, typically in the Backus-Naur form (BNF)
   \item e.g., (part of C grammar)
 
     \begin{itemize}
@@ -1508,6 +1543,24 @@ while (x < 10)
   \end{itemize}
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifen
+\begin{frame}
+  \frametitle{Intermediate Representation (IR)}
+  \begin{itemize}
+  \item a common representation of programs internally used by a compiler
+    \begin{itemize}
+    \item hopefully independent from the source language (C, C++, Rust, Go, Julia, etc.)
+    \item hopefully independent from the target language (x86, ARM, PowerPC, etc.)
+    \end{itemize}
+  \item it generally looks like ``an assembly with infinite registers (variables)''
+  \item a compiler performs optimizations as IR $\rightarrow$ IR transformations
+  \item {\it note:} in the exercise you could design your IR, but it is not necessary (it is possible
+    to directly go from AST $\rightarrow$ asm) 
+  \end{itemize}
+\end{frame}
+\fi
+  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}
