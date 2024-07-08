@@ -448,6 +448,9 @@ learn details and other instructions from the exercise
 \begin{frame}
   \frametitle{From high-level programming languages to machine code}
   \begin{itemize}
+  \item there are \aka{\it no structured control flows} (for, while, if, etc.);
+    everything must be done by (conditional) jump instructions
+    ($\approx$ ``goto'' statement)
   \item an instruction can perform \aka{\it only a single operation}, so
     nested expressions (e.g., {\tt a * x + b * y + c * z}) must be
     broken down into a series of instructions
@@ -459,9 +462,6 @@ learn details and other instructions from the exercise
       predetermined registers ({\it calling convention}
       or {\it Application Binary Interface})
     \end{itemize}
-  \item there are \aka{\it no structured control flows} (for, while, if, etc.);
-    everything must be done by (conditional) jump instructions
-    ($\approx$ ``goto'' statement)
   \end{itemize}
 \end{frame}
 
@@ -963,11 +963,12 @@ Lstart:
   \item the first six integer/pointers arguments : \ao{\tt rdi, rsi, rdx, rcx, r8, r9}
   \item floating point number arguments : \ao{\tt xmm0, xmm1, \ldots}
   \item an integer/pointer return value : \ao{\tt rax}
-  \item {\tt rsp} : points the end of the stack upon function entry, which holds the return address
-  \item callee-save registers: \ao{\tt rbx, rbp, r12, r13, r14, r15}
+  \item a floating point number return value : \ao{\tt xmm0}
+  \item \ao{\tt rsp} : points the end of the stack upon function entry, which holds the return address
+  \item {\it callee-save} registers: \ao{\tt rbx, rbp, r12, r13, r14, r15, rsp}
     (preserved across function calls $\rightarrow$
     a function must save them before using (setting a value to) them)
-  \item other registers are caller-save
+  \item other registers are {\it caller-save}
     (a function must assume they are destroyed across function calls)
   \item see ``general-purpose'' registers in
     \url{https://wiki.cdot.senecacollege.ca/wiki/X86_64_Register_and_Instruction_Quick_Start}
@@ -1054,12 +1055,13 @@ double integ(long n) {
   \begin{itemize}
   \item in general,
     \begin{itemize}
-    \item there may be so many intermediate results that some have to be spilled on memory
-    \item values used after a function call must be saved on memory 
+    \item there may be too many intermediate results to hold on registers
+    \item values used after a function call must be
+      saved on memory (or callee-save registers)
     \end{itemize}
     $\Rightarrow$ \ao{\it ``always''} using memory \ao{(stack)} is the simplest strategy
   \item a register is used only ``temporarily''
-    (to read an operand from memory, which is immediately used by an instruction)
+    to apply an instruction
   \end{itemize}
 
   \begin{center}
@@ -1189,6 +1191,7 @@ double integ(long n) {     /*  n :  @\ao{\tt 0(\%rsp)}@ */
   \item []
 \begin{lstlisting}
 double integ(long n) {
+  subq $72,%rsp    
   /* n : 0(%rsp) */
   movq %rdi,0(%rsp)  
   # double x = 0;
@@ -1197,7 +1200,8 @@ double integ(long n) {
   movsd %xmm0,8(%rsp)
   # double t0 = 1;
   /* t0 : 16(%rsp)*/
-  movq $1,16(%rsp)
+  movsd .L1(%rip), %xmm0
+  movsd %xmm0,16(%rsp)
   # double t1 = (double)n;
   /* t1 : 24(%rsp)*/
   cvtsi2sdq 0(%rsp),%xmm0
@@ -1209,8 +1213,6 @@ double integ(long n) {
   movsd %xmm0,32(%rsp)
   # double s = 0;
   /* s : 40(%rsp) */
-  movsd .L0(%rip),%xmm0
-  movsd %xmm0,40(%rsp)
 \end{lstlisting}%$
   \end{itemize}
     \end{column}
@@ -1218,6 +1220,8 @@ double integ(long n) {
   \begin{itemize}
   \item []
 \begin{lstlisting}
+  movsd .L0(%rip),%xmm0
+  movsd %xmm0,40(%rsp)
   # long i = 0;
   /* i : 48(%rsp) */
   movq $0,48(%rsp)
@@ -1493,7 +1497,7 @@ while (x < 10)
       
     \item {\it expr} $=$ {\it number} $|$ {\it expr} {\tt '+'} {\it expr} $|$ \ldots
 
-    \item {\it number} $=$ {\it digit}* $|$ {\it digit}* {\tt .} {\it digit}* $|$ \ldots
+    \item {\it number} $=$ {\it digit}+ $|$ {\it digit}+ {\tt .} {\it digit}* $|$ \ldots
       
     \item {\it digit} $=$ [0-9]
     \item \ldots
