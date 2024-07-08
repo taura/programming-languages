@@ -1410,13 +1410,13 @@ double integ(long n) {
 \begin{frame}[fragile]
   \frametitle{Abstract Syntax Tree (AST)}
   \begin{itemize}
-  \item naturally represent a program
+  \item a data structure that naturally represents a program
     \begin{itemize}
-    \item the whole program
-    \item function definition
-    \item statement
-    \item expression
-    \item etc.
+    \item the whole program,
+    \item function definition,
+    \item statement,
+    \item expression,
+    \item \ldots
     \end{itemize}
   \item also called \ao{\it parse tree}
   \item see {\tt minc\_ast.??}
@@ -1443,10 +1443,10 @@ while (x < 10)
 \begin{frame}
   \frametitle{Lexer and parser}
   \begin{itemize}
-  \item lexer (lexical analyzer, tokenizer) : string $\rightarrow$ sequence of ``tokens'' (words)
+  \item \ao{lexer (lexical analyzer, tokenizer) :} string $\rightarrow$ sequence of ``tokens'' (words)
     \begin{itemize}
-    \item[] {\tt while (x < 10) y++;}
-    \item[] $\rightarrow$ \fbox{\tt while}
+    \item[] ``{\tt while (x < 10) y++;}''
+    \item[] $\Rightarrow$ \fbox{\tt while}
       \fbox{\tt (}
       \fbox{\tt x}
       \fbox{\tt <}
@@ -1457,7 +1457,7 @@ while (x < 10)
       \fbox{\tt ;}
     \end{itemize}
     
-  \item parser : sequence of tokens $\Rightarrow$ AST
+  \item \ao{parser :} sequence of tokens $\Rightarrow$ AST
 
     \begin{columns}
       \begin{column}{0.6\textwidth}
