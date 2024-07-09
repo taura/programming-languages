@@ -1288,7 +1288,7 @@ double integ(long n) {
 \section{最小限のCからのコード先生器}
 \fi
 \ifen
-\section{Implementing a minimum compiler for a C-like language}
+\section{Implementing a compiler for a minimum C-like language}
 \fi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifja
@@ -1391,7 +1391,7 @@ double integ(long n) {
     \item {\tt minc\_grammar.y} --- grammar definition
     \item {\tt minc\_to\_xml.py} --- minC $\rightarrow$ XML converter
     \end{itemize}
-  \item {\tt \{ml,jl,go,rs\}/minc/}
+  \item {\tt \{go,jl,ml,rs\}/minc/}
     \begin{itemize}
     \item {\tt minc\_ast.??} --- abstract syntax tree (AST) definition
     \item {\tt minc\_parse.??} --- XML $\rightarrow$ AST
@@ -1518,9 +1518,9 @@ while (x < 10)
   \frametitle{Lexer/parser generators}
   \begin{itemize}
   \item \ao{\it lexer generator} generates a lexer
-    from a syntax of \ao{\it tokens} (variables, numbers, \ldots)
+    from the definition of \ao{\it tokens} (variables, numbers, \ldots)
   \item \ao{\it parser generator} generates a parser from
-    a syntax of higher-level constructs (expressions, statements, \ldots)
+    the definition of higher-level constructs (expressions, statements, \ldots)
   \item some grammar frameworks (PEG) specify them in a single framework
   \end{itemize}
 \end{frame}
@@ -1552,13 +1552,17 @@ while (x < 10)
 \begin{frame}
   \frametitle{Intermediate Representation (IR)}
   \begin{itemize}
-  \item a common representation of programs internally used by a compiler
-    \begin{itemize}
-    \item hopefully independent from the source language (C, C++, Rust, Go, Julia, etc.)
-    \item hopefully independent from the target language (x86, ARM, PowerPC, etc.)
-    \end{itemize}
-  \item it generally looks like ``an assembly with infinite registers (variables)''
-  \item a compiler performs optimizations as IR $\rightarrow$ IR transformations
+  \item a common representation of programs used by a compiler
+  \item generally $\approx$ ``an assembly with unlimited variables''
+  \item purposes
+    \begin{enumerate}
+    \item achieve portability
+      \begin{itemize}
+      \item hopefully independent from the source language (C, C++, Rust, Go, Julia, etc.)
+      \item hopefully independent from the target language (x86, ARM, PowerPC, etc.)
+      \end{itemize}
+    \item perform optimizations as IR $\rightarrow$ IR transformations
+    \end{enumerate}
   \item {\it note:} in the exercise you could design your IR, but it is not necessary (it is possible
     to directly go from AST $\rightarrow$ asm) 
   \end{itemize}
@@ -1606,8 +1610,11 @@ while (x < 10)
     \begin{column}{0.55\textwidth}
 In OCaml, it will look like \ldots
 \begin{lstlisting}[escapechar=!]
-let ast_to_insns_program defs ... =
-  List.concat (List.map (fun def -> !\ao{\tt ast\_to\_insns\_def}! def ...) defs)
+let ast_to_asm_program (Program(defs)) ... =
+  ...
+  header
+  @ List.concat (List.map (fun def -> !\ao{\tt ast\_to\_asm\_def}! def ...) defs)
+  @ trailer
 \end{lstlisting}
     \end{column}
   \end{columns}
@@ -1629,11 +1636,11 @@ let ast_to_insns_program defs ... =
     \end{column}
     \begin{column}{0.55\textwidth}
 \begin{lstlisting}[escapechar=!]
-let ast_to_insns_def def ... =
+let ast_to_asm_def def ... =
   match def with
     DefFun(f, params, ret_type, body) ->
       (gen_prologue def)
-      @ (!\ao{\tt ast\_to\_insns\_stmt}! body ...)
+      @ (!\ao{\tt ast\_to\_asm\_stmt}! body ...)
       @ (gen_epilogue def)
 \end{lstlisting}
     \end{column}
@@ -1655,12 +1662,12 @@ let ast_to_insns_def def ... =
     \end{column}
     \begin{column}{0.55\textwidth}
 \begin{lstlisting}[escapechar=!]
-let rec ast_to_insns_stmt stmt ...  =
+let rec ast_to_asm_stmt stmt ...  =
   match stmt with
     ...
   | StmtWhile(cond, body) ->
-    let cond_op,cond_insns = !\ao{\tt ast\_to\_insns\_expr}! cond ... in
-    let body_insns = !\ao{\tt ast\_to\_insns\_stmt}! body ... in
+    let cond_op,cond_insns = !\ao{\tt ast\_to\_asm\_expr}! cond ... in
+    let body_insns = !\ao{\tt ast\_to\_asm\_stmt}! body ... in
     let ... in
     [ jmp Lc;
       Ls ]
@@ -1688,12 +1695,12 @@ let rec ast_to_insns_stmt stmt ...  =
     \end{column}
     \begin{column}{0.57\textwidth}
 \begin{lstlisting}[escapechar=!]
-let rec ast_to_insns_expr expr ... =
+let rec ast_to_asm_expr expr ... =
   match expr with
     ...
   | ExprOp("+", [e0; e1]) ->
-    let insns1,op1 = !\ao{\tt ast\_insns\_expr}! e1 ... in
-    let insns0,op0 = !\ao{\tt ast\_insns\_expr}! e0 ... in
+    let insns1,op1 = !\ao{\tt ast\_to\_asm\_expr}! e1 ... in
+    let insns0,op0 = !\ao{\tt ast\_to\_asm\_expr}! e0 ... in
     let m = !{\it a slot on the stack}! in
     ((insns1
     @ [ movq op1,m ]
@@ -1765,12 +1772,12 @@ when {\tt \%rsi - \%rdi} $\leq$ 0 (less-than-or-equal)
     \end{column}
     \begin{column}{0.57\textwidth}
 \begin{lstlisting}[escapechar=!]
-let rec ast_to_insns_expr expr ... =
+let rec ast_to_asm_expr expr ... =
   match expr with
     ...
   | ExprOp("<", [e0; e1]) ->
-    let insns1,op1 = !\ao{\tt ast\_to\_insns\_expr}! e1 ... in
-    let insns0,op0 = !\ao{\tt ast\_to\_insns\_expr}! e0 ... in
+    let insns1,op1 = !\ao{\tt ast\_to\_asm\_expr}! e1 ... in
+    let insns0,op0 = !\ao{\tt ast\_to\_asm\_expr}! e0 ... in
     let m0 = !{\it a slot on the stack}! in
     let m1 = !{\it a slot on the stack}! in
       ...
@@ -1799,15 +1806,15 @@ let rec ast_to_insns_expr expr ... =
   \end{itemize}
   \begin{columns}
 \begin{column}{0.45\textwidth}
-\includegraphics[width=0.9\textwidth]{out/pdf/lsvg/translate_6.pdf}
+\includegraphics[width=0.9\textwidth]{out/pdf/svg/translate_6.pdf}
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{lstlisting}[escapechar=!]
-let rec ast_to_insns_expr expr ... =
+let rec ast_to_asm_expr expr ... =
   match expr with
     ...
   | ExprCall(f, args) ->
-     let insns,arg_vars = !\ao{\tt ast\_to\_insns\_exprs}! args env var_idx in
+     let insns,arg_vars = !\ao{\tt ast\_to\_asm\_exprs}! args env var_idx in
      ((insns @ (make_call f arg_vars)), rax)
 \end{lstlisting}
 \end{column}
@@ -1824,8 +1831,8 @@ let rec ast_to_insns_expr expr ... =
     to save values of \ao{\it subexpressions} and \mura{\it variables}
   \item that is, how to determine XX below
     \begin{center}
-    \includegraphics[width=0.5\textwidth]{out/pdf/lsvg/translate_4.pdf}
-  \end{center}
+      \includegraphics[width=0.5\textwidth]{out/pdf/lsvg/translate_4.pdf}
+    \end{center}
 \end{itemize}
 \end{frame}
 \fi
@@ -1834,13 +1841,29 @@ let rec ast_to_insns_expr expr ... =
 \ifen
 \begin{frame}[fragile]
   \frametitle{Determining where to save subexpressions}
+  \begin{columns}
+    \begin{column}{0.7\textwidth}
+      \begin{itemize}
+      \item {\tt ast\_to\_asm\_expr} $E$ receives a value ($v$)
+        pointing to the lowest end of free space
+      \item {\tt ast\_to\_asm\_expr} $E$ {\it v} \ldots\ 
+        generates instructions that evaluate $E$ using
+        (destroying) only addresses at or above $v${\tt (\%rsp)}
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.3\textwidth}
+      \begin{center}
+        \includegraphics[width=1.0\textwidth]{out/pdf/svg/stack_v.pdf}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+\fi
+
+\ifen
+\begin{frame}[fragile]
+  \frametitle{Determining where to save subexpressions}
   \begin{itemize}
-\item {\tt ast\_to\_insns\_expr} receives a value ($v$)
-  pointing to the lowest end of free space
-\item []
-  {\tt ast\_to\_insns\_expr} $E$ {\it v} \ldots 
-  generates instructions that evaluate $E$ using
-  (destroying) only addresses above $v${\tt (\%rsp)}
 \item $\rightarrow$ when evaluating \aka{\fbox{$A$}} + \ao{\fbox{$B$}},
   save \ao{\fbox{$B$}} at $v${\tt (\%rsp)}
 \item let \aka{\fbox{$A$}} use $v + 8$ and higher addresses
@@ -1848,16 +1871,20 @@ let rec ast_to_insns_expr expr ... =
 
   \begin{columns}
     \begin{column}{0.34\textwidth}
-      \includegraphics[width=0.9\textwidth]{out/pdf/lsvg/translate_4.pdf}
+      \begin{center}
+        \includegraphics[width=0.9\textwidth]{out/pdf/lsvg/translate_4.pdf}
+        \vskip5mm
+        \includegraphics[width=0.5\textwidth]{out/pdf/svg/stack_v.pdf}
+      \end{center}
     \end{column}
     \begin{column}{0.66\textwidth}
 \begin{lstlisting}[escapechar=!]
-let rec ast_to_insns_expr expr !\ao{$v$}! =
+let rec ast_to_asm_expr expr !\ao{$v$}! =
  match expr with
   ...
  | ExprOp("+", e0, e1) ->
-  let insns1,op1 = !\ao{\tt ast\_to\_insns\_expr}! e1 !\ao{$v$}! .. in
-  let insns0,op0 = !\ao{\tt ast\_to\_insns\_expr}! e0 (!\underline{\tt \ao{$v$} + 8}!) .. in
+  let insns1,op1 = !\ao{\tt ast\_to\_asm\_expr}! e1 !\ao{$v$}! .. in
+  let insns0,op0 = !\ao{\tt ast\_to\_asm\_expr}! e0 (!\underline{\tt \ao{$v$} + 8}!) .. in
   let m = !\ao{$v$}!(%rsp) in
   ((insns1
   @ [ movq op1,m ]
@@ -1886,11 +1913,11 @@ if (...) {
 \item we need to hold {\tt a, b, c} on the stack
 \item the problem is almost identical to saving values of subexpressions
 \item $\rightarrow$
-  {\tt ast\_to\_insns\_stmt} also takes {\it v} pointing to the beginning of
+  {\tt ast\_to\_asm\_stmt} also takes {\it v} pointing to the beginning of
   the free space
-\item [] spec: {\tt ast\_to\_insns\_stmt} $S$ $v$ \ldots generates
+\item {\tt ast\_to\_asm\_stmt} $S$ $v$ \ldots\ generates
   instructions to execute $S$; they use (destroy)
-  only addresses above $v${\tt (\%rsp)}
+  only addresses at or above $v${\tt (\%rsp)}
 \item $\rightarrow$ e.g., hold
   ${\tt a} \mapsto v${\tt (\%rsp)}, 
   ${\tt b} \mapsto v+8${\tt (\%rsp)}, 
@@ -1911,7 +1938,7 @@ if (...) {
     \end{itemize}
   \item make a data structure that holds
     a mapping ``variable $\mapsto$ location'' \ao{\it (environment)}
-    and pass it to {\tt ast\_to\_insns\_stmt} and {\tt ast\_to\_insns\_expr}
+    and pass it to {\tt ast\_to\_asm\_stmt} and {\tt ast\_to\_asm\_expr}
   \item when new variables are declared at the beginning of
     a compound statement (\{ \ldots \}), add new mappings to it
   \end{itemize}
@@ -1921,11 +1948,11 @@ if (...) {
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
-  \frametitle{{\tt ast\_to\_insns\_expr} receives an environment}
+  \frametitle{{\tt ast\_to\_asm\_expr} receives an environment}
   \begin{itemize}
   \item []
 \begin{lstlisting}[escapechar=!]
-let rec ast_to_insns_expr expr !\ao{\it env}! !\ao{$v$}! =
+let rec ast_to_asm_expr expr !\ao{\it env}! !\ao{$v$}! =
   match expr with
     ...
   | ExprId(x) ->
@@ -1942,12 +1969,12 @@ let rec ast_to_insns_expr expr !\ao{\it env}! !\ao{$v$}! =
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ifen
 \begin{frame}[fragile]
-  \frametitle{{\tt ast\_to\_insns\_stmt} receives an environment too}
+  \frametitle{{\tt ast\_to\_asm\_stmt} receives an environment too}
   \begin{itemize}
   \item []
 \begin{lstlisting}[escapechar=!]
-let rec ast_to_insns_stmt expr !\ao{\it env}! !\ao{$v$}! =
-  match expr with
+let rec ast_to_asm_stmt stmt !\ao{\it env}! !\ao{$v$}! =
+  match stmt with
     ...
   | StmtCompound(decls, stmts) ->
      let env',v' = env_extend decls !\ao{\it env}! !\ao{$v$}! in
@@ -1983,8 +2010,12 @@ let rec ast_to_insns_stmt expr !\ao{\it env}! !\ao{$v$}! =
       mapping $x \mapsto$ {\it loc} in addition to {\it env}
       ({\tt ($x$, {\it loc})::{\it env}})
     \end{itemize}
-  \item an environment can be easily implemented with a list of (variable name, location)'s
-    and is left for your exercise
+
+  \item {\it env', v'} {\tt = env\_extend} {\it decls} {\it loc} {\it env}
+    \begin{itemize}
+    \item [] can be easily built on {\tt env\_add} (left for you)
+    \end{itemize}
+    
   \end{itemize}
 \end{frame}
 \fi

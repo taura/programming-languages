@@ -3,7 +3,7 @@
 # Julia
 #minc := ../jl/minc/minc.jl
 # OCaml
-#minc := ../ml/minc/_build/default/bin/main.exe
+minc := ../ml/minc/_build/default/bin/main.exe
 # Rust
 #minc := ../rs/minc/target/debug/minc
 # or you might use the release verson
