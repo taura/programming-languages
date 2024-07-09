@@ -46,6 +46,7 @@ let rec env_extend decls env var_idx =
      let env' = (var, (texpr, MEM_OP_VAR(var_idx)))::env in
      env_extend rest_decls env' (var_idx + 1)
 ;;
+
 let make_call f arg_vars = 
   let rec make_call_iter f arg_vars arg_idx =
     match arg_vars with
@@ -154,7 +155,7 @@ exception Wrong_fun_expr of (Minc_ast.expr * Minc_ast.expr list)
 
 
 (* code gen for expr in the environment env *)
-let rec irgen_expr expr env var_idx =
+let rec ast_to_asm_expr expr env var_idx =
   match expr with
     Minc_ast.ExprIntLiteral(n) ->
      ([ INSN_SET_CONST(n, rdx) ], rdx)
@@ -168,13 +169,13 @@ let rec irgen_expr expr env var_idx =
          (match e0 with
             Minc_ast.ExprId(x) ->
              let _,ox = env_lookup x env in
-             let insns,reg = irgen_expr e1 env var_idx in
+             let insns,reg = ast_to_asm_expr e1 env var_idx in
              ((insns @ [ INSN_ST(reg, ox) ]), reg)
           | _ -> raise (Lhs_not_lvalue(e0)))
       | BIN_OP_TYPE_ARITH ->
          (* e0 + e1 etc. *)
-         let insns1,reg1 = irgen_expr e1 env var_idx in
-         let insns0,reg0 = irgen_expr e0 env (var_idx + 1) in
+         let insns1,reg1 = ast_to_asm_expr e1 env var_idx in
+         let insns0,reg0 = ast_to_asm_expr e0 env (var_idx + 1) in
          let m = MEM_OP_VAR(var_idx) in
          ((insns1
            @ [ INSN_ST(reg1, m) ]
@@ -183,8 +184,8 @@ let rec irgen_expr expr env var_idx =
           reg0)
       | BIN_OP_TYPE_DIV ->
          (* e0 + e1 etc. *)
-         let insns1,reg1 = irgen_expr e1 env var_idx in
-         let insns0,reg0 = irgen_expr e0 env (var_idx + 1) in
+         let insns1,reg1 = ast_to_asm_expr e1 env var_idx in
+         let insns0,reg0 = ast_to_asm_expr e0 env (var_idx + 1) in
          let m = MEM_OP_VAR(var_idx) in
          let dreg = (match op with
                        "/" -> rax
@@ -200,8 +201,8 @@ let rec irgen_expr expr env var_idx =
           dreg)
       | BIN_OP_TYPE_CMP ->
          (* e0 < e1 etc. *)
-         let insns1,reg1 = irgen_expr e1 env var_idx in
-         let insns0,reg0 = irgen_expr e0 env (var_idx + 1) in
+         let insns1,reg1 = ast_to_asm_expr e1 env var_idx in
+         let insns0,reg0 = ast_to_asm_expr e0 env (var_idx + 1) in
          let m1 = MEM_OP_VAR(var_idx) in
          let m0 = MEM_OP_VAR(var_idx + 1) in
          ((insns1
@@ -218,14 +219,14 @@ let rec irgen_expr expr env var_idx =
      (match un_op_type op with
         (* +e *)
         UN_OP_TYPE_PLUS ->
-         irgen_expr e env var_idx
+         ast_to_asm_expr e env var_idx
       | UN_OP_TYPE_ARITH ->
          (* -e, ~e *)
-         let insns,reg = irgen_expr e env var_idx in
+         let insns,reg = ast_to_asm_expr e env var_idx in
          ((insns @ [ INSN_UN_OP(op, reg) ]), reg) (* reg = op reg *)
       | UN_OP_TYPE_NOT ->
          (* !e *)
-         let insns,reg = irgen_expr e env var_idx in
+         let insns,reg = ast_to_asm_expr e env var_idx in
          let m = MEM_OP_VAR(var_idx) in
          ((insns
            @ [ INSN_ST(reg, m);
@@ -237,24 +238,24 @@ let rec irgen_expr expr env var_idx =
   | Minc_ast.ExprOp(op, args) ->
      raise (Wrong_num_operands_op(op, args))
   | Minc_ast.ExprCall(ExprId(f), args) ->
-     let insns,arg_vars = irgen_exprs args env var_idx in
+     let insns,arg_vars = ast_to_asm_exprs args env var_idx in
      ((insns @ (make_call f arg_vars)), rax)
   | Minc_ast.ExprCall(f, args) ->
      raise (Wrong_fun_expr(f, args))
   | Minc_ast.ExprParen(e) ->
-     irgen_expr e env var_idx
+     ast_to_asm_expr e env var_idx
     
-and irgen_exprs exprs env var_idx =
+and ast_to_asm_exprs exprs env var_idx =
   match exprs with
     [] -> ([], [])
   | expr::rest_exprs ->
-     let insns,reg = irgen_expr expr env var_idx in
-     let rest_insns,rest_vars = irgen_exprs rest_exprs env (var_idx + 1) in
+     let insns,reg = ast_to_asm_expr expr env var_idx in
+     let rest_insns,rest_vars = ast_to_asm_exprs rest_exprs env (var_idx + 1) in
      let var = MEM_OP_VAR(var_idx) in
      ((insns @ [ INSN_ST(reg, var) ] @ rest_insns),
       var::rest_vars)
 
-and irgen_stmt stmt env var_idx gen_label label_cont label_brk label_ret =
+and ast_to_asm_stmt stmt env var_idx gen_label label_cont label_brk label_ret =
   match stmt with
     Minc_ast.StmtEmpty -> []
   | Minc_ast.StmtContinue ->
@@ -262,20 +263,20 @@ and irgen_stmt stmt env var_idx gen_label label_cont label_brk label_ret =
   | Minc_ast.StmtBreak ->
      [ INSN_JMP(label_brk) ]
   | Minc_ast.StmtReturn(expr) ->
-     let insns,reg = irgen_expr expr env var_idx in
+     let insns,reg = ast_to_asm_expr expr env var_idx in
      insns @ [ INSN_MOVE(reg, rax); INSN_JMP(label_ret) ]
   | Minc_ast.StmtExpr(e) ->
-     let insns,_ = irgen_expr e env var_idx in
+     let insns,_ = ast_to_asm_expr e env var_idx in
      insns
   | Minc_ast.StmtCompound(decls, stmts) ->
      let env',var_idx' = env_extend decls env var_idx in
-     irgen_stmts stmts env' var_idx' gen_label label_cont label_brk label_ret
+     ast_to_asm_stmts stmts env' var_idx' gen_label label_cont label_brk label_ret
   | Minc_ast.StmtIf(cexpr, then_stmt, else_stmt) ->
-     let cexpr_insns,cexpr_reg = irgen_expr cexpr env var_idx in
-     let then_insns = irgen_stmt then_stmt env var_idx gen_label label_cont label_brk label_ret in
+     let cexpr_insns,cexpr_reg = ast_to_asm_expr cexpr env var_idx in
+     let then_insns = ast_to_asm_stmt then_stmt env var_idx gen_label label_cont label_brk label_ret in
      let else_insns = match else_stmt with
          None -> []
-       | Some(else_stmt) -> irgen_stmt else_stmt env var_idx gen_label label_cont label_brk label_ret in
+       | Some(else_stmt) -> ast_to_asm_stmt else_stmt env var_idx gen_label label_cont label_brk label_ret in
      let label_else = gen_label "e" in
      let label_endif = gen_label "f" in
      cexpr_insns
@@ -290,8 +291,8 @@ and irgen_stmt stmt env var_idx gen_label label_cont label_brk label_ret =
      let label_cexpr = gen_label "w" in
      let label_exit  = gen_label "x" in
      let label_body  = gen_label "b" in
-     let body_insns = irgen_stmt body_stmt env var_idx gen_label label_cexpr label_exit label_ret in
-     let cexpr_insns,cexpr_reg = irgen_expr cexpr env var_idx in
+     let body_insns = ast_to_asm_stmt body_stmt env var_idx gen_label label_cexpr label_exit label_ret in
+     let cexpr_insns,cexpr_reg = ast_to_asm_expr cexpr env var_idx in
      INSN_JMP(label_cexpr)
      :: INSN_LABEL(label_body)
      :: body_insns
@@ -301,17 +302,19 @@ and irgen_stmt stmt env var_idx gen_label label_cont label_brk label_ret =
      @ [ INSN_BNE(label_body) ]
      @ [ INSN_LABEL(label_exit) ]
 
-and irgen_stmts stmts env var_idx gen_label label_cont label_brk label_ret =
+and ast_to_asm_stmts stmts env var_idx gen_label label_cont label_brk label_ret =
   map_concat 
     (fun stmt ->
-      irgen_stmt stmt env var_idx gen_label label_cont label_brk label_ret)
+      ast_to_asm_stmt stmt env var_idx gen_label label_cont label_brk label_ret)
     stmts
 ;;
 
 let reg_op_string (REG_OP(reg)) = Printf.sprintf "%%%s" reg
 ;;
+
 exception Reg_op_string_low_wrong_register of string
 ;;
+
 let reg_op_string_low (REG_OP(reg)) =
   if reg = "rax" then "%al"
   else raise (Reg_op_string_low_wrong_register(reg))
@@ -358,8 +361,8 @@ let insn_to_asm insn n_args n_params n_slots =
   | INSN_CQTO                  -> (sp "\tcqto")
   | INSN_UN_OP(op, reg)        -> (sp "\t%s %s" (us op) (rs reg))
   | INSN_JMP(l)                -> (sp "\tjmp %s" l)
-  | INSN_CMP(_, reg, mem)     -> (sp "\tcmpq %s,%s" (ms mem) (rs reg))
-  | INSN_CMP_CONST(_, reg, n) -> (sp "\tcmpq $%d,%s" n (rs reg))
+  | INSN_CMP(_, reg, mem)      -> (sp "\tcmpq %s,%s" (ms mem) (rs reg))
+  | INSN_CMP_CONST(_, reg, n)  -> (sp "\tcmpq $%d,%s" n (rs reg))
   | INSN_SETC(op, reg)         -> (sp "\t%s %s" (bs op) (rsl reg))
   | INSN_BE(l)                 -> (sp "\tje %s" l)
   | INSN_BNE(l)                -> (sp "\tjne %s" l)
@@ -469,7 +472,7 @@ let ast_to_asm_def (Minc_ast.DefFun(f, params, _ret_type, body)) gen_label =
   let env,var_idx = env_extend params [] 0 in
   let label_ret = gen_label "r" in
   let insns = dump_params params
-              @ irgen_stmt body env var_idx gen_label "" "" label_ret
+              @ ast_to_asm_stmt body env var_idx gen_label "" "" label_ret
               @ [ INSN_LABEL(label_ret) ] in
   let n_params = (List.length params) in
   let n_args = num_args insns in
