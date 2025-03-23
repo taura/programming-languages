@@ -259,7 +259,7 @@ and login with the user name and password.
           採点できなくなる</li>
         <li class="en">Some cells are for entering your answers and grading.
           If you duplicate (copy and paste) such a cell,
-          the notebook becomes broken and can't be graded.
+          the notebook becomes broken and cannot be graded.
         </li>
       </ul>
     </div>
@@ -394,6 +394,100 @@ and login with the user name and password.
       <iframe width="560" height="315" src="https://www.youtube.com/embed/j3HfHuIxADg?si=dZIUfR5PyH7cSqpF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       
     </div>
+
+
+    <h2 class="ja">
+      Notebookをfetchし直して始めからやり直したい ...
+    </h2>
+    <h2 class="en">
+      I want to re-fetch the notebook again to start over ...
+    </h2>
+    <div>
+      <ul>
+        <li class="ja">
+          Notebookを破壊してしまったとか, 何か分け合って課題をfetch
+          し直して初期状態からやり直したい場合は,
+          fetchし直したい課題のフォルダをまるごと削除して,
+          上記の
+          <a name=if_thigs_go_wrong>おかしなことになったら</a>
+          の「すべてがダメなときのリセット方法」に従って
+          Jupyterサーバを再起動してください.
+          詳しい手順.
+          <ol>
+            <li>左ペインから「notebooks」 -&gt;
+              をそれぞれダブルクリックして, fetchし直したい課題のフォルダの中身を表示
+            </li>
+            <li>
+              そのフォルダ内のファイルを全て選択して全て削除.
+              サブフォルダがある場合は, それらが空でないと消せないので, 
+              一旦それらサブフォルダ内のファイルを削除してから行う
+            </li>
+            <li>
+              上部のメニューから<font color="blue">File</font>-&gt;
+              <font color="blue">Hub Control Panel</font>を選択. <font color="red">Stop My Server</font>
+              を押して, <font color="blue">Start My Server</font>を押す.
+            </li>
+            <li>
+              メニュから
+              <font color="blue">Nbgrader</font>-&gt;
+              <font color="blue">Assignment List</font>
+              を表示すると, 課題が再びFetch可能になっているはずなのでFetchする
+            </li>
+          </ol>
+          注: フォルダを消す作業は以下の, 端末経由で行うことも可能. その場合,
+<pre>
+cd ~/notebooks/
+rm -rf 消したい課題のフォルダ
+</pre>
+        </li>
+
+        <li class="en">
+          In case you want to re-fetch the assignment and start over
+          for a reason, like you somehow corrupted the notebook,
+          you first delete the whole folder of the assignment
+          you want to start over and reset your Jupyter server
+          following the procedure <a name=if_thigs_go_wrong>
+            If things go wrong ...</a> above.
+          Details:
+          <ol>
+            <li>In the left pane,
+              double-click <tt>notebooks</tt> folder -&gt;
+              the folder of the assignment you want to delete
+              to show the contents of the assignment folder.
+            </li>
+            <li>
+              Select all files and delete them of that folder.
+              To delete a folder, it must be empty.
+              When it has subfolders, you must first delete
+              contents in each of them before deleting them.
+            </li>
+            <li>
+              Select <font color="blue">File</font>-&gt;
+              <font color="blue">Hub Control Panel</font>
+              from the top menu.  Press <font color="red">Stop My Server</font>
+              and then <font color="blue">Start My Server</font>.
+            </li>
+            <li>
+              From the menu, select
+              <font color="blue">Nbgrader</font>-&gt;
+              <font color="blue">Assignment List</font>
+              and you should be able to find it.
+            </li>
+          </ol>
+          Note: when deleting a folder, you can do it in a terminal
+          as explained below.  In that case, just do
+<pre>
+cd ~/notebooks/
+rm -rf the-folder-you-want-to-delete
+</pre>
+        </li>
+      </ul>
+
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/5SO6KTaYwSk?si=vp9I6CWNwMpra5K1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+    </div>
+
+    
     
     <h2 class="ja">
       Jupyter (webブラウザ) じゃなくて端末(SSH)で作業・編集したい
