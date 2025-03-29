@@ -8,16 +8,13 @@
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
 * <font color=blue>(2025/03/29)</font> Home page for AY2025 is out. Welcome!
-* <font color=blue>(2025/03/29)</font> If you participate in the first lecture on April 7th, make sure you can see the UTOL course page.  To make that happen you either have to 
-  * register to or bookmark the course in UTAS at least two days earlier (by April 5th)
-  * self-register to UTOL
-* We use PC during the class. Bring your device.
-* <font color=blue>(2025/03/29)</font> We are going to use Jupyter environment for your work. See How to access Jupyter environment
+* <font color=blue>(2025/03/29)</font> We use PC during the class. Bring your device.
+* <font color=blue>(2025/03/29)</font> We are going to use Jupyter environment for your work. See [How to access Jupyter environment](html/jupyter.html?lang=en)
 * <font color=blue>(2025/03/29)</font> Your user name and password will be distributed via UTOL (see How to access Jupyter environment above). They are sent to the following people, so please make sure you will be included.
-  * Those who already registered to this course via UTAS
-  * Those who bookmarked this course in UTAS
-  * Those who self-registered yourself to this course, by pressing the "register a course" button on the upper right of the course top page (note: it does not register to the course, which has to be done via UTAS. If you want to join the first day but haven't decided to register, please use this option).
-* <font color=blue>(2025/03/29)</font> Plan for the first day (April 7th)
+  * Those who already registered to this course via [UTAS](https://utas.adm.u-tokyo.ac.jp/)
+  * Those who bookmarked this course in [UTAS](https://utas.adm.u-tokyo.ac.jp/)
+  * Those who self-registered yourself, by pressing the "register a course" button on the upper right of the [UTOL course page](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2025_0340_FEN-EE4d19L1_01) (note: it does not register to the course for credit, which has to be done via [UTAS](https://utas.adm.u-tokyo.ac.jp/). If you want to join the first day but haven't decided to take the course for credit, use this option).
+* <font color=blue>(2025/03/29)</font> Plan of the first day (April 7th)
   1. Course introduction (Roadmap)
   1. Answer a survey during the class today and submit it until 11:15AM latest
   1. Play with Jupyter; use `pl00_intro` to practice submitting your work, in Jupyter and UTOL
