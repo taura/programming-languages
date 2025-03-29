@@ -1,0 +1,61 @@
+<link rel="stylesheet" href="scripts/style.css">
+
+# Programming Languages Course Introduction<br/> Kenjiro Taura {.unnumbered}
+
+# What's new
+
+* <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
+* <font color=red>Please reload the page</font> frequently as it will be updated during the course.
+
+* <font color=blue>(2025/03/29)</font> Home page for AY2025 is out. Welcome!
+* <font color=blue>(2025/03/29)</font> If you participate in the first lecture on April 7th, make sure you can see the UTOL course page.  To make that happen you either have to 
+  * register to or bookmark the course in UTAS at least two days earlier (by April 5th)
+  * self-register to UTOL
+* We use PC during the class. Bring your device.
+* <font color=blue>(2025/03/29)</font> We are going to use Jupyter environment for your work. See How to access Jupyter environment
+* <font color=blue>(2025/03/29)</font> Your user name and password will be distributed via UTOL (see How to access Jupyter environment above). They are sent to the following people, so please make sure you will be included.
+  * Those who already registered to this course via UTAS
+  * Those who bookmarked this course in UTAS
+  * Those who self-registered yourself to this course, by pressing the "register a course" button on the upper right of the course top page (note: it does not register to the course, which has to be done via UTAS. If you want to join the first day but haven't decided to register, please use this option).
+* <font color=blue>(2025/03/29)</font> Plan for the first day (April 7th)
+  1. Course introduction (Roadmap)
+  1. Answer a survey during the class today and submit it until 11:15AM latest
+  1. Play with Jupyter; use `pl00_intro` to practice submitting your work, in Jupyter and UTOL
+  1. work on `pl01_basics`. Please share answer in this spreadsheet after 11:15AM (whoever comes it first)
+  1. Answer a wrap-up survey at the end of the class today
+  1. Submit a Reflective Essay to UTOL after every lecture (due the next day).
+
+# Slides and other materials
+
+* [Roadmap](../slides/00-roadmap.pdf)
+* [Functional Programming Basics](../slides/01-functional.pdf)
+* [Essence of Object-Oriented Programming](../slides/02-oop.pdf)
+* [Going outside Jupyter and Using Libraries](../slides/03-standalone-and-libraries.pdf)
+* [Parametric Polymorphism (aka Generic Types/Functions)](../slides/04-parametric.pdf)
+* [Basics of programming language implementation](../slides/05-implementation-basics.pdf)
+* [Memory Management](../slides/06-memory-management.pdf)
+* [Garbage Collection (GC) : A Brief Introductions](../slides/07-gc-basics.pdf)
+* [Rust Memory Management](../slides/08-rust.pdf)
+* [Garbage Collection](../slides/09-gc-adv.pdf)
+* [Making a Compiler](../slides/10-compiler.pdf )
+
+# References
+
+* [Compilers: Principles, Techniques, and Tools: International Edition](https://www.amazon.co.jp/Compilers-Principles-Techniques-Tools-International/dp/0321491696)
+* Richard Jones and Rafael D Lins. [Garbage Collection: Algorithms for Automatic Dynamic Memory Management](https://www.amazon.co.jp/Programming-Rust-Fast-Systems-Development/dp/1492052590/ref=pd_lpo_1?pd_rd_i=1492052590&psc=1)
+* Yaron Minsky, Anil Madhavapeddy, and Jason Hickey. [Real World OCaml: Functional programming for the masses.](http://www.amazon.com/Real-World-OCaml-Functional-programming/dp/144932391X/ref=tmm_pap_title_0?ie=UTF8&qid=1396268703&sr=8-1-spell)
+* Benjamin Pierce. [Types and Programming Languages.](http://www.cis.upenn.edu/~bcpierce/tapl/)
+
+# Links
+
+* [Go](https://go.dev/)
+* [Julia](https://julialang.org/)
+* [OCaml](http://caml.inria.fr/)
+* [Rust](https://www.rust-lang.org/)
+* [Python](https://www.python.org/)
+* [Conservative GC](http://valgrind.org/)
+* [valgrind](http://valgrind.org/)
+* [LLVM](http://llvm.org/)
+* [COINS (in Japanese)](http://coins-compiler.sourceforge.jp/international/)
+
+# Grading
