@@ -13,8 +13,7 @@
 
 * Put the following in a Python code cell and execute it
 <!--- code kernel=python --->
-from heytutor import hey,  I,  C,  R,  D, config
-from heytutor import hey_, I_, C_, R_, D_
+from heytutor import *
 <!--- end code --->
 
 ## Basics

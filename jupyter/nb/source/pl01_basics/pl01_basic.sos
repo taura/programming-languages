@@ -41,8 +41,7 @@ Declare your choice in the following cell.  You can write any number of language
 
 * Execute the following cell to set up your tutor
 <!--- code w kernel=python --->
-from heytutor import hey,  I,  C,  R,  D, config
-from heytutor import hey_, I_, C_, R_, D_
+from heytutor import *
 
 config(default_lang=".......")  # choose one of Go/Julia/OCaml/Rust
 <!--- end code --->
