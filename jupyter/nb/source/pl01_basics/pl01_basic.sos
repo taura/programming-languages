@@ -40,7 +40,7 @@ Declare your choice in the following cell.  You can write any number of language
 # Prepare AI Tutor
 
 * Execute the following cell to set up your tutor
-<!--- code kernel=python --->
+<!--- code w kernel=python --->
 from heytutor import hey,  I,  C,  R,  D, config
 from heytutor import hey_, I_, C_, R_, D_
 
@@ -121,6 +121,17 @@ and test your function by computing ${\tt f}(1, 1, 1)$, ${\tt f}(3, 4, 5)$, and 
 
 <!--- code w label=prob kernel=python points=1 --->
 <!--- end code --->
+
+* After you think you have done, copy the contents of the above cell to the Python cell below, and call the tutor by putting `%%hey_` at the beginning (change the language name according to your choice)
+
+<!--- code w kernel=python --->
+%%hey_
+## an OCaml function given a, b, and c returning a^2 + b^2 - c^2
+... replace this with your code here ...
+<!--- end code --->
+
+* You may want to do this for problems that follow too, by adding a Python cell by yourself (press 'b' to insert a cell below)
+
 
 <!--- md label=ans --->
 Go
