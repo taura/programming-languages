@@ -17,12 +17,21 @@
 
 * 以下のような入力欄を「セル」という
 * SHIFT+ENTERで実行できる
+
 <br/>
 
 * A textbox like below is called a "cell"
 * Press SHIFT+ENTER to execute it
 
-## Python
+## Python セル / Python Cells
+
+* 以下はPythonのコードを書いて実行するセル
+* セル (またはセル左の余白) をクリックするとページ上部に「Code」, セルの右端上に「Python 3 (ipykernel)」と表示されることを確認せよ
+
+<br/>
+
+* The cell below is a Python cell, in which you can write and execute Python code
+* Click on the cell (or somewhere its left) and confirm "Code" is selected near the top of the page and "Python 3 (ipykernel)" on the upper right end of the cell
 
 <!--- code w kernel=python --->
 def f(x):
@@ -36,13 +45,13 @@ f(3)
 * 以下のセルを実行して`[*]`を観察しておくこと
 <br/>
 
-* while a cell is executing, `[*]` is shown on the left, which turns into a number like `[2]`
-* remember that you cannot execute other cells while `[*]` is shown
-* execute the cell below and observe `[*]`
+* While a cell is executing, `[*]` is shown on the left, which turns into a number like `[2]`
+* Remember that you cannot execute other cells while `[*]` is shown
+* Execute the cell below and observe `[*]`
 
 <!--- code w kernel=python --->
 import time
-time.sleep(5.0)
+time.sleep(2.0)
 <!--- end code --->
 
 * 実行中のセルを途中で止めたければタブ上部の■ボタンで止められることにはなっているが効かないことも多い
@@ -52,25 +61,25 @@ time.sleep(5.0)
 * カーネルのリセット, サーバの再起動も試してみよ
 <br/>
 
-* you should be able to stop an executing cell by ■ button at top of the tab, but do not expect it to work reliably
-* if it doesn't work, **reset kernel** by going to menu and selecting Kernel -&gt; Restart Kernel
-* even more powerful method to reset everything is to **restart the server** by going to menu and selecting File -&gt; Hub Control Panel -&gt; Stop Server -&gt; Start Server
-* execute the cell below and stop it before it finishes by ■ button
-* also try to reset kernel and restart server
+* You should be able to stop an executing cell by ■ button at top of the tab, but do not expect it to work reliably
+* If it doesn't work, **reset kernel** by going to menu and selecting Kernel -&gt; Restart Kernel
+* Even more powerful method to reset everything is to **restart the server** by going to menu and selecting File -&gt; Hub Control Panel -&gt; Stop Server -&gt; Start Server
+* Execute the cell below and stop it before it finishes by ■ button
+* Also try to reset kernel and restart server
 
 <!--- code w kernel=python --->
 import time
 time.sleep(10.0)
 <!--- end code --->
 
-## `%%writefile` で始まるセル / Cells starting with `%%writefile`
+## `%%writefile` で始まるPythonセル / Python Cells starting with `%%writefile`
 
 * `%%writefile filename` で始まるセルは SHIFT + Enter でその中身を指定されたファイルに保存する
-* Pythonではあるが典型的にはCプログラムを保存して後にBashセルでコンパイル, 実行するために用いられる
+* Pythonセルの機能ではあるが, 保存するだけの機能なので中身はPythonコードでなくても良い
 <br/>
 
 * Pressing SHIFT + Enter on cells that begin with `%%writefile filename` save the contents of the cell into the specified file
-* They look like Python cells, but they typically contain C programs which are then compiled and executed by bash cells
+* This is a function of Python cells, but as it only saves the contents, the contents can be anything (don't have to be Python code)
 
 <!--- code w kernel=python --->
 %%writefile hello.c
@@ -82,14 +91,16 @@ int main() {
 }
 <!--- end code --->
 
-## bash
+## bashセル / bash Cells
 
 * 下のセルはbash (Linuxのコマンドを実行できる)
-* ただしバグがあって, 出力が正しく出ないことがある(おかしいなと思ったら何度か実行してみてください)
+* セル (またはセル左の余白) をクリックするとページ上部に「Code」, セルの右端上に「bash」と表示されることを確認せよ
+* 初回実行時, 出力が出ないことがある (もう一度実行してみてください)
 <br/>
 
 * The cell below is bash, in which you can execute Linux commands
-* There seems a bug that misses outputs.  Repeat executing several times when the output is suspicious.
+* Click on the cell (or somewhere its left) and confirm "Code" is selected near the top of the page and "bash" on the upper right end of the cell
+* It occasionally happens that the output is not shown on the first execution.  Execute it again when that happens.
 
 <!--- code w kernel=bash --->
 # 表示されなかったらもう一回実行
@@ -109,8 +120,10 @@ gcc hello.c -o hello
 ## text (markdown)
 
 * コードではなくテキスト(マークダウン形式)を書くためのセル
-<br/>
-* there are cells for ordinary texts (markdown format), not code
+* セル (またはセル左の余白) をクリックするとページ上部に「Markdown」と表示されることを確認せよ
+
+* There are cells for ordinary texts (markdown format), not code
+* Click on the cell (or somewhere its left) and confirm "Markdown" is selected near the top of the page
 
 <!--- md w --->
 * ここをダブルクリックして編集してみよ
@@ -119,11 +132,20 @@ gcc hello.c -o hello
   * after done, press SHIFT-ENTER to save
 <!--- end md --->
 
+# セルの挿入や削除 / Adding and Removing Cells
+
+* 「Edit」メニューからセルの追加や削除ができる
+* キーボードショートカットもある. セルの左をクリックした状態で, (A)bove, (B)elow に新しいセルを挿入, など
+
+* You can add or remove cells from "Edit" menu
+* There are keyboard shortcuts; after clicking left of a cell, insert a new cell (A)bove or (B)elow, etc.
+
 # 注意: 解答用セルをコピーしないこと / Do not copy cells for answers
 
 * Jupyter notebookにはセルを複製(コピー, ペースト)する機能があるがそれを使って解答を記入すべきセルの複製を作ると, ノートブックが壊れてしまい採点ができなくなる
 * 解答記入用のセルには **解答セル/Answer Cell** と印がついている
 * 作業用にセルを新しく作ることは問題ない
+
 <br/>
 
 * Jupyter notebook allows you to duplicate (copy and paste) cells.  However, when you make a copy of cells for your answers, the notebook is broken and becomes impossible to grade
@@ -154,8 +176,9 @@ Validateボタン / Validate Button
 ### Jupyterで使う場合 / Using in Jupyter
 
 * 以下のセルをクリックして右上の言語選択メニューに「Go」と表示されることを確認せよ
-* Click the cell below and confirm "Go" is selected in the language menu on the right
 * 以下を下のセルにコピーして実行してみよ
+
+* Click the cell below and confirm "Go" is selected in the language menu on the right
 * Copy the following to the cell below and execute it
 ```
 println("hello go")
@@ -170,34 +193,64 @@ println("hello go")
 println("hello go")
 <!--- end code --->
 
-### コマンドラインで使う場合 / Using in command line
+### 単独動作するプログラムの作り方 / Making Standalone Programs
 
-* コマンドライン(JupyterターミナルやSSH)で使うには以下を(JupyterターミナルやSSHでログインした端末で)実行する
-* to use in a command line (Jupyter terminal or SSH), execute the following (in the Jupyter terminal or SSH terminal)
-```
+* `.go`を拡張子に持つファイルを作る
+* C言語などと同様で, ファイルのトップレベルに自由に文を書くことはできず, プログラムの実行=`main`関数の実行
+
+* Make a file with `.go` extension
+* Like C language, you cannot write arbitrary statements in the toplevel of a file and executing a program = executing its `main` function
+
+<!--- code kernel=python --->
+%%writefile hello.go
+<!--- include nb/source/pl00_intro/include/hello.go --->
+<!--- end code --->
+
+* コマンドライン (JupyterターミナルやSSH) で使うには以下を (JupyterターミナルやSSHでログインした端末で) 実行する
+* To use in a command line (Jupyter terminal or SSH), execute the following (in the Jupyter terminal or SSH terminal)
+
+<!--- code kernel=bash --->
 export PATH=~/go/bin:$PATH
-```
-<br/>
+<!--- end code --->
 
 * 毎回実行し直さなくて良いようにするには `~/.bashrc` に書いておく
-* if you don't want to do it every time, put it in your `~/.bashrc`
+* If you don't want to do it every time, put it in your `~/.bashrc`
 
 * 以下で`go`コマンドの場所 (`/home/uNNNNN/go/bin/go`) が表示されることを確認
-* make sure the following command shows the location of `go` command (`/home/uNNNNN/go/bin/go`)
-```
+* Make sure the following command shows the location of `go` command (`/home/uNNNNN/go/bin/go`)
+
+<!--- code kernel=bash --->
 which go
-```
+<!--- end code --->
+
+* 以下でコンパイル (`hello` という名前のファイルができる)
+* Compile the file with the following, to get an executable file `hello`
+
+<!--- code kernel=bash --->
+go build hello.go
+<!--- end code --->
+
+* 実行する
+* Execute it
+
+<!--- code kernel=bash --->
+./hello
+<!--- end code --->
+
+* 上記はすべてJupyterなしで, コマンドライン (SSHでログインしたターミナル) 上で実行できるのでやってみよ
+* You should be able to do the above without Jupyter, but with a command line (terminal you log in with SSH).  Give it a try.
 
 ## Julia
 
 ### Jupyterで使う場合 / Using in Jupyter
 
-* 以下のセルをクリックして右上の言語選択メニューに「Juila 1.10.2」と表示されることを確認せよ
-* Click the cell below and confirm "Julia 1.10.2" is selected in the language menu on the right
+* 以下のセルをクリックして右上の言語選択メニューに「Juila 1.11.4」と表示されることを確認せよ
 * 以下を下のセルにコピーして実行してみよ
+
 * Copy the following to the cell below and execute it
+* Click the cell below and confirm "Julia 1.11.4" is selected in the language menu on the right
 ```
-print("hello Julia")
+println("hello Julia")
 ```
 
 **解答セル/Answer Cell**
@@ -206,34 +259,60 @@ print("hello Julia")
 <!--- end code --->
 
 <!--- code w label=ans kernel=jl --->
-print("hello Julia")
+println("hello Julia")
 <!--- end code --->
 
-### コマンドラインで使う場合 / Using in command line
+### 単独動作するプログラムの作り方 / Making Standalone Programs
 
-* コマンドライン(JupyterターミナルやSSH)で使うには以下を(JupyterターミナルやSSHでログインした端末で)実行する
-* to use in a command line (Jupyter terminal or SSH), execute the following (in the Jupyter terminal or SSH terminal)
-```
+* `.jl`を拡張子に持つファイルを作る
+* Goと異なり, ファイルのトップレベルに自由に式/文を書くことが可能で, プログラムを実行する=それらを順に実行する
+
+* Make a file with `.jl` extension
+* Unlike Go, you can write arbitrary expressions/statements and executing a program = executing them in order
+
+<!--- code kernel=python --->
+%%writefile hello.jl
+<!--- include nb/source/pl00_intro/include/hello.jl --->
+<!--- end code --->
+
+* コマンドライン (JupyterターミナルやSSH) で使うには以下を (JupyterターミナルやSSHでログインした端末で) 実行する
+* To use in a command line (Jupyter terminal or SSH), execute the following (in the Jupyter terminal or SSH terminal)
+
+<!--- code kernel=bash --->
 export PATH=~/.juliaup/bin:$PATH
-```
-<br/>
+<!--- end code --->
 
 * 毎回実行し直さなくて良いようにするには `~/.bashrc` に書いておく
-* if you don't want to do it every time, put it in your `~/.bashrc`
-
 * 以下で`julia`コマンドの場所 (`/home/uNNNNN/.juliaup/bin/julia`) が表示されることを確認
+
+* If you don't want to do it every time, put it in your `~/.bashrc`
 * make sure the following command shows the location of `julia` command (`/home/uNNNNN/.juliaup/bin/julia`)
-```
+
+<!--- code kernel=bash --->
 which julia
-```
+<!--- end code --->
+
+* 以下で実行. コンパイルも行われる (Just-in-time コンパイル)
+* Execute with the following, which compiles the program, too (Just-in-time compilation)
+
+<!--- code kernel=bash --->
+julia hello.jl
+<!--- end code --->
+
+* 上記はすべてJupyterなしで, コマンドライン (SSHでログインしたターミナル) 上で実行できるのでやってみよ
+* You should be able to do the above without Jupyter, but with a command line (terminal you log in with SSH).  Give it a try.
+
+* `julia`コマンドはファイルを実行するだけでなく, 対話的環境としても動作する
+* `julia` command can be used not only to execute a file but also to start an interactive environment
 
 ## OCaml
 
 ### Jupyterで使う場合 / Using in Jupyter
 
-* 以下のセルをクリックして右上の言語選択メニューに「OCaml default」と表示されることを確認せよ
-* Click the cell below and confirm "OCaml default" is selected in the language menu on the right
+* 以下のセルをクリックして右上の言語選択メニューに「OCaml 4.14.2」と表示されることを確認せよ
 * 以下を下のセルにコピーして実行してみよ
+
+* Click the cell below and confirm "OCaml 4.14.2" is selected in the language menu on the right
 * Copy the following to the cell below and execute it
 ```
 Printf.printf("hello ocaml\n");
@@ -250,31 +329,73 @@ Printf.printf("hello ocaml\n");
 flush_all()
 <!--- end code --->
 
-### コマンドラインで使う場合 / Using in command line
+### 単独動作するプログラムの作り方 / Making Standalone Programs
 
-* コマンドライン(JupyterターミナルやSSH)で使うには以下を(JupyterターミナルやSSHでログインした端末で)実行する
-* to use in a command line (Jupyter terminal or SSH), execute the following (in the Jupyter terminal or SSH terminal)
-```
+* `.ml`を拡張子に持つファイルを作る
+* Juliaと同様, ファイルのトップレベルに自由に式/文を書くことが可能で, プログラムを実行する=それらを順に実行する
+
+* Make a file with `.ml` extension
+* Like Julia, you can write arbitrary expressions and executing a program = executing them in order
+
+<!--- code kernel=python --->
+%%writefile hello.ml
+<!--- include nb/source/pl00_intro/include/hello.ml --->
+<!--- end code --->
+
+* コマンドライン (JupyterターミナルやSSH) で使うには以下を (JupyterターミナルやSSHでログインした端末で) 実行する
+* To use in a command line (Jupyter terminal or SSH), execute the following (in the Jupyter terminal or SSH terminal)
+
+<!--- code kernel=bash --->
 eval $(opam env)
-```
-<br/>
+<!--- end code --->
 
 * 毎回実行し直さなくて良いようにするには `~/.bashrc` に書いておく
-* if you don't want to do it every time, put it in your `~/.bashrc`
-
 * 以下で`ocaml`コマンドの場所 (`/home/uNNNNN/.opam/default/bin/ocaml`) が表示されることを確認
-* make sure the following command shows the location of `ocaml` (`/home/uNNNNN/.opam/default/bin/ocaml`)
-```
+
+* If you don't want to do it every time, put it in your `~/.bashrc`
+* Make sure the following command shows the location of `ocaml` command (`/home/uNNNNN/.opam/default/bin/ocaml`)
+
+<!--- code kernel=bash --->
 which ocaml
-```
+<!--- end code --->
+
+* OCamlには, Goのようにコンパイルして実行可能なファイルを作ってから改めてそれを実行する方法と, JuliaやPythonのように直接実行する方法がある
+
+* OCaml has two ways to execute; one is to compile a program into an executable and then execute it; the other is to execute it directly just like Julia or Python
+
+* 前者の方法
+* The former method
+
+<!--- code kernel=bash --->
+ocamlc hello.ml
+# or, ocaml.opt hello.ml
+<!--- end code --->
+
+<!--- code kernel=bash --->
+./a.out
+<!--- end code --->
+
+* 後者の方法
+* The latter method
+
+<!--- code kernel=bash --->
+ocaml hello.ml
+<!--- end code --->
+
+* 上記はすべてJupyterなしで, コマンドライン (SSHでログインしたターミナル) 上で実行できるのでやってみよ
+* `ocaml`コマンドはファイルを実行するだけでなく, 対話的環境としても動作する
+
+* You should be able to do the above without Jupyter, but with a command line (terminal you log in with SSH).  Give it a try.
+* `ocaml` command can be used not only to execute a file but also to start an interactive environment
 
 ## Rust
 
 ### Jupyterで使う場合 / Using in Jupyter
 
 * 以下のセルをクリックして右上の言語選択メニューに「Rust」と表示されることを確認せよ
-* Click the cell below and confirm "Rust" is selected in the language menu on the right
 * 以下を下のセルにコピーして実行してみよ
+
+* Click the cell below and confirm "Rust" is selected in the language menu on the right
 * Copy the following to the cell below and execute it
 ```
 println!("hello rust")
@@ -289,24 +410,53 @@ println!("hello rust")
 println!("hello rust")
 <!--- end code --->
 
-### コマンドラインで使う場合 / Using in command line
 
-* コマンドライン(JupyterターミナルやSSH)で使うには以下を(JupyterターミナルやSSHでログインした端末で)実行する
-* to use in a command line (Jupyter terminal or SSH), execute the following (in the Jupyter terminal or SSH terminal)
-```
+### 単独動作するプログラムの作り方 / Making Standalone Programs
+
+* `.rs`を拡張子に持つファイルを作る
+* C言語, Goなどと同様で, ファイルのトップレベルに自由に文を書くことはできず, プログラムの実行=`main`関数の実行
+
+* Make a file with `.rs` extension
+* Like C or Go language, you cannot write arbitrary statements in the toplevel of a file and executing a program = executing its `main` function
+
+<!--- code kernel=python --->
+%%writefile hello.rs
+<!--- include nb/source/pl00_intro/include/hello.rs --->
+<!--- end code --->
+
+* コマンドライン (JupyterターミナルやSSH) で使うには以下を (JupyterターミナルやSSHでログインした端末で) 実行する
+* To use in a command line (Jupyter terminal or SSH), execute the following (in the Jupyter terminal or SSH terminal)
+
+<!--- code kernel=bash --->
 . ~/.cargo/env
-```
-<br/>
+<!--- end code --->
 
 * 毎回実行し直さなくて良いようにするには `~/.bashrc` に書いておく
-* if you don't want to do it every time, put it in your `~/.bashrc`
+* 以下で`rustc`コマンドの場所 (`/home/uNNNNN/.cargo/bin/rustc`) が表示されることを確認
 
-* 以下で`cargo`, `rustc`コマンドの場所 (`/home/uNNNNN/.cargo/bin/cargo`, `/home/uNNNNN/.cargo/bin/rustc`) が表示されることを確認
-* make sure the following command shows the location of `cargo` or `rustc` command (`/home/uNNNNN/go/bin/cargo` or `/home/uNNNNN/go/bin/rustc`)
-```
-which cargo
+* If you don't want to do it every time, put it in your `~/.bashrc`
+* Make sure the following command shows the location of `rustc` command (`/home/uNNNNN/.cargo/bin/rustc`)
+
+<!--- code kernel=bash --->
 which rustc
-```
+<!--- end code --->
+
+* 以下でコンパイル (`hello` という名前のファイルができる)
+* Compile the file with the following, to get an executable file `hello`
+
+<!--- code kernel=bash --->
+rustc hello.rs
+<!--- end code --->
+
+* 実行する
+* Execute it
+
+<!--- code kernel=bash --->
+./hello
+<!--- end code --->
+
+* 上記はすべてJupyterなしで, コマンドライン (SSHでログインしたターミナル) 上で実行できるのでやってみよ
+* You should be able to do the above without Jupyter, but with a command line (terminal you log in with SSH).  Give it a try.
 
 # Jupyter 端末環境 / Jupyter Terminals
 
@@ -319,11 +469,11 @@ which rustc
 <br/>
 
 * A typical Jupyter environment executes programs in a page like this (notebook).  There is, however, an environment you type arbitrary commands (terminal)
-* click the "+" icon right below the menu to show the launcher page
-* select "Terminal" to open the command line terminal
-* some circumstances in which you want to use it
-  * you browse a man page
-  * use kill command to terminate a program that does not stop with ■ button
+* Click the "+" icon right below the menu to show the launcher page
+* Select "Terminal" to open the command line terminal
+* Some circumstances in which you want to use it
+  * You browse a man page
+  * Use kill command to terminate a program that does not stop with ■ button
 
 # SSH でログイン / Login with SSH
 
@@ -332,8 +482,7 @@ which rustc
 * SSHログインのやり方は, [Jupyter環境の使い方](https://taura.github.io/programming-languages/html/jupyter.html)を参照
 <br/>
 
-* to do them, however, you probably want to master SSH login described below instead
-* you don't have to do this immediately, but need it in later assignments
-* see [How to access Jupyter environment](https://taura.github.io/programming-languages/html/jupyter.html?lang=en) for how to set up SSH
-
+* To do them, however, you probably want to master SSH login described below instead
+* You don't have to do this immediately, but need it in later assignments
+* See [How to access Jupyter environment](https://taura.github.io/programming-languages/html/jupyter.html?lang=en) for how to set up SSH
 

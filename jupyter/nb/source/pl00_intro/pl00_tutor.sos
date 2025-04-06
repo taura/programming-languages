@@ -1,0 +1,77 @@
+#* プログラミング言語 AI チューター 
+
+#* Programming Languages AI Tutor
+
+# What is it?
+
+* You can talk to an AI Chat I instructed to be your tutor in this course, through a small program that integrates it with this Jupyter environment
+* You can work in this Jupyter environment and call the AI tutor when you need help or when you want to get a feedback on your work
+
+# How to Use
+
+## Prepare
+
+* Put the following in a Python code cell and execute it
+<!--- code kernel=python --->
+from heytutor import hey,  I,  C,  R,  D, config
+from heytutor import hey_, I_, C_, R_, D_
+<!--- end code --->
+
+## Basics
+
+* To ask a question, the most basic way is to call function `hey` with your question:
+  * e.g.,
+<!--- code w kernel=python --->
+hey("Hey, give me an introduction to defining functions in OCaml")
+<!--- end code --->
+  * or, you can put `%%hey_` or `%%H_` in any Python cell containing a function, like this
+<!--- code w kernel=python --->
+%%hey_
+Hey, give me an introduction to recursive functions in OCaml
+<!--- end code --->
+
+## Convenient shortcuts
+
+* More importantly, it has several convenient functions to help you learn
+  * `I`(_topic_, _lang_) ... Introduction
+  * `C`(_topic_, _lang_) ... Coding problem
+  * `R`(_topic_, _lang_) ... Reading problem
+  * `D`(_topic_, _lang_) ... Debugging problem
+where _topic_ is a topic you want to learn and _lang_ is the name of the programming language you want to ask about.  For example, 
+<!--- code w kernel=python --->
+I("defining functions", "OCaml")
+<!--- end code --->
+will give you a general introduction to defining functions in OCaml, whereas
+<!--- code w kernel=python --->
+C("defining functions", "OCaml")
+<!--- end code --->
+will give you a coding problem about it.
+
+## Setting your default language
+
+* You can call
+<!--- code w kernel=python --->
+config(default_lang="OCaml")
+<!--- end code --->
+to omit the second parameter for above four functions, like
+<!--- code w kernel=python --->
+C("defining functions")
+<!--- end code --->
+
+## A typical usage
+
+* Putting `%%hey_` is especially convenient when you want to send the content of your code cell as a response to a coding/debugging problem or for feedback.
+* Note that `%%hey_` works only for Python cells.  Therefore, your typical workflow will be to develop your answer in a coding cell of an appropriate language (Go, Jupyter, OCaml, or Rust) and temporarily switch to Python cell when you need help or feedback.
+* Make sure you turn it back to the original language cell once you are finished.
+* If you do not want to overwrite the feedback, you might want to copy the cell content to another Python cell instead.
+
+## Practice
+
+* Above, you should have been given a coding exercise on defining functions in OCaml
+* Develop your answer below (note that the following is an OCaml cell)
+<!--- code w kernel=ocaml --->
+let ..
+<!--- end code --->
+* When you need help or you are done, turn the above cell into Python cell and send it by putting `%%hey_` to get feedback
+
+
