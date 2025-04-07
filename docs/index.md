@@ -17,10 +17,17 @@
 * <font color=blue>(2025/03/29)</font> Plan for the first day (April 7th)
   1. Course introduction ([Roadmap](slides/00-roadmap.pdf))
   1. Answer a [survey](https://forms.office.com/r/pXQ5WbvgBJ) during the class today (before 11:45AM if possible)
-  1. Play with Jupyter; use `pl00_intro` to practice submitting your work, in [Jupyter](html/jupyter.html?lang=en) and [UTOL](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2025_0340_FEN-EE4d19L1_01) (Assignment `pl00_intro`)
-  1. Don't forget to play with the AI tutor in `pl00_intro/pl_tutor.sos`
+  1. Play with Jupyter; use `pl00_intro` to practice submitting your work, in [Jupyter](html/jupyter.html?lang=en) and [UTOL](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2025_0340_FEN-EE4d19L1_01) (Assignment 01 : `pl00_intro`)
+  1. Don't forget to play with the AI tutor in `pl00_intro/pl00_tutor.sos`
   1. Work on `pl01_basics`. Please share answer in this [spreadsheet](https://univtokyo-my.sharepoint.com/:f:/g/personal/2615215597_utac_u-tokyo_ac_jp/EnuN7pra4klGozkzfTknOOwBkDAkdfMbMTxOaPS0qELq-Q?e=40ecSi) after 11:15AM (whoever comes first)
   1. Submit a Reflective Essay to [UTOL](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2025_0340_FEN-EE4d19L1_01) after every lecture (due the next day).
+* (optional) There is a UTokyo Slack / EEIC workspace / `#2025s-programming-languages` channel for mutual help on this course
+  * To join it, find the [EEIC: 工学部 電子情報工学科・電気電子工学科](https://utokyo-eeic.slack.com) workspace (public) from the [UTokyo Slack directory page](https://utokyo.enterprise.slack.com/), join the workspace (anybody with access to UTokyo Slack can join the workspace), and then to the channel
+  * For general instruction and prerequisites on UTokyo Slack, see [Joining an open workspace in UTokyo Slack](https://utelecon.adm.u-tokyo.ac.jp/en/slack/join) in utelecon (or Google "utokyo slack"); in particular, [Multi-Factor Authentication (MFA)](https://utelecon.adm.u-tokyo.ac.jp/en/utokyo_account/mfa/) is mandatory; if you haven't done it yet, do it later, not during the lecture
+* How to reach me?
+  * UTOL message
+  * Email (tau at eidos.ic.i.u-tokyo.ac.jp)
+  * UTokyo Slack / EEIC workspace / #2025s-programming-languages channel
 
 # Slides and other materials
 
