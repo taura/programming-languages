@@ -1,0 +1,521 @@
+#* Programming Languages (2) --- Functional Programming Basics
+
+<!--- md w --->
+
+Enter your name and student ID.
+
+ * Name:
+ * Student ID:
+
+<!--- end md --->
+
+# Choose your language
+
+Choose a language you want to work on for today from the following.
+
+* Go --- designed as a "better C"
+* Julia --- popular for scientific computing
+* OCaml --- a practical functional language
+* Rust --- a system programming language with memory safety without garbage collection
+
+
+* Choose a language you want to learn instead of one you already know.
+* The choice you made for today is not final, however; the language you work on in the rest of the course will be determined based on your preference as well as the balance.
+
+Declare your choice in the following cell.  You can write any number of languages you actually worked on.  In this notebook, I will work on the following language(s).
+
+<!--- md w points=1 --->
+<!--- end md --->
+
+# Prepare
+
+* Find an authoritive documentation for the language you chose by Google (e.g., google with [_the language name_ documentation])
+* I recommend you to find them by yourself, but in case you have a hard time finding it, here they are
+
+* [Go:](https://go.dev/doc/)
+* [Julia:](https://docs.julialang.org/en/v1/)
+* [OCaml:](https://ocaml.org/manual/)
+* Rust: [language manual](https://doc.rust-lang.org/book/) and [other docs](https://www.rust-lang.org/learn)
+
+# Prepare AI Tutor
+
+* Execute the following cell to set up your tutor
+<!--- code w kernel=python --->
+from heytutor import *
+config(default_lang=" ... ")  # choose one of Go/Julia/OCaml/Rust
+<!--- end code --->
+
+* Recall the most generic way of asking is to put `%%hey_` in a Python cell
+<!--- code w kernel=python --->
+%%hey_
+Tell me how to make an array in Julia
+<!--- end code --->
+or execute one of `hey`, `I`(ntro), `C`(oding problem), `R`(eading problem), and `D`(ebugging problem) in a Python cell. e.g.,
+<!--- code w kernel=python --->
+# hey("How to make an array") # how to do this in the language you chose
+# I("list", "OCaml")          # introduction to list of ocaml
+# C("vector")    # coding problem about vector in the language you chose
+<!--- end code --->
+
+# Roadmap
+
+* Below, you are going to learn the basics of functional programming.
+
+* Note: follow case conventions/requirements about type names of your language; Go, Julia and Rust conventionally capitalize them and OCaml requires them to be in lowercase
+
+#*P A simple recurrence relation
+
+Write a "functional program" that is given $n$ and computes the value of $a_n$ of the following recurrence.
+
+$$
+\begin{eqnarray*}
+   a_0 & = & 1, \\
+   a_n & = & 0.9\; a_{n-1} + 2 \quad (n > 0)
+\end{eqnarray*}
+$$
+
+* If it matters in your language, make it return 64-bit floating point numbers.
+
+The following is a "procedural" version in Python.
+
+<!--- code kernel=python --->
+<!--- exec-include ./mk_version.py -D label="A procedural recurrence" nb/source/pl02_fp_basics/include/pl02.py --->
+<!--- end code --->
+
+* Here, you are asked to write a "functional" version, whose superficial characteristics are
+  * it does not use loops
+  * it does not update variables
+
+* But more important is the fact that you can straightforwardly express the above recurrence using a recursive call.
+* Once you master this way of thinking, you don't even have to think of loops or updating variables.
+
+* <font color="red">In cells that follow, choose your language from the language selection menu.</font>
+
+**解答セル/Answer Cell**
+
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* Go
+<!--- end md --->
+
+<!--- code w kernel=go label=ans --->
+<!--- exec-include ./mk_version.py -D label="A simple recurrence" nb/source/pl02_fp_basics/include/pl02.go --->
+<!--- end code --->
+
+* Test (Go)
+
+<!--- code kernel=go --->
+import "math"
+<!--- exec-include ./mk_version.py -D label="A simple recurrence test" nb/source/pl02_fp_basics/include/pl02.go --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* Julia
+<!--- end md --->
+
+<!--- code w kernel=jl label=ans --->
+<!--- exec-include ./mk_version.py -D label="A simple recurrence" nb/source/pl02_fp_basics/include/pl02.jl --->
+<!--- end code --->
+
+* Test (Julia)
+
+<!--- code kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="A simple recurrence test" nb/source/pl02_fp_basics/include/pl02.jl --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* OCaml
+<!--- end md --->
+
+<!--- code w kernel=ml label=ans --->
+<!--- exec-include ./mk_version.py -D label="A simple recurrence" nb/source/pl02_fp_basics/include/pl02.ml --->
+<!--- end code --->
+
+* Test (OCaml)
+
+<!--- code kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="A simple recurrence test" nb/source/pl02_fp_basics/include/pl02.ml --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* Rust
+<!--- end md --->
+
+<!--- code w kernel=rs label=ans --->
+<!--- exec-include ./mk_version.py -D label="A simple recurrence" nb/source/pl02_fp_basics/include/pl02.rs --->
+<!--- end code --->
+
+* Test (Rust)
+
+<!--- code kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="A simple recurrence test" nb/source/pl02_fp_basics/include/pl02.rs --->
+<!--- end code --->
+
+#*P Find a divisor
+
+Write a program, or more specifically a function, smallest_divisor_geq($n$, $x$), that finds the smallest divisor of a given integer $n$ that is $\geq x$.  
+
+In Python syntax, 
+```
+>>> smallest_divisor_geq(10, 2)
+2
+>>> smallest_divisor_geq(35, 2)
+5
+>>> smallest_divisor_geq(43, 2)
+43
+```
+
+You may assume:
+* $n$ is an integer and $2 \leq n < 2^{25}$
+* $x$ is an integer and $2 \leq x \leq n$
+* $n$ is not visible by any integer $y$ s.t. $2 \leq y < x$
+
+If it matters in your language, use 64-bit integers for $n$ and $x$.
+
+Write it in a "functional" style (no loops or updates to variables).
+
+Hint: functional thinking goes: "The trivial case is when $x$ divides $n$. Otherwise?"
+
+**解答セル/Answer Cell**
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* Go
+<!--- end md --->
+
+<!--- code w kernel=go label=ans --->
+<!--- exec-include ./mk_version.py -D label="The smallest divisor" nb/source/pl02_fp_basics/include/pl02.go --->
+<!--- end code --->
+
+* Test (Go)
+
+<!--- code kernel=go --->
+<!--- exec-include ./mk_version.py -D label="The smallest divisor test" nb/source/pl02_fp_basics/include/pl02.go --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* Julia
+<!--- end md --->
+
+<!--- code w kernel=jl label=ans --->
+<!--- exec-include ./mk_version.py -D label="The smallest divisor" nb/source/pl02_fp_basics/include/pl02.jl --->
+<!--- end code --->
+
+* Test (Julia)
+
+<!--- code kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="The smallest divisor test" nb/source/pl02_fp_basics/include/pl02.jl --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* OCaml
+<!--- end md --->
+
+<!--- code w kernel=ml label=ans --->
+<!--- exec-include ./mk_version.py -D label="The smallest divisor" nb/source/pl02_fp_basics/include/pl02.ml --->
+<!--- end code --->
+
+* Test (OCaml)
+
+<!--- code kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="The smallest divisor test" nb/source/pl02_fp_basics/include/pl02.ml --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* Rust
+<!--- end md --->
+
+<!--- code w kernel=rs label=ans --->
+<!--- exec-include ./mk_version.py -D label="The smallest divisor" nb/source/pl02_fp_basics/include/pl02.rs --->
+<!--- end code --->
+
+* Test (Rust)
+
+<!--- code kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="The smallest divisor test" nb/source/pl02_fp_basics/include/pl02.rs --->
+<!--- end code --->
+
+#*P Factorization
+
+Write a program, or more specifically, a function factorize($n$), that finds the factorization of $n$.  The answer should be a list (or an array) of integers, whose products $=$ $n$.  For convenience, the factorization of 1 is an empty list (or an array).  In Python,
+
+```
+>>> factorize(12)
+[2,2,3]
+>>> factorize(105)
+[3,5,7]
+>>> factorize(19)
+[19]
+>>> factorize(1)
+[]
+```
+
+* To make the correct answer unique, the list must have numbers in the ascending order
+
+Hint:
+
+* Once you find a divisor of $n$, say $a$, just factorize $n/a$.
+* To solve this problem, you probably need a method that takes an integer a0 and a sequence [a1, a2, a3, ...] and returns the sequence [a0, a1, a2, ...].  Here are how you can do it with each of the languages.
+  * Go : [append](https://pkg.go.dev/builtin#append)
+  * Julia : [vcat](https://docs.julialang.org/en/v1/base/arrays/#Base.vcat)
+  * OCaml : builtin operator [::](https://ocaml.org/docs/lists)
+  * Rust : [concat](https://doc.rust-lang.org/std/slice/trait.Concat.html)
+
+**解答セル/Answer Cell**
+
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
+
+* This problem requires you to prepend an element in front of an existing sequence (e.g., given an element `x` and a sequence `p, q, r, ...`, make a sequence `x, p, q, r, ...`
+* How this can be done depends on the language and is separately addressed below
+<!--- end md --->
+
+<!--- md label=ans --->
+* Go
+
+* Go has an array-like data structure called "slice"
+* slice is like a dynamically-sized array
+* `[]T` is a type expression representing slice of `T`
+* `[]T{a,b,c,...}` is an expression representing a slice containing `a, b, c, ...`
+* Go has an append function that returns a slice extended with an arbitrary number of extra elements _at the end of a slice_. It can take a slice and any number of elements you want to extend the slice with. For example,
+  * let `s` be a slice containing 1, 2, and 3 (i.e., `[]int64{1,2,3}`)
+  * `append(s, 4)` is a slice containing 1, 2, 3, and 4
+  * `append(s, 4, 5)` is a slice containing 1, 2, 3, 4, and 5
+  * `append(s, 4, 5, 6)` is a slice containing 1, 2, 3, 4, 5, and 6
+  * and so on
+* In addition, Go allows you to pass elements of a slice to a function call as if you are passing them individually.  Its syntax is `f(slice...)`. For example, let `s` be the same slice,
+  * `f(s...)` is equivalent to `f(1,2,3)`
+* Finally, therefore `append(s, t...)` has an effect of concatenating two slices s and t
+* To prepend an element `x` in front of slice `a`, you concatenate a singleton slice containing only `x`, and `a`
+* Hence this cryptic expression `append([]int64{x}, a...)`
+
+<!--- end md --->
+
+<!--- code w kernel=go label=ans --->
+<!--- exec-include ./mk_version.py -D label="Factorize" nb/source/pl02_fp_basics/include/pl02.go --->
+<!--- end code --->
+
+* Test (Go)
+
+<!--- code kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Factorize test" nb/source/pl02_fp_basics/include/pl02.go --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* Julia
+
+* Julia has `vcat` that takes an arbitrary number of arrays and concatenate them together
+  * `vcat([1,2,3], [4,5])` is `[1,2,3,4,5]` 
+* You can also pass a scalar, which is considered a singleton array containing only that scalar
+  * `vcat(1, [2,3,4,5])` is `[1,2,3]`
+* Prepending an element `x` in front of an array `a` is as simple as `vcat(x, a)`
+<!--- end md --->
+
+<!--- code w kernel=jl label=ans --->
+<!--- exec-include ./mk_version.py -D label="Factorize" nb/source/pl02_fp_basics/include/pl02.jl --->
+<!--- end code --->
+
+* Test (Julia)
+
+<!--- code kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="Factorize test" nb/source/pl02_fp_basics/include/pl02.jl --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* OCaml
+
+* In OCaml, this is very straightforward
+* When `a` is a list and `x` an element, `x :: a` is a list that prepends `x` in front of `a`
+* e.g., `1 :: [2; 3; 4]` is `[1; 2; 3; 4]`
+
+<!--- end md --->
+
+<!--- code w kernel=ml label=ans --->
+<!--- exec-include ./mk_version.py -D label="Factorize" nb/source/pl02_fp_basics/include/pl02.ml --->
+<!--- end code --->
+
+* Test (OCaml)
+
+<!--- code kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Factorize test" nb/source/pl02_fp_basics/include/pl02.ml --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* Rust
+
+* In Rust, concat() method can concatenate any number of vectors
+* Given vectors `a, b, c, ...`,
+  * `[a, b].concat()` concatenates `a` and `b`
+  * `[a, b, c].concat()` concatenates `a`, `b` and `c`
+  * etc.
+* e.g.,
+  * `[vec![1,2], vec![3,4,5]].concat()` is a vector containing 1,2,3,4, and 5
+* Therefore, to prepend `x` in front of a vector `a`, `[vec![x], a].concat()` will do
+
+<!--- end md --->
+
+<!--- code w kernel=rs label=ans --->
+<!--- exec-include ./mk_version.py -D label="Factorize" nb/source/pl02_fp_basics/include/pl02.rs --->
+<!--- end code --->
+
+* Test (Rust)
+
+<!--- code kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="Factorize test" nb/source/pl02_fp_basics/include/pl02.rs --->
+<!--- end code --->
+
+#*P A Combinatorial Problem
+
+* Write a function subset_sum($a$, $v$) which, given a sequence (array or list depending on the language) of positive integers $a$ and try to make a subset of $a$ whose sum is $v$
+* More specifically, it should return either
+  1. a sequence $k$ of 0/1's s.t.
+    * $k$ has the same length with $a$
+    * sum of elements in $a$ whose corresponding value in $k$ is one is $v$ (the $i$-th element of $a$ "corresponds to" the $i$-th element of $k$), if such a subset indeed exists, or
+  1. nil (Go), nothing (Julia), or None (OCaml or Rust) if no such subset exists
+
+* In math terms, the dot product of $a$ and the returned sequence is $v$
+    
+* In Python syntax,
+
+```
+>>> subset_sum([1, 1, 1, 10, 100], 12)
+[1, 1, 0, 1, 0]
+>>> subset_sum([1, 1, 1, 10, 100], 19)
+None
+>>> subset_sum([1, 2, 4, 8, 16], 13)
+[1, 0, 1, 1, 0]
+```
+
+* To make the correct answer unique, if there are two or more subsets whose sum make $v$, a list that is lexicographically greatest should be returned (in plain terms, try to choose elements that come earlier in $a$)
+
+**解答セル/Answer Cell**
+<!--- code w label=prob kernel=python points=1 --->
+<!--- end code --->
+
+<!--- md label=ans --->
+
+Basic idea:
+
+* This is where the _functional thinking_ or _problem solving by recursion_ really shines
+* Imagine you are asked to make a sum of `1000` out of `[12, 7, 39, 23, ...]`
+* The recursive thinking goes
+  1. First assume take the first element in the set.  Then, making `1000` out of `[12, 7, 39, 23, ...]` is now equivalent to making `988`  (= 1000 - 12) out of the remaining `[7, 39, 23, ...]`
+  1. Next assume instead we do not take the first element in the set.  Then making `1000` is equivalent to making `1000` out of `[7, 39, 23, ...]`
+* The code below straightforwardly expresses this idea.
+* It naturally returns the lexicographically greatest one.  If you are instead asked to return the lexicographically smallest one, examine the second choice first
+
+* This problem also needs a way to represent a list or a special value indicating no such set exists 
+* How this is done depends on the language is separately addressed below
+
+<!--- end md --->
+
+
+<!--- md label=ans --->
+* Go
+
+* Go has a slice to represent a sequence and a special value `nil` can be used to indicate no such set exists
+* `nil` is much like a null pointer in C/C++; it is OK to return `nil` from a function whose return type is a slice
+* Static type checker does not complain about it.  The flip side is that you always have to assume a value whose static type is a slice (or pretty much any other type, for that matter) may in fact be a `nil`
+<!--- end md --->
+
+<!--- code w kernel=go label=ans --->
+<!--- exec-include ./mk_version.py -D label="Subset sum" nb/source/pl02_fp_basics/include/pl02.go --->
+<!--- end code --->
+
+* Test (Go)
+
+<!--- code kernel=go --->
+<!--- exec-include ./mk_version.py -D label="Subset sum test" nb/source/pl02_fp_basics/include/pl02.go --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* Julia
+
+* Julia has an array to represent a sequence and a special value `nothing` can be used to indicate no such set exists
+<!--- end md --->
+
+<!--- code w kernel=jl label=ans --->
+<!--- exec-include ./mk_version.py -D label="Subset sum" nb/source/pl02_fp_basics/include/pl02.jl --->
+<!--- end code --->
+
+* Test (Julia)
+
+<!--- code kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="Subset sum test" nb/source/pl02_fp_basics/include/pl02.jl --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* OCaml
+
+* OCaml has a type called $t$ `option`, which can be used to represent either a value of $t$ or a special value indicating a value does not exist
+* Given a value $x$ of type $t$,
+  * `Some($x$)` is a value of type $t$ `option`, indicating a value exists and it is $x$
+  * `None` is also a value of type $t$ `option`, indicating a value does not exist
+* Note that a static type checker of OCaml does not allow an expression like
+```
+if ...
+   [1;2;3] (* a list *)
+else
+   None
+```
+as the static types of the two branches do not match
+* You instead have to write
+```
+if ...
+   (Some([1;2;3])) (* a list option *)
+else
+   None
+```
+<!--- end md --->
+
+<!--- code w kernel=ml label=ans --->
+<!--- exec-include ./mk_version.py -D label="Subset sum" nb/source/pl02_fp_basics/include/pl02.ml --->
+<!--- end code --->
+
+* Test (OCaml)
+
+<!--- code kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="Subset sum test" nb/source/pl02_fp_basics/include/pl02.ml --->
+<!--- end code --->
+
+<!--- md label=ans --->
+* Rust
+
+* Similar to OCaml, Rust has a type called `Option<T>`, which can be used to represent either a value of $T$ or a special value indicating a value does not exist
+* Given a value $x$ of type $T$,
+  * `Some($x$)` is a value of type $T$ `option`, indicating a value exists and it is $x$
+  * `None` is also a value of type $T$ `option`, indicating a value does not exist
+* Note that a static type checker of Rust does not allow an expression like
+```
+if ... {
+   vec![1, 2, 3] (* a vector *)
+} else {
+   None
+}   
+```
+as the static types of the two branches do not match
+* You instead have to write
+```
+if ... {
+   Some(vec![1, 2, 3]) (* a vector *)
+} else {
+   None
+}   
+```
+<!--- end md --->
+
+<!--- code w kernel=rs label=ans --->
+<!--- exec-include ./mk_version.py -D label="Subset sum" nb/source/pl02_fp_basics/include/pl02.rs --->
+<!--- end code --->
+
+* Test (Rust)
+
+<!--- code kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="Subset sum test" nb/source/pl02_fp_basics/include/pl02.rs --->
+<!--- end code --->
+
