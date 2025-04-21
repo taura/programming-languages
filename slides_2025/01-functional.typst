@@ -531,3 +531,9 @@ in
 sum_to_tail 1 n 0
 ```])
 
+== A final remark about stack overflow
+
+- In principle, we should be able to grow stack as large as the computer memory (or other data on heap)
+- Yet, stack tends to overflow much earlier than that (e.g., a few MB, when you can use $>$ GB for other data)
+- It is actually an unnecessary constraint, imposed by typical memory management strategy for stack
+- A suitable language implementation can avoid such unnecessary overflow altogether by allocating stack more flexibly (e.g., from heap)
