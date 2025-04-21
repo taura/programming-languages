@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="127mm"
+   height="89.958336mm"
+   viewBox="0 0 127 89.958336"
+   version="1.1"
+   id="svg5"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <g
+     id="g3146"
+     transform="translate(-63.5,-27.78125)"
+     style="display:inline">
+    <rect
+       style="fill:#ffffff;fill-opacity:0.985835;stroke:none;stroke-width:0.554181;stroke-dasharray:1.66254, 1.66254;stroke-dashoffset:0"
+       id="rect3076"
+       width="127"
+       height="89.958336"
+       x="63.5"
+       y="27.78125" />
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-size:8.46667px;font-family:serif;-inkscape-font-specification:'serif Italic';fill:#ffffff;fill-opacity:0.985835;stroke:#000000;stroke-width:1;stroke-dasharray:none"
+       x="68.410667"
+       y="88.756073"
+       id="text3082"><tspan
+         id="tspan3080"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.46667px;font-family:serif;-inkscape-font-specification:serif;fill:#000000;stroke:none;stroke-width:1"
+         x="68.410667"
+         y="88.756073">sum_to(<tspan
+   style="font-style:italic;font-size:8.46667px"
+   id="tspan3078">n </tspan>- 1)</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:0.985835;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none"
+       id="rect3084"
+       width="63.5"
+       height="10.583338"
+       x="121.70833"
+       y="80.697914" />
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-size:8.46667px;font-family:serif;-inkscape-font-specification:'serif Italic';fill:#ffffff;fill-opacity:0.985835;stroke:#000000;stroke-width:1;stroke-dasharray:none"
+       x="68.410667"
+       y="99.339401"
+       id="text3090"><tspan
+         id="tspan3088"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.46667px;font-family:serif;-inkscape-font-specification:serif;fill:#000000;stroke:none;stroke-width:1"
+         x="68.410667"
+         y="99.339401">sum_to(<tspan
+   style="font-style:italic;font-size:8.46667px"
+   id="tspan3086">n</tspan>)</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:0.985835;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none"
+       id="rect3092"
+       width="63.5"
+       height="10.583338"
+       x="121.70833"
+       y="91.281242" />
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-size:8.46667px;font-family:serif;-inkscape-font-specification:'serif Italic';fill:#ffffff;fill-opacity:0.985835;stroke:#000000;stroke-width:1;stroke-dasharray:none"
+       x="68.410667"
+       y="78.172745"
+       id="text3098"><tspan
+         id="tspan3096"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.46667px;font-family:serif;-inkscape-font-specification:serif;fill:#000000;stroke:none;stroke-width:1"
+         x="68.410667"
+         y="78.172745">sum_to(<tspan
+   style="font-style:italic;font-size:8.46667px"
+   id="tspan3094">n </tspan>- 2)</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:0.985835;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none"
+       id="rect3100"
+       width="63.5"
+       height="10.583338"
+       x="121.70833"
+       y="70.114586" />
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-size:8.46667px;font-family:serif;-inkscape-font-specification:'serif Italic';fill:#ffffff;fill-opacity:0.985835;stroke:#000000;stroke-width:1;stroke-dasharray:none"
+       x="126.61897"
+       y="99.339401"
+       id="text3124"><tspan
+         id="tspan3122"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.46667px;font-family:serif;-inkscape-font-specification:serif;fill:#000000;stroke:none;stroke-width:1"
+         x="126.61897"
+         y="99.339401"><tspan
+   style="font-style:italic;font-size:8.46667px"
+   id="tspan3120">n </tspan>+ ...</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-size:8.46667px;font-family:serif;-inkscape-font-specification:'serif Italic';fill:#ffffff;fill-opacity:0.985835;stroke:#000000;stroke-width:1;stroke-dasharray:none"
+       x="126.61897"
+       y="88.756073"
+       id="text3132"><tspan
+         id="tspan3130"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.46667px;font-family:serif;-inkscape-font-specification:serif;fill:#000000;stroke:none;stroke-width:1"
+         x="126.61897"
+         y="88.756073"><tspan
+   style="font-style:italic;font-size:8.46667px"
+   id="tspan3128"><tspan
+   style="font-style:normal"
+   id="tspan3126">(</tspan>n </tspan>- 1) + ...</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-size:8.46667px;font-family:serif;-inkscape-font-specification:'serif Italic';fill:#ffffff;fill-opacity:0.985835;stroke:#000000;stroke-width:1;stroke-dasharray:none"
+       x="126.61897"
+       y="78.172745"
+       id="text3138"><tspan
+         id="tspan3136"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.46667px;font-family:serif;-inkscape-font-specification:serif;fill:#000000;stroke:none;stroke-width:1"
+         x="126.61897"
+         y="78.172745">(<tspan
+   style="font-style:italic;font-size:8.46667px"
+   id="tspan3134">n </tspan>- 2) + ...</tspan></text>
+    <rect
+       style="fill:#ffffff;fill-opacity:0.985835;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none"
+       id="rect3140"
+       width="63.5"
+       height="10.583338"
+       x="121.70833"
+       y="101.86457" />
+    <text
+       xml:space="preserve"
+       style="font-style:italic;font-size:8.46667px;font-family:serif;-inkscape-font-specification:'serif Italic';fill:#ffffff;fill-opacity:0.985835;stroke:#000000;stroke-width:1;stroke-dasharray:none"
+       x="68.410667"
+       y="109.92274"
+       id="text3144"><tspan
+         id="tspan3142"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.46667px;font-family:serif;-inkscape-font-specification:serif;fill:#000000;stroke:none;stroke-width:1"
+         x="68.410667"
+         y="109.92274">main()</tspan></text>
+  </g>
+</svg>
