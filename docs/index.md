@@ -12,6 +12,7 @@
   1. [Functional Programming Basics](slides/01-functional.pdf)
   1. Work on `pl02_fp_basics`, and share your answers in the same [spreadsheet](https://univtokyo-my.sharepoint.com/:f:/g/personal/2615215597_utac_u-tokyo_ac_jp/EnuN7pra4klGozkzfTknOOwBkDAkdfMbMTxOaPS0qELq-Q?e=40ecSi)
   1. Until the end of today's class, answer [language preference survey](https://forms.office.com/r/qnR50JQ6ZS)
+     - <font color="red">Update after the class:</font> I will start grouping wednesday.  Please submit your survey no later than <font color="red">23:59, April 22nd</font>
 * <font color=blue>(2025/04/20)</font> Lecture recordings available from the "Course Materials" section of [UTOL course page](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2025_0340_FEN-EE4d19L1_01)
 * <font color=blue>(2025/03/29)</font> Home page for AY2025 is out. Welcome!
 * <font color=blue>(2025/03/29)</font> We use PC during the class. Bring your device.
