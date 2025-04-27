@@ -29,14 +29,14 @@
   #only(i+1, image(prefix + "_L" + str(j) + ".svg", ..kwargs))
 ]
 
-#show raw.where(block: true): it => text(size: 20pt, pad(left: 0.5em, it))
+#show raw.where(block: true): it => text(size: 20pt, pad(left: 0.7em, it))
 #show raw.where(block: false): it => text(rgb(127,127,127), size: 20pt, it)
 
 #title-slide()
 
 #outline(depth: 1)
 
-= Basics
+= What is object-oriented programming?
 
 == What is object-oriented programming?
 
@@ -49,8 +49,8 @@ _... Object-oriented programming (OOP) is a programming paradigm based on the co
 - _*class-based*_ : in many languages, you first define a _*class*_ ($approx$ template of objects)
   - an object is made from a class (object = _*instance*_ of a class)
   - C++, Python, Go, Julia, Rust
-- _*prototype-based*_ or _*classless*_ : in other languages, you can create an object without defining a class
-  - an object is made by a generic object expression 
+- _*prototype-based*_ or _*classless*_ : in other languages, you can create an object with or without defining a class
+  - an object can be made by a generic object expression or from a class 
   - Javascript, OCaml
 
 == Classes and objects : examples
@@ -71,11 +71,24 @@ a = point(1.2, 3.4)
 == Classless object creation : example
 
 #grid(gutter: 24pt,
-[Javascript object creation],
+[Javascript],
 [
 ```javascript
 let a = { "x" : 1.2, "y" : 3.4 }
 ```],
+[OCaml (classless)],
+[
+```ocaml
+let a = object method x = 1.2 method y = 3.4 end
+```],
+[OCaml (with class)],
+[
+```ocaml
+class point (x : float) (y : float) =
+  object method x = x method y = y end;;
+let a = new point 1.2 3.4
+```],
+
 )
 
 == Relevant keywords/syntax in our languages
@@ -86,23 +99,23 @@ table(columns: (auto, auto, auto), inset: 10pt, align: left,
 [Go],       [`type Point struct ...`], [`Point(1.2, 3.4)`],
 [Julia],    [`struct Point ...`],      [`Point(1.2, 3.4)`],
 [Rust],     [`struct Point ...`],      [`Point(1.2, 3.4)`],
-[OCaml],    [],                        [`object ... end`]
+[OCaml],    [`class point ...`],       [`object ... end`]
 ))
 
 == Methods
 
 - method $approx$ function or procedures in any other language
 - so what is different?
-  - there can be _multiple definitions_ of a method of the same name
-    - e.g., the same `area` method for `rectangle`, `circle`, `triangle`, etc.
-  - _*dynamic dispatch*_ : which one gets called depends on which objects it applies to
+  - _multiple definitions_ of a method of the same name can exist
+    - e.g., an `area` method for `rectangle`, `circle`, `triangle`, etc.
+  - _*dynamic dispatch*_ : when calling a method, which one gets called depends on which objects it is called for
 
-== Dynanic dispatch : taxonomy
+== Dynamic dispatch : taxonomy
 
-- _*single dispatch*_ : many languages determine which method gets called by on a _single_ argument
+- _*single dispatch*_ : many languages determine which method gets called by the type of a _single_ argument (object)
   - it is called a "_receiver_" object
   - C++, Python, Go, OCaml, Rust
-- _*multiple dispatch*_ : some languages determine allow it to be determined by on _multiple_ arguments
+- _*multiple dispatch*_ : some languages determine which method gets called by the types of _multiple_ arguments (objects)
   - Julia
 
 == Single dispatch : example
@@ -127,7 +140,7 @@ class rect:
 ```python
 shapes = [circle(...), rect(...)]
 for s in shapes:
-  s.area()
+  s.area()  # method call
 ```
 
 == An equivalent Julia example
@@ -135,10 +148,14 @@ for s in shapes:
 - multiple definitions of `area` method in Julia
 #grid(columns: (auto, auto), align: top, gutter: 20pt,
 [```julia
-area(c :: Circle) = pi * c.r * c.r
+function area(c :: Circle)
+  pi * c.r * c.r
+end  
 ```],
 [```julia
-area(r :: Rect) = r.w * r.h
+function area(r :: Rect)
+  r.w * r.h
+end  
 ```])
 
 - dispatch, based on whether `s` is `circle` or `rect`
@@ -150,14 +167,14 @@ end
 ```
 
 == Multiple dispatch
-- let's say we define a method `contains($a$, $b$)` that computes whether $a$ contains $b$
+- let's say we define a method `contains(`$a$`, `$b$`)` that computes whether $a$ contains $b$
 - Julia allows you to define it based on _both_ $a$ and $b$
 
 ```julia
 function contains(c0 :: Circle, c1 :: Circle) ...
-function contains(c0 :: Circle, r1 :: Rectangle) ...
-function contains(r0 :: Circle, c1 :: Circle) ...
-function contains(r0 :: Circle, r1 :: Rectangle) ...
+function contains(c0 :: Circle, r1 :: Rect) ...
+function contains(r0 :: Rect,   c1 :: Circle) ...
+function contains(r0 :: Rect,   r1 :: Rect) ...
 ```
 
 = Type Systems
@@ -193,8 +210,9 @@ for s in shapes:
 
 - other languages guarantee, _*prior to execution*_, that no runtime type errors will happen (_*static type checking*_)
 - it generally works by
-  - calculating _the type of each expression at compile time_ (_*static type*_), and
-  - judging the validity of each operation by static types
+  - calculating _the *static* or *compile-time* type of each expression_, and
+  - judging the validity of each operation by static types,
+  - before execution
 
 == An example (in a hypothetical Python-like language)
 ```python
@@ -202,13 +220,13 @@ l = [circle(..), circle(..)]
 for c in l:
   c.area()
 ```
-- static types 
+- static types  ("_expr_ : _type_" means _expr_ has _type_)
   - `circle(..)` : circle
   - `[circle(..), circle(..)]` : list of circle
   - `l` : list of circle
   - `c` : circle
-  - `c.area()` : real
-- this program will never cause a runtime error  
+  - `c.area()` : float
+- this program is _*(well-)typed*_ and never causes a runtime error  
 
 == Another example
 ```python
@@ -282,12 +300,12 @@ n_elems(["a", "b", "c"])
 == Polymorphism and type safety
 
 - forget about type safety $=>$ polymorphism is easy to achieve
-  - Python or Julia
+  - Julia, Python, Javascript, or many scripting languages
 - forget about polymorphism (i.e., settle for simply typed languages) $=>$ type safety is easy to achieve
 - achieving _both_ polymorphism and type safety is difficult
 
 == Static type system for polymorphism
-- we need a static type representing multiple dynamic types
+- informally, we need a static type representing multiple dynamic types
 - two common approaches
 + _*subtype polymorphism*_ : allows a single static type that accommodates multiple types
 + _*parametric polymorphism*_ : allows a static type having _parameter(s)_, which can be instantiated into multiple types
@@ -300,8 +318,8 @@ l = [rect(..), circle(..)]
 for s in l:
   s.area()
 ```
-- in this example, we say rect (and circle) is a _*subtype*_ of _*shape*_
-- shape is a _*supertype*_ of rect (and circle)
+- in this example, we say rect (and circle) is a _*subtype*_ of shape
+- or, shape is a _*supertype*_ of rect (and circle)
 - more on this later
 
 == Parametric polymorphism
@@ -311,9 +329,10 @@ for s in l:
 n_elems([1,2,3])
 n_elems(["a", "b", "c"])
 ```
+- we'll cover this more in the next week
 
 == How static type checking works with subtyping
-- a hypothetical statically-typed langage with Python-like syntax
+- in the hypothetical Python-like language
  ```python
 def smaller(s0 : shape, s1 : shape) -> shape:
   return (s0 if s0.area() < s1.area() else s1)
@@ -329,7 +348,7 @@ smaller(circle(..), rect(..))
 == The key question
 - in the example above, 
   - `smaller(rect(..), circle(..))` is valid. i.e., 
-  - passing `rect (or circle)` to a parameter of "shape" type is allowed
+  - passing a value of "rect" (or "circle") type to a parameter of "shape" type is allowed
 - the key question:
 #quote([
 for two types $S$ and $T$ when is an _assignment-like operation_ $S <- T$ valid (safe if allowed)?
@@ -339,14 +358,14 @@ for two types $S$ and $T$ when is an _assignment-like operation_ $S <- T$ valid 
 - intuitively, any operation that flows a value to another place
   - assignment (left hand side : $S$ $<-$ right hand side $T$)
   - passing arguments (formal arg : $S$ $<-$ actual arg : $T$)
-- in general, anywhere a value whose static type is $T$ becomes a value of another expression whose static type is $S$
+- in general, any operation where a value whose static type is $T$ becomes a value of another expression whose static type is $S$
   - returning a value (return type $S$ $<-$ returned expression : $T$)
   - conditional expression (result type $S$ $<-$ then/else expression : $T$)
 
 == When is $S <- T$ safe?
 
 - informally, $S <- T$ is safe when _*any operation applicable to $S$ is also applicable to $T$ ($ast$)*_ (_Liskov substition principle_)
-  - ex: "shape $<-$ rect" is safe as operation applicable to (any) shape will be applicable to rect (it depends on how they are actually defined, of course)
+  - ex: "shape $<-$ rect" is safe, because operation applicable to (any) shape will be applicable to rect (whether it's true depends on how they are actually defined, of course)
 - intuitively, $T$ is a kind of $S$
   - ex: rect (circle) is a kind of shape
 
@@ -357,41 +376,124 @@ for two types $S$ and $T$ when is an _assignment-like operation_ $S <- T$ valid 
 
 - the exact definition of $<=$ varies between languages, but ($ast$) must hold to achieve type safety
 
+== Most generic subtype relationship
+
+- if both $S$ and $T$ are record-like types (struct, class, etc.), $T <= S$ holds if the following two conditions *($dagger$)* are met
+  + $T$ has all the (public) methods/fields of $S$
+  + for each public method $m$, \ type of $m$ in $T$ $<=$ type of $m$ in $S$
+
+== Subtype relationship example (1)
+
+- shape
+  - has `area()` method returning float 
+
+- rect
+  - has `area()` method returning float 
+  - has additional `width()` and `height()` methods
+
+- rect $<=$ shape holds
+
+== Subtype relationship example (2)
+
+- shape
+  - has `area()` method returning float and
+  - #ao[`perimeter()` method returning float]
+
+- rect is the same as before
+- rect $<=$ shape does not (_should not_) hold
+- to see why, consider
+```
+s : shape = rect(..)
+s.perimeter()
+```
+
+== Subtype relationship tricky example (3)
+
+- shape
+  - has `area()` method returning float and
+  - #ao[`eq(s : shape)` method returning bool]
+- rect
+  - has `area()` method returning float,
+  - has `width()` and `height()` method each returning float, and
+  - #ao[`eq(r : rect)` method returning bool]
+- does rect $<=$ shape hold?
+#pagebreak()
+- no, it _should not_ hold
+- to see why not, consider
+```python
+s : shape = rect(..)
+s.eq(circle(..))
+```
+- which passes circle type to a formal argument of `eq` (rect type)
+
+#pagebreak()
+- more algorithmically,
+
+rect $<=$ shape \
+$=>$ type of `eq` in rect $<=$ type of `eq` in shape \
+$=>$ rect $->$ bool $<=$ shape $->$ bool \
+
+- in general, $a' -> b' <= a -> b$ holds when
+  - $b' <= b$ and #ao[$a' >= a$] (next slide)
+
+$=>$ shape $<=$ rect (false)
+
+== Subtype relationship between functions
+
+- $a' -> b' <= a -> b$ holds when
+  - $b' <= b$ and #ao[$a' >= a$]
+- recall substition principle ($ast$)
+  - assume $f'$ : $a' -> b'$ and $f$ : $a -> b$,
+  - and ask when $f <- f'$ is safe?
+- it is when "$f'$ can take any data $f$ can take ($a$)". i.e.,
+  - $a' >= a$ ($a'$ is a _supertype_ of $a$)
+
+== Covariant and contravariant
+- in general, a type $T(alpha)$ parameterized by $alpha$, is said to be
+  - _*covariant on $alpha$*_ if replacing $alpha$ with its subtype $alpha'$ yields its subtype (i.e., $alpha' <= alpha => T(alpha') <= T(alpha)$)
+  - _*contravariant on $alpha$*_ if replacing $alpha$ with its supertype $alpha'$ yields its subtype (i.e., $alpha' >= alpha => T(alpha') <= T(alpha)$)
+
+- in this terminology, a function type is
+  - _covariant_ on output type ($b' <= b => a -> b <= a -> b'$)
+  - _contravariant_ on input type ($a' <= a => a' -> b <= a -> b$)
+
 == Taxonomy of subtype relationships
 
-- interface-based vs. concrete-type-based
-  - concrete-type-based (C++, Java, OCaml)
+- _*interface*_ subtyping vs. _*concrete-type*_ subtyping
+  - concrete-type subtyping (C++, Java, OCaml)
     - $<=$ is introduced between ordinary (concrete) types
-  - interface-based (Go, Rust)
-    - besides ordinary types, define _abstract types_, _interfaces_ (Go), or _traits_ (Rust) are defined
+  - interface subtyping (Go, Rust)
+    - besides ordinary types, define _abstract types_, _interfaces_ (Go), or _traits_ (Rust)
     - $<=$ is introduced only between interfaces or between a concrete type and an interface
-- nominal vs. structural
+#pagebreak()    
+- _*nominal*_ subtyping vs. _*structural*_ subtyping
   - nominal (Rust)
     - $<=$ holds only when the programmer so specified explicitly (`impl` _trait_ `for` _struct_)
   - structural (Go, OCaml)
     - $<=$ is derived automatically from definitions
 
-== Rust
-```rust
-trait Shape {  fn area(&self) -> f64;  }
-impl Shape for Rect {
-  fn area(&self) -> f64 { ... }
-}
-```
-- with Rust nominal subtyping, `Rect` $<=$ `Shape` is established by explicitly stating `impl Shape for Rect`, allowing the assignment below
-```rust
-let s : &dyn Shape = &Rect{ ... };
-```
-
 == Go
 ```go
-type Shape interface {  area() float64 }
+type Shape interface { area() float64 }
 type Rect struct { ... }
 func (r Rect) area() float64 { ... }
 ```
 - with Go structural subtyping, `Rect` $<=$ `Shape` is _automatically_ established because `Rect` has an `area` method returning `float64`, allowing the following assignment
 ```go
 var s shape = rect{0, 0, 100, 100}
+```
+
+== Subtyping in Rust
+```rust
+trait Shape { fn area(&self) -> f64;  }
+struct Rect { ... }
+impl Shape for Rect {
+  fn area(&self) -> f64 { ... }
+}
+```
+- with Rust (nominal subtyping between struct and trait), `Rect` $<=$ `Shape` is established by explicitly stating `impl Shape for Rect`, allowing the assignment below
+```rust
+let s : &dyn Shape = &Rect{ ... };
 ```
 
 == OCaml

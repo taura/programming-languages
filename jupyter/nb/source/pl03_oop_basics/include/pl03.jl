@@ -28,7 +28,7 @@ shapes = [Rect(0, 0, 100, 100), Ellipse(0, 0, 100, 50)]
 ### if label == "Scan an array of shapes"
 function sum_area(shapes)
     sa = 0.0
-    for (i, s) in enumerate(shapes)
+    for s in shapes
         sa += area(s)
     end
     sa
