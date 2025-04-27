@@ -1,47 +1,4 @@
-#import "@preview/touying:0.6.1": *
-#import themes.metropolis: *
-//#import themes.university: *
-//#import themes.aqua: *
-//#import themes.dewdrop: *
-//#import themes.simple: *
-//#import themes.stargazer: *
-//#import themes.default: *
-
-// #import "@preview/numbly:0.1.0": numbly
-
-#show: metropolis-theme.with(
-  aspect-ratio: "16-9",
-  // align: horizon,
-  // config-common(handout: true),
-  // config-common(frozen-counters: (theorem-counter,)),  // freeze theorem counter for animation
-  config-info(
-    title: [Programming Languages],
-    subtitle: [Functional Programming],
-    author: [Kenjiro Taura],
-    date: [2025/04/21],
-  // institution: [Institution],
-  // logo: emoji.school,
-  ),
-)
-#set text(font: ("Liberation Serif", "Noto Sans CJK JP"))
-#set text(size: 28pt)
-#set quote(block: true)
-#let ao(x) = text(blue)[#x]
-#let small(x) = text(size: 20pt)[#x]
-
-/* include image sequence xxx_L1.svg, xxx_L2.svg, ... */
-#let images(prefix, rng, ..kwargs) = for (i, j) in rng.enumerate() [
-  #only(i+1, image(prefix + "_L" + str(j) + ".svg", ..kwargs))
-]
-
-#show raw.where(block: true): it => text(size: 20pt, pad(left: 1em, it))
-#show raw.where(block: false): it => text(rgb(127,127,127), size: 20pt, it)
-
-// #set heading(numbering: numbly("{1}.", default: "1.1"))
-
-#title-slide()
-
-#outline(depth: 1)
+#include "def.typst"
 
 = What is Functional Programming? 
 

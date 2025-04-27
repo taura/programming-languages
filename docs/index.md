@@ -7,6 +7,23 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2025/04/27)</font> Your language and workplace assignments are out
+  * Those who have submitted language preference survey should be able to see your assignment (as it contains personal infomration, it is visible only to those who have submitted it) in onedrive.  Get the link in the information or course materials section of [UTOL course page](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2025_0340_FEN-EE4d19L1_01)
+  * Please check your assigned language (go/julia/ocaml/rust) and suggested workplace (classroom or home)
+  * I have made teams so that either all members in a team work in classroom or all members in zoom
+  * _Therefore it is important to follow your suggested workplace_
+  * Those who said "you always or almost always work in classroom (or zoom)" are assigned to the respective workplace you preferred
+  * Among those who said "you are flexible (can work either in classroom or zoom)", two of those are assigned to zoom, and all others are assigned to classroom
+  * Some facts about the overall "happiness" (how much of your preference has been satisfied)
+    * 57 students have been grouped into 15 teams (12 x 4-member teams + 3 x 3-member teams)
+    * If you specified the friends you wanted to team up with, your wishes were 100% honored
+    * How many students were assigned to the language they ranked at each position:
+      * 1st: 43
+      * 2nd: 11
+      * 3rd: 1
+      * 4th: 2
+    * If you are assigned to the language you preferred 4th, it is because you specified three friends and everybody in the team ranked that language 4th (no way to avoid them)
+    * If you are assigned the language you preferred 3rd, it is because of a slightly different but similar situation
 * <font color=blue>(2025/04/20)</font> Plan for April 21st
   1. Work on `pl01_basics` for 10 minutes and briefly review answers in [spreadsheet](https://univtokyo-my.sharepoint.com/:f:/g/personal/2615215597_utac_u-tokyo_ac_jp/EnuN7pra4klGozkzfTknOOwBkDAkdfMbMTxOaPS0qELq-Q?e=40ecSi)
   1. [Functional Programming Basics](slides/01-functional.pdf)

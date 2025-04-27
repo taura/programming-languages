@@ -1,0 +1,401 @@
+#import "@preview/touying:0.6.1": *
+#import themes.metropolis: *
+//#import themes.university: *
+//#import themes.aqua: *
+//#import themes.dewdrop: *
+//#import themes.simple: *
+//#import themes.stargazer: *
+//#import themes.default: *
+//#import "@preview/numbly:0.1.0": numbly
+
+#show: metropolis-theme.with(
+  aspect-ratio: "16-9",
+  config-info(
+    title: [Object-Oriented Programming],
+    author: [Kenjiro Taura],
+    date: [2024/04/28],
+  ),
+)
+
+#set text(font: ("Liberation Serif", "Noto Sans CJK JP"))
+#set text(size: 28pt)
+#set quote(block: true)
+#let ao(x) = text(blue)[#x]
+#let aka(x) = text(red)[#x]
+#let small(x) = text(size: 20pt)[#x]
+
+/* include image sequence xxx_L1.svg, xxx_L2.svg, ... */
+#let images(prefix, rng, ..kwargs) = for (i, j) in rng.enumerate() [
+  #only(i+1, image(prefix + "_L" + str(j) + ".svg", ..kwargs))
+]
+
+#show raw.where(block: true): it => text(size: 20pt, pad(left: 0.5em, it))
+#show raw.where(block: false): it => text(rgb(127,127,127), size: 20pt, it)
+
+#title-slide()
+
+#outline(depth: 1)
+
+= Basics
+
+== What is object-oriented programming?
+
+#quote(attribution: [Wikipedia])[
+_... Object-oriented programming (OOP) is a programming paradigm based on the concept of *objects*.  Objects can contain data (called fields, attributes or properties) and have actions they can perform (called procedures or *methods* and implemented in code)._
+]
+
+== Classes and objects : taxonomy
+
+- _*class-based*_ : in many languages, you first define a _*class*_ ($approx$ template of objects)
+  - an object is made from a class (object = _*instance*_ of a class)
+  - C++, Python, Go, Julia, Rust
+- _*prototype-based*_ or _*classless*_ : in other languages, you can create an object without defining a class
+  - an object is made by a generic object expression 
+  - Javascript, OCaml
+
+== Classes and objects : examples
+
+#grid(columns: (auto, auto), align: top, row-gutter: 20pt,
+[Python class definition], [Object creation],
+[
+```python
+class point:
+  def __init__(self, x, y):
+    self.x = x;
+    self.y = y;
+```],
+[```python
+a = point(1.2, 3.4)
+```])
+
+== Classless object creation : example
+
+#grid(gutter: 24pt,
+[Javascript object creation],
+[
+```javascript
+let a = { "x" : 1.2, "y" : 3.4 }
+```],
+)
+
+== Relevant keywords/syntax in our languages
+
+#align(center,
+table(columns: (auto, auto, auto), inset: 10pt, align: left,
+[language], [class definition],        [object creation],
+[Go],       [`type Point struct ...`], [`Point(1.2, 3.4)`],
+[Julia],    [`struct Point ...`],      [`Point(1.2, 3.4)`],
+[Rust],     [`struct Point ...`],      [`Point(1.2, 3.4)`],
+[OCaml],    [],                        [`object ... end`]
+))
+
+== Methods
+
+- method $approx$ function or procedures in any other language
+- so what is different?
+  - there can be _multiple definitions_ of a method of the same name
+    - e.g., the same `area` method for `rectangle`, `circle`, `triangle`, etc.
+  - _*dynamic dispatch*_ : which one gets called depends on which objects it applies to
+
+== Dynanic dispatch : taxonomy
+
+- _*single dispatch*_ : many languages determine which method gets called by on a _single_ argument
+  - it is called a "_receiver_" object
+  - C++, Python, Go, OCaml, Rust
+- _*multiple dispatch*_ : some languages determine allow it to be determined by on _multiple_ arguments
+  - Julia
+
+== Single dispatch : example
+- multiple definitions of `area` method in Python
+
+#grid(columns: (auto, auto), align: top, gutter: 20pt,
+[```python
+class circle:
+  ...
+  def area(self):
+    r = self.r
+    return pi * r * r
+```],
+[```python
+class rect:
+  ...
+  def area(self):
+    return self.w * self.h
+```])
+
+- dispatch, based on whether `s` is `circle` or `rect`
+```python
+shapes = [circle(...), rect(...)]
+for s in shapes:
+  s.area()
+```
+
+== An equivalent Julia example
+
+- multiple definitions of `area` method in Julia
+#grid(columns: (auto, auto), align: top, gutter: 20pt,
+[```julia
+area(c :: Circle) = pi * c.r * c.r
+```],
+[```julia
+area(r :: Rect) = r.w * r.h
+```])
+
+- dispatch, based on whether `s` is `circle` or `rect`
+```python
+shapes = [Circle(...), Rect(...)]
+for s in shapes
+  area(s)
+end  
+```
+
+== Multiple dispatch
+- let's say we define a method `contains($a$, $b$)` that computes whether $a$ contains $b$
+- Julia allows you to define it based on _both_ $a$ and $b$
+
+```julia
+function contains(c0 :: Circle, c1 :: Circle) ...
+function contains(c0 :: Circle, r1 :: Rectangle) ...
+function contains(r0 :: Circle, c1 :: Circle) ...
+function contains(r0 :: Circle, r1 :: Rectangle) ...
+```
+
+= Type Systems
+
+== Types
+
+- _*types*_ in programming languages $approx$ _kind_ of data. e.g.,
+  - integers, floating point numbers, array of integers, ...
+  - there are user-defined types (e.g., `circle`, `rect`, etc.)
+- the type of data generally determines what operations are valid on it, e.g.,
+  - `s.area(...)` is valid if `s` is a `circle, rect,` or other type that defines an `area` method
+  - `a[i] = x` is valid if `a` is an array, or other type that supports indexed assignment (`..[..] = ...`)
+
+== Type errors at runtime
+
+- at runtime, each data naturally has its type (_*dynamic type*_ or _*runtime type*_)
+- when an operation not defined on the runtime type of data is applied, a _*runtime type error*_ results.
+- e.g., Python code below gets an error in the third iteration
+```python
+shapes = [circle(...), rect(...), (3,4)]
+for s in shapes:
+  print(s.area())
+```
+
+== Runtime type errors are disastrous
+
+- some languages perform _*runtime type checking*_, which detects runtime type errors and gracefully aborts the program with error messages
+  - Python, Javascript, Julia
+- some languages do not perform runtime type checking, which may cause _segmentation fault_ or even worse, _data corruption_
+  - C, C++
+
+== Static types and static type checking
+
+- other languages guarantee, _*prior to execution*_, that no runtime type errors will happen (_*static type checking*_)
+- it generally works by
+  - calculating _the type of each expression at compile time_ (_*static type*_), and
+  - judging the validity of each operation by static types
+
+== An example (in a hypothetical Python-like language)
+```python
+l = [circle(..), circle(..)]
+for c in l:
+  c.area()
+```
+- static types 
+  - `circle(..)` : circle
+  - `[circle(..), circle(..)]` : list of circle
+  - `l` : list of circle
+  - `c` : circle
+  - `c.area()` : real
+- this program will never cause a runtime error  
+
+== Another example
+```python
+l = [(3,4), (5,6)]
+for p in l:
+  p.area()
+```
+- static types 
+  - `(3,4)` : pair of int
+  - `[(3,4),(5,6)]` : list of pair of int
+  - `l` : list of string
+  - `p` : pair of int
+  - `p.area()` : #aka[error] (`area` on pair of int)
+
+== (A bit pedantic) taxonomy
+
+- languages performing static type checking are generally called _*statically typed*_
+- not all statically typed languages _guarantee_ absense of runtime type errors
+  - C, C++, Java
+- statically typed languages that do are called _*type safe*_
+  - Go, OCaml, and Rust (without `unsafe`) are type safe
+
+== Is type safety difficult to achieve?
+
+- in the simple case, no
+- specifically, it is not difficult if the static type of an expression _*uniquely determines*_ its runtime type
+  - we call such a language _*simply typed*_
+  - in simply typed languages, each expression or variable can take values of only a single runtime type
+- then what's the matter?
+
+== Why simply typed languages do not suffice?
+- they are _inflexible_ and hider _code reusability_. e.g.,
+- cannot put elements of different types in a single container
+ ```python
+l = [rect(..), circle(..)]
+for s in l:
+  s.area() # what is the static type of s??
+```
+
+== Why simply typed languages do not suffice?
+- cannot have a single function definition of an array of different types, even when element type should not matter
+```python
+def n_elems(l): # list of what?
+  n = 0
+  for x in l:
+    n += 1
+  return n
+
+n_elems([1,2,3])
+n_elems(["a", "b", "c"])
+```   
+
+== Polymorphism
+
+- in each of the examples, a single expression can take values of different types at runtime
+#grid(columns: (auto,auto), gutter: 20pt, align: top,
+[```python
+l = [rect(..), circle(..)]
+for s in l:
+  s.area()
+```],
+[```python
+n_elems([1,2,3])
+n_elems(["a", "b", "c"])
+```])
+- a variable or expression is said to be _*polymorphic*_ when it can take values of different runtime types
+- a language is said to support _*polymorphism*_ when it allows polymorphic variables or expressions
+
+= Polymorphism and type safety
+
+== Polymorphism and type safety
+
+- forget about type safety $=>$ polymorphism is easy to achieve
+  - Python or Julia
+- forget about polymorphism (i.e., settle for simply typed languages) $=>$ type safety is easy to achieve
+- achieving _both_ polymorphism and type safety is difficult
+
+== Static type system for polymorphism
+- we need a static type representing multiple dynamic types
+- two common approaches
++ _*subtype polymorphism*_ : allows a single static type that accommodates multiple types
++ _*parametric polymorphism*_ : allows a static type having _parameter(s)_, which can be instantiated into multiple types
+
+== Subtype polymorphism
+
+- `s` has a static type, like "shape", that accommodates both rect and circle
+ ```python
+l = [rect(..), circle(..)]
+for s in l:
+  s.area()
+```
+- in this example, we say rect (and circle) is a _*subtype*_ of _*shape*_
+- shape is a _*supertype*_ of rect (and circle)
+- more on this later
+
+== Parametric polymorphism
+
+- `n_elems` has a static type (like "$forall alpha . "array of" alpha -> "int"$"), which can be instantiated into "array of int" and "array of string"
+```python
+n_elems([1,2,3])
+n_elems(["a", "b", "c"])
+```
+
+== How static type checking works with subtyping
+- a hypothetical statically-typed langage with Python-like syntax
+ ```python
+def smaller(s0 : shape, s1 : shape) -> shape:
+  return (s0 if s0.area() < s1.area() else s1)
+
+smaller(rect(..), circle(..))
+smaller(circle(..), rect(..))
+```
+- `s0, s1` : shape
+- $=>$ `s0.area(), s1.area()` : float
+- $=>$ `s0.area() < s1.area()` : boolean
+- $=>$ `s0 if ... else s1` : shape
+
+== The key question
+- in the example above, 
+  - `smaller(rect(..), circle(..))` is valid. i.e., 
+  - passing `rect (or circle)` to a parameter of "shape" type is allowed
+- the key question:
+#quote([
+for two types $S$ and $T$ when is an _assignment-like operation_ $S <- T$ valid (safe if allowed)?
+])
+
+== Note: assignment-like operation
+- intuitively, any operation that flows a value to another place
+  - assignment (left hand side : $S$ $<-$ right hand side $T$)
+  - passing arguments (formal arg : $S$ $<-$ actual arg : $T$)
+- in general, anywhere a value whose static type is $T$ becomes a value of another expression whose static type is $S$
+  - returning a value (return type $S$ $<-$ returned expression : $T$)
+  - conditional expression (result type $S$ $<-$ then/else expression : $T$)
+
+== When is $S <- T$ safe?
+
+- informally, $S <- T$ is safe when _*any operation applicable to $S$ is also applicable to $T$ ($ast$)*_ (_Liskov substition principle_)
+  - ex: "shape $<-$ rect" is safe as operation applicable to (any) shape will be applicable to rect (it depends on how they are actually defined, of course)
+- intuitively, $T$ is a kind of $S$
+  - ex: rect (circle) is a kind of shape
+
+== Subtype
+- we write $T <= S$ and say $T$ is a _*subtype*_ of $S$ (and $S$ is a _*supertype*_ of $T$) when ($ast$) is the case
+  - ex: rect $<=$ shape, circle $<=$ shape
+- if we think of a type as a set, $<=$ represents a subset relation
+
+- the exact definition of $<=$ varies between languages, but ($ast$) must hold to achieve type safety
+
+== Taxonomy of subtype relationships
+
+- interface-based vs. concrete-type-based
+  - concrete-type-based (C++, Java, OCaml)
+    - $<=$ is introduced between ordinary (concrete) types
+  - interface-based (Go, Rust)
+    - besides ordinary types, define _abstract types_, _interfaces_ (Go), or _traits_ (Rust) are defined
+    - $<=$ is introduced only between interfaces or between a concrete type and an interface
+- nominal vs. structural
+  - nominal (Rust)
+    - $<=$ holds only when the programmer so specified explicitly (`impl` _trait_ `for` _struct_)
+  - structural (Go, OCaml)
+    - $<=$ is derived automatically from definitions
+
+== Rust
+```rust
+trait Shape {  fn area(&self) -> f64;  }
+impl Shape for Rect {
+  fn area(&self) -> f64 { ... }
+}
+```
+- with Rust nominal subtyping, `Rect` $<=$ `Shape` is established by explicitly stating `impl Shape for Rect`, allowing the assignment below
+```rust
+let s : &dyn Shape = &Rect{ ... };
+```
+
+== Go
+```go
+type Shape interface {  area() float64 }
+type Rect struct { ... }
+func (r Rect) area() float64 { ... }
+```
+- with Go structural subtyping, `Rect` $<=$ `Shape` is _automatically_ established because `Rect` has an `area` method returning `float64`, allowing the following assignment
+```go
+var s shape = rect{0, 0, 100, 100}
+```
+
+== OCaml
+- OCaml does not require type (class) definitions to make objects
+- when you define class, subtype relationship is automatically derived
+- nor does it require type of variables to be specified
+- ... everything just _naturally_ happens (learn in the notebook)
