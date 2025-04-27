@@ -7,6 +7,12 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2025/04/28)</font> Plan for April 28th
+  1. Wrap up [Functional Programming Basics](slides/01-functional.pdf)
+  1. Briefly explains [Object-Oriented Programming](slides/02-oop.pdf)
+  1. Team members meet and greet
+  1. Work on `pl03_oop_basics` briefly
+  1. Continue [Object-Oriented Programming](slides/02-oop.pdf)
 * <font color=blue>(2025/04/27)</font> Your language and workplace assignments are out
   * Those who have submitted language preference survey should be able to see your assignment (as it contains personal infomration, it is visible only to those who have submitted it) in onedrive.  Get the link in the information or course materials section of [UTOL course page](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2025_0340_FEN-EE4d19L1_01)
   * Please check your assigned language (go/julia/ocaml/rust) and suggested workplace (classroom or home)
