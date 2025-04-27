@@ -65,8 +65,8 @@ config(default_lang=" ... ")  # choose one of Go/Julia/OCaml/Rust
 <!--- end code --->
 * You may want to ask a few basics
 <!--- code w kernel=python --->
-I("how to define a class or something equivalent")
-#I("how to make an instance of a class")
+I("how to define a class (or something equivalent)")
+#I("how to make an object")
 <!--- end code --->
 
 # Class definition
