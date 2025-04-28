@@ -1,4 +1,40 @@
-#include "def.typst"
+#import "@preview/touying:0.6.1": *
+#import themes.metropolis: *
+//#import themes.university: *
+//#import themes.aqua: *
+//#import themes.dewdrop: *
+//#import themes.simple: *
+//#import themes.stargazer: *
+//#import themes.default: *
+//#import "@preview/numbly:0.1.0": numbly
+
+#show: metropolis-theme.with(
+  aspect-ratio: "16-9",
+  config-info(
+    title: [Object-Oriented Programming],
+    author: [Kenjiro Taura],
+    date: [2024/04/28],
+  ),
+)
+
+#set text(font: ("Liberation Serif", "Noto Sans CJK JP"))
+#set text(size: 28pt)
+#set quote(block: true)
+#let ao(x) = text(blue)[#x]
+#let aka(x) = text(red)[#x]
+#let small(x) = text(size: 20pt)[#x]
+
+/* include image sequence xxx_L1.svg, xxx_L2.svg, ... */
+#let images(prefix, rng, ..kwargs) = for (i, j) in rng.enumerate() [
+  #only(i+1, image(prefix + "_L" + str(j) + ".svg", ..kwargs))
+]
+
+#show raw.where(block: true): it => text(size: 20pt, pad(left: 0.7em, it))
+#show raw.where(block: false): it => text(rgb(127,127,127), size: 20pt, it)
+
+#title-slide()
+
+#outline(depth: 1)
 
 = What is Functional Programming? 
 
@@ -460,8 +496,8 @@ return s
 i = 1
 s = 0
 while i <= n:
-  s += i
-  i += 1
+  s = s + i
+  i = i + 1
 return s
 ```])
 
@@ -471,8 +507,8 @@ return s
 i = 1
 s = 0
 while i <= n:
-  s += i
-  i += 1
+  s = s + i
+  i = i + 1
 return s
 ```
 ],
@@ -490,7 +526,9 @@ sum_to_tail 1 n 0
 
 == A final remark about stack overflow
 
-- In principle, we should be able to grow stack as large as the computer memory (or other data on heap)
+- Stack overflow is an _implementation artifact_ (avoidable)
+- In principle, we should be able to grow (stack + heap) up to the computer memory
 - Yet, stack tends to overflow much earlier than that (e.g., a few MB, when you can use $>$ GB for other data)
-- It is actually an unnecessary constraint, imposed by typical memory management strategy for stack
-- A suitable language implementation can avoid such unnecessary overflow altogether by allocating stack more flexibly (e.g., from heap)
+- It is actually an _unnecessary_ constraint, imposed by a typical/traditional memory management strategy that allocates stack separately from heap as a contiguous memory whose maximum size is set when a program (or a thread) is started
+- A suitable language implementation can avoid such unnecessary overflow altogether by allocating stack more flexibly (e.g., dynamically growing it by allocating stack frames from heap)
+- Few language implementations (e.g., Standard ML New Jersey) do it 
