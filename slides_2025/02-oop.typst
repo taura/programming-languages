@@ -99,7 +99,7 @@ table(columns: (auto, auto, auto), inset: 10pt, align: left,
 [Go],       [`type Point struct ...`], [`Point(1.2, 3.4)`],
 [Julia],    [`struct Point ...`],      [`Point(1.2, 3.4)`],
 [Rust],     [`struct Point ...`],      [`Point(1.2, 3.4)`],
-[OCaml],    [`class point ...`],       [`object ... end`]
+[OCaml],    [`class point ...`],       [`object ... end` or \ `new point ...`]
 ))
 
 == Methods
@@ -112,8 +112,7 @@ table(columns: (auto, auto, auto), inset: 10pt, align: left,
 
 == Dynamic dispatch : taxonomy
 
-- _*single dispatch*_ : many languages determine which method gets called by the type of a _single_ argument (object)
-  - it is called a "_receiver_" object
+- _*single dispatch*_ : many languages determine which method gets called by the type of a _single_ argument ("_receiver_" object)
   - C++, Python, Go, OCaml, Rust
 - _*multiple dispatch*_ : some languages determine which method gets called by the types of _multiple_ arguments (objects)
   - Julia
@@ -140,10 +139,10 @@ class rect:
 ```python
 shapes = [circle(...), rect(...)]
 for s in shapes:
-  s.area()  # method call
+  s.area()  # method call (s is the receiver)
 ```
 
-== An equivalent Julia example
+== A single dispatch in Julia
 
 - multiple definitions of `area` method in Julia
 #grid(columns: (auto, auto), align: top, gutter: 20pt,
@@ -166,7 +165,7 @@ for s in shapes
 end  
 ```
 
-== Multiple dispatch
+== Multiple dispatch in Julia
 - let's say we define a method `contains(`$a$`, `$b$`)` that computes whether $a$ contains $b$
 - Julia allows you to define it based on _both_ $a$ and $b$
 
@@ -176,6 +175,42 @@ function contains(c0 :: Circle, r1 :: Rect) ...
 function contains(r0 :: Rect,   c1 :: Circle) ...
 function contains(r0 :: Rect,   r1 :: Rect) ...
 ```
+
+== Power of dynamic dispatch
+- dynamic dispatch allows a single piece of code to work on many different kinds of data. e.g., 
+- the following Python code
+```python
+def sum(a, v0):
+  v = v0
+  for x in a:
+    v += x
+  return v
+```
+which is equivalent to
+```python
+def sum(a, v0):
+  v = v0
+  it = a.__iter__()
+  try:  
+    while True:          # = for x in a
+      x = it.__next__()
+      v = v.__iadd__(x)  # v += x
+  except StopIteration:
+    pass
+  return v
+```
+works for _any_ `a` (and `v0`) satisfying the following
+- `v0` has a method `__iadd__(x)`, which takes a parameter and returns anything that also has a method `__iadd__(x)`, which takes a parameter and returns anything that also has a method `__iadd__(x)`, which ...
+- `a` has a method `__iter__()`, which
+  - returns anything that has a method `__next__()`, which returns anything for which `v.__iadd__` works, ... (details omitted) ..., and
+  - eventually raises `StopIteration`
+
+- this is the reason why Python's for loop works for lots of data
+  - lists, tuples, strings, dictionaries,
+  - file handles,
+  - numpy arrays
+  - database query results,
+and you can _define_ your data structure for which the same code just works
 
 = Type Systems
 
@@ -196,25 +231,31 @@ function contains(r0 :: Rect,   r1 :: Rect) ...
 ```python
 shapes = [circle(...), rect(...), (3,4)]
 for s in shapes:
-  print(s.area())
+  s.area()
 ```
 
-== Runtime type errors are disastrous
+== Runtime vs. static type checking
 
-- some languages perform _*runtime type checking*_, which detects runtime type errors and gracefully aborts the program with error messages
-  - Python, Javascript, Julia
-- some languages do not perform runtime type checking, which may cause _segmentation fault_ or even worse, _data corruption_
-  - C, C++
+- some languages perform type checking _during_ execution (_*runtime type checking*_), which aborts the program with error messages when detected
+  - Python, Javascript, Julia, ...
+- some languages (_*statically typed*_ languages) perform type checking _before_ execution (_*static*_ or _*compile-time type checking*_), which refuses to execute programs containing certain errors
+  - C, C++, Java, Go, OCaml, Rust, ...
 
-== Static types and static type checking
+== Static type checking and type safety
 
-- other languages guarantee, _*prior to execution*_, that no runtime type errors will happen (_*static type checking*_)
+- some statically typed languages _guarantee_ that no runtime type errors will happen for programs that pass static type checking (_*type safe*_ languages)
+  - Go, OCaml, Rust, ...
 - it generally works by
   - calculating _the *static* or *compile-time* type of each expression_, and
   - judging the validity of each operation by static types,
   - before execution
+- some languages do _not guarantee_ no runtime type errors despite static type checking
+  - some employ complementary runtime type checks, too (Java)
+  - some forgo runtime type checks altogether; when a type error happens at runtime, it may cause _segmentation fault_ or even worse, _data corruption_ (C, C++)
+    - you will see why later in the course (assembly languages and compilers)
 
-== An example (in a hypothetical Python-like language)
+
+== A static type checking example (a hypothetical Python-like language)
 ```python
 l = [circle(..), circle(..)]
 for c in l:
@@ -228,7 +269,7 @@ for c in l:
   - `c.area()` : float
 - this program is _*(well-)typed*_ and never causes a runtime error  
 
-== Another example
+== An example containing an error
 ```python
 l = [(3,4), (5,6)]
 for p in l:
@@ -241,18 +282,10 @@ for p in l:
   - `p` : pair of int
   - `p.area()` : #aka[error] (`area` on pair of int)
 
-== (A bit pedantic) taxonomy
-
-- languages performing static type checking are generally called _*statically typed*_
-- not all statically typed languages _guarantee_ absense of runtime type errors
-  - C, C++, Java
-- statically typed languages that do are called _*type safe*_
-  - Go, OCaml, and Rust (without `unsafe`) are type safe
-
 == Is type safety difficult to achieve?
 
-- in the simple case, no
-- specifically, it is not difficult if the static type of an expression _*uniquely determines*_ its runtime type
+- in a simple case, no
+- specifically, it is not difficult if the static type of an expression _*uniquely*_ determines its runtime type
   - we call such a language _*simply typed*_
   - in simply typed languages, each expression or variable can take values of only a single runtime type
 - then what's the matter?
@@ -364,7 +397,7 @@ for two types $S$ and $T$ when is an _assignment-like operation_ $S <- T$ valid 
 
 == When is $S <- T$ safe?
 
-- informally, $S <- T$ is safe when _*any operation applicable to $S$ is also applicable to $T$ ($ast$)*_ (_Liskov substition principle_)
+- informally, $S <- T$ is safe when _*any operation applicable to $S$ is also applicable to $T$ ($ast$)*_ (_Liskov substitution principle_)
   - ex: "shape $<-$ rect" is safe, because operation applicable to (any) shape will be applicable to rect (whether it's true depends on how they are actually defined, of course)
 - intuitively, $T$ is a kind of $S$
   - ex: rect (circle) is a kind of shape
@@ -442,7 +475,7 @@ $=>$ shape $<=$ rect (false)
 
 - $a' -> b' <= a -> b$ holds when
   - $b' <= b$ and #ao[$a' >= a$]
-- recall substition principle ($ast$)
+- recall substitution principle ($ast$)
   - assume $f'$ : $a' -> b'$ and $f$ : $a -> b$,
   - and ask when $f <- f'$ is safe?
 - it is when "$f'$ can take any data $f$ can take ($a$)". i.e.,
