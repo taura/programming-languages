@@ -288,7 +288,7 @@ for p in l:
 - specifically, it is not difficult if the static type of an expression _*uniquely*_ determines its runtime type
   - we call such a language _*simply typed*_
   - in simply typed languages, each expression or variable can take values of only a single runtime type
-- then what's the matter?
+- Q : what's wrong with simply typed languages?
 
 == Why simply typed languages do not suffice?
 - they are _inflexible_ and hider _code reusability_. e.g.,
