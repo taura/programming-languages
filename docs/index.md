@@ -11,7 +11,7 @@
   * I made a OneDrive folder for each team
   * You can access that folder via
     * Course Materials section (or Information "Language and workplace assignments are out") [UTOL course page](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2025_0340_FEN-EE4d19L1_01) 
-    * -> the common OneDrive Folder `programming-languages-shared`, shared by everybody 
+    * -> the common OneDrive folder `programming-languages-shared`, shared by everybody 
     * -> `teaming/teams.xlsx` Excel book
     * -> link to the folder for each team is in `05-08` tab
   * Use the `team-info.xlsx` in your folder to exchange your contact info
