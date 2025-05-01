@@ -7,6 +7,9 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2025/05/01)</font> 
+  * answers to [`pl01_basic`](html/ans/pl01_basic.sos.ans.html) and [`pl02_fp_basics`](html/ans/pl02_fp_basics.sos.ans.html) released
+
 * <font color=blue>(2025/04/29)</font> 
   * I made a OneDrive folder for each team
   * You can access that folder via
