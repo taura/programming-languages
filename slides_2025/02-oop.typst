@@ -338,12 +338,12 @@ n_elems(["a", "b", "c"])
 - achieving _both_ polymorphism and type safety is difficult
 
 == Static type system for polymorphism
-- informally, we need a static type representing multiple dynamic types
-- two common approaches
+- informally, we need a static type that can represent multiple dynamic types
+- two complementary approaches
 + _*subtype polymorphism*_ : allows a single static type that accommodates multiple types
 + _*parametric polymorphism*_ : allows a static type having _parameter(s)_, which can be instantiated into multiple types
 
-== Subtype polymorphism
+== Subtype polymorphism example
 
 - `s` has a static type, like "shape", that accommodates both rect and circle
  ```python
@@ -366,75 +366,112 @@ n_elems(["a", "b", "c"])
 
 == How static type checking works with subtyping
 - in the hypothetical Python-like language
- ```python
+```python
 def smaller(s0 : shape, s1 : shape) -> shape:
   return (s0 if s0.area() < s1.area() else s1)
 
 smaller(rect(..), circle(..))
-smaller(circle(..), rect(..))
 ```
-- `s0, s1` : shape
-- $=>$ `s0.area(), s1.area()` : float
-- $=>$ `s0.area() < s1.area()` : boolean
-- $=>$ `s0 if ... else s1` : shape
 
-== The key question
-- in the example above, 
-  - `smaller(rect(..), circle(..))` is valid. i.e., 
-  - passing a value of "rect" (or "circle") type to a parameter of "shape" type is allowed
-- the key question:
-#quote([
-for two types $S$ and $T$ when is an _assignment-like operation_ $S <- T$ valid (safe if allowed)?
-])
+== Type checking the function
+```python
+def smaller(s0 : shape, s1 : shape) -> shape:
+  return (s0 if s0.area() < s1.area() else s1)
+```
 
-== Note: assignment-like operation
-- intuitively, any operation that flows a value to another place
-  - assignment (left hand side : $S$ $<-$ right hand side $T$)
-  - passing arguments (formal arg : $S$ $<-$ actual arg : $T$)
-- in general, any operation where a value whose static type is $T$ becomes a value of another expression whose static type is $S$
-  - returning a value (return type $S$ $<-$ returned expression : $T$)
-  - conditional expression (result type $S$ $<-$ then/else expression : $T$)
+- ```python s0, s1``` : ```python shape```
+- $=>$ ```python s0.area(), s1.area()``` : ```python float```
+- $=>$ ```python s0.area() < s1.area()``` : ```python boolean```
+- $=>$ ```python s0 if ... else s1``` : ```python shape```
+
+- as straightforward as the simply-typed case
+
+== Type checking the function cal
+```python
+smaller(rect(..), circle(..))
+```
+
+- ```python rect(..)``` : ```python rect```
+- ```python circle(..)``` : ```python circle```
+- ```python smaller``` : ```python (shape, shape) -> shape```
+
+- must allow passing argument of ```python rect``` to ```python shape``` (and ```python circle``` to ```python shape```)
+  - ```python shape``` $<-$ ```python rect```
+  - ```python shape``` $<-$ ```python circle```
+
+
+== In general ...
+
++ an operation (e.g., method call) is judged valid when _static type_ of respective subexpression defines that operation
+  - e.g., `s0.area()` is valid as `s0`'s static type is `shape`, which (we assume) defines `area` method
++ passing argument of $T$ to formal argument of type $S$ (or other "assignment-like" operations $S <- T$) is judged valid _*when doing so is safe*_
+  - e.g., `smaller(rect(..), circle(..))` is judged valid as passing `shape` $<-$ `rect` seems safe (but why?)
 
 == When is $S <- T$ safe?
 
 - informally, $S <- T$ is safe when _*any operation applicable to $S$ is also applicable to $T$ ($ast$)*_ (_Liskov substitution principle_)
-  - ex: "shape $<-$ rect" is safe, because operation applicable to (any) shape will be applicable to rect (whether it's true depends on how they are actually defined, of course)
-- intuitively, $T$ is a kind of $S$
-  - ex: rect (circle) is a kind of shape
+  - ex: "`shape` $<-$ `rect`" is safe, because operation applicable to (any) shape will be applicable to rect (whether it's true depends on how they are actually defined, of course)
+  - intuitively, safe when "$T$ is a kind of $S$"
+  - ex: `rect` (`circle`) is a kind of shape
+
+== Note: what is "assignment-like" operation?
+- intuitively, any operation that flows a value to another place
+  - assignment (left hand side : $S$ $<-$ right hand side $T$)
+  - passing arguments (formal arg : $S$ $<-$ actual arg : $T$)
+- more generally, any operation where a value of static type $T$ is interpreted as a value of static type $S$. e.g.,
+  - returning a value of $T$ from a function whose declared return value is $S$
+  - conditional expression whose clauses have different types $T_0$ and $T_1$
 
 == Subtype
-- we write $T <= S$ and say $T$ is a _*subtype*_ of $S$ (and $S$ is a _*supertype*_ of $T$) when ($ast$) is the case
-  - ex: rect $<=$ shape, circle $<=$ shape
+- we write $T <= S$ and say $T$ is a _*subtype*_ of $S$ (and $S$ is a _*supertype*_ of $T$) when the condition ($ast$) is the case
+  - ex: `rect` $<=$ `shape`, `circle` $<=$ `shape`
+- with this terminology, _*an assignment-like operation $S <- T$ is safe simply when $T <= S$*_
+
 - if we think of a type as a set, $<=$ represents a subset relation
 
-- the exact definition of $<=$ varies between languages, but ($ast$) must hold to achieve type safety
+= Establishing subtype relationship
 
-== Most generic subtype relationship
+== Most general subtype relationship of record-like types
 
 - if both $S$ and $T$ are record-like types (struct, class, etc.), $T <= S$ holds if the following two conditions *($dagger$)* are met
   + $T$ has all the (public) methods/fields of $S$
-  + for each public method $m$, \ type of $m$ in $T$ $<=$ type of $m$ in $S$
+  + for each (public) _*immutable*_ field or method $m$,
+    $ "type of" m "in" T <= "type of" m "in" S $
+  + for each (public) _*mutable*_ field $m$,
+    $ "type of" m "in" T = "type of" m "in" S $
+
+- note: the exact definition can vary between languages and can be stronger (more restrictive)
+- ($ast$) is a _necessary_ condition to achieve type safety
 
 == Subtype relationship example (1)
 
-- shape
-  - has `area()` method returning float 
+```python
+class shape:
+  def area(self): ...
 
-- rect
-  - has `area()` method returning float 
-  - has additional `width()` and `height()` methods
+class rect:
+  def area(self): ...
+  def width(self): ...
+  def height(self): ...
+```
 
-- rect $<=$ shape holds
+- Q: rect $<=$ shape (assignment "shape $<-$ rect" safe)?
 
 == Subtype relationship example (2)
 
-- shape
-  - has `area()` method returning float and
-  - #ao[`perimeter()` method returning float]
+```python
+class shape:
+  def area(self): ...
+  def perimeter(self): ... <- NEW ...
 
-- rect is the same as before
-- rect $<=$ shape does not (_should not_) hold
-- to see why, consider
+class rect:
+  def area(self): ...
+  def width(self): ...
+  def height(self): ...
+```
+- Q: rect $<=$ shape (assignment "shape $<-$ rect" safe)?
+#pagebreak()
+- A: no
 ```
 s : shape = rect(..)
 s.perimeter()
@@ -442,22 +479,30 @@ s.perimeter()
 
 == Subtype relationship tricky example (3)
 
-- shape
-  - has `area()` method returning float and
-  - #ao[`eq(s : shape)` method returning bool]
-- rect
-  - has `area()` method returning float,
-  - has `width()` and `height()` method each returning float, and
-  - #ao[`eq(r : rect)` method returning bool]
-- does rect $<=$ shape hold?
+
+```python
+class shape:
+  def area(self): ...
+  def eq(self, s : shape): ...
+
+class rect:
+  def area(self): ...
+  def width(self): ...
+  def height(self): ...
+  def eq(self, s : rect): ...
+```
+
+- Q : rect $<=$ shape (assignment "shape $<-$ rect" safe)?
+
 #pagebreak()
-- no, it _should not_ hold
-- to see why not, consider
+
+- A : No
+
 ```python
 s : shape = rect(..)
 s.eq(circle(..))
 ```
-- which passes circle type to a formal argument of `eq` (rect type)
+- would pass a circle to a formal argument of `eq` (rect type)
 
 #pagebreak()
 - more algorithmically,
@@ -466,15 +511,15 @@ rect $<=$ shape \
 $=>$ type of `eq` in rect $<=$ type of `eq` in shape \
 $=>$ rect $->$ bool $<=$ shape $->$ bool \
 
-- in general, $a' -> b' <= a -> b$ holds when
-  - $b' <= b$ and #ao[$a' >= a$] (next slide)
+- in general, $a' -> b <= a -> b$ holds when
+  - #aka[$a' >= a$] (next slide)
 
 $=>$ shape $<=$ rect (false)
 
 == Subtype relationship between functions
 
 - $a' -> b' <= a -> b$ holds when
-  - $b' <= b$ and #ao[$a' >= a$]
+  - #ao[$b' <= b$] and #aka[$a' >= a$]
 - recall substitution principle ($ast$)
   - assume $f'$ : $a' -> b'$ and $f$ : $a -> b$,
   - and ask when $f <- f'$ is safe?
@@ -489,6 +534,55 @@ $=>$ shape $<=$ rect (false)
 - in this terminology, a function type is
   - _covariant_ on output type ($b' <= b => a -> b <= a -> b'$)
   - _contravariant_ on input type ($a' <= a => a' -> b <= a -> b$)
+
+== Subtype relationship example (4)
+
+```python
+class node:
+  def __init__(self):
+      self.sib : node
+
+class node_w_color:
+  def __init__(self, col):
+      self.sib : node_w_color  # mutable field
+      self.color = col
+```
+
+- Q: `node_w_color` $<=$ `node` ("`node` $<-$ `nodw_w_color`" safe)?
+#pagebreak()
+- A: no
+```
+nc : node_w_color = node_w_color("red")
+n : node = nc
+n.sib = node()
+nc.sib.color
+```
+- for reasoning, just consider having mutable field `sib : `$T$ is equivalent to having a method `set_sib(`$s$ : $T$`)`
+  - node has `set_sib(s : node)`
+  - node_w_color has `set_sib(s : node_w_color)`
+
+== Subtype relationship example (5)
+
+- Q : given `rect` $<=$ `shape` and `circle` $<=$ `shape`,  is `array rect` $<=$ `array shape`?
+- i.e., is the following assignment safe?
+```python
+ar : array rect = [rect(), rect()]
+a : array shape = ar
+```
+
+#pagebreak()
+
+- A : No
+```python
+ar : array rect = [rect(), rect()]
+a : array shape = ar
+a[0] = circle()
+ar[0].width()
+```
+
+- for reasoning, just consider each element of a mutable array is a mutable field
+
+= Subtypes in actual languages : a taxonomy
 
 == Taxonomy of subtype relationships
 
