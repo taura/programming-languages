@@ -1,8 +1,4 @@
-<!--- md --->
-
 #* Programming Languages (3) --- Object-Oriented Programming Basics
-
-<!--- end md --->
 
 <!--- md w --->
 
@@ -54,7 +50,6 @@ Declare your choice in the following cell.  In this notebook, I will work on
  |Rust |[Using Structs to Structure Related Data](https://doc.rust-lang.org/book/ch05-00-structs.html)|
  |     |[Method Syntax](https://doc.rust-lang.org/book/ch05-03-method-syntax.html?highlight=impl#method-syntax)|
  |     |[Traits: Defining Shared Behavior](https://doc.rust-lang.org/book/ch10-02-traits.html)|
-
 
 # Prepare AI Tutor
 
