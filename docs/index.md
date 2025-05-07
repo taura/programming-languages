@@ -7,6 +7,18 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2025/05/07)</font> Assignment due Sat. May 24th
+  1. Every member in each team finishes `pl03_oop_basics` Jupyter notebook.
+  1. All members in a team get together and collaboratively work on `pl03_oop_basics/pl03_oop_basics.xlsx` Excel book in your team's OneDrive folder.
+  1. Every member in each team submits the Jupyter notebook and the [UTOL `assignment 02: pl03_oop_basics`](https://utol.ecc.u-tokyo.ac.jp/lms/course/report/submission?idnumber=2025_0340_FEN-EE4d19L1_01&reportId=196873) (where you just say you have submitted Jupyter notebook and finished the work in Excel book).
+
+* <font color=blue>(2025/05/07)</font> Plan for May 8th
+  * (make sure you exchange your contact info)
+  1. teams get together 
+  1. work on `pl03_oop_basics` ($\approx$ 10 mins)
+  1. continue [Object-Oriented Programming](slides/02-oop.pdf)
+  1. continue working on `pl03_oop_basics`
+
 * <font color=blue>(2025/05/01)</font> 
   * answers to [`pl01_basic`](html/ans/pl01_basic.sos.ans.html) and [`pl02_fp_basics`](html/ans/pl02_fp_basics.sos.ans.html) released
 
