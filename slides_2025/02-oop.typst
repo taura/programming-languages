@@ -351,13 +351,13 @@ l = [rect(..), circle(..)]
 for s in l:
   s.area()
 ```
-- in this example, we say rect (and circle) is a _*subtype*_ of shape
-- or, shape is a _*supertype*_ of rect (and circle)
+- in this example, we say `rect` (and `circle`) is a _*subtype*_ of `shape`
+- or, `shape` is a _*supertype*_ of `rect` (and `circle`)
 - more on this later
 
 == Parametric polymorphism
 
-- `n_elems` has a static type (like "$forall alpha . "array of" alpha -> "int"$"), which can be instantiated into "array of int" and "array of string"
+- `n_elems` has a static type (like "$forall alpha . "array of" alpha -> "int"$"), which can be instantiated into "array of int $->$ int" and "array of string $->$ int"
 ```python
 n_elems([1,2,3])
 n_elems(["a", "b", "c"])
@@ -365,55 +365,85 @@ n_elems(["a", "b", "c"])
 - we'll cover this more in the next week
 
 == How static type checking works with subtyping
-- in the hypothetical Python-like language
+- consider the following program in a hypothetical Python-like language
 ```python
-def smaller(s0 : shape, s1 : shape) -> shape:
-  return (s0 if s0.area() < s1.area() else s1)
+def small(s : shape) -> bool:
+  return s0.area() < 10.0
 
-smaller(rect(..), circle(..))
+small(rect(..))  # or small(circle())
 ```
 
 == Type checking the function
 ```python
-def smaller(s0 : shape, s1 : shape) -> shape:
-  return (s0 if s0.area() < s1.area() else s1)
+def small(s : shape) -> bool:
+  return s.area() < 10.0
 ```
 
-- ```python s0, s1``` : ```python shape```
-- $=>$ ```python s0.area(), s1.area()``` : ```python float```
-- $=>$ ```python s0.area() < s1.area()``` : ```python boolean```
-- $=>$ ```python s0 if ... else s1``` : ```python shape```
+- ```python s``` : ```python shape```
+- $=>$ ```python s.area()``` : ```python float```
+- $=>$ ```python s.area() < 10.0``` : ```python bool```
 
 - as straightforward as the simply-typed case
 
-== Type checking the function cal
+== Type checking the function call
 ```python
-smaller(rect(..), circle(..))
+small(rect(..))
 ```
 
 - ```python rect(..)``` : ```python rect```
-- ```python circle(..)``` : ```python circle```
-- ```python smaller``` : ```python (shape, shape) -> shape```
+- ```python small``` : ```python shape -> bool```
 
-- must allow passing argument of ```python rect``` to ```python shape``` (and ```python circle``` to ```python shape```)
+- must allow _*passing argument of type ```python rect``` (and ```python circle```) to a parameter of type ```python shape```*_
   - ```python shape``` $<-$ ```python rect```
   - ```python shape``` $<-$ ```python circle```
+
+- i.e., _*treating a value of type ```python rect``` as if it is of type ```python shape```*_
 
 
 == In general ...
 
 + an operation (e.g., method call) is judged valid when _static type_ of respective subexpression defines that operation
-  - e.g., `s0.area()` is valid as `s0`'s static type is `shape`, which (we assume) defines `area` method
-+ passing argument of $T$ to formal argument of type $S$ (or other "assignment-like" operations $S <- T$) is judged valid _*when doing so is safe*_
-  - e.g., `smaller(rect(..), circle(..))` is judged valid as passing `shape` $<-$ `rect` seems safe (but why?)
+  - e.g., `s.area()` is valid as the static type of `s` is `shape`, which (we assume) defines `area` method
++ passing argument of $T$ to formal argument of type $S$ (or _treating $T$ as if it is $S$_, which we denote as by $S <- T$) is judged valid _*when doing so is safe*_
+  - e.g., `small(rect(..))` is judged valid as `shape` $<-$ `rect` seems safe (but why?)
 
 == When is $S <- T$ safe?
 
 - informally, $S <- T$ is safe when _*any operation applicable to $S$ is also applicable to $T$ ($ast$)*_ (_Liskov substitution principle_)
-  - ex: "`shape` $<-$ `rect`" is safe, because operation applicable to (any) shape will be applicable to rect (whether it's true depends on how they are actually defined, of course)
+  - ex: "`shape` $<-$ `rect`" is safe, because operation applicable to `shape` will be applicable to `rect` (note: whether it's true depends on how they are actually defined, of course)
   - intuitively, safe when "$T$ is a kind of $S$"
-  - ex: `rect` (`circle`) is a kind of shape
+    - ex: `rect` (`circle`) is a kind of shape
+    - but this intuitive reasoning breaks later (keep awake!)
 
+== When do we need to consider safety of $S <- T$?
+
+- assignment:
+```python
+x : shape = rect(...) ```
+- passing argument:
+```python
+def f(x : shape):  ...```
+
+```python
+f(rect(...))```
+
+- returning from a function
+```python
+f (...) -> shape:
+  return rect(...)
+```
+- conditional expression
+```python
+rect(...) if ... else circle(...) : shape
+```
+- heterogeneous list
+```python
+[ rect(...), circle(...), ... ] : list of shape
+```
+
+- in all cases, we are treating an expression of type `rect` (`circle`) as `shape`
+
+/*
 == Note: what is "assignment-like" operation?
 - intuitively, any operation that flows a value to another place
   - assignment (left hand side : $S$ $<-$ right hand side $T$)
@@ -421,19 +451,21 @@ smaller(rect(..), circle(..))
 - more generally, any operation where a value of static type $T$ is interpreted as a value of static type $S$. e.g.,
   - returning a value of $T$ from a function whose declared return value is $S$
   - conditional expression whose clauses have different types $T_0$ and $T_1$
+*/
 
 == Subtype
 - we write $T <= S$ and say $T$ is a _*subtype*_ of $S$ (and $S$ is a _*supertype*_ of $T$) when the condition ($ast$) is the case
   - ex: `rect` $<=$ `shape`, `circle` $<=$ `shape`
-- with this terminology, _*an assignment-like operation $S <- T$ is safe simply when $T <= S$*_
+- with this terminology, _*treating a value of $T$ as $S$ ($S <- T$) is safe simply when $T <= S$*_
 
 - if we think of a type as a set, $<=$ represents a subset relation
+  - this intuition breaks again later (keep awake!)
 
 = Establishing subtype relationship
 
 == Most general subtype relationship of record-like types
 
-- if both $S$ and $T$ are record-like types (struct, class, etc.), $T <= S$ holds if the following two conditions *($dagger$)* are met
+- when both $S$ and $T$ are record-like types (struct, class, etc.), $T <= S$ holds if the following two conditions *($dagger$)* are met
   + $T$ has all the (public) methods/fields of $S$
   + for each (public) _*immutable*_ field or method $m$,
     $ "type of" m "in" T <= "type of" m "in" S $
@@ -455,21 +487,21 @@ class rect:
   def height(self): ...
 ```
 
-- Q: rect $<=$ shape (assignment "shape $<-$ rect" safe)?
+- Q: `rect` $<=$ `shape` (is `shape` $<-$ `rect` safe)?
 
 == Subtype relationship example (2)
 
 ```python
 class shape:
   def area(self): ...
-  def perimeter(self): ... <- NEW ...
+  def perimeter(self): ...
 
 class rect:
   def area(self): ...
   def width(self): ...
   def height(self): ...
 ```
-- Q: rect $<=$ shape (assignment "shape $<-$ rect" safe)?
+- Q: `rect` $<=$ `shape` (is `shape` $<-$ `rect` safe)?
 #pagebreak()
 - A: no
 ```
@@ -477,9 +509,90 @@ s : shape = rect(..)
 s.perimeter()
 ```
 
-== Subtype relationship tricky example (3)
+== Subtype relationship example (3)
 
+```python
+class node:
+  def __init__(self):
+    self.left : node
+    self.right : node
 
+class node_w_color:
+  def __init__(self, col):
+    self.left : node_w_color
+    self.right : node_w_color
+    self.color = col
+```
+
+- Q: `node_w_color` $<=$ `node` (is `node` $<-$ `nodw_w_color` safe)?
+
+#pagebreak()
+
+- A: no
+```
+nc : node_w_color = node_w_color("red")
+no : node = nc
+no.left = node()
+nc.left.color    # calling .color on node!
+```
+
+- the assignment ```python no : node = nc``` should have been disallowed
+
+/*
+- for reasoning, just consider having mutable field `sib : `$T$ is equivalent to having a method `set_sib(`$s$ : $T$`)`
+  - node has `set_sib(s : node)`
+  - node_w_color has `set_sib(s : node_w_color)`
+*/
+
+== Subtype relationship example (4)
+
+- Q : given `rect` $<=$ `shape`,  is `array rect` $<=$ `array shape`?
+- i.e., is the following assignment safe?
+```python
+ar : array rect = [rect(), rect()]
+as : array shape = ar
+```
+
+#pagebreak()
+
+- A : No
+```python
+ar : array rect = [rect(), rect()]
+as : array shape = ar
+as[0] = circle()
+ar[0].width()   # calling .width() on circle()!
+```
+
+- assignment ```python as : array shape = ar``` should have been disallowed
+
+- for reasoning, just consider each element of a mutable array is a mutable field
+
+== A side story
+
+```python
+ar : array rect = [rect(), rect()]
+as : array shape = ar
+as[0] = circle()
+ar[0].width()   # calling .width() on circle()!
+```
+
+- Java got it wrong and allows this assignment
+  - a runtime exception occurs at ```java as[0] = circle()```
+- there is another OOP language, called Eiffel, that got it wrong
+  - anything (segfault or returning junk data) can happen at ```eiffel ar[0].width()```
+
+#pagebreak()
+
+- Julia allows this assignment, too
+```julia
+ar :: Vector{Rect} = [Rect(..), Rect(..)]
+as :: Vector{Shape} = ar
+as[1] = circle()
+ar[1].width()   # calling .width() on circle()!
+```
+but ```julia as : Vector{Shape} = ar``` creates a copy of `ar` (wierd)
+
+== Subtype relationship tricky example (5)
 ```python
 class shape:
   def area(self): ...
@@ -492,7 +605,7 @@ class rect:
   def eq(self, s : rect): ...
 ```
 
-- Q : rect $<=$ shape (assignment "shape $<-$ rect" safe)?
+- Q : `rect` $<=$ `shape` (assignment `shape` $<-$ `rect` safe)?
 
 #pagebreak()
 
@@ -502,28 +615,26 @@ class rect:
 s : shape = rect(..)
 s.eq(circle(..))
 ```
-- would pass a circle to a formal argument of `eq` (rect type)
+- would pass a `circle` to a formal argument of `eq` (`rect` type)
 
 #pagebreak()
-- more algorithmically,
+- to reason more algorithmically,
 
-rect $<=$ shape \
-$=>$ type of `eq` in rect $<=$ type of `eq` in shape \
-$=>$ rect $->$ bool $<=$ shape $->$ bool \
+`rect` $<=$ `shape` \
+$=>$ (type of `eq` in `rect`) $<=$ (type of `eq` in `shape`) \
+$=>$ `rect` $->$ `bool` $<=$ `shape` $->$ `bool` \
 
-- in general, $a' -> b <= a -> b$ holds when
-  - #aka[$a' >= a$] (next slide)
+- in general, $a' -> b <= a -> b$ holds when #aka[$a' >= a$] (next slide)
 
-$=>$ shape $<=$ rect (false)
+$=>$ `shape` $<=$ `rect` (false)
 
 == Subtype relationship between functions
 
 - $a' -> b' <= a -> b$ holds when
-  - #ao[$b' <= b$] and #aka[$a' >= a$]
-- recall substitution principle ($ast$)
-  - assume $f'$ : $a' -> b'$ and $f$ : $a -> b$,
+  $ #ao[$b' <= b$] "and" #aka[$a' >= a$] $
+- to see why, assume $f'$ : $a' -> b'$ and $f$ : $a -> b$,
   - and ask when $f <- f'$ is safe?
-- it is when "$f'$ can take any data $f$ can take ($a$)". i.e.,
+- recall substitution principle ($ast$); it is when "$f'$ can take any data $f$ can take ($a$)". i.e.,
   - $a' >= a$ ($a'$ is a _supertype_ of $a$)
 
 == Covariant and contravariant
@@ -535,69 +646,26 @@ $=>$ shape $<=$ rect (false)
   - _covariant_ on output type ($b' <= b => a -> b <= a -> b'$)
   - _contravariant_ on input type ($a' <= a => a' -> b <= a -> b$)
 
-== Subtype relationship example (4)
-
-```python
-class node:
-  def __init__(self):
-      self.sib : node
-
-class node_w_color:
-  def __init__(self, col):
-      self.sib : node_w_color  # mutable field
-      self.color = col
-```
-
-- Q: `node_w_color` $<=$ `node` ("`node` $<-$ `nodw_w_color`" safe)?
-#pagebreak()
-- A: no
-```
-nc : node_w_color = node_w_color("red")
-n : node = nc
-n.sib = node()
-nc.sib.color
-```
-- for reasoning, just consider having mutable field `sib : `$T$ is equivalent to having a method `set_sib(`$s$ : $T$`)`
-  - node has `set_sib(s : node)`
-  - node_w_color has `set_sib(s : node_w_color)`
-
-== Subtype relationship example (5)
-
-- Q : given `rect` $<=$ `shape` and `circle` $<=$ `shape`,  is `array rect` $<=$ `array shape`?
-- i.e., is the following assignment safe?
-```python
-ar : array rect = [rect(), rect()]
-a : array shape = ar
-```
-
-#pagebreak()
-
-- A : No
-```python
-ar : array rect = [rect(), rect()]
-a : array shape = ar
-a[0] = circle()
-ar[0].width()
-```
-
-- for reasoning, just consider each element of a mutable array is a mutable field
-
 = Subtypes in actual languages : a taxonomy
 
 == Taxonomy of subtype relationships
 
-- _*interface*_ subtyping vs. _*concrete-type*_ subtyping
-  - concrete-type subtyping (C++, Java, OCaml)
-    - $<=$ is introduced between ordinary (concrete) types
-  - interface subtyping (Go, Rust)
-    - besides ordinary types, define _abstract types_, _interfaces_ (Go), or _traits_ (Rust)
-    - $<=$ is introduced only between interfaces or between a concrete type and an interface
+_*interface*_ subtyping vs. _*concrete-type*_ subtyping
+
+- concrete-type subtyping (C++, Java, OCaml)
+  - $<=$ is introduced between ordinary (concrete) types
+- interface subtyping (Go, Rust, Julia)
+  - besides ordinary types, define _abstract types_ (Julia), _interfaces_ (Go), or _traits_ (Rust)
+  - $<=$ is introduced only between interfaces or between a concrete type and an interface
 #pagebreak()    
-- _*nominal*_ subtyping vs. _*structural*_ subtyping
-  - nominal (Rust)
-    - $<=$ holds only when the programmer so specified explicitly (`impl` _trait_ `for` _struct_)
-  - structural (Go, OCaml)
-    - $<=$ is derived automatically from definitions
+
+_*nominal*_ subtyping vs. _*structural*_ subtyping
+- nominal (Julia, Rust)
+  - $<=$ holds only when the programmer so specified explicitly
+    - Julia: `struct` $T$ `<:` $S$
+    - Rust: `impl` _trait_ `for` _struct_
+- structural (Go, OCaml)
+  - $<=$ is derived automatically from definitions
 
 == Go
 ```go
@@ -610,7 +678,27 @@ func (r Rect) area() float64 { ... }
 var s shape = rect{0, 0, 100, 100}
 ```
 
-== Subtyping in Rust
+== Julia
+
+- does not need anything specific to define functions on `struct`
+```julia
+struct Rect ... end
+struct Circle ... end
+function area(r :: Rect) ... end
+function area(c :: Circle) ... end
+```
+
+#pagebreak()
+
+- if you want to define a single function body that works _both_ on `Rect` and `Circle`, you can use an abstract type. e.g.,
+```julia
+abstract type Shape ... end
+struct Rect <: Shape ... end
+struct Circle <: Shape ... end
+function dist(s :: Shape) ... end
+```
+
+== Rust
 ```rust
 trait Shape { fn area(&self) -> f64;  }
 struct Rect { ... }
@@ -624,7 +712,21 @@ let s : &dyn Shape = &Rect{ ... };
 ```
 
 == OCaml
-- OCaml does not require type (class) definitions to make objects
-- when you define class, subtype relationship is automatically derived
-- nor does it require type of variables to be specified
-- ... everything just _naturally_ happens (learn in the notebook)
+- OCaml requires no type (class) definitions to make objects
+- type of an object expression is automatically derived from methods
+- even if they have different names, they are the same if their structures are the same
+- you may need a type annotation (actually, a cast) for
+  - if expressions having different types in then/else clauses
+    - ```ocaml if ... new rect() else new circle()```
+  - heterogeneous list/array expressions
+    - ```ocaml [new rect(); new circle(); ...]```
+
+#pagebreak()
+
+- you can use _type cast_ (`(`$e$ `:>` $S$`)`) to treat $e$ as if it is $S$
+  - valid only when $e$'s (naturally derived) static type $T <= S$
+  - not the cast you may know in C
+- e.g.,
+  - ```ocaml [(new rect() :> shape); (new circle() :> shape); ...]```
+  - valid if `rect` $<=$ `shape` (determined by their method signatures)
+  - note: unnecessary if `rect` and `circle` happen to have the same method signatures
