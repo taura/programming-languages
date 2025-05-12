@@ -11,7 +11,7 @@
 #show: metropolis-theme.with(
   aspect-ratio: "16-9",
   config-info(
-    title: [Building Standalone Programs \\
+    title: [Building Standalone Programs \
   and Using Libraries],
     author: [Kenjiro Taura],
     date: [2024/05/09],
@@ -41,7 +41,7 @@
 - make programs outside Jupyter playground
   - SSH (command line)
   - editors, not web browsers
-  - build system
+- build system
 - use libraries
 - split a program into multiple files ($approx$ use something defined in another file)
 
@@ -77,24 +77,24 @@ using a library entails different procedures depending on how "embedded" it is i
 == Importing a library to your program
 - assume $M$ is a library name and $n$ a name defined in $M$
 
-- OCaml:
-  - call *M.n*
-  - `open M` and call *n*
+- Go:
+  - ```go import "```_M_```go "``` and call _*M.n*_
 
-- Julia:
-  - `import M` and call *M.n*
-  - `using M` and call *n*
+- OCaml:
+  - call _*M.n*_
+  - ```ocaml open ```_M_ and call _*n*_
 
 #pagebreak()
 
-- Go:
-  - `import "M"` and call *M.n*
+- Julia:
+  - ```julia import``` *$M$* and call _*M.n*_
+  - ```julia using``` *$M$* and call _*n*_
 
 - Rust:
   - assume $C$ is the name of a crate
-  - a crate may contain nested modules ($C in.rev M_0 in.rev M_1 ... in.rev n$)
-  - call `C::M_0::M_1:: ... ::n`
-  - `use C::M_0::M_1:: ... ::n` and call *n*
+  - a crate may contain nested modules ($C in.rev M_0 in.rev ... in.rev n$)
+  - call *$C$`::`$M_0$`::`$M_1$`::` ... `::`$n$*
+  - ```rust use``` *$C$`::`$M_0$`::`$M_1$`::` ... `::`$n$* and call *$n$*
   - anywhere between the two
 
 == Repository of libraries
