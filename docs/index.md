@@ -11,7 +11,8 @@
   1. teams get together
   1. work on `pl04_standalone`
   1. [Parametric Polymorphism (aka Generic Types/Functions)](slides/04-parametric.pdf)
-  1. work on `pl05_generic_fun_type`
+  1. collaboratively work on `pl05_generic_fun_type` Jupyter notebook and `pl05_generic_fun_type/pl05_generic_fun_type.xlsx` Excel book in your team's OneDrive folder
+     * this will be next assignment (due around June 7)
 
 * <font color=blue>(2025/05/11)</font> Plan for May 12th
   1. teams get together
