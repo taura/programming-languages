@@ -7,6 +7,12 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2025/05/18)</font> Plan for May 19th
+  1. teams get together
+  1. work on `pl04_standalone`
+  1. [Parametric Polymorphism (aka Generic Types/Functions)](slides/04-parametric.pdf)
+  1. work on `pl05_generic_fun_type`
+
 * <font color=blue>(2025/05/11)</font> Plan for May 12th
   1. teams get together
   1. work on [UTOL `assignment 02: pl03_oop_basics`](https://utol.ecc.u-tokyo.ac.jp/lms/course/report/submission?idnumber=2025_0340_FEN-EE4d19L1_01&reportId=196873)
