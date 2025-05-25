@@ -1,0 +1,188 @@
+<h1 data-number="1" id="aarch64-arm64-assembly-cheat-sheet"><span
+class="header-section-number">1</span> AArch64 (ARM64) Assembly Cheat
+Sheet</h1>
+<ul>
+<li><a
+href="https://developer.arm.com/documentation/ddi0602/2025-03/?lang=en"
+target="_blank" rel="noopener">Authorative source</a></li>
+</ul>
+<h2 data-number="1.1" id="registers"><span
+class="header-section-number">1.1</span> Registers</h2>
+<h3 data-number="1.1.1" id="general-purpose-x0x30"><span
+class="header-section-number">1.1.1</span> General Purpose (x0–x30)</h3>
+<ul>
+<li>C convention</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Purpose</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>x0-x7</td>
+<td>Arguments / return values</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>x8</td>
+<td>Indirect result location / syscall</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>x9-x15</td>
+<td>Temporary (caller-saved)</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>x16-x17</td>
+<td>Intra-procedure call scratch</td>
+<td>(X)</td>
+</tr>
+<tr class="odd">
+<td>x18</td>
+<td>Platform register (TLS)</td>
+<td>(X)</td>
+</tr>
+<tr class="even">
+<td>x19-x28</td>
+<td>Callee-saved</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>x29</td>
+<td>Frame pointer</td>
+<td>(X)</td>
+</tr>
+<tr class="even">
+<td>x30</td>
+<td>Link register (return address)</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>sp</td>
+<td>Stack pointer</td>
+<td>(X)</td>
+</tr>
+<tr class="even">
+<td>zr</td>
+<td>Zero register</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Each xN has a 32-bit alias: wN</li>
+<li>Registers with (X) have specific purposes and should not be used for
+general computation</li>
+<li>“Temporary (caller-saved)” are destroyed across a function call
+<ul>
+<li>flip side: your function can use (destroy) them without saving
+them</li>
+</ul></li>
+<li>“Callee-saved” are preserved across a function call
+<ul>
+<li>flip side: if your function use one, you must save it before using
+it and restore it before return</li>
+</ul></li>
+</ul>
+<hr />
+<h2 data-number="1.2" id="stack-calling-convention-of-c-aapcs64"><span
+class="header-section-number">1.2</span> Stack &amp; Calling Convention
+of C (AAPCS64)</h2>
+<ul>
+<li>Arguments: x0-x7</li>
+<li>Return: x0</li>
+<li>Stack grows down, 16-byte aligned</li>
+<li>Callee-saved: x19-x28, x29 (fp), x30 (lr), x31 (sp)</li>
+<li>Function call: <code>bl func</code></li>
+<li>Return: <code>ret</code></li>
+</ul>
+<hr />
+<h2 data-number="1.3" id="arithmetic-and-logic"><span
+class="header-section-number">1.3</span> Arithmetic and Logic</h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode asm"><code class="sourceCode fasm"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">add</span> x0<span class="op">,</span> x1<span class="op">,</span> x2        <span class="op">//</span> x0 <span class="op">=</span> x1 <span class="op">+</span> x2</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">sub</span> x0<span class="op">,</span> x1<span class="op">,</span> <span class="op">#</span><span class="dv">4</span>        <span class="op">//</span> x0 <span class="op">=</span> x1 <span class="op">-</span> <span class="dv">4</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">mul</span> x0<span class="op">,</span> x1<span class="op">,</span> x2        <span class="op">//</span> x0 <span class="op">=</span> x1 <span class="op">*</span> x2</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">and</span> x0<span class="op">,</span> x1<span class="op">,</span> x2        <span class="op">//</span> bitwise <span class="op">AND</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>orr x0<span class="op">,</span> x1<span class="op">,</span> x2        <span class="op">//</span> bitwise <span class="op">OR</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>eor x0<span class="op">,</span> x1<span class="op">,</span> x2        <span class="op">//</span> bitwise <span class="op">XOR</span></span></code></pre></div>
+<hr />
+<h2 data-number="1.4" id="load-and-store"><span
+class="header-section-number">1.4</span> Load and Store</h2>
+<ul>
+<li>single-word load/stores</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode asm"><code class="sourceCode fasm"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ldr x0<span class="op">,</span> <span class="op">[</span>x1<span class="op">]</span>          <span class="op">//</span> load <span class="dv">64</span><span class="op">-</span>bit from the address in x1 <span class="op">and</span> put it to x0</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ldr w0<span class="op">,</span> <span class="op">[</span>x1<span class="op">]</span>          <span class="op">//</span> load <span class="dv">32</span><span class="op">-</span>bit</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ldrb w0<span class="op">,</span> <span class="op">[</span>x1<span class="op">]</span>         <span class="op">//</span> load <span class="dt">byte</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="bu">str</span> x0<span class="op">,</span> <span class="op">[</span>x1<span class="op">]</span>          <span class="op">//</span> store <span class="dv">64</span><span class="op">-</span>bit value in x0 to the address in x1</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="bu">str</span> w0<span class="op">,</span> <span class="op">[</span>x1<span class="op">]</span>          <span class="op">//</span> store <span class="dv">32</span><span class="op">-</span>bit</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>strb w0<span class="op">,</span> <span class="op">[</span>x1<span class="op">]</span>         <span class="op">//</span> store <span class="dt">byte</span></span></code></pre></div>
+<ul>
+<li>offset and increment</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode asm"><code class="sourceCode fasm"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ldr x0<span class="op">,</span> <span class="op">[</span>x1<span class="op">,</span> <span class="op">#</span><span class="dv">16</span><span class="op">]</span>     <span class="op">//</span> load from the address in x1 <span class="op">+</span> <span class="dv">16</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ldr x0<span class="op">,</span> <span class="op">[</span>x1<span class="op">],</span> <span class="op">#</span><span class="dv">16</span>     <span class="op">//</span> load from the address in x1<span class="co">; x1 += 16 (post-increment)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ldr x0<span class="op">,</span> <span class="op">[</span>x1<span class="op">,</span> <span class="op">#</span><span class="dv">16</span><span class="op">]!</span>    <span class="op">//</span> x1 <span class="op">+=</span> <span class="dv">16</span><span class="co">; load from the address in x1 (pre-increment)</span></span></code></pre></div>
+<ul>
+<li>two-word load/stores</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode asm"><code class="sourceCode fasm"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ldp x0<span class="op">,</span> x1<span class="op">,</span> <span class="op">[</span><span class="kw">sp</span><span class="op">,</span> <span class="op">#</span><span class="dv">16</span><span class="op">]</span>   <span class="op">//</span> <span class="op">=</span> ldr x0<span class="op">,[</span><span class="kw">sp</span><span class="op">,#</span><span class="dv">16</span><span class="op">]</span><span class="co">; ldr x1,[sp,#24]</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>stp x0<span class="op">,</span> x1<span class="op">,</span> <span class="op">[</span><span class="kw">sp</span><span class="op">,</span> <span class="op">#-</span><span class="dv">16</span><span class="op">]!</span> <span class="op">//</span> <span class="op">=</span> <span class="kw">sp</span> <span class="op">-=</span> <span class="dv">16</span><span class="co">; stp x0,[sp]; stp x1,[sp,#8]</span></span></code></pre></div>
+<hr />
+<h2 data-number="1.5" id="branch-and-compare"><span
+class="header-section-number">1.5</span> Branch and Compare</h2>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode asm"><code class="sourceCode fasm"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cmp</span> x0<span class="op">,</span> x1            <span class="op">//</span> compare x0 <span class="op">and</span> x1 <span class="op">and</span> put the result into the condition flags register</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span>eq label            <span class="op">//</span> branch if equal</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span>ne label            <span class="op">//</span> <span class="op">not</span> equal</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>b<span class="op">.</span>gt<span class="op">,</span> b<span class="op">.</span>lt<span class="op">,</span> b<span class="op">.</span>ge<span class="op">,</span> b<span class="op">.</span>le</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>b label               <span class="op">//</span> unconditional</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>bl func               <span class="op">//</span> branch <span class="op">and</span> link</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">ret</span>                   <span class="op">//</span> return</span></code></pre></div>
+<ul>
+<li>conditional branch instructions look at the flags set in the
+condition flags register</li>
+<li>in other words, they refer to the result of the <em>last</em>
+compare instruction</li>
+<li><code>bl func</code> puts the address of the instruction immediately
+following <code>bl func</code> instruction (i.e., the address of
+<code>bl func</code> + 4) to <code>x30</code> register</li>
+<li><code>ret</code> jumps to the address in <code>x30</code>
+register</li>
+</ul>
+<hr />
+<h2 data-number="1.6" id="function-prologueepilogue"><span
+class="header-section-number">1.6</span> Function Prologue/Epilogue</h2>
+<ul>
+<li>Any function that calls another function</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode asm"><code class="sourceCode fasm"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>// Prologue <span class="op">(</span>grows stack <span class="op">and</span> saves x29 <span class="op">and</span> x30<span class="co">; set x29 (fp))</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>stp x29<span class="op">,</span> x30<span class="op">,</span> <span class="op">[</span><span class="kw">sp</span><span class="op">,</span> <span class="op">#-</span><span class="dv">16</span><span class="op">]!</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">mov</span> x29<span class="op">,</span> <span class="kw">sp</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>// Epilogue <span class="op">(</span>restores x29 <span class="op">and</span> x30<span class="co">; shrink stack; jump to x30)</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>ldp x29<span class="op">,</span> x30<span class="op">,</span> <span class="op">[</span><span class="kw">sp</span><span class="op">],</span> <span class="op">#</span><span class="dv">16</span> </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="cf">ret</span></span></code></pre></div>
+<hr />
+<h2 data-number="1.7" id="floating-point-registers"><span
+class="header-section-number">1.7</span> Floating-Point Registers</h2>
+<ul>
+<li>sN = 32-bit float, dN = 64-bit float</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode asm"><code class="sourceCode fasm"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">fadd</span> s0<span class="op">,</span> s1<span class="op">,</span> s2       <span class="op">//</span> float add</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">fmul</span> d0<span class="op">,</span> d1<span class="op">,</span> d2       <span class="op">//</span> double mul</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>scvtf s0<span class="op">,</span> w0          <span class="op">//</span> int to float</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>fcvtzs w0<span class="op">,</span> s0         <span class="op">//</span> float to int</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>ldr s0<span class="op">,</span> <span class="op">[</span>x0<span class="op">]</span>          <span class="op">//</span> load float</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">str</span> d0<span class="op">,</span> <span class="op">[</span>x0<span class="op">]</span>          <span class="op">//</span> store double</span></code></pre></div>
