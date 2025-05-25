@@ -24,7 +24,8 @@ $(c_asms) : %.s : %.c
 
 $(go_asms) : %.s : %.go
 #	go tool compile -I $(shell go env GOROOT)/pkg/$(shell go env GOOS)_$(shell go env GOARCH) -o $*.o $<
-	go tool compile -l -o $*.o $< 
+#	go tool compile -l -o $*.o $<
+	go build -o $*.o $<
 	go tool objdump -gnu $*.o > $@
 
 $(jl_asms) : %.s : %.jl
