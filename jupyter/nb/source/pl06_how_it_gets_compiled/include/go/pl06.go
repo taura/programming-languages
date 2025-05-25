@@ -46,6 +46,14 @@ func Collatz(n int64) int64 {
     }
 }
 /*** endif */
+/*** if label == "call" */
+func Call_f(x float64) float64 {
+    return math.Sqrt(x + 1)
+}
+func tautautau(n int64, m int64) int64 {
+    return n / m
+}
+/*** endif */
 /*** if label == "regions" */
 func Regions(n int64) int64 {
     if n == 0 {
