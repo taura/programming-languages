@@ -29,6 +29,10 @@ let collatz n =
     3 * n + 1
 ;;
 (** endif *)
+(** if label == "call_tanh" *)
+let call_tanh x =
+(Float.tanh (x +. 1.0)) +. 2.0
+(** endif *)
 (** if label == "regions" *)
 let rec regions n = 
   if n = 0 then

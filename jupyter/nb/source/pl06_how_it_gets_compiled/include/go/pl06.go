@@ -1,5 +1,6 @@
 /*** if 1 */
 package pl06
+import "math"
 /*** endif */
 /*** if label == "add123" */
 func Add123(x int64) int64 {
@@ -46,12 +47,9 @@ func Collatz(n int64) int64 {
     }
 }
 /*** endif */
-/*** if label == "call" */
-func Call_f(x float64) float64 {
-    return math.Sqrt(x + 1)
-}
-func tautautau(n int64, m int64) int64 {
-    return n / m
+/*** if label == "call_tanh" */
+func Call_tanh(x float64) float64 {
+    return math.Tanh(x + 1.0) + 2.0
 }
 /*** endif */
 /*** if label == "regions" */
@@ -106,6 +104,6 @@ func Sum_array_loop(a []float64, n int64) float64 {
 /*** endif */
 /*** if 0 */
 func main() {
-    
+     println(Call_tanh(4.0))
 }
 /*** endif */

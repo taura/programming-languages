@@ -1,7 +1,7 @@
 /*** if label == "add123" */
 #[no_mangle]
-pub fn add123(n : i64) -> i64 {
-    n + 123
+pub fn add123(x : i64) -> i64 {
+    x + 123
 }
 /*** endif */
 /*** if label == "many_args" */
@@ -55,6 +55,12 @@ pub fn collatz(n : i64) -> i64 {
     }
 }
 /*** endif */
+/*** if label == "call_tanh" */
+#[no_mangle]
+pub fn call_tanh(x : f64) -> f64 {
+    (x + 1.0).tanh() + 2.0
+}
+/*** endif */
 /*** if label == "regions" */
 #[no_mangle]
 pub fn regions(n : i64) -> i64 {
@@ -66,6 +72,7 @@ pub fn regions(n : i64) -> i64 {
 }
 /*** endif */
 /*** if label == "sum_array_rec" */
+#[no_mangle]
 pub fn sum_array_rec(a : &[f64], p : usize, q : usize) -> f64 {
     if q - p == 0 {
         0.0

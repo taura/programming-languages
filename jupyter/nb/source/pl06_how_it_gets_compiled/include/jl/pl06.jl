@@ -41,6 +41,11 @@ function collatz(n :: Int64)
   end
 end
 ### endif
+### if label == "call_tanh"
+function call_tanh(x :: Float64)
+  tanh(x + 1.0) + 2.0
+end
+### endif
 ### if label == "regions"
 function regions(n :: Int64)
     if n == 0
@@ -99,6 +104,7 @@ code_native(get_float_array_elem_const)
 code_native(get_float_array_elem_i)
 code_native(get_point_y)
 code_native(collatz)
+code_native(call_atan2)
 code_native(regions)
 code_native(regions_tail)
 code_native(sum_array_loop)
