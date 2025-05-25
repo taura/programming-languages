@@ -7,6 +7,15 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2025/05/26)</font> Plan for May 26th
+  1. teams get together
+  1. briefly work on `pl05_generic_fun_type` and `pl05_generic_fun_type/pl05_generic_fun_type.xlsx` Excel book in your team's OneDrive folder, to finish the work for `Assignment 03: pl05_generic_fun_type`
+  1. [Basics of programming language implementation](slides/05-implementation-basics.pdf)
+  1. work on `pl06_how_it_gets_compiled`
+
+* <font color=blue>(2025/05/26)</font> Plan for May 26th
+  * AArch64 (ARM64) Assembly Cheat Sheet ([markdown](html/arm64_assembly_cheat_sheet.md), [html](html/arm64_assembly_cheat_sheet.html))
+
 * <font color=blue>(2025/05/18)</font> Plan for May 19th
   1. teams get together
   1. work on `pl04_standalone`
