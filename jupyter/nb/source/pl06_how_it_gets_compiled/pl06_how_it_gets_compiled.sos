@@ -28,9 +28,8 @@ config(default_lang=" ... ")  # choose one of Go/Julia/OCaml/Rust
 <!--- end code --->
 * you may want to ask a few basics
 <!--- code w kernel=python --->
-I("how to write a function taking a function")
-# I("how to write a generic function (function with type parameter)")
-# I("how to write a generic type (type with type parameter)")
+hey("what is adrp instruction of ARM64?")
+# hey("what is ARM64 for integer division")
 <!--- end code --->
 
 # Let the compiler generate assembly code
@@ -50,31 +49,48 @@ I("how to write a function taking a function")
 <!--- code kernel=py --->
 %%writefile go/add123.go
 
-<!--- exec-include ./mk_version.py -D label="add123" nb/source/pl06_how_it_gets_compiled/include/pl06.go --->
+<!--- exec-include ./mk_version.py -D label="add123" nb/source/pl06_how_it_gets_compiled/include/go/pl06.go --->
 <!--- end code --->
 
 ### How to emit assembly code
 
-* ordinary go compiler does not support emitting native 64 bit x86 assembly
+* ordinary go compiler does not support emitting native assembly
 * it instead emits something called "plan 9 assembly" ([details](https://go.dev/doc/asm)), which is a machine-independent, therefore portable, assembly
+* to obtain the native assembly, you first `go build` a file to obtain an _object file_ --- the real binary machine code containing instructions --- and reverse it back to assembly (textual representation of instructions) using `go tool objdump`
+* `go tool objdump` prints the plan 9 assembly; giving `-gnu` option prints the native assembly as well, which is our interest
+* <font color="red">Note:</font> to make the output easy to read, shrink the text size so that lines do not wrap
+
+<!--- code w kernel=bash --->
+go build -o go/add123.o go/add123.go
+go tool objdump -gnu go/add123.o
+<!--- end code --->
+
+* **NOTE:**
+  * if the command does not output anything, do it again (likely a bash kernel bug)
+
+<!---
 * portability is good, but for the learning objective of this exercise, it obscures how your program executes on the real machine
 * therefore, in this exercise, we instead use an alternative compiler, `gccgo`, which generates a native assembly for x86
   * `-S` to emit assembly code
   * `-O` to optimize
   * `-g0` not to generate debugging information (which is unncessary now)
 
-<!--- code w kernel=bash --->
+<!- -- code w kernel=bash -- ->
 gccgo -O -g0 -S go/add123.go -o go/add123.s
 cat -n go/add123.s
-<!--- end code --->
+<!- -- end code -- ->
+
+--->
 
 * try to locate the instruction that does `x + 123`
 * try to locate the start of the function, which should be labeled with a symbol similar to the function name `Add123` (it may not be exactly the same)
 
-* **NOTE 1:**
+* **NOTE:**
   * you need to say `package xxx`, with _xxx_ anything other than `main`; if you say `package main`, the compiler complains about the lack of `main` function
   * you need to <font color="red">capitalize the function name</font> whose assembly code you want to see, as otherwise the compiler may eliminate it as a dead code
   * in Go, functions starting with an uppercase letter are visible (can be called) from another package (see https://go.dev/doc/tutorial/create-module), so the compiler should leave the assembly code even if it finds the function not called anywhere in the file it is compiling
+
+<!---
 
 * **NOTE 2:** if you want to use `gccgo` along with `go build`, you can do
 ```
@@ -84,6 +100,7 @@ instead of just
 ```
 go build
 ```
+--->
 
 ## Julia
 
@@ -95,7 +112,7 @@ go build
 <!--- code kernel=py --->
 %%writefile jl/add123.jl
 
-<!--- exec-include ./mk_version.py -D label="add123" nb/source/pl06_how_it_gets_compiled/include/pl06.jl --->
+<!--- exec-include ./mk_version.py -D label="add123" nb/source/pl06_how_it_gets_compiled/include/jl/pl06.jl --->
 
 using InteractiveUtils
 code_native(add123)
@@ -115,7 +132,7 @@ julia jl/add123.jl
 <!--- code kernel=py --->
 %%writefile jl/add123.jl
 
-<!--- exec-include ./mk_version.py -D label="add123" nb/source/pl06_how_it_gets_compiled/include/pl06.jl --->
+<!--- exec-include ./mk_version.py -D label="add123" nb/source/pl06_how_it_gets_compiled/include/jl/pl06.jl --->
 <!--- end code --->
 
 <!--- code kernel=bash --->
@@ -138,7 +155,7 @@ julia --load jl/add123.jl --eval 'using InteractiveUtils; code_native(add123)'
 <!--- code kernel=py --->
 %%writefile ml/add123.ml
 
-<!--- exec-include ./mk_version.py -D label="add123" nb/source/pl06_how_it_gets_compiled/include/pl06.ml --->
+<!--- exec-include ./mk_version.py -D label="add123" nb/source/pl06_how_it_gets_compiled/include/ml/pl06.ml --->
 <!--- end code --->
 
 ### How to emit assembly code
@@ -164,7 +181,7 @@ cat -n ml/add123.s
 <!--- code kernel=py --->
 %%writefile rs/add123.rs
 
-<!--- exec-include ./mk_version.py -D label="add123" nb/source/pl06_how_it_gets_compiled/include/pl06.rs --->
+<!--- exec-include ./mk_version.py -D label="add123" nb/source/pl06_how_it_gets_compiled/include/rs/pl06.rs --->
 <!--- end code --->
 
 ### How to emit assembly code
@@ -191,14 +208,14 @@ cat -n rs/add123.s
 * define a function `many_args` (or `Many_args` in Go) that takes many (> 10) integer parameters and returns the sum of them (similar to the following C function) in your language, compile it into assembly and examine it
 
 <!--- code kernel=py --->
-%%writefile cc/many_args.c
+%%writefile c/many_args.c
 
-<!--- exec-include ./mk_version.py -D label="many_args" nb/source/pl06_how_it_gets_compiled/include/pl06.cc --->
+<!--- exec-include ./mk_version.py -D label="many_args" nb/source/pl06_how_it_gets_compiled/include/c/pl06.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-gcc -O3 -S cc/many_args.c -o cc/many_args.s
-cat -n cc/many_args.s
+gcc -O3 -S c/many_args.c -o c/many_args.s
+cat -n c/many_args.s
 <!--- end code --->
 
 * write the code below
@@ -216,20 +233,27 @@ cat -n cc/many_args.s
 <!--- code label=ans kernel=py --->
 %%writefile go/many_args.go
 
-<!--- exec-include ./mk_version.py -D label="many_args" nb/source/pl06_how_it_gets_compiled/include/pl06.go --->
+<!--- exec-include ./mk_version.py -D label="many_args" nb/source/pl06_how_it_gets_compiled/include/go/pl06.go --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
+go build -o go/many_args.o go/many_args.go
+go tool objdump -gnu go/many_args.o
+<!--- end code --->
+
+<!---
+<!- -- code w kernel=bash -- ->
 gccgo -O -g0 -S go/many_args.go -o go/many_args.s
 cat -n go/many_args.s
-<!--- end code --->
+<!- -- end code -- ->
+--->
 
 * Julia
 
 <!--- code label=ans kernel=py --->
 %%writefile jl/many_args.jl
 
-<!--- exec-include ./mk_version.py -D label="many_args" nb/source/pl06_how_it_gets_compiled/include/pl06.jl --->
+<!--- exec-include ./mk_version.py -D label="many_args" nb/source/pl06_how_it_gets_compiled/include/jl/pl06.jl --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -241,7 +265,7 @@ julia --load jl/many_args.jl --eval 'using InteractiveUtils; code_native(many_ar
 <!--- code label=ans kernel=py --->
 %%writefile ml/many_args.ml
 
-<!--- exec-include ./mk_version.py -D label="many_args" nb/source/pl06_how_it_gets_compiled/include/pl06.ml --->
+<!--- exec-include ./mk_version.py -D label="many_args" nb/source/pl06_how_it_gets_compiled/include/ml/pl06.ml --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -254,7 +278,7 @@ cat -n ml/many_args.s
 <!--- code label=ans kernel=py --->
 %%writefile rs/many_args.rs
 
-<!--- exec-include ./mk_version.py -D label="many_args" nb/source/pl06_how_it_gets_compiled/include/pl06.rs --->
+<!--- exec-include ./mk_version.py -D label="many_args" nb/source/pl06_how_it_gets_compiled/include/rs/pl06.rs --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -274,14 +298,14 @@ cat -n rs/many_args.s
 * define a function `add_floats` (or `Add_floats` in Go) that takes two floating point numbers and returns the sum of the two (similar to the following C function) in your language, compile it into assembly and examine it
 
 <!--- code kernel=py --->
-%%writefile cc/add_floats.c
+%%writefile c/add_floats.c
 
-<!--- exec-include ./mk_version.py -D label="add_floats" nb/source/pl06_how_it_gets_compiled/include/pl06.cc --->
+<!--- exec-include ./mk_version.py -D label="add_floats" nb/source/pl06_how_it_gets_compiled/include/c/pl06.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-gcc -O3 -S cc/add_floats.c -o cc/add_floats.s
-cat -n cc/add_floats.s
+gcc -O3 -S c/add_floats.c -o c/add_floats.s
+cat -n c/add_floats.s
 <!--- end code --->
 
 * write the code below
@@ -299,20 +323,27 @@ cat -n cc/add_floats.s
 <!--- code label=ans kernel=py --->
 %%writefile go/add_floats.go
 
-<!--- exec-include ./mk_version.py -D label="add_floats" nb/source/pl06_how_it_gets_compiled/include/pl06.go --->
+<!--- exec-include ./mk_version.py -D label="add_floats" nb/source/pl06_how_it_gets_compiled/include/go/pl06.go --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
+go build -o go/add_floats.o go/add_floats.go
+go tool objdump -gnu go/add_floats.o
+<!--- end code --->
+
+<!---
+<!- -- code w kernel=bash -- ->
 gccgo -O -g0 -S go/add_floats.go -o go/add_floats.s
 cat -n go/add_floats.s
-<!--- end code --->
+<!- -- end code -- ->
+--->
 
 * Julia
 
 <!--- code label=ans kernel=py --->
 %%writefile jl/add_floats.jl
 
-<!--- exec-include ./mk_version.py -D label="add_floats" nb/source/pl06_how_it_gets_compiled/include/pl06.jl --->
+<!--- exec-include ./mk_version.py -D label="add_floats" nb/source/pl06_how_it_gets_compiled/include/jl/pl06.jl --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -324,7 +355,7 @@ julia --load jl/add_floats.jl --eval 'using InteractiveUtils; code_native(add_fl
 <!--- code label=ans kernel=py --->
 %%writefile ml/add_floats.ml
 
-<!--- exec-include ./mk_version.py -D label="add_floats" nb/source/pl06_how_it_gets_compiled/include/pl06.ml --->
+<!--- exec-include ./mk_version.py -D label="add_floats" nb/source/pl06_how_it_gets_compiled/include/ml/pl06.ml --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -337,7 +368,7 @@ cat -n ml/add_floats.s
 <!--- code label=ans kernel=py --->
 %%writefile rs/add_floats.rs
 
-<!--- exec-include ./mk_version.py -D label="add_floats" nb/source/pl06_how_it_gets_compiled/include/pl06.rs --->
+<!--- exec-include ./mk_version.py -D label="add_floats" nb/source/pl06_how_it_gets_compiled/include/rs/pl06.rs --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -356,14 +387,14 @@ cat -n rs/add_floats.s
 * define a struct `point` (or `Point`) that has two fields (`x` and `y`; both are 64 bit floating point numbers) and function `get_point_y` (or `Get_point_y`) that takes a point or a pointer to it and returns its `y` field
 
 <!--- code kernel=py --->
-%%writefile cc/get_struct_elem.c
+%%writefile c/get_struct_elem.c
 
-<!--- exec-include ./mk_version.py -D label="get_struct_elem" nb/source/pl06_how_it_gets_compiled/include/pl06.cc --->
+<!--- exec-include ./mk_version.py -D label="get_struct_elem" nb/source/pl06_how_it_gets_compiled/include/c/pl06.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-gcc -O3 -S cc/get_struct_elem.c -o cc/get_struct_elem.s
-cat -n cc/get_struct_elem.s
+gcc -O3 -S c/get_struct_elem.c -o c/get_struct_elem.s
+cat -n c/get_struct_elem.s
 <!--- end code --->
 
 * write the code below
@@ -381,20 +412,27 @@ cat -n cc/get_struct_elem.s
 <!--- code label=ans kernel=py --->
 %%writefile go/get_struct_elem.go
 
-<!--- exec-include ./mk_version.py -D label="get_struct_elem" nb/source/pl06_how_it_gets_compiled/include/pl06.go --->
+<!--- exec-include ./mk_version.py -D label="get_struct_elem" nb/source/pl06_how_it_gets_compiled/include/go/pl06.go --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
+go build -o go/get_struct_elem.o go/get_struct_elem.go
+go tool objdump -gnu go/get_struct_elem.o
+<!--- end code --->
+
+<!---
+<!- -- code w kernel=bash -- ->
 gccgo -O -g0 -S go/get_struct_elem.go -o go/get_struct_elem.s
 cat -n go/get_struct_elem.s
-<!--- end code --->
+<!- -- end code -- ->
+--->
 
 * Julia
 
 <!--- code label=ans kernel=py --->
 %%writefile jl/get_struct_elem.jl
 
-<!--- exec-include ./mk_version.py -D label="get_struct_elem" nb/source/pl06_how_it_gets_compiled/include/pl06.jl --->
+<!--- exec-include ./mk_version.py -D label="get_struct_elem" nb/source/pl06_how_it_gets_compiled/include/jl/pl06.jl --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -406,7 +444,7 @@ julia --load jl/get_struct_elem.jl --eval 'using InteractiveUtils; code_native(g
 <!--- code label=ans kernel=py --->
 %%writefile ml/get_struct_elem.ml
 
-<!--- exec-include ./mk_version.py -D label="get_struct_elem" nb/source/pl06_how_it_gets_compiled/include/pl06.ml --->
+<!--- exec-include ./mk_version.py -D label="get_struct_elem" nb/source/pl06_how_it_gets_compiled/include/ml/pl06.ml --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -419,7 +457,7 @@ cat -n ml/get_struct_elem.s
 <!--- code label=ans kernel=py --->
 %%writefile rs/get_struct_elem.rs
 
-<!--- exec-include ./mk_version.py -D label="get_struct_elem" nb/source/pl06_how_it_gets_compiled/include/pl06.rs --->
+<!--- exec-include ./mk_version.py -D label="get_struct_elem" nb/source/pl06_how_it_gets_compiled/include/rs/pl06.rs --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -443,14 +481,14 @@ cat -n rs/get_struct_elem.s
   * `Vec<f64>` for Rust
 
 <!--- code kernel=py --->
-%%writefile cc/get_float_array_elem.c
+%%writefile c/get_float_array_elem.c
 
-<!--- exec-include ./mk_version.py -D label="get_float_array_elem" nb/source/pl06_how_it_gets_compiled/include/pl06.cc --->
+<!--- exec-include ./mk_version.py -D label="get_float_array_elem" nb/source/pl06_how_it_gets_compiled/include/c/pl06.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-gcc -O3 -S cc/get_float_array_elem.c -o cc/get_float_array_elem.s
-cat -n cc/get_float_array_elem.s
+gcc -O3 -S c/get_float_array_elem.c -o c/get_float_array_elem.s
+cat -n c/get_float_array_elem.s
 <!--- end code --->
 
 * write the code below
@@ -468,20 +506,27 @@ cat -n cc/get_float_array_elem.s
 <!--- code label=ans kernel=py --->
 %%writefile go/get_float_array_elem.go
 
-<!--- exec-include ./mk_version.py -D label="get_float_array_elem" nb/source/pl06_how_it_gets_compiled/include/pl06.go --->
+<!--- exec-include ./mk_version.py -D label="get_float_array_elem" nb/source/pl06_how_it_gets_compiled/include/go/pl06.go --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
+go build -o go/get_float_array_elem.o go/get_float_array_elem.go
+go tool objdump -gnu go/get_float_array_elem.o
+<!--- end code --->
+
+<!---
+<!- -- code w kernel=bash -- ->
 gccgo -O -g0 -S go/get_float_array_elem.go -o go/get_float_array_elem.s
 cat -n go/get_float_array_elem.s
-<!--- end code --->
+<!- -- end code -- ->
+--->
 
 * Julia
 
 <!--- code label=ans kernel=py --->
 %%writefile jl/get_float_array_elem.jl
 
-<!--- exec-include ./mk_version.py -D label="get_float_array_elem" nb/source/pl06_how_it_gets_compiled/include/pl06.jl --->
+<!--- exec-include ./mk_version.py -D label="get_float_array_elem" nb/source/pl06_how_it_gets_compiled/include/jl/pl06.jl --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -497,7 +542,7 @@ julia --load jl/get_float_array_elem.jl --eval 'using InteractiveUtils; code_nat
 <!--- code label=ans kernel=py --->
 %%writefile ml/get_float_array_elem.ml
 
-<!--- exec-include ./mk_version.py -D label="get_float_array_elem" nb/source/pl06_how_it_gets_compiled/include/pl06.ml --->
+<!--- exec-include ./mk_version.py -D label="get_float_array_elem" nb/source/pl06_how_it_gets_compiled/include/ml/pl06.ml --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -510,7 +555,7 @@ cat -n ml/get_float_array_elem.s
 <!--- code label=ans kernel=py --->
 %%writefile rs/get_float_array_elem.rs
 
-<!--- exec-include ./mk_version.py -D label="get_float_array_elem" nb/source/pl06_how_it_gets_compiled/include/pl06.rs --->
+<!--- exec-include ./mk_version.py -D label="get_float_array_elem" nb/source/pl06_how_it_gets_compiled/include/rs/pl06.rs --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -528,14 +573,14 @@ cat -n rs/get_float_array_elem.s
 * define a function `collatz` (or `Collatz` in Go) that takes an integer $n$ and returns $n/2$ if $n$ is an even number and $3 n + 1$ otherwise (similar to the following C function)
 
 <!--- code kernel=py --->
-%%writefile cc/collatz.c
+%%writefile c/collatz.c
 
-<!--- exec-include ./mk_version.py -D label="collatz" nb/source/pl06_how_it_gets_compiled/include/pl06.cc --->
+<!--- exec-include ./mk_version.py -D label="collatz" nb/source/pl06_how_it_gets_compiled/include/c/pl06.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-gcc -O3 -S cc/collatz.c -o cc/collatz.s
-cat -n cc/collatz.s
+gcc -O3 -S c/collatz.c -o c/collatz.s
+cat -n c/collatz.s
 <!--- end code --->
 
 * write the code below
@@ -553,20 +598,27 @@ cat -n cc/collatz.s
 <!--- code label=ans kernel=py --->
 %%writefile go/collatz.go
 
-<!--- exec-include ./mk_version.py -D label="collatz" nb/source/pl06_how_it_gets_compiled/include/pl06.go --->
+<!--- exec-include ./mk_version.py -D label="collatz" nb/source/pl06_how_it_gets_compiled/include/go/pl06.go --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
+go build -o go/collatz.o go/collatz.go
+go tool objdump -gnu go/collatz.o
+<!--- end code --->
+
+<!---
+<!- -- code w kernel=bash -- ->
 gccgo -O -g0 -S go/collatz.go -o go/collatz.s
 cat -n go/collatz.s
-<!--- end code --->
+<!- -- end code -- ->
+--->
 
 * Julia
 
 <!--- code label=ans kernel=py --->
 %%writefile jl/collatz.jl
 
-<!--- exec-include ./mk_version.py -D label="collatz" nb/source/pl06_how_it_gets_compiled/include/pl06.jl --->
+<!--- exec-include ./mk_version.py -D label="collatz" nb/source/pl06_how_it_gets_compiled/include/jl/pl06.jl --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -578,7 +630,7 @@ julia --load jl/collatz.jl --eval 'using InteractiveUtils; code_native(collatz)'
 <!--- code label=ans kernel=py --->
 %%writefile ml/collatz.ml
 
-<!--- exec-include ./mk_version.py -D label="collatz" nb/source/pl06_how_it_gets_compiled/include/pl06.ml --->
+<!--- exec-include ./mk_version.py -D label="collatz" nb/source/pl06_how_it_gets_compiled/include/ml/pl06.ml --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -591,7 +643,7 @@ cat -n ml/collatz.s
 <!--- code label=ans kernel=py --->
 %%writefile rs/collatz.rs
 
-<!--- exec-include ./mk_version.py -D label="collatz" nb/source/pl06_how_it_gets_compiled/include/pl06.rs --->
+<!--- exec-include ./mk_version.py -D label="collatz" nb/source/pl06_how_it_gets_compiled/include/rs/pl06.rs --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -615,14 +667,14 @@ cat -n rs/collatz.s
 for an array
 
 <!--- code kernel=py --->
-%%writefile cc/sum_array_loop.c
+%%writefile c/sum_array_loop.c
 
-<!--- exec-include ./mk_version.py -D label="sum_array_loop" nb/source/pl06_how_it_gets_compiled/include/pl06.cc --->
+<!--- exec-include ./mk_version.py -D label="sum_array_loop" nb/source/pl06_how_it_gets_compiled/include/c/pl06.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-gcc -O3 -S cc/sum_array_loop.c -o cc/sum_array_loop.s
-cat -n cc/sum_array_loop.s
+gcc -O3 -S c/sum_array_loop.c -o c/sum_array_loop.s
+cat -n c/sum_array_loop.s
 <!--- end code --->
 
 * write the code below
@@ -640,19 +692,26 @@ cat -n cc/sum_array_loop.s
 <!--- code label=ans kernel=py --->
 %%writefile go/sum_array_loop.go
 
-<!--- exec-include ./mk_version.py -D label="sum_array_loop" nb/source/pl06_how_it_gets_compiled/include/pl06.go --->
+<!--- exec-include ./mk_version.py -D label="sum_array_loop" nb/source/pl06_how_it_gets_compiled/include/go/pl06.go --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
+go build -o go/sum_array_loop.o go/sum_array_loop.go
+go tool objdump -gnu go/sum_array_loop.o
+<!--- end code --->
+
+<!---
+<!- -- code w kernel=bash -- ->
 gccgo -O -g0 -S go/sum_array_loop.go -o go/sum_array_loop.s
 cat -n go/sum_array_loop.s
-<!--- end code --->
+<!- -- end code -- ->
+--->
 
 * Julia
 <!--- code label=ans kernel=py --->
 %%writefile jl/sum_array_loop.jl
 
-<!--- exec-include ./mk_version.py -D label="sum_array_loop" nb/source/pl06_how_it_gets_compiled/include/pl06.jl --->
+<!--- exec-include ./mk_version.py -D label="sum_array_loop" nb/source/pl06_how_it_gets_compiled/include/jl/pl06.jl --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -664,7 +723,7 @@ julia --load jl/sum_array_loop.jl --eval 'using InteractiveUtils; code_native(su
 <!--- code label=ans kernel=py --->
 %%writefile ml/sum_array_loop.ml
 
-<!--- exec-include ./mk_version.py -D label="sum_array_loop" nb/source/pl06_how_it_gets_compiled/include/pl06.ml --->
+<!--- exec-include ./mk_version.py -D label="sum_array_loop" nb/source/pl06_how_it_gets_compiled/include/ml/pl06.ml --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -677,7 +736,7 @@ cat -n ml/sum_array_loop.s
 <!--- code label=ans kernel=py --->
 %%writefile rs/sum_array_loop.rs
 
-<!--- exec-include ./mk_version.py -D label="sum_array_loop" nb/source/pl06_how_it_gets_compiled/include/pl06.rs --->
+<!--- exec-include ./mk_version.py -D label="sum_array_loop" nb/source/pl06_how_it_gets_compiled/include/rs/pl06.rs --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -693,25 +752,24 @@ cat -n rs/sum_array_loop.s
 
 #*P Function call
 
-* define a function `sum_array_rec` (or `sum_array_rec` in Go) that takes an array $a$ and two integers $p$ and $q$ and returns sum of $a[p:q]$
-* write it in the divide and conquer recursion (similar to the following C function)
+* define a function `call_tanh` (or `Call_tanh` in Go) that takes a floating point number $x$ and returns $\tanh(x + 1.0) + 2.0$
 
 <!--- code kernel=py --->
-%%writefile cc/sum_array_rec.c
+%%writefile c/call_tanh.c
 
-<!--- exec-include ./mk_version.py -D label="sum_array_rec" nb/source/pl06_how_it_gets_compiled/include/pl06.cc --->
+<!--- exec-include ./mk_version.py -D label="call_tanh" nb/source/pl06_how_it_gets_compiled/include/c/pl06.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-gcc -O -S cc/sum_array_rec.c -o cc/sum_array_rec.s
-cat -n cc/sum_array_rec.s
+gcc -O -S c/call_tanh.c -o c/call_tanh.s
+cat -n c/call_tanh.s
 <!--- end code --->
 
 * write the code below
 * <font color="red">replace xx with go, jl, ml, or rs and write the function</font>
 
 <!--- code w kernel=py points=1 --->
-%%writefile xx/sum_array_rec.xx
+%%writefile xx/call_tanh.xx
 
 <!--- end code --->
 
@@ -720,58 +778,156 @@ cat -n cc/sum_array_rec.s
 * Go
 
 <!--- code label=ans kernel=py --->
-%%writefile go/sum_array_rec.go
+%%writefile go/call_tanh.go
 
-<!--- exec-include ./mk_version.py -D label="sum_array_rec" nb/source/pl06_how_it_gets_compiled/include/pl06.go --->
+<!--- exec-include ./mk_version.py -D label="call_tanh" nb/source/pl06_how_it_gets_compiled/include/go/pl06.go --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-gccgo -O -g0 -S go/sum_array_rec.go -o go/sum_array_rec.s
-cat -n go/sum_array_rec.s
+go build -o go/call_tanh.o go/call_tanh.go
+go tool objdump -gnu go/call_tanh.o
 <!--- end code --->
+
+<!---
+<!- -- code w kernel=bash -- ->
+gccgo -O -g0 -S go/call_tanh.go -o go/call_tanh.s
+cat -n go/call_tanh.s
+<!- -- end code -- ->
+--->
 
 * Julia
 
 <!--- code label=ans kernel=py --->
-%%writefile jl/sum_array_rec.jl
+%%writefile jl/call_tanh.jl
 
-<!--- exec-include ./mk_version.py -D label="sum_array_rec" nb/source/pl06_how_it_gets_compiled/include/pl06.jl --->
+<!--- exec-include ./mk_version.py -D label="call_tanh" nb/source/pl06_how_it_gets_compiled/include/jl/pl06.jl --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-julia --load jl/sum_array_rec.jl --eval 'using InteractiveUtils; code_native(sum_array_rec)'
+julia --load jl/call_tanh.jl --eval 'using InteractiveUtils; code_native(call_tanh)'
 <!--- end code --->
 
 * OCaml
 
 <!--- code label=ans kernel=py --->
-%%writefile ml/sum_array_rec.ml
+%%writefile ml/call_tanh.ml
 
-<!--- exec-include ./mk_version.py -D label="sum_array_rec" nb/source/pl06_how_it_gets_compiled/include/pl06.ml --->
+<!--- exec-include ./mk_version.py -D label="call_tanh" nb/source/pl06_how_it_gets_compiled/include/ml/pl06.ml --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-ocamlopt -S ml/sum_array_rec.ml
-cat -n ml/sum_array_rec.s
+ocamlopt -S ml/call_tanh.ml
+cat -n ml/call_tanh.s
 <!--- end code --->
 
 * Rust
 
 <!--- code label=ans kernel=py --->
-%%writefile rs/sum_array_rec.rs
+%%writefile rs/call_tanh.rs
 
-<!--- exec-include ./mk_version.py -D label="sum_array_rec" nb/source/pl06_how_it_gets_compiled/include/pl06.rs --->
+<!--- exec-include ./mk_version.py -D label="call_tanh" nb/source/pl06_how_it_gets_compiled/include/rs/pl06.rs --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
+rustc -O --emit asm --crate-type lib rs/call_tanh.rs -o rs/call_tanh.s
+cat -n rs/call_tanh.s
+<!--- end code --->
+
+* __<font color="blue">Questions:</font>__
+  1. locate the instruction that calls `tanh` or a similar function
+  1. as the function computes $\tanh(x + 1.0) + x$, the value of `x` must be saved somewhere during the function call
+  1. discuss differences between languages in the team and write notable difference(s) you found
+
+<!---
+#*P Divide and conquer
+
+* define a function `sum_array_rec` (or `sum_array_rec` in Go) that takes an array $a$ and two integers $p$ and $q$ and returns sum of $a[p:q]$
+* write it in the divide and conquer recursion (similar to the following C function)
+
+<!- -- code kernel=py -- ->
+%%writefile c/sum_array_rec.c
+
+<!- -- exec-include ./mk_version.py -D label="sum_array_rec" nb/source/pl06_how_it_gets_compiled/include/c/pl06.c -- ->
+<!- -- end code -- ->
+
+<!- -- code w kernel=bash -- ->
+gcc -O -S c/sum_array_rec.c -o c/sum_array_rec.s
+cat -n c/sum_array_rec.s
+<!- -- end code -- ->
+
+* write the code below
+* <font color="red">replace xx with go, jl, ml, or rs and write the function</font>
+
+<!- -- code w kernel=py points=1 -- ->
+%%writefile xx/sum_array_rec.xx
+
+<!- -- end code -- ->
+
+* and see the assembly code by executing one of the following
+
+* Go
+
+<!- -- code label=ans kernel=py -- ->
+%%writefile go/sum_array_rec.go
+
+<!- -- exec-include ./mk_version.py -D label="sum_array_rec" nb/source/pl06_how_it_gets_compiled/include/go/pl06.go -- ->
+<!- -- end code -- ->
+
+<!- -- code w kernel=bash -- ->
+go build -o go/sum_array_rec.o go/sum_array_rec.go
+go tool objdump -gnu go/sum_array_rec.o
+<!- -- end code -- ->
+
+<!- --
+<!- -- code w kernel=bash -- ->
+gccgo -O -g0 -S go/sum_array_rec.go -o go/sum_array_rec.s
+cat -n go/sum_array_rec.s
+<!- -- end code -- ->
+
+* Julia
+
+<!- -- code label=ans kernel=py -- ->
+%%writefile jl/sum_array_rec.jl
+
+<!- -- exec-include ./mk_version.py -D label="sum_array_rec" nb/source/pl06_how_it_gets_compiled/include/jl/pl06.jl -- ->
+<!- -- end code -- ->
+
+<!- -- code w kernel=bash -- ->
+julia --load jl/sum_array_rec.jl --eval 'using InteractiveUtils; code_native(sum_array_rec)'
+<!- -- end code -- ->
+
+* OCaml
+
+<!- -- code label=ans kernel=py -- ->
+%%writefile ml/sum_array_rec.ml
+
+<!- -- exec-include ./mk_version.py -D label="sum_array_rec" nb/source/pl06_how_it_gets_compiled/include/ml/pl06.ml -- ->
+<!- -- end code -- ->
+
+<!- -- code w kernel=bash -- ->
+ocamlopt -S ml/sum_array_rec.ml
+cat -n ml/sum_array_rec.s
+<!- -- end code -- ->
+
+* Rust
+
+<!- -- code label=ans kernel=py -- ->
+%%writefile rs/sum_array_rec.rs
+
+<!- -- exec-include ./mk_version.py -D label="sum_array_rec" nb/source/pl06_how_it_gets_compiled/include/rs/pl06.rs -- ->
+<!- -- end code -- ->
+
+<!- -- code w kernel=bash -- ->
 rustc -O --emit asm --crate-type lib rs/sum_array_rec.rs -o rs/sum_array_rec.s
 cat -n rs/sum_array_rec.s
-<!--- end code --->
+<!- -- end code -- ->
 
 * __<font color="blue">Questions:</font>__
   1. locate the instruction that recursively calls `sum_array_rec` (or `Sum_array_rec`)
   1. as the function computes `sum_array_rec(n - 1) + n - 1`, the value of `n` (or `n - 1`) must be saved somewhere during `sum_array_rec(n - 1)`; where is it saved?
   1. discuss differences between languages in the team and write notable difference(s) you found
+  
+--->  
 
 #*P Tail recursive call
 
@@ -779,14 +935,14 @@ cat -n rs/sum_array_rec.s
 * write it in the _tail recursive_ manner (similar to the following C function)
 
 <!--- code kernel=py --->
-%%writefile cc/sum_array_tail_rec.c
+%%writefile c/sum_array_tail_rec.c
 
-<!--- exec-include ./mk_version.py -D label="sum_array_tail_rec" nb/source/pl06_how_it_gets_compiled/include/pl06.cc --->
+<!--- exec-include ./mk_version.py -D label="sum_array_tail_rec" nb/source/pl06_how_it_gets_compiled/include/c/pl06.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-gcc -O2 -S cc/sum_array_tail_rec.c -o cc/sum_array_tail_rec.s
-cat -n cc/sum_array_tail_rec.s
+gcc -O2 -S c/sum_array_tail_rec.c -o c/sum_array_tail_rec.s
+cat -n c/sum_array_tail_rec.s
 <!--- end code --->
 
 
@@ -835,20 +991,27 @@ def loop(x, y):
 <!--- code label=ans kernel=py --->
 %%writefile go/sum_array_tail_rec.go
 
-<!--- exec-include ./mk_version.py -D label="sum_array_tail_rec" nb/source/pl06_how_it_gets_compiled/include/pl06.go --->
+<!--- exec-include ./mk_version.py -D label="sum_array_tail_rec" nb/source/pl06_how_it_gets_compiled/include/go/pl06.go --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
+go build -o go/sum_array_tail_rec.o go/sum_array_tail_rec.go
+go tool objdump -gnu go/sum_array_tail_rec.o
+<!--- end code --->
+
+<!---
+<!- -- code w kernel=bash -- ->
 gccgo -O -g0 -S go/sum_array_tail_rec.go -o go/sum_array_tail_rec.s
 cat -n go/sum_array_tail_rec.s
-<!--- end code --->
+<!- -- end code -- ->
+--->
 
 * Julia
 
 <!--- code label=ans kernel=py --->
 %%writefile jl/sum_array_tail_rec.jl
 
-<!--- exec-include ./mk_version.py -D label="sum_array_tail_rec" nb/source/pl06_how_it_gets_compiled/include/pl06.jl --->
+<!--- exec-include ./mk_version.py -D label="sum_array_tail_rec" nb/source/pl06_how_it_gets_compiled/include/jl/pl06.jl --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -860,7 +1023,7 @@ julia --load jl/sum_array_tail_rec.jl --eval 'using InteractiveUtils; code_nativ
 <!--- code label=ans kernel=py --->
 %%writefile ml/sum_array_tail_rec.ml
 
-<!--- exec-include ./mk_version.py -D label="sum_array_tail_rec" nb/source/pl06_how_it_gets_compiled/include/pl06.ml --->
+<!--- exec-include ./mk_version.py -D label="sum_array_tail_rec" nb/source/pl06_how_it_gets_compiled/include/ml/pl06.ml --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -873,7 +1036,7 @@ cat -n ml/sum_array_tail_rec.s
 <!--- code label=ans kernel=py --->
 %%writefile rs/sum_array_tail_rec.rs
 
-<!--- exec-include ./mk_version.py -D label="sum_array_tail_rec" nb/source/pl06_how_it_gets_compiled/include/pl06.rs --->
+<!--- exec-include ./mk_version.py -D label="sum_array_tail_rec" nb/source/pl06_how_it_gets_compiled/include/rs/pl06.rs --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -903,31 +1066,4 @@ cat -n rs/sum_array_tail_rec.s
 <!--- end code --->
 
 * and see the assembly code by executing one of the following
-
-* Go
-
-<!--- code w kernel=bash --->
-gccgo -O -g0 -S go/sum_array_rec.go -o go/sum_array_rec.s
-cat -n go/sum_array_rec.s
-<!--- end code --->
-
-* Julia
-
-<!--- code w kernel=bash --->
-julia --load jl/sum_array_rec.jl --eval 'using InteractiveUtils; code_native(sum_array_rec)'
-<!--- end code --->
-
-* OCaml
-
-<!--- code w kernel=bash --->
-ocamlopt -S ml/sum_array_rec.ml
-cat -n ml/sum_array_rec.s
-<!--- end code --->
-
-* Rust
-
-<!--- code w kernel=bash --->
-rustc -O --emit asm --crate-type lib rs/sum_array_rec.rs -o rs/sum_array_rec.s
-cat -n rs/sum_array_rec.s
-<!--- end code --->
 

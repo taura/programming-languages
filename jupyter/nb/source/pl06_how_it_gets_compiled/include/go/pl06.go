@@ -1,5 +1,7 @@
 /*** if 1 */
 package pl06
+/*** endif */
+/*** if label == "call_tanh" */
 import "math"
 /*** endif */
 /*** if label == "add123" */
@@ -49,7 +51,7 @@ func Collatz(n int64) int64 {
 /*** endif */
 /*** if label == "call_tanh" */
 func Call_tanh(x float64) float64 {
-    return math.Tanh(x + 1.0) + 2.0
+    return math.Tanh(x + 1.0) + x
 }
 /*** endif */
 /*** if label == "regions" */

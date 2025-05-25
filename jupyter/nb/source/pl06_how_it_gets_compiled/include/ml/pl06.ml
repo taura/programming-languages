@@ -31,7 +31,7 @@ let collatz n =
 (** endif *)
 (** if label == "call_tanh" *)
 let call_tanh x =
-(Float.tanh (x +. 1.0)) +. 2.0
+(Float.tanh (x +. 1.0)) +. x
 (** endif *)
 (** if label == "regions" *)
 let rec regions n = 

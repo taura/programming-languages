@@ -38,6 +38,12 @@ long collatz(long n) {
   }
 }
 /*** endif */
+/*** if label == "call_tanh" */
+#include <math.h>
+double call_tanh(double x) {
+  return tanh(x + 1.0) + x;
+}
+/*** endif */
 /*** if label == "regions" */
 long regions(long n) {
   if (n == 0) {

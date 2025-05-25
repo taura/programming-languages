@@ -58,7 +58,7 @@ pub fn collatz(n : i64) -> i64 {
 /*** if label == "call_tanh" */
 #[no_mangle]
 pub fn call_tanh(x : f64) -> f64 {
-    (x + 1.0).tanh() + 2.0
+    (x + 1.0).tanh() + x
 }
 /*** endif */
 /*** if label == "regions" */
