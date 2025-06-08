@@ -7,6 +7,12 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2025/06/09)</font> Plan for June 09th
+  1. [Basics of programming language implementation](slides/05-implementation-basics.pdf)
+  1. teams get together
+  1. work on `pl06_how_it_gets_compiled`
+  1. [Memory Management Introduction](slides/06-memory-management.pdf)  
+
 * <font color=blue>(2025/05/26)</font> Plan for May 26th
   1. teams get together
   1. briefly work on `pl05_generic_fun_type` and `pl05_generic_fun_type/pl05_generic_fun_type.xlsx` Excel book in your team's OneDrive folder, to finish the work for `Assignment 03: pl05_generic_fun_type`
