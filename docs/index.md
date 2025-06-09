@@ -11,7 +11,8 @@
   1. [Basics of programming language implementation](slides/05-implementation-basics.pdf)
   1. teams get together
   1. work on `pl06_how_it_gets_compiled`
-  1. [Memory Management Introduction](slides/06-memory-management.pdf)  
+  1. [Memory Management Introduction](slides/06-memory-management.pdf)
+  1. [Garbage Collection Basics](slides/07-gc-basics.pdf)
 
 * <font color=blue>(2025/05/26)</font> Plan for May 26th
   1. teams get together
