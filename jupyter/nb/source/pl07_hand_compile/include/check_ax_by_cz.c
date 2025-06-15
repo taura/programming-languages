@@ -14,7 +14,10 @@ int main(int argc, char ** argv) {
   long z = atol(argv[6]);
   long r = ax_by_cz(a, x, b, y, c, z);
   long rc = a * x + b * y + c * z;
-  assert(r == rc);
-  printf("OK %ld\n", r);
+  if (r == rc) {
+    printf("OK %ld %ld\n", r, rc);
+  } else {
+    printf("NG %ld %ld\n", r, rc);
+  }
   return 0;
 }

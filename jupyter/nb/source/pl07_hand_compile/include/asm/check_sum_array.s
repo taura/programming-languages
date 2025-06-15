@@ -54,13 +54,10 @@ sum_array_c:
 	.section	.rodata.str1.8,"aMS",@progbits,1
 	.align	3
 .LC0:
-	.string	"check_sum_array.c"
+	.string	"OK %ld %ld\n"
 	.align	3
 .LC1:
-	.string	"sa == sum_array_c(a, n)"
-	.align	3
-.LC2:
-	.string	"OK %ld\n"
+	.string	"NG %ld %ld\n"
 	.section	.text.startup,"ax",@progbits
 	.align	2
 	.p2align 4,,11
@@ -111,45 +108,47 @@ main:
 	mov	x2, x0
 	sub	x1, x22, #1
 	cmp	x1, 1
-	bls	.L20
-	lsr	x3, x22, 1
+	bls	.L21
+	lsr	x4, x22, 1
 	mov	x1, x20
 	movi	v0.4s, 0
-	add	x3, x20, x3, lsl 4
+	add	x4, x20, x4, lsl 4
 	.p2align 3,,7
 .L17:
 	ldr	q1, [x1], 16
 	add	v0.2d, v0.2d, v1.2d
-	cmp	x1, x3
+	cmp	x1, x4
 	bne	.L17
 	addp	d0, v0.2d
 	and	x0, x22, -2
-	fmov	x1, d0
-	tbz	x23, 0, .L29
+	fmov	x3, d0
+	tbz	x23, 0, .L30
 .L16:
-	lsl	x3, x0, 3
+	lsl	x1, x0, 3
 	add	x0, x0, 1
-	ldr	x4, [x20, x3]
-	add	x1, x1, x4
+	ldr	x4, [x20, x1]
+	add	x3, x3, x4
 	cmp	x22, x0
-	ble	.L29
-	add	x20, x20, x3
+	ble	.L30
+	add	x20, x20, x1
 	ldr	x0, [x20, 8]
 	ldp	x19, x20, [sp, 16]
 	.cfi_restore 20
 	.cfi_restore 19
-	add	x1, x1, x0
+	add	x3, x3, x0
 .L15:
-	cmp	x2, x1
-	bne	.L30
-	adrp	x1, .LC2
+	cmp	x2, x3
+	beq	.L31
+	adrp	x1, .LC1
 	mov	w0, 2
-	add	x1, x1, :lo12:.LC2
+	add	x1, x1, :lo12:.LC1
 	bl	__printf_chk
+.L20:
 	ldp	x21, x22, [sp, 32]
 	mov	w0, 0
 	ldp	x23, x24, [sp, 48]
 	ldp	x29, x30, [sp], 64
+	.cfi_remember_state
 	.cfi_restore 30
 	.cfi_restore 29
 	.cfi_restore 23
@@ -158,16 +157,17 @@ main:
 	.cfi_restore 22
 	.cfi_def_cfa_offset 0
 	ret
-.L29:
-	.cfi_def_cfa_offset 64
+.L31:
+	.cfi_restore_state
+	mov	x3, x2
+	adrp	x1, .LC0
+	mov	w0, 2
+	add	x1, x1, :lo12:.LC0
+	bl	__printf_chk
+	b	.L20
+.L30:
 	.cfi_offset 19, -48
 	.cfi_offset 20, -40
-	.cfi_offset 21, -32
-	.cfi_offset 22, -24
-	.cfi_offset 23, -16
-	.cfi_offset 24, -8
-	.cfi_offset 29, -64
-	.cfi_offset 30, -56
 	ldp	x19, x20, [sp, 16]
 	.cfi_restore 20
 	.cfi_restore 19
@@ -175,38 +175,17 @@ main:
 .L12:
 	mov	x1, x22
 	bl	sum_array
-	mov	x1, 0
+	mov	x3, 0
 	mov	x2, x0
 	b	.L15
-.L20:
+.L21:
 	.cfi_offset 19, -48
 	.cfi_offset 20, -40
-	mov	x1, 0
+	mov	x3, 0
 	mov	x0, 0
 	b	.L16
-.L30:
-	.cfi_restore 19
-	.cfi_restore 20
-	adrp	x3, .LANCHOR0
-	adrp	x1, .LC0
-	adrp	x0, .LC1
-	add	x3, x3, :lo12:.LANCHOR0
-	add	x1, x1, :lo12:.LC0
-	add	x0, x0, :lo12:.LC1
-	mov	w2, 21
-	stp	x19, x20, [sp, 16]
-	.cfi_offset 20, -40
-	.cfi_offset 19, -48
-	bl	__assert_fail
 	.cfi_endproc
 .LFE40:
 	.size	main, .-main
-	.section	.rodata
-	.align	3
-	.set	.LANCHOR0,. + 0
-	.type	__PRETTY_FUNCTION__.0, %object
-	.size	__PRETTY_FUNCTION__.0, 5
-__PRETTY_FUNCTION__.0:
-	.string	"main"
 	.ident	"GCC: (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0"
 	.section	.note.GNU-stack,"",@progbits

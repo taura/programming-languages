@@ -10,10 +10,10 @@
 	.string	"argc == 4"
 	.align	3
 .LC2:
-	.string	"l2 == x[0] * x[0] + x[1] * x[1] + x[2] * x[2]"
+	.string	"OK %ld %ld\n"
 	.align	3
 .LC3:
-	.string	"OK %ld\n"
+	.string	"NG %ld %ld\n"
 	.section	.text.startup,"ax",@progbits
 	.align	2
 	.p2align 4,,11
@@ -37,7 +37,7 @@ main:
 	str	x1, [sp, 24]
 	mov	x1, 0
 	cmp	w0, 4
-	bne	.L7
+	bne	.L8
 	ldr	x0, [x19, 8]
 	mov	w2, 10
 	mov	x1, 0
@@ -58,24 +58,26 @@ main:
 	mov	x0, sp
 	str	x1, [sp, 16]
 	bl	l2_norm_long
-	ldp	x1, x3, [sp]
-	ldr	x2, [sp, 16]
-	mul	x3, x3, x3
-	madd	x1, x1, x1, x3
-	madd	x2, x2, x2, x1
-	cmp	x2, x0
-	bne	.L8
+	mov	x2, x0
+	ldp	x1, x4, [sp]
+	ldr	x3, [sp, 16]
+	mul	x4, x4, x4
+	madd	x1, x1, x1, x4
+	madd	x3, x3, x3, x1
+	cmp	x0, x3
+	beq	.L9
 	adrp	x1, .LC3
 	mov	w0, 2
 	add	x1, x1, :lo12:.LC3
 	bl	__printf_chk
+.L4:
 	adrp	x0, :got:__stack_chk_guard
 	ldr	x0, [x0, :got_lo12:__stack_chk_guard]
 	ldr	x2, [sp, 24]
 	ldr	x1, [x0]
 	subs	x2, x2, x1
 	mov	x1, 0
-	bne	.L9
+	bne	.L10
 	ldp	x29, x30, [sp, 32]
 	mov	w0, 0
 	ldr	x19, [sp, 48]
@@ -86,8 +88,15 @@ main:
 	.cfi_restore 19
 	.cfi_def_cfa_offset 0
 	ret
-.L7:
+.L9:
 	.cfi_restore_state
+	mov	x3, x0
+	adrp	x1, .LC2
+	mov	w0, 2
+	add	x1, x1, :lo12:.LC2
+	bl	__printf_chk
+	b	.L4
+.L8:
 	adrp	x3, .LANCHOR0
 	adrp	x1, .LC0
 	adrp	x0, .LC1
@@ -96,17 +105,8 @@ main:
 	add	x0, x0, :lo12:.LC1
 	mov	w2, 7
 	bl	__assert_fail
-.L9:
+.L10:
 	bl	__stack_chk_fail
-.L8:
-	adrp	x3, .LANCHOR0
-	adrp	x1, .LC0
-	adrp	x0, .LC2
-	add	x3, x3, :lo12:.LANCHOR0
-	add	x1, x1, :lo12:.LC0
-	add	x0, x0, :lo12:.LC2
-	mov	w2, 10
-	bl	__assert_fail
 	.cfi_endproc
 .LFE39:
 	.size	main, .-main

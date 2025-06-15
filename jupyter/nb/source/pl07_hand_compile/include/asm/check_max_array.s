@@ -33,13 +33,10 @@ max_array_c:
 	.section	.rodata.str1.8,"aMS",@progbits,1
 	.align	3
 .LC0:
-	.string	"check_max_array.c"
+	.string	"OK %f %f\n"
 	.align	3
 .LC1:
-	.string	"ma == max_array_c(a, n)"
-	.align	3
-.LC2:
-	.string	"OK %f\n"
+	.string	"NG %f %f\n"
 	.section	.text.startup,"ax",@progbits
 	.align	2
 	.p2align 4,,11
@@ -85,24 +82,25 @@ main:
 	mov	x1, x23
 	mov	x0, x21
 	bl	max_array
-	movi	d2, #0
+	movi	d1, #0
 	mov	x1, 0
 	.p2align 3,,7
 .L17:
-	ldr	d1, [x21, x1, lsl 3]
-	fcmpe	d1, d2
-	bgt	.L19
+	ldr	d2, [x21, x1, lsl 3]
+	fcmpe	d2, d1
+	bgt	.L20
 .L15:
 	add	x1, x1, 1
 	cmp	x1, x20
 	bne	.L17
 .L14:
-	fcmp	d0, d2
-	bne	.L24
-	adrp	x1, .LC2
+	fcmp	d0, d1
+	bne	.L18
+	adrp	x1, .LC0
 	mov	w0, 2
-	add	x1, x1, :lo12:.LC2
+	add	x1, x1, :lo12:.LC0
 	bl	__printf_chk
+.L19:
 	ldp	x19, x20, [sp, 16]
 	mov	w0, 0
 	ldp	x21, x22, [sp, 32]
@@ -119,33 +117,23 @@ main:
 	.cfi_def_cfa_offset 0
 	ret
 	.p2align 2,,3
-.L19:
+.L20:
 	.cfi_restore_state
-	fmov	d2, d1
+	fmov	d1, d2
 	b	.L15
+.L18:
+	adrp	x1, .LC1
+	mov	w0, 2
+	add	x1, x1, :lo12:.LC1
+	bl	__printf_chk
+	b	.L19
 .L11:
 	mov	x1, x23
 	bl	max_array
-	movi	d2, #0
+	movi	d1, #0
 	b	.L14
-.L24:
-	adrp	x3, .LANCHOR0
-	adrp	x1, .LC0
-	adrp	x0, .LC1
-	add	x3, x3, :lo12:.LANCHOR0
-	add	x1, x1, :lo12:.LC0
-	add	x0, x0, :lo12:.LC1
-	mov	w2, 21
-	bl	__assert_fail
 	.cfi_endproc
 .LFE40:
 	.size	main, .-main
-	.section	.rodata
-	.align	3
-	.set	.LANCHOR0,. + 0
-	.type	__PRETTY_FUNCTION__.0, %object
-	.size	__PRETTY_FUNCTION__.0, 5
-__PRETTY_FUNCTION__.0:
-	.string	"main"
 	.ident	"GCC: (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0"
 	.section	.note.GNU-stack,"",@progbits

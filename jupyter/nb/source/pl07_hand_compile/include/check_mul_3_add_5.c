@@ -7,7 +7,11 @@ int main(int argc, char ** argv) {
   assert(argc == 2);
   long x = atol(argv[1]);
   long y = mul_3_add_5(x);
-  assert(y == 3 * x + 5);
-  printf("OK %ld\n", y);
+  long yc = 3 * x + 5;
+  if (y == yc) {
+    printf("OK %ld %ld\n", y, yc);
+  } else {
+    printf("NG %ld %ld\n", y, yc);
+  }
   return 0;
 }

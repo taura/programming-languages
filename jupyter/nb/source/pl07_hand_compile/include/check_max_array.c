@@ -18,7 +18,11 @@ int main(int argc, char ** argv) {
     a[i] = atof(argv[i + 1]);
   }
   double ma = max_array(a, n);
-  assert(ma == max_array_c(a, n));
-  printf("OK %f\n", ma);
+  double ma_c = max_array_c(a, n);
+  if (ma == ma_c) {
+    printf("OK %f %f\n", ma, ma_c);
+  } else {
+    printf("NG %f %f\n", ma, ma_c);
+  }
   return 0;
 }

@@ -18,7 +18,11 @@ int main(int argc, char ** argv) {
     a[i] = atol(argv[i + 1]);
   }
   long sa = sum_array(a, n);
-  assert(sa == sum_array_c(a, n));
-  printf("OK %ld\n", sa);
+  long sa_c = sum_array_c(a, n);
+  if (sa == sa_c) {
+    printf("OK %ld %ld\n", sa, sa_c);
+  } else {
+    printf("NG %ld %ld\n", sa, sa_c);
+  }
   return 0;
 }

@@ -13,7 +13,10 @@ int main(int argc, char ** argv) {
   double x = atof(argv[1]);
   double y = normal(x);
   double yc = normal_c(x);
-  assert(fabs(y - yc) < 1.0e-6);
-  printf("OK %f\n", y);
+  if (fabs(y - yc) < 1.0e-6) {
+    printf("OK %f %f\n", y, yc);
+  } else {
+    printf("NG %f %f\n", y, yc);
+  }
   return 0;
 }
