@@ -8,8 +8,7 @@
 add:
 .LFB0:
 	.cfi_startproc
-	add	x2, x2, x2, lsl 1
-	add	x0, x0, x1, lsl 1
+	add	x0, x0, x1
 	add	x0, x0, x2
 	ret
 	.cfi_endproc
@@ -61,10 +60,8 @@ div:
 fadd:
 .LFB4:
 	.cfi_startproc
-	fmov	d4, 2.0e+0
-	fmov	d3, 3.0e+0
-	fmadd	d0, d1, d4, d0
-	fmadd	d0, d2, d3, d0
+	fadd	d0, d0, d1
+	fadd	d0, d0, d2
 	ret
 	.cfi_endproc
 .LFE4:
