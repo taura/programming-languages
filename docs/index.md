@@ -7,6 +7,11 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2025/06/16)</font> Plan for June 16th
+  1. [Writing Assembly](slides/08-writing-assembly.pdf)
+  1. work on `pl06_how_it_gets_compiled` and `pl07_hand_compile`
+  1. [Garbage Collection Basics](slides/07-gc-basics.pdf)
+
 * <font color=blue>(2025/06/09)</font> Plan for June 09th
   1. [Basics of programming language implementation](slides/05-implementation-basics.pdf)
   1. teams get together
@@ -124,6 +129,8 @@
 * [Basics of programming language implementation](slides/05-implementation-basics.pdf)
 * [Memory Management](slides/06-memory-management.pdf)
 * [Garbage Collection (GC) : A Brief Introductions](slides/07-gc-basics.pdf)
+* [Writing Aseembly](slides/08-writing-assembly.pdf)
+
 * [Rust Memory Management](slides/08-rust.pdf)
 * [Garbage Collection](slides/09-gc-adv.pdf)
 * [Making a Compiler](slides/10-compiler.pdf )
