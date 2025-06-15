@@ -420,7 +420,7 @@ cat sigmoid.s
 * write a function that takes a floating-point (`double`) number $x$ and calculates the following value
 $$ \mbox{normal}(x) \equiv \frac{1}{\sqrt{2\pi}}\exp(-x^2/2) $$
 
-* to obtain the value of $\pi$, use $\pi/4 = \atan2(1.0, 1.0)$
+* to obtain the value of $\pi$, use $\pi/4 = \mbox{atan2}(1.0, 1.0)$
 * in other words, 
 
 $$ \mbox{normal}(x) = \frac{1}{\sqrt{8 \;\mbox{atan2}(1.0, 1.0)}} \exp(-x^2/2) $$
