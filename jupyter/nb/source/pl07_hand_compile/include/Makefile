@@ -1,17 +1,20 @@
 cs := $(wildcard *.c)
-dels := $(patsubst %.c,del_%.s,$(cs))
 asms := $(patsubst %.c,asm/%.s,$(cs))
 
-all : $(asms)
+check_cs := $(wildcard check_*.c)
+check_exes := $(patsubst %.c,exe/%,$(check_cs))
+
+all : $(asms) $(check_exes)
 #all : $(dels)
 
-$(dels) : del_%.s : %.c
-	git rm $*.s
-
 $(asms) : asm/%.s : %.c asm/dir
-	gcc -o $@ -S -O3 $<
+	gcc -o $@ -S -O3 -Wall -Wextra $<
 
-asm/dir :
+$(check_exes) : exe/check_% : check_%.c exe/dir
+	gcc -o $@ $< asm/$*.s -O3 -Wall -Wextra -lm
+
+asm/dir exe/dir :
 	mkdir -p $@
+
 clean :
-	rm -rf asm
+	rm -rf asm exe

@@ -3,9 +3,9 @@
 	.text
 	.align	2
 	.p2align 4,,11
-	.global	normal_dist
-	.type	normal_dist, %function
-normal_dist:
+	.global	normal
+	.type	normal, %function
+normal:
 .LFB0:
 	.cfi_startproc
 	fnmul	d0, d0, d0
@@ -27,7 +27,7 @@ normal_dist:
 	ret
 	.cfi_endproc
 .LFE0:
-	.size	normal_dist, .-normal_dist
+	.size	normal, .-normal
 	.section	.rodata.cst8,"aM",@progbits,8
 	.align	3
 .LC0:

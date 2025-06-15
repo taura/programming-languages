@@ -7,10 +7,13 @@
 	.string	"check_mul_3_add_5.c"
 	.align	3
 .LC1:
-	.string	"y == 3 * x + 5"
+	.string	"argc == 2"
 	.align	3
 .LC2:
-	.string	"OK"
+	.string	"y == 3 * x + 5"
+	.align	3
+.LC3:
+	.string	"OK %ld\n"
 	.section	.text.startup,"ax",@progbits
 	.align	2
 	.p2align 4,,11
@@ -19,37 +22,42 @@
 main:
 .LFB39:
 	.cfi_startproc
-	mov	x0, x1
 	stp	x29, x30, [sp, -32]!
 	.cfi_def_cfa_offset 32
 	.cfi_offset 29, -32
 	.cfi_offset 30, -24
-	mov	w2, 10
 	mov	x29, sp
-	ldr	x0, [x0, 8]
-	mov	x1, 0
-	str	x19, [sp, 16]
+	stp	x19, x20, [sp, 16]
 	.cfi_offset 19, -16
+	.cfi_offset 20, -8
+	cmp	w0, 2
+	bne	.L6
+	mov	w20, w0
+	mov	w2, 10
+	ldr	x0, [x1, 8]
+	mov	x1, 0
 	bl	strtol
 	mov	x19, x0
 	bl	mul_3_add_5
 	add	x19, x19, x19, lsl 1
-	add	x19, x19, 5
-	cmp	x19, x0
-	bne	.L5
-	adrp	x0, .LC2
-	add	x0, x0, :lo12:.LC2
-	bl	puts
-	ldr	x19, [sp, 16]
+	add	x2, x19, 5
+	cmp	x2, x0
+	bne	.L7
+	mov	w0, w20
+	adrp	x1, .LC3
+	add	x1, x1, :lo12:.LC3
+	bl	__printf_chk
+	ldp	x19, x20, [sp, 16]
 	mov	w0, 0
 	ldp	x29, x30, [sp], 32
 	.cfi_remember_state
 	.cfi_restore 30
 	.cfi_restore 29
 	.cfi_restore 19
+	.cfi_restore 20
 	.cfi_def_cfa_offset 0
 	ret
-.L5:
+.L6:
 	.cfi_restore_state
 	adrp	x3, .LANCHOR0
 	adrp	x1, .LC0
@@ -57,7 +65,16 @@ main:
 	add	x3, x3, :lo12:.LANCHOR0
 	add	x1, x1, :lo12:.LC0
 	add	x0, x0, :lo12:.LC1
-	mov	w2, 9
+	mov	w2, 7
+	bl	__assert_fail
+.L7:
+	adrp	x3, .LANCHOR0
+	adrp	x1, .LC0
+	adrp	x0, .LC2
+	add	x3, x3, :lo12:.LANCHOR0
+	add	x1, x1, :lo12:.LC0
+	add	x0, x0, :lo12:.LC2
+	mov	w2, 10
 	bl	__assert_fail
 	.cfi_endproc
 .LFE39:

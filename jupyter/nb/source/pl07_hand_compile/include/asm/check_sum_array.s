@@ -60,7 +60,7 @@ sum_array_c:
 	.string	"sa == sum_array_c(a, n)"
 	.align	3
 .LC2:
-	.string	"OK"
+	.string	"OK %ld\n"
 	.section	.text.startup,"ax",@progbits
 	.align	2
 	.p2align 4,,11
@@ -108,42 +108,44 @@ main:
 	mov	x1, x22
 	mov	x0, x20
 	bl	sum_array
+	mov	x2, x0
 	sub	x1, x22, #1
 	cmp	x1, 1
 	bls	.L20
-	lsr	x2, x22, 1
+	lsr	x3, x22, 1
 	mov	x1, x20
 	movi	v0.4s, 0
-	add	x2, x20, x2, lsl 4
+	add	x3, x20, x3, lsl 4
 	.p2align 3,,7
 .L17:
 	ldr	q1, [x1], 16
 	add	v0.2d, v0.2d, v1.2d
-	cmp	x1, x2
+	cmp	x1, x3
 	bne	.L17
 	addp	d0, v0.2d
-	and	x2, x22, -2
+	and	x0, x22, -2
 	fmov	x1, d0
 	tbz	x23, 0, .L29
 .L16:
-	lsl	x3, x2, 3
-	add	x2, x2, 1
+	lsl	x3, x0, 3
+	add	x0, x0, 1
 	ldr	x4, [x20, x3]
 	add	x1, x1, x4
-	cmp	x22, x2
+	cmp	x22, x0
 	ble	.L29
 	add	x20, x20, x3
-	ldr	x2, [x20, 8]
+	ldr	x0, [x20, 8]
 	ldp	x19, x20, [sp, 16]
 	.cfi_restore 20
 	.cfi_restore 19
-	add	x1, x1, x2
+	add	x1, x1, x0
 .L15:
-	cmp	x0, x1
+	cmp	x2, x1
 	bne	.L30
-	adrp	x0, .LC2
-	add	x0, x0, :lo12:.LC2
-	bl	puts
+	adrp	x1, .LC2
+	mov	w0, 2
+	add	x1, x1, :lo12:.LC2
+	bl	__printf_chk
 	ldp	x21, x22, [sp, 32]
 	mov	w0, 0
 	ldp	x23, x24, [sp, 48]
@@ -174,12 +176,13 @@ main:
 	mov	x1, x22
 	bl	sum_array
 	mov	x1, 0
+	mov	x2, x0
 	b	.L15
 .L20:
 	.cfi_offset 19, -48
 	.cfi_offset 20, -40
 	mov	x1, 0
-	mov	x2, 0
+	mov	x0, 0
 	b	.L16
 .L30:
 	.cfi_restore 19

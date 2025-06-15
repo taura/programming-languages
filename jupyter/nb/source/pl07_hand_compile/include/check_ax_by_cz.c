@@ -5,6 +5,7 @@
 long ax_by_cz(long a, long x, long b, long y, long c, long z);
 
 int main(int argc, char ** argv) {
+  assert(argc == 7);
   long a = atol(argv[1]);
   long x = atol(argv[2]);
   long b = atol(argv[3]);
@@ -12,8 +13,8 @@ int main(int argc, char ** argv) {
   long c = atol(argv[5]);
   long z = atol(argv[6]);
   long r = ax_by_cz(a, x, b, y, c, z);
-  long yc = a * x + b * y + c * z;
-  assert(fabs(y - yc) < 1.0e-6);
-  printf("OK\n");
+  long rc = a * x + b * y + c * z;
+  assert(r == rc);
+  printf("OK %ld\n", r);
   return 0;
 }

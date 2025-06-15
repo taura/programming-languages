@@ -36,10 +36,10 @@ max_array_c:
 	.string	"check_max_array.c"
 	.align	3
 .LC1:
-	.string	"sa == max_array_c(a, n)"
+	.string	"ma == max_array_c(a, n)"
 	.align	3
 .LC2:
-	.string	"OK"
+	.string	"OK %f\n"
 	.section	.text.startup,"ax",@progbits
 	.align	2
 	.p2align 4,,11
@@ -99,9 +99,10 @@ main:
 .L14:
 	fcmp	d0, d2
 	bne	.L24
-	adrp	x0, .LC2
-	add	x0, x0, :lo12:.LC2
-	bl	puts
+	adrp	x1, .LC2
+	mov	w0, 2
+	add	x1, x1, :lo12:.LC2
+	bl	__printf_chk
 	ldp	x19, x20, [sp, 16]
 	mov	w0, 0
 	ldp	x21, x22, [sp, 32]

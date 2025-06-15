@@ -19,6 +19,6 @@ int main(int argc, char ** argv) {
   }
   long sa = sum_array(a, n);
   assert(sa == sum_array_c(a, n));
-  printf("OK\n");
+  printf("OK %ld\n", sa);
   return 0;
 }

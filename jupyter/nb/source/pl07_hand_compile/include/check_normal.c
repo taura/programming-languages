@@ -9,10 +9,11 @@ double normal_c(double x) {
 }
 
 int main(int argc, char ** argv) {
-  long x = atof(argv[1]);
-  long y = normal(x);
-  long yc = normal_c(x);
+  assert(argc == 2);
+  double x = atof(argv[1]);
+  double y = normal(x);
+  double yc = normal_c(x);
   assert(fabs(y - yc) < 1.0e-6);
-  printf("OK\n");
+  printf("OK %f\n", y);
   return 0;
 }
