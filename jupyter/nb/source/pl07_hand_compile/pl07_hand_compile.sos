@@ -1,8 +1,4 @@
-<!--- md --->
-
 #* Hand-compiling C programs
-
-<!--- end md --->
 
 <!--- md w --->
 
@@ -13,18 +9,12 @@ Enter your name and student ID.
 
 <!--- end md --->
 
-<!--- md --->
-
 * <font color="red">As this notebook is rather long, you may want to use the index shown by clicking the list icon on the left</font>
-
-<!--- end md --->
-
-<!--- md --->
 
 <a name="intro"> </a>
 # Introduction
 
-* your final goal in the course is to build a compiler
+* your final goal of the course is to build a compiler of a tiny subset of C language
 * a compiler reads a program, builds a parse tree, and finally translates it to a _<font color="blue">machine code</font>_
 * _<font color="blue">a machine code</font>_ is a series of instructions a processor can directly execute and is formatted in a way a machine can easily interpret (e.g., an instruction has a fixed number of bits, a fixed part of which encodes the kind of instructions)
 * _<font color="blue">an assembly code</font>_ is practically the same as a machine code (a single assembly instruction almost directly corresponds to a single machine instruction) but is formatted as a text easier for humans to read
@@ -33,20 +23,15 @@ Enter your name and student ID.
 * even if you are not building a compiler, such a knowledge is useful in its own right to understand how programming languages work, to write an efficient program in them, and/or to diagnose your programs (especially for unsafe languages such as C or C++)
 * to that end, the goal of this notebook is to look at and understand assembly code generated from C language and translate some C functions into assembly by hand
 
-<!--- end md --->
-
-<!--- md --->
-
 <a name="let_the_compiler_generate_assembly"> </a>
-# Let the compiler generate assembly code
+# Let the C compiler generate assembly code
 
 * `gcc/g++` is a compiler for C/C++
 * `-S` option instructs the compiler to emit assembly code and stop the compilation after that
-<!--- end md --->
 
 <!--- code w kernel=python --->
 %%writefile call.c
-<!--- include nb/source/pl08_hand_compile/include/call.c --->
+<!--- include nb/source/pl07_hand_compile/include/call.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -54,477 +39,97 @@ gcc -O3 -S call.c
 cat call.s
 <!--- end code --->
 
-<!--- md --->
-
-* we choose 64 bit Intel x86 instruction set (called _<font color="blue">x86\_64</font>_ or _<font color="blue">amd64</font>_) as the target assembly code
- * this notebook teaches you the necessary part of x86_64 assembly. don't worry if you do not know about it
- * nobody can remember all x86_64 instructions. the point is to understand the minimum set of instructions necessary by a compiler and to be able to examine instructions corresponding to specific C expressions
- * [a quick reference](https://www.felixcloutier.com/x86/)
- * [a brief introduction by a lecture in Brown University](http://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf)
- * [A complete reference by Intel](https://cdrdv2.intel.com/v1/dl/getContent/671143)
+* we choose 64 bit ARM instruction set (called _<font color="blue">arm64</font>_ or _<font color="blue">aarch64</font>_) as the target assembly code
+ * this notebook teaches you the necessary part of arm64 assembly. don't worry if you do not know about it
+ * this notebook requires a basic knowledge about C language; if you are new to C, study a C primer for this notebook
+ * nobody can remember all instructions. the point is to understand the minimum set of instructions necessary by a compiler and to be able to examine instructions corresponding to specific C expressions
+ <!-- * [reference](https://www.felixcloutier.com/x86/) -->
+ * [cheat sheet](https://taura.github.io/programming-languages/html/arm64_assembly_cheat_sheet.html)
+ * [a quick reference](https://developer.arm.com/documentation/ddi0602/latest/)
 
 * below, you are going to learn what kind of expressions or statements are converted to what kind of assembly code, gradually changing functions from trivial ones to more substantial ones
 
-<!--- end md --->
-
-<!--- md --->
-
-<a name="assembly_basics"> </a>
-# CPUs and machine code (assembly code) basics
-
-* before looking into assembly code, here is the basics of CPUs
-
-<img src="img/cpu.svg" /> 
-
-* a CPU or more precisely, a (virtual) core of a CPU, has a small number (a few to dozens) of storage, called _<font color="blue">registers</font>_ (a single CPU nowadays has a number of (virtual) cores in it. in this exercise we almost exclusively talk about a single virtual core)
-* registers are almost never enough to hold data of the program, so most other data are put in _<font color="blue">the main memory</font>_
-* you use an _<font color="blue">address</font>_ to specify the location in the memory you want to access.  an address is in fact just an integer.  you can think of it as being similar to an ordinary "address" in daily life.  it is not a complex string we use for our home addresses (e.g., 7-3-1 Hongo Bunkyo-ku, Tokyo), however.  it may be more similar to zip code, in this sense.
-* a virtual core executes instructions one after another. instructions are also put in the memory.  after an instruction is executed, the instruction at the immediately next address is usually executed next
-* an instruction typically does one of the following
- - (<font color="blue">load</font> instruction) : gets data from an address in the memory to a register
- - (<font color="blue">store</font> instruction) : gets data from a register to an address in the memory
- - (<font color="blue">arithmetic</font> instructions) :  computes a value from values on one to a few registers and put the result into a register 
- - (<font color="blue">jump</font> instruction) : changes the address from which the next instruction is taken
- - (<font color="blue">conditional</font> branch instruction) : changes the address from which the next instruction is taken depending on the result of recent operations (typically a comparison)
-* some instructions combine the effect of two; for example, there is an instruction that takes one of its operands in a memory and computes a value based on it (and some other values)
-* it may not be immediately clear to you how you can convert programs in high level languages to something like this, but the mapping is, at least conceptually, not as complex as you might think
-* the mapping is roughly the following
-
-| high-level languages       | assembly                      |
-|----------------------------|-------------------------------|
-| variable                   | register or memory            |
-| operators in an expression | combination of arithmetic instructions (+ load/store as necessary) |
-| if statements or loops     | instructions + conditional branches |
-
-* after all, assembly is just another programming language that has many restrictions, some of which are
- * you cannot have arbitrary number of variables of names you choose; you instead only have a fixed number of variables of fixed names (i.e., registers) and one huge array (the entire address space)
- * you cannot arbitrarily nest expressions (e.g., a * x + b * y) and an instruction (say '+') can only take a constant or a variable as its operands; the above expression must be broken down into a series of instructions (s = a * x; t = b * y; u = s + t)
- * you do not have structured statements (if, while, for, etc.); you instead have to implement them with a combination of jumps and conditional branches
- * you do not have a function call or variables local to functions either; you instead have to implement them with a combination of jumps and a memory allocation scheme for local variables (stacks)
-* with the above in mind, let's witness the the mapping between your language and assembly below
-
-<!--- end md --->
-
-<!--- md --->
-
-<a name="function_by_function"> </a>
-# A compilation is done on a function-by-function basis
-
-* let's first compile four functions that do nothing
-
-<!--- end md --->
+<a name="arithmetic"> </a>
+# Arithmetic
 
 <!--- code w kernel=python --->
-%%writefile empty.c
-<!--- include nb/source/pl08_hand_compile/include/empty.c --->
+%%writefile arith.c
+<!--- include nb/source/pl07_hand_compile/include/arith.c --->
 <!--- end code --->
+
+* compile it by:
 
 <!--- code w kernel=bash --->
-gcc -O3 -S empty.c
-cat empty.s
+gcc -O3 -S arith.c
+cat arith.s
 <!--- end code --->
 
-<!--- md --->
-
-observe
-
-* you find strings aaa:, bbb:, ccc:, ddd: corresponding to function names
-* they are called _<font color="blue">labels"</font>_, whose purpose is to name addresses in the instructions so you can conveniently reference them in other instructions (e.g., jump instructions)
-* there come instructions for a function after its label
-
-* assembly code for the four empty functions naturally look the same; let's extract what seems for `aaa:`
-```
-    .p2align 4
-	.globl	aaa
-	.type	aaa, @function
-aaa:
-.LFB0:
-	.cfi_startproc
-	endbr64
-	ret
-	.cfi_endproc
-.LFE0:
-	.size	aaa, .-aaa
-```
-* of which the actual instructions are the only 
-```
-	endbr64
-	ret
-```
-
-* generally, lines starting from `.` do not represent actual instructions but directives to instruct the assembler in various ways such as "put the following instruction at addresses that are multiple of four" and you do not have to master them in depth (when you build a compiler, they are mostly boilerplate you can generate without deeply understanding them)
-
-* what kind of assembly code `aaa` ended up translated, after all?  essentially, it is only this
-```
-aaa:  ## start of aaa
-	endbr64
-	ret
-```
-
-* `endbr64` is essentially a no-op, which is actually not necessary.  the reason why it is put despite it's doing nothing is explained the page ["What does the endbr64 instruction actually do?"](https://stackoverflow.com/questions/56905811/what-does-the-endbr64-instruction-actually-do)
-
-* `ret` is a _<font color="blue">return instruction</font>_ and roughly speaking it ends the execution of a function
-* a more detailed explanation beyond "it ends a function" will come shortly.  for now, you only have to understand that it is a kind of jump instruction and instructions that textually follow it will not be executed (without `ret` instruction here, the execution continues to instructions immediately below, which are bbb. a processor does not know which instructions constitute a function but just blindly execute instructions told to execute next)
-* as this is a function that finishes without doing anything, it is natural that only `ret` instruction gets executed (except for the `endbr64` which is a no-op)
-* the point here is not so much how an empty function is compiled, but that a translation from C to assembly is basically done on a function-by-function basis.  the basic issue is therefore _how to translate a single_ C function_ into a corresponding assembly code (sequence of instructions) 
-
-* __points you learned:__ 
- 1. for each C function, instructions corresponding to it are generated
- 1. a label whose name is the same as the function name is put at the start of them
-
-
-<!--- end md --->
-
-<!--- md ---> 
-
-<a name="call_insn"> </a>
-# An instruction to call a function
-
-* labels such as `aaa:`, `bbb:`, etc. are used for using (i.e., calling) these functions
-* let's write a function aaa that calls bbb to see how it is done
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile call.c
-<!--- include nb/source/pl08_hand_compile/include/call.c --->
-<!--- end code --->
-
-<!--- code w kernel=bash --->
-gcc -O3 -S call.c
-cat call.s
-<!--- end code --->
-
-<!--- md ---> 
-
-* it is much more complex than the previous example, but for now, just notice the following
-```
-    call	bbb@PLT
-```
-
-* it is a kind of jump instruction called _<font color="blue">call instruction</font>_.  it is an instruction that "calls a function named `bbb`" = "transfers the execution to the instruction at the label `bbb`"
-* you may wonder what is `@PLT` but you can ignore it for a moment (you may assume you always have it)
-* when `bbb` executes `ret` instruction eventually, the control goes back to the caller, the instruction immediately after `call bbb@PLT` = `addq $8,%rsp`.  details of how it happens will be explained later.
-* details aside, a call instruction jumps to the label of the specified function to effectively start execution of the function, which eventually executes a `ret` function, which gets the execution back to the instruction immediately after the call instruction
-
-* __points you learned:__ 
- 1. `call f@PLT` transfers the execution to the instruction at label `f`
- 1. `ret` instruction transfers the execution to the caller (the instruction immediately after the call instruction)
- 1. calling a function and continuing the the execution after its return is implemented in this way
- 1. it therefore suffices to look at a function at a time when you examine the translation from C to assembly
-
-<!--- end md --->
-
-<!--- md ---> 
-
-* now we understand the execution goes back and forth between functions by `call` and `ret` instructions
-* below, we are going to see how "values" are held and passed between functions
-* there are various "values"; global variables, function return values, function parameters, local variables, etc.
-<!--- end md --->
-
-<!--- md ---> 
-
-<a name="args_and_return_value"> </a>
-# Parameters and return values
-
-* for values to be passed via parameters and return values, they should be placed on some registers or somewhere in memory 
-* first take a look at a function that takes a single integer (long) value as a parameter
-
-<a name="mul_insn"> </a>
-## multiplication
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile mul_123.c
-<!--- include nb/source/pl08_hand_compile/include/mul_123.c --->
-<!--- end code --->
-
-<!--- code w kernel=bash --->
-gcc -O3 -S mul_123.c
-cat mul_123.s
-<!--- end code --->
-
-<!--- md --->
-
-* looking at the generated code, the only instruction other than `endbr64` and `ret` is 
-
-```
-    imulq $123,%rdi,%rax
-```
-* this instruction does what `%rax = 123 * %rdi` would do in C (`%rax` and `%rdi` are both register names)
-* you can deduce the following
- 1. the first parameter `x` is on the register `%rdi`
- 1. the return value is put on `%rax`
-* note: `imulq` is an instruction name that comes from _<font color="blue">Integer MULtiply Quadword</font>_.  Quadword means that its operand is 8 bytes wide (C's `long` in 64 bit environment is 8 bytes)
-* it may be a bit stretching to conclude that "the first parameter is always on `%rdi`" and "the return values is always `%rax`"; they must indeed be different if types (sizes) of them are different (e.g., larger than 8 bytes), but it is also very conceivable that there must be some uniform rules across functions
-* a called function (say `g`) and the calling function (say `f`) are not necessarily compiled at the same time.  we don't know which other functions call `g` in future and `g` may be compiled again without recompiling `f`.  given these circumstances, it would be troubling if where `f` is supposed to pass values and where `g` is supposed to receive values are not agreed by some convention.  therefore, there is a rule with which one can know how a function passes its parameters and return value without looking inside the function.  such a rule is called _<font color="blue">calling convention</font>_ or _<font color="blue">application binary interface (ABI)</font>_.  here is the spec, [The x86-64 psABI version 1.0](https://github.com/hjl-tools/x86-psABI/wiki/x86-64-psABI-1.0.pdf). this notebook teaches you necessary elements, so you don't have to read it thoroughly
-
-* __points you learned:__ 
- 1. a first integer (long) parameter is passed via `%rdi` register
- 1. an integer (long) return value is passed via `%rax` register
-
-<!--- end md --->
-
-<!--- md --->
-
-<a name="sub_insn"> </a>
-## subtraction
-
-* let's confirm with another example that the first parameter is on `%rdi` and the return value on `%rax`
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile sub_123.c
-<!--- include nb/source/pl08_hand_compile/include/sub_123.c --->
-<!--- end code --->
-
-<!--- code w kernel=bash --->
-gcc -O3 -S sub_123.c
-cat sub_123.s
-<!--- end code --->
-
-<!--- md --->
-
-* generated instructions
-
-```
-    movl $123,%eax
-    subq %rdi,%rax
-```
-
-* `movl $123,%eax` sets 123 on `eax` register
-* an astute student may wonder why it's `eax` not `rax`.  in fact, `eax` refers to the last 32 bits of `rax`. the above instruction sets the lower 32 bits of `rax` to 123 and the higher half to 0. it is therefore essentially `%rax = 123`
-* `subq %rdi,%rax` does what `rax = rax - rdi` of C would do
-* it is thus observed that here again x (the first parameter) is on `%rdi` and the return value on `%rax` 
-
-<font color="blue">note:</font>
-* many x86\_64 instructions have two operands (_op X,Y_) and perform an operation _Y = Y op X_
-* the order is a bit confusing especially for subtraction (`subq` _X,Y_ computes _Y - X_, not _X - Y_)
-* a rule to remember is the destination register is always on the right (_Y_) and `subq` _X,Y_ does _Y -= X_, which is _Y = Y - X_
-
-
-<!--- end md --->
-
-<!--- md --->
-
-* let's see that the caller also puts the first parameter on `%rdi` and receive the return value through `%rax`
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile f_mul_123.c
-<!--- include nb/source/pl08_hand_compile/include/f_mul_123.c --->
-<!--- end code --->
-
-<!--- code w kernel=bash --->
-gcc -O3 -S f_mul_123.c
-cat f_mul_123.s
-<!--- end code --->
-
-<!--- md --->
-
-* the first instruction 
-```
-    movl $100, %edi
-```
-sets  `%rdi` to 100 (the reason why it's `%edi` is the same as before. it actually sets `%rdi`'s upper 32 bits to 0 and the lower 32 bits to 100)
-
-* the instruction after `call f@PLT`
-```
-    imulq $123, %rax, %rax
-```
-indicates that it expects that the return value is on `%rax`
-
-<!--- end md --->
-
-<!--- md --->
-
-<a name="div_insn"> </a>
-## division
-
-* let's take a look at division and addition too
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile div_123.c
-<!--- include nb/source/pl08_hand_compile/include/div_123.c --->
-<!--- end code --->
-
-<!--- code w kernel=bash --->
-gcc -O3 -S div_123.c
-cat div_123.s
-<!--- end code --->
-
-<!--- md --->
-
-```
-    movl $123,%eax
-    cqto
-    idivq %rdi
-```
-* from the instruction name we can imagine `idivq %rdi` will be a division instruction, but it apparently takes only a single operand (`%rdi`)
-* the fact of the matter is that the other operand (dividend) of `idivq` is the 128 bit number concatenating rdx (64 bit) and rax (64 bit)
-
-* `idivq %rdi` performs the following (computes both quotient and remainder)
-```
-    (%rdx,%rax) = (%rdx:%rax % %rdi, %rdx:%rax / %rdi)
-```
-* that is, it divides `%rdx:%rax` by `%rdi` and puts the quotient on `%rax` and the remainder on `%rdx`, where `%rdx:%rax` is a 128 bit number whose higher 64 bits are `%rdx` and the lower 64 bits `%rax`
-
-
-
-* details on idivq instruction can be found at [the Brown University course material](https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf)
-* `cqto` stands for _<font color="blue">Convert Quadword To Octoword</font>_. it extends `%rax` to 128 bits and puts the upper/lower 64 bits on `%rdx` and `%rax`, respectively
-* it can be seen again that `x` (the first parameter) is on `%rdi` and `%rax` holds the return value
-
-<!--- end md --->
-
-<!--- md --->
-
-<a name="add_insn"> </a>
-## addition
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile add_123.c
-<!--- include nb/source/pl08_hand_compile/include/add_123.c --->
-<!--- end code --->
-
-<!--- code w kernel=bash --->
-gcc -O3 -S add_123.c
-cat add_123.s
-<!--- end code --->
-
-<!--- md --->
-* 
-```
-    leaq 123(%rdi),%rax
-```
-is essentially an addition instruction that performs
-
-```
-    %rax = 123 + %rdi
-```
-* the mysterious name `leaq` stands for _<font color="blue">Load Effective Address Quadword</font>_
-* it is so called as it can be used to calculate the address 123 bytes ahead of the address in `%rdi`, which is exactly `(%rdi + 123)`.  note that it is not a memory access instruction despite it has _load_ in its name
-
-* more naturally, we could do
-```
-    movl $123,%eax
-    addq %rdi,%rax
-```
-but using only `addq`, it always takes two instructions, which may be why `leaq` is used (note: performance won't differ in any recent superscalar processors)
-
-<!--- end md --->
-
-<!--- md ---> 
-
-<a name="summary_so_far"> </a>
-## summary so far
-
-* the first parameter of long (64 bit integer, to be more precise) type is passed via `%rdi`
-* the return value of long type is passed via `%rax`
-
-* arithmetic instructions on long types are as follows
-
-| operation      | operand               | instruction (example)  |  semantics (in C-like expression)  |
-|----------------|-----------------------|------------------------|------------------------------------|
-| addition       | 64 bit integer (long) | addq \$123,%rax        |  %rax += 123                       |
-| addition       | 64 bit integer (long) | leaq 123(%rdi),%rax    |  %rax = 123 + %rdi                 |
-| subtraction    | 64 bit integer (long) | addq \$123,%rax        |  %rax -= 123                       |
-| multiplication | 64 bit integer (long) | imulq \$123,%rdi,%rax  |  %rax = 123 * %rdi                 |
-| division       | 64 bit integer (long) | idivq %rdi             | (%rdx,%rax) = (%rdx:%rax / %rdi, %rdx:%rax % %rdi) |
-
-* when you want to know the instruction that does something, write a small function that only does it and see the output of the compiler
-
-<!--- end md --->
-
-<!--- md ---> 
-
-* In the problems on this page, you practice manually converting a simple example into an assembly code
-
-<a name="problem_3x_plus_5"> </a>
-#*P 3x+5
-
-* write a function `mul_3_add_5` that returns 3x+5 for a given input x (whose type is long) __in assembly__
+* observe:
+  * parameters are passed following the ARM64 ABI (first three integer parameters on `x0, x1,` and `x2` and first three floating-point number parameters on `d0, d1,` and `d2`)
+  * return value is returned following the ARM64 ABI, too (integer on `x0` and floating-point number on `d0`)
+  * there are instructions corresponding to integer/floating-point number arithmetic
+
+<a name="problem_ax_by_cz"> </a>
+#*P ax+by+cz
+
+* write a function `ax_by_cz` that returns ax+by+cz for a given input a, x, b, y, c, and z (whose types are long) __in assembly__
 
 * that is, the translation of the following C function
 ```
-    long mul_3_add_5(long x) { return 3 * x + 5; }
+long ax_by_cz(long a, long x, long b, long y, long c, long z) {
+  return a * x + b * y + c * z;
+}
 ```
 
-<!--- end md --->
+* fill the following assembly function in assembly code (what follows `------- write your answer here -------`) with instructions and execute it
 
-<!--- md --->
-
-* fill the following assembly function in assembly code (what follows ------- 解答をここに書く. write your answer here -------) with instructions and execute it
-
-* it is saved with the name `mul_3_add_5.s` and compiled
-
-<!--- end md --->
+* it is saved with the name `ax_by_dz.s`
 
 <!--- code w points=1 kernel=python --->
-%%writefile mul_3_add_5.s
-<!--- include nb/source/pl08_hand_compile/include/mul_3_add_5.s --->
+%%writefile ax_by_cz.s
+<!--- include nb/source/pl07_hand_compile/include/empty_asm/ax_by_cz.s --->
 <!--- end code --->
 
-<!--- md --->
-
-* then make an executable below
-
-<!--- end md --->
+* compile it with the following C code that calls your `ax_by_cz` function
 
 <!--- code w points=1 kernel=python --->
-%%writefile check_mul_3_add_5.c
-<!--- include nb/source/pl08_hand_compile/include/check_mul_3_add_5.c --->
+%%writefile check_ax_by_cz.c
+<!--- include nb/source/pl07_hand_compile/include/check_ax_by_cz.c --->
 <!--- end code --->
 
-<!--- md --->
+<!--- code w points=1 kernel=bash --->
+gcc -o check_ax_by_cz -O3 check_ax_by_cz.c ax_by_cz.s
+<!--- end code --->
+
 * execute the cell below; if you see three OK's and no errors, you are done
-<!--- end md --->
 
 <!--- code w points=1 kernel=bash --->
-gcc -o check_mul_3_add_5 -O3 check_mul_3_add_5.c mul_3_add_5.s
+./check_ax_by_cz 1 1 1 1 1 1
+./check_ax_by_cz 1 2 3 4 5 6
 <!--- end code --->
-
-<!--- code w points=1 kernel=bash --->
-./check_mul_3_add_5 10
-./check_mul_3_add_5 20
-./check_mul_3_add_5 30
-<!--- end code --->
-
-<!--- md --->
 
 #* If things do not go well
 
 * If your program compiles but does not produce the correct answer, run it within a debugger (gdb)
 * To that end, first compile the program with -g
 
-<!--- end md --->
-
 <!--- code w points=1 kernel=bash --->
-gcc -o check_mul_3_add_5 -O0 -g check_mul_3_add_5.c mul_3_add_5.s
+gcc -o check_ax_by_cz -O0 -g check_ax_by_cz.c ax_by_cz.s
 <!--- end code --->
-
-<!--- md --->
 
 * Go to terminal (login with SSH) and run the debugger
 ```
 cd notebooks/pl07_compile_c
-gdb check_mul_3_add_5
-(gdb) break mul_3_add_5
+gdb check_ax_by_cz
+(gdb) break ax_by_cz
 (gdb) run
 ```
 
-* This way, you can step into the mul_3_add_5 function
+* This way, you can step into the ax_by_cz function
 * You continue doing `step` to execute one instruction at a time
 * At each instruction you can see the values in the registers by, e.g.,
 ```
-(gdb) print $rax
+(gdb) print $x0
 ```
 or
 ```
@@ -532,9 +137,44 @@ or
 ```
 
 * Of course, you can use vscode or emacs for a better debugging experience
-<!--- end md --->
 
-<!--- md --->
+#* Notes on literal (immediate) values
+
+* using literal (immediate) values in arbitrary expressions (e.g., `x + 1234567` or `x * 3.141592`) is trivial in any high-level programming language, but not in machine code
+* machine languages generally have restrictions on using such values directly in instructions, because the number of bits used for an instruction is limited (32 bits in ARM64); there is no space to encode arbitrary 32 bit, let alone 64 bit, numbers
+* you do not have to know the details in this exercise, but this becomes an issue when you build a compiler, which needs to represent arbitrary integers and floating-point numbers in assembly
+* details are left to your investigation, but for now I just note that in ARM64,
+  * a `mov` or `movz` (move-and-zero) instruction can set one of the four 16-bit words of an integer register to the specified 16-bit value, and zeros the remaining three 16-bit words
+  * a `movk` (move-and-keep) instruction can set one of the four 16-bit words of an integer register to the specified 16-bit value, and leaves the remaining three 16-bit words unchanged
+  * by combining them (a `mov` + up to three `movk`s), you can set an arbitrary 64 bit value to a register
+  * `fmov` instruction can set a floating-point register to certain "simple" numbers --- numbers whose exponents and mantissa can be represented by a small number of bits; in my quick investigation, `fmov` can take numbers of the form: $\pm 1.xxxx \times 2^{(yyy-3)}$; i.e., numbers whose exponents are 3 bits and mantissa 4 bits (positive and negative)
+  * each non-simple number is constructed first by constructing its bit representation on an integer register with `mov` and `movk` and then moving the value from the integer register to the floating-point register (which can be done using `fmov`)
+* you may investigate this by changing the immediate values in the following function
+```
+long imm() { return 1234567; }
+double fimm() { return 1.234; }
+```
+
+<a name="many_args"> </a>
+#* Notes on passing many parameters
+
+* there are only so many registers, so you cannot pass arbitrary number of parameters with registers
+* what if we pass so many parameters?
+* this is another thing you don't have to get into in this exercise but you have to know when building a compiler
+
+<!--- code w kernel=python --->
+%%writefile args_many.c
+<!--- include nb/source/pl07_hand_compile/include/args_many.c --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+gcc -O3 -S args_many.c
+cat args_many.s
+<!--- end code --->
+
+* it seems that the first eight parameters are passed by registers
+* eighth and further registers are passed via the stack, specifically addresses starting from the address in `sp` upon entry to the function
+
 
 <a name="pointer"> </a>
 # Pointers
@@ -545,11 +185,9 @@ or
 <a name="pointer_deref"></a>
 ## pointer dereferencing
 
-<!--- end md --->
-
 <!--- code w kernel=python --->
 %%writefile ptr_deref.c 
-<!--- include nb/source/pl08_hand_compile/include/ptr_deref.c  --->
+<!--- include nb/source/pl07_hand_compile/include/ptr_deref.c  --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -557,31 +195,25 @@ gcc -O3 -S ptr_deref.c
 cat ptr_deref.s
 <!--- end code --->
 
-<!--- md --->
-
 * what is generated from `*p` seems 
 ```
-    movq (%rdi),%rax
+        ldr     x0, [x0]
 ```
-which is a _<font color="blue">load instruction</font>_ that uses the address in `%rdi` to read the eight bytes (the `q` of `movq` stands for quadword $=$ 8bytes) at that address and puts it on `%rax`. the following is therefore observed
+which is a _<font color="blue">load instruction</font>_ that reads the eight bytes at the address in `x0` and puts the value on `x0`. the following is therefore observed
 
 * __points you learned:__
- 1. a pointer parameter (`p`) is passed by `%rdi`, just like an integer parameter
+ 1. a pointer parameter (`p`) is passed by `x0`, just like an integer parameter
  1. a pointer value of C is in fact an "address", which is merely an integer in the assembly code level
  1. dereferencing a pointer `p` (*p) refers to the value stored at the address in pointer `p`.  a load instruction is therefore used to extract the value
 
-<!--- end md --->
-
-<!--- md --->
+## accessing an array element = pointer dereferencing
 
 * various superficially different expressions in C all end up reading certain addresses
 * referencing an array element, for example
 
-<!--- end md --->
-
 <!--- code w kernel=python --->
 %%writefile array_index_long.c
-<!--- include nb/source/pl08_hand_compile/include/array_index_long.c --->
+<!--- include nb/source/pl07_hand_compile/include/array_index_long.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -589,41 +221,34 @@ gcc -O3 -S array_index_long.c
 cat array_index_long.s
 <!--- end code --->
 
-<!--- md --->
-
 * what is generated for
 ```
     p[0] + p[10];
 ```
 appears 
 ```
-    movq 80(%rdi),%rax
-    addq (%rdi),%rax
+        ldr     x1, [x0]
+        ldr     x0, [x0, 80]
+        add     x0, x1, x0
 ```
 * the first instruction
 ```
-    movq 80(%rdi), %rax
+        ldr     x1, [x0]
 ```
-reads eight bytes from the address (the value in `%rdi` + 80) and puts it in `%rax` and corresponds to `p[10]`.  the reason for +80 is that a single long takes eight bytes
-* the next
+reads eight bytes from the address in `x0`, the second from the address in `x0 + 80`. the reason for `+ 80` is that a single long takes eight bytes
+* the third instruction
 ```
-    addq (%rdi), %rax
+        add     x0, x1, x0
 ```
-is a combined load and addition instruction that reads `p[0]` and adds it to `%rax`
+adds the two numbers
 * note that `*p` and `p[0]` end up using the same instruction
+* this is where a famous narrative about C "arrays are pointers" comes from
 
-<!--- end md --->
-
-<!--- md --->
-
-* pointers are always addresses regardless of their types
 * let's do the same thing for pointers to `int` (32 bit integer)
-
-<!--- end md --->
 
 <!--- code w kernel=python --->
 %%writefile array_index_int.c
-<!--- include nb/source/pl08_hand_compile/include/array_index_int.c --->
+<!--- include nb/source/pl07_hand_compile/include/array_index_int.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -631,23 +256,17 @@ gcc -O3 -S array_index_int.c
 cat array_index_int.s
 <!--- end code --->
 
-<!--- md --->
-
 * the only differences that arise by the size of `int`, which is four bytes, are that
- * `movl` (a load instruction for Long word (4 bytes)) instruction is used instead of `movq`, and
- * the address accessed for `p[10]` is p + 40 (p + 4 * 10) instead of p + 80
+ * the destination registers are `w` registers
+ * the offset used for `p[10]` is 40 instead of 80
 
-<!--- end md --->
+## accessing a structure field $\approx$ pointer dereferencing
 
-<!--- md --->
-
-* exactly the same for structures
-
-<!--- end md --->
+* accessing a structure field through a pointer, like `p->x` is another expression ending up with a similar instruction
 
 <!--- code w kernel=python --->
 %%writefile struct_field.c
-<!--- include nb/source/pl08_hand_compile/include/struct_field.c --->
+<!--- include nb/source/pl07_hand_compile/include/struct_field.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -655,27 +274,18 @@ gcc -O3 -S struct_field.c
 cat struct_field.s
 <!--- end code --->
 
-<!--- md --->
-
-* from the generated instructions, we can observe load instructions access
- * `(%rdi)` for `p->x`,
- * `8(%rdi)` for `p->y`, and 
- * `16(%rdi)` for `p->z`
+* from the generated instructions, we can observe load instructions access elements as follows
+ * `ldp x1, x3, [x0]` (load pair) for `p->x` and `p->y`
+ * `ldr x2, [x0, 16]` for `p->z`
 
 * the reason why these addresses are eight bytes apart is that each of `x` and `y` is eight bytes large
-
-<!--- end md --->
-
-<!--- md --->
 
 * as you can imagine, the same for array of structures
 * guess what kind of instructions are generated for the function below and see it
 
-<!--- end md --->
-
 <!--- code w kernel=python --->
 %%writefile struct_array_field.c
-<!--- include nb/source/pl08_hand_compile/include/struct_array_field.c --->
+<!--- include nb/source/pl07_hand_compile/include/struct_array_field.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -683,28 +293,20 @@ gcc -O3 -S struct_array_field.c
 cat struct_array_field.s
 <!--- end code --->
 
-<!--- md --->
+* you can observe that load instructions access elements as follows
+ * `ldr` accesses `x0+240` for `p->x`,
+ * `ldp` accesses `x0+248` for `p->y` and `p->z`
 
-* you can observe that load instructions access
- * `240(%rdi)` for p->x,
- * `248(%rdi)` for p->y, and
- * `256(%rdi)` for p->z
+* the result is expected, as the size of a structure element is (presumably) 8 bytes x 3 = 24 bytes
 
-* the result is expected, as the size of a structure is presumably 8 bytes x 3 = 24 bytes
+## dereferencing pointers multiple times
 
-<!--- end md --->
-
-<!--- md --->
-
-* an example of dereferencing pointers multiple times
+* an example of dereferencing pointers multiple times (nothing conceptually new here)
 * guess what kind of instructions are generated for the function below and see it
-
-
-<!--- end md --->
 
 <!--- code w kernel=python --->
 %%writefile ptr_ptr.c
-<!--- include nb/source/pl08_hand_compile/include/ptr_ptr.c --->
+<!--- include nb/source/pl07_hand_compile/include/ptr_ptr.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -712,16 +314,12 @@ gcc -O3 -S ptr_ptr.c
 cat ptr_ptr.s
 <!--- end code --->
 
-<!--- md --->
-
 <a name="pointer_deref_assign"> </a>
 ## pointer dereferencing + assignment
 
-<!--- end md --->
-
 <!--- code w kernel=python --->
 %%writefile struct_array_field_assign.c
-<!--- include nb/source/pl08_hand_compile/include/struct_array_field_assign.c --->
+<!--- include nb/source/pl07_hand_compile/include/struct_array_field_assign.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -729,25 +327,16 @@ gcc -O3 -S struct_array_field_assign.c
 cat struct_array_field_assign.s
 <!--- end code --->
 
-<!--- md --->
-
 * what corresponds to
 ```
     p[10].x = 30;
 ```
 appears
 ```
-    movq $30,240(%rdi)
+        mov     x2, 30
+        ...
+        str     x2, [x0, 240]
 ```
-
-* this is a _<font color="blue">store instruction</font>_ that stores 30 at the address `%rdi + 240`
-* the name of the instruction (`movq`) is the same as load instruction, but as it is register $\rightarrow$ memory, it is a store instruction
-* note that we compiled this example with `-O2` (lower optimization level), as using `-O3` uses an instruction (a SIMD instruction) in a way so specific to this code. give it a try if you are interested
-
-<!--- end md --->
-
-
-<!--- md ---> 
 
 <a name="problem_l2_norm_long"> </a>
 #*P square norm
@@ -762,18 +351,14 @@ long l2_norm_long(long * x) {
 }
 ```
 
-* _<font color="blue">hint:</font>_ if you need registers other than `%rdi`, `%rax`, use `%rdx`, `%rcx` etc. as necessary. see details at <a href="#registers">list of registers</a>
-
-<!--- end md --->
-
 <!--- code w points=1 kernel=python --->
 %%writefile l2_norm_long.s
-<!--- include nb/source/pl08_hand_compile/include/l2_norm_long.s --->
+<!--- include nb/source/pl07_hand_compile/include/empty_asm/l2_norm_long.s --->
 <!--- end code --->
 
 <!--- code w points=1 kernel=python --->
 %%writefile check_l2_norm_long.c
-<!--- include nb/source/pl08_hand_compile/include/check_l2_norm_long.c --->
+<!--- include nb/source/pl07_hand_compile/include/check_l2_norm_long.c --->
 <!--- end code --->
 
 <!--- code w points=1 kernel=bash --->
@@ -785,306 +370,123 @@ gcc -o check_l2_norm_long -O3 check_l2_norm_long.c l2_norm_long.s
 ./check_l2_norm_long 3 4 5
 <!--- end code --->
 
-<!--- md ---> 
 
-<a name="passing_args"> </a>
-# Passing more arguments
+<a name="function_calls"> </a>
+# Function calls
 
-<!--- end md --->
-
-<!--- md --->
-
-* we have seen that the first parameter is put on `%rdi` but how about second and subsequent parameters
-
-* let's see how it works by compiling a function taking six parameters
-
-<!--- end md --->
+* if a function calls another function, the assembly code for the function becomes more complex
+* this is because:
+  * it overwrites `x30` (link register) to call a function with `bl` instruction,
+  * which means it has to preserve `x30` on the stack before doing so,
+  * which in turn means it has to extend the stack (`sp`) and set the frame pointer (`x29`) to the same address,
+  * which then means it has to preserve `x29` on the stack, too
+* in summary, it has to do something like
+```
+        stp     x29, x30, [sp, -16]!
+```
+to extend the stack and preserve `x29` and `x30` before making a function call and restore them before it returns
+* observe this in the following simple example
 
 <!--- code w kernel=python --->
-%%writefile args.c
-<!--- include nb/source/pl08_hand_compile/include/args.c --->
+%%writefile sigmoid.c
+<!--- include nb/source/pl07_hand_compile/include/sigmoid.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
-gcc -O3 -S args.c
-cat args.s
+gcc -O3 -S sigmoid.c
+cat sigmoid.s
 <!--- end code --->
 
-<!--- md ---> 
+* for details, study how a function call works explained in [How Programming Languages Work (Basics)](https://taura.github.io/programming-languages/slides/05-implementation-basics.pdf) slide deck
 
-* observing it with clues that it multiplies the first parameter by 1111 and the second by 2222, etc. we can deduce the following
+<a name="compilation_framework"> </a>
+# A general framework for hand-compilation
 
-|parameter number|location|
-|--------|----|
-| 1      |%rdi|
-| 2      |%rsi|
-| 3      |%rdx|
-| 4      |%rcx|
-| 5      |%r8|
-| 6      |%r9|
+* the following problems will be too complex to tackle without a general _framework_ or tactic
+* the main gaps between high level languages and assembly language are
+  + assembly language does not have structured compound statements but have branch instructions ($\approx$ goto statement) only
+  + assembly language does not allow nested expressions
+  + assembly language does not allow to introduce new variables but only has a fixed number of variables of fixed names (i.e., registers)
+* when hand-compiling, filling the three gaps simultanesouly is overwhelming
+* instead, convert the source program one step at a time by
+  + converting loops and if statements into goto's,
+  + breaking nested expressions into a series of simple assignments (`a * x + b * y` $\rightarrow$ `s = a * x; t = b * y; u = s + t`),
+  + and assining registers to variables
+* also, when you call a function, save values necessary after the call into the stack
 
+<a name="problem_normal_dist"> </a>
+#*P normal distribution
 
-* you can confirm this by <a href="https://github.com/hjl-tools/x86-psABI/wiki/x86-64-psABI-1.0.pdf">ABI specification</a> too, but also by writing a simple program like this
+* write a function that takes a floating-point (`double`) number $x$ and calculates the following value
+$$ \mbox{normal}(x) \equiv \frac{1}{2\pi}\exp(x^2/2) $$
 
-<!--- end md --->
+* to obtain the value of $\pi$, obtain $\pi/4$ by calling `atan(1.0, 1.0)` 
+* in other words, 
 
-<!--- md ---> 
+$$ \mbox{normal}(x) = \frac{1}{8 \mbox{atan}(1.0, 1.0)} \exp(x^2/2) $$
 
-<a name="more_args"> </a>
-## more registers
+* see the `normal_c` below for the equivalent C function (your jobs is to write sum_array in assembly language equivalent to it)
 
-* with only a small number of registers, there must be a limit on the number of parameters passed via registers
-* as a matter of fact, seventh and subsequent parameters are passed differently
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile args_many.c
-<!--- include nb/source/pl08_hand_compile/include/args_many.c --->
+<!--- code w points=1 kernel=python --->
+%%writefile normal.s
+<!--- include nb/source/pl07_hand_compile/include/empty_asm/normal.s --->
 <!--- end code --->
 
-<!--- code w kernel=bash --->
-gcc -O3 -S args_many.c
-cat args_many.s
+<!--- code w points=1 kernel=python --->
+%%writefile check_normal.c
+<!--- include nb/source/pl07_hand_compile/include/check_normal.c --->
 <!--- end code --->
 
-<!--- md ---> 
-
-* you can deduce the following
- * the 7th parameter is at 8(%rsp)
- * the 8th parameter is at 16(%rsp)
- * the 9th parameter is at 24(%rsp)
-`%rsp` is called a _<font color="blue">stack pointer</font>_ and adjusted upon a function call; details are described below
-
-* at this point, understand that seventh and further parameters are arranged as above from the perspective of a called function
-
-<!--- end md --->
-
-<!--- md --->
-
-<a name="float_args"> </a>
-##  parameters of floating point numbers
-
-* despite being numbers, floating point numbers use different instructions for operations and different registers as operands
-* accordingly, ABI therefore specifies different ways to pass and return floating point numbers
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile fadd.c
-<!--- include nb/source/pl08_hand_compile/include/fadd.c --->
+<!--- code w points=1 kernel=bash --->
+gcc -o check_normal -O3 check_normal.c normal.s
 <!--- end code --->
 
-<!--- code w kernel=bash --->
-gcc -O3 -S fadd.c
-cat fadd.s
+<!--- code w points=1 kernel=bash --->
+./check_normal 0.0
+./check_normal 1.0
+./check_normal 2.0
 <!--- end code --->
 
-<!--- md ---> 
-
-* instructions
-```
-    addsd %xmm1, %xmm0  # %xmm0 += %xmm1
-    addsd %xmm1, %xmm0  # %xmm0 += %xmm1
-```
-* what can be observed (inferred)
- * the first parameter (a) is on `%xmm0`
- * the second parameter (b) on `%xmm1`
- * the return value on `%xmm0`
-
-<!--- end md --->
-
-<!--- md --->
-
-* confirm with another example (multiplication)
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile fmul.c
-<!--- include nb/source/pl08_hand_compile/include/fmul.c --->
-<!--- end code --->
-
-<!--- code w kernel=bash --->
-gcc -O3 -S fmul.c
-cat fmul.s
-<!--- end code --->
-
-<!--- md --->
-
-* instructions
-```
-    mulsd %xmm1, %xmm0  # xmm0 *= xmm1 (a = a * b)
-    mulsd %xmm2, %xmm3  # xmm3 *= xmm2 (d = c * d)
-    addsd %xmm3, %xmm0  # xmm0 += xmm3 (a = a + d)
-```
-* observations
- * the first parameter `xmm0`
- * the second parameter `xmm1`
- * the third parameter `xmm2`
- * the fourth parameter `xmm3`
- * the return value `xmm0`
-
-<!--- end md --->
-
-<!--- md --->
-
-<a name="many_args"> </a>
-## when there are many parameters
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile fadd10.c
-<!--- include nb/source/pl08_hand_compile/include/fadd10.c --->
-<!--- end code --->
-
-<!--- code w kernel=bash --->
-gcc -O3 -S fadd10.c
-cat fadd10.s
-<!--- end code --->
-
-<!--- md --->
-
-* observations
- * the 1st parameter `%xmm0`
- * the 2nd parameter `%xmm1`
- * ...
- * the 7th parameter `%xmm6`
- * the 8th parameter `%xmm7`
- * the 9th parameter `8(%rsp)`
- * the 10th parameter `16(%rsp)`
-
-
-<!--- end md --->
-
-<!--- md --->
-
-<a name="many_types_of_args"> </a>
-## when integers, pointers, and float point numbers are mixed
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile args_mixed_many.c
-<!--- include nb/source/pl08_hand_compile/include/args_mixed_many.c --->
-<!--- end code --->
-
-<!--- code w kernel=bash --->
-gcc -O3 -S args_mixed_many.c
-cat args_mixed_many.s
-<!--- end code --->
-
-<!--- md --->
-
-* generated instructions
-```
-    addsd (%rdi), %xmm0   # A[0] + a
-    movq 8(%rsp), %rax    # %rax = G
-    addsd (%rsi), %xmm0   # + B[0]
-    addsd %xmm1, %xmm0    # + b
-    addsd (%rdx), %xmm0   # + C[0]
-    addsd %xmm2, %xmm0    # + c
-    addsd (%rcx), %xmm0   # + D[0]
-    addsd %xmm3, %xmm0    # + d
-    addsd (%r8), %xmm0    # + E[0]
-    addsd %xmm4, %xmm0    # + e
-    addsd (%r9), %xmm0    # + F[0]
-    addsd %xmm5, %xmm0    # + f
-    addsd (%rax), %xmm0   # + G[0]
-    movq 16(%rsp), %rax   # %rax = H
-    addsd %xmm6, %xmm0    # + g
-    addsd (%rax), %xmm0   # + H[0]
-    movq 24(%rsp), %rax   # %rax = I
-    addsd %xmm7, %xmm0    # + h
-    addsd (%rax), %xmm0   # + I[0]
-    movq 40(%rsp), %rax   # %rax = J
-    addsd 32(%rsp), %xmm0 # + i
-    addsd (%rax), %xmm0   # + J[0]
-    addsd	48(%rsp), %xmm0 # + j
-```
-* the observed relationship between parameters and locations
-
-|param|location  |
-|----|----------|
-| A  | %rdi     |
-| a  | %xmm0    |
-| B  | %rsi     |
-| b  | %xmm1    |
-| C  | %rdx     |
-| c  | %xmm2    |
-| D  | %rcx     |
-| d  | %xmm3    |
-| E  | %r8      |
-| e  | %xmm4    |
-| F  | %r9      |
-| f  | %xmm5    |
-| G  | 8(%rsp)  |
-| g  | %xmm6    |
-| H  | 16(%rsp) |
-| h  | %xmm7    |
-| I  | 24(%rsp) |
-| i  | 32(%rsp) |
-| J  | 40(%rsp) |
-| j  | 48(%rsp) |
-
-* to summarize how parameters are passed,
-
-* __points you learned:__
- 1. the first six integers and pointers are put on `%rdi`, `%rsi`, `%rdx`, `%rcx`, `%r8`, `%r9`
- 1. the first eight floating point numbers are put on `%xmm0`, `%xmm1`, ..., `%xmm7`
- 1. spilled parameters are put them in `8(%rsp)`, `16(%rsp)`, ... regardless of the type
-
-<!--- end md --->
-
-<!--- md ---> 
-
-<a name="registers"> </a>
-# List of registers
-
-* for those who wonder how many registers are there, [the Brown University course material](https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf) lists all integer registers
-* in addition, `%xmm0` ... `%xmm15` are floating point registers
-* to summarize here are the available registers
-
-|-|-|-|-|-|-|-|-|
-|-------|-------|---------|--------|--------|--------|--------|--------|
-| %rax  | %rbx  | %rcx    | %rdx   | %rdi   | %rsi   | %rbp   |        |
-| %r8   | %r9   | %r10    | %r11   | %r12   | %r13   | %r14   | %r15   |
-| %xmm0 | %xmm1 | %xmm2   | %xmm3  | %xmm4  | %xmm5  | %xmm6  | %xmm7  |
-| %xmm8 | %xmm9 | %xmm10  | %xmm11 | %xmm12 | %xmm13 | %xmm14 | %xmm15 |
-| %rsp  |%eflags | %rip   |        |        |        |        |        |
-
-* of which
- * `%rsp` is the _<font color="blue">stack pointer</font>_ used to point to an end of the stack (described below) and cannot be used for arbitrary purposes
- * `%rip` is the _<font color="blue">instruction pointer</font>_ that holds the address from which the next instruction will be read
- * `%eflags` is the _<font color="blue">flag</font>_ register that holds the result of the last compare instruction.  it is not explicitly used in programs but is set by a compare (cmp) instruction and implicitly referenced by conditional branch instructions
-
-* minor remarks
- * a single `%xmm` register is in fact able to hold two double (64 bit) values or 4 float (32 bit) values and there are (SIMD) instructions that can operate on all of them, but such details are not important in this exercise
- * more recent processors have `%ymm` registers that can hold twice as many (4 double or 8 float) values and even more recent ones have `%zmm` registers that can hold another twice as many (8 double or 16 float) values
-
-
-<!--- end md --->
-
-<!--- md ---> 
 
 <a name="control_flows"> </a>
 # Control flows
 
 * how control flows such as if statements or loops (while or for) are compiled?
 
-<!--- end md --->
+<a name="if_stmt_conditional"> </a>
+## if statement (by conditional branch instruction)
 
-<!--- md ---> 
+<!--- code w kernel=python --->
+%%writefile branch.c
+<!--- include nb/source/pl07_hand_compile/include/branch.c --->
+<!--- end code --->
 
-<a name="if_stmt"> </a>
-## if statement
+<!--- code w kernel=bash --->
+gcc -O3 -S branch.c
+cat branch.s
+<!--- end code --->
 
-<!--- end md --->
+* you may observe unremarkable compare-then-conditional-branch structure
+
+```
+        cmp     x1, 5   # y - 5
+        ble     .L3     # if (y - 5 <= 0.0) goto .L3
+        ...
+.L3:
+        ...
+```
+
+<a name="if_stmt_conditional"> </a>
+## if statement (without conditional branch instruction)
+
+* superscalar processors speculatively decode instructions much ahead of currently executing instructions
+* when they encounter a branch instruction, they "predict" the branch outcome (whether the branch is taken or not) and decode the instructions on the predicted path
+* mispredicting the branch outcome results in rolling back the processor state to the state before the branch, which degrades performance
+* as such, compilers try to avoid branch instructions where profitable and use _conditional instructions_ instead
 
 <!--- code w kernel=python --->
 %%writefile add_or_mul_long.c
-<!--- include nb/source/pl08_hand_compile/include/add_or_mul_long.c --->
+<!--- include nb/source/pl07_hand_compile/include/add_or_mul_long.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -1092,91 +494,29 @@ gcc -O3 -S add_or_mul_long.c
 cat add_or_mul_long.s
 <!--- end code --->
 
-<!--- md ---> 
-
-* processors have a compare instruction and conditional branch instructions that change the address of the next instruction depending on the result of the last compare instruction
-* this illustrates how the above if statement gets compiled
+* the point is `csel x0,x1,x3, ge` ("conditional select") instruction that sets either `x1` or `x3` to `x0`, depending on the value in the condition code register (= the result of the last `cmp` instruction)
+* more specifically
 ```
-    compare x and y
-    conditionally jump to L if x < y
-    compute y + z
-L:
-    compute y * z
+        cmp     x0, x1          # x0 - x1
+        ...
+        csel    x0, x1, x3, ge
 ```
-* the actual result
+the above `csel` effectively performs
 ```
-    cmpq %rsi, %rdi  # compare %rdi(x) and %rsi(y) (computes rdi - rsi)
-    jl .L2           # jump if less (jump to .L2 if rdi - rsi < 0)
-    movq %rsi, %rax  # rax = rsi (y)
-    imulq %rdx, %rax # rax *= rdx (z)
-    ret
-    .p2align 4,,10
-    .p2align 3
-.L2:
-    leaq (%rsi,%rdx), %rax # rax = rsi (y) + rdx (z)
-    ret
+x0 = (x0 - x1 >= 0 ? x1 : x3) 
 ```
-* two lines before label .L2
-```
-    .p2align 4,,10
-    .p2align 3
-```
-are not instructions and can be ignored for the purpose of understanding how they work, but 
-* to summarize, it ensures the address .L2 is a multiple of 16, inserting no-op instructions as necessary [details](https://sourceware.org/binutils/docs/as/P2align.html#P2align)
-
-<!--- end md --->
-
-<!--- md ---> 
-
-<a name="cmp_insn"> </a>
-## on cmp instruction
-
-```
-    cmpq %rsi,%rdi
-```
-basically compares `%rsi` (y) and `%rdi` (x)
-* some remarks
- * as always `q` stands for quadword
-* you can consider that `cmpq A,B` does what `subq A,B` does, except that the result goes to `%eflags` register not B (i.e., `%eflags = B - A`)
-* conditional branches (many instructions starting with `j`) may jump to a specified label depending on  `%eflags` (whether it's $< 0$, $\leq 0$, $=0$, etc.)
-
-|instruction | meaning                   | an equivalent C statement  |
-|--------|-------------------------------|----------------------------|
-|jl .Lx  | jump if less than             | if (%eflags < 0) goto .Lx  |
-|jle .Lx | jump if less than or equal    | if (%eflags <= 0) goto .Lx |
-|jg .Lx  | jump if greater than          | if (%eflags > 0) goto .Lx  |
-|jge .Lx | jump if greater than or equal | if (%eflags >= 0) goto .Lx |
-|je .Lx  | jump if equal                 | if (%eflags == 0) goto .Lx |
-|jne .Lx | jump if equal                 | if (%eflags != 0) goto .Lx |
-
-* [list of all jump instructions](http://unixwiz.net/techtips/x86-jumps.html)
-* it's actually a bit inaccurate to say "`%eflags` holds the result of the subtraction"; as a matter of actual implementation, it only holds the sign of the result, whether it is zero, etc. as a set of bits.  the distinction does not matter much, however, as you never explicitly extract bits in `%eflags`
-* another remark: there is a choice as to whether a comparison is made as signed integers (int, long, etc. in C) or as unsigned integers (unsigned int, unsigned long, etc. in C).  above instructions are for signed comparisons
-* just for your information, below are instructions for comparing unsigned values
-
-
-|instruction | meaning                   | an equivalent C statement  |
-|--------|------------------------|----------------------------|
-|jb .Lx  | jump if below          | if (%eflags < 0) goto .Lx  |
-|jbe .Lx | jump if below or equal | if (%eflags <= 0) goto .Lx |
-|ja .Lx  | jump if above          | if (%eflags > 0) goto .Lx  |
-|jae .Lx | jump if above or equal | if (%eflags >= 0) goto .Lx |
-
-<!--- end md --->
-
-<!--- md --->
+* note that the generated code calculates _both_ `y + z` _and_ `y * z` to avoid branch instructions
+* this is profitable as both expressions are cheap; if one branch incurs a large or unknown cost, it is not profitable to do so
 
 <a name="cmp_floats"> </a>
-## comparing floating point numbers
+## comparing floating-point numbers
 
-* if you think you need different instructions to compare floating point numbers, you are getting used to assembly languages
+* if you think you need different instructions to compare floating-point numbers, you are getting used to assembly languages
 * do not think you have to remember each of them, let `gcc -S` teach you instruction name and google it
-
-<!--- end md --->
 
 <!--- code w kernel=python --->
 %%writefile add_or_mul_double.c
-<!--- include nb/source/pl08_hand_compile/include/add_or_mul_double.c --->
+<!--- include nb/source/pl07_hand_compile/include/add_or_mul_double.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -1184,46 +524,16 @@ gcc -O3 -S add_or_mul_double.c
 cat add_or_mul_double.s
 <!--- end code --->
 
-<!--- md --->
-
-* if you look at generated instructions,
-
-```
-add_or_mul_double:
-.LFB0:
-    .cfi_startproc
-    comisd %xmm0, %xmm1   # %eflags = xmm1 (y) - xmm0 (x)
-    ja .L7                # if (%eflags (= y - x) > 0) goto .L7
-    mulsd %xmm2, %xmm1    # y *= z
-    movapd %xmm1, %xmm0   # xmm0 = y
-    ret
-.L7:
-    addsd %xmm2, %xmm1    #y += z
-    movapd %xmm1, %xmm0   # xmm0 = y
-    ret
-```
-
-* you can easily imagine `comisd` is the comparison instruction
-* if you google `comisd instruction` this mysterious instruction stands for _<font color="blue">COMpare Scalar Double</font>_
-* just like `cmpq`, `comisd A,B` computes B - A and puts the result into `%eflags`
-
-<!--- end md --->
-
-
-<!--- md ---> 
+* observe that `fcmpe` is the comparison instruction
 
 <a name="loops"> </a>
 ## loops (while and for)
 
 * in assembly languages, loops are made of comparison and conditional branches just as if statements are
-* the following is compiled with `-O1`, as `-O3` produces code that is difficult to understand
-* to be sure, you don't have to become able to understand all the generated code to make a compiler, but only have to know a general method/template to translate each construct 
-
-<!--- end md --->
 
 <!--- code w kernel=python --->
 %%writefile fact.c
-<!--- include nb/source/pl08_hand_compile/include/fact.c --->
+<!--- include nb/source/pl07_hand_compile/include/fact.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -1231,32 +541,29 @@ gcc -O3 -S fact.c
 cat fact.s
 <!--- end code --->
 
-<!--- md --->
-
 * comments to generated instructions
 
 ```
 fact:
 .LFB0:
-    .cfi_startproc
-    testq %rdi, %rdi   # %eflags = %rdi (n) & %rdi (n)
-    jle .L4            # if (%eflags (= n) <= 0) goto .L4
-    movl $1, %eax      # rax (p) = 1
-    movl $1, %edx      # rdx (i) = 1
+        .cfi_startproc
+        cmp     x0, 0      # cc = n - 0
+        ble     .L4        # if (n - 0 <= 0) goto .L4
+        add     x2, x0, 1  # x2 = n + 1
+        mov     x0, 1      # x0 = 1  (x0 <-> p)
+        mov     x1, x0     # x1 = x0 (x1 <-> i)
+        .p2align 3,,7
 .L3:
-    imulq %rdx, %rax   # p = p * i
-    addq $1, %rdx      # i = i + 1
-    cmpq %rdx, %rdi    # %eflags = rdi (n) - rdx (i)
-    jge .L3            # if (%eflags (= n - i) >= 0) goto .L3
-    rep ret
+        mul     x0, x0, x1 # x0 = x0 * x1 (p = p * i)
+        add     x1, x1, 1  # x1 = x1 + 1  (i = i + 1)
+        cmp     x1, x2     # cc = x1 - x2 (cc = i - (n + 1))
+        bne     .L3        # if (i - (n + 1) != 0) goto .L3
+        ret
+        .p2align 2,,3
 .L4:
-    movl $1, %eax
- ret
+        mov     x0, 1
+        ret
 ```
-
-<!--- end md --->
-
-<!--- md --->
 
 * in general
 ```
@@ -1286,10 +593,6 @@ LB:
 LE:
 ```
 
-<!--- end md --->
-
-<!--- md --->
-
 * for-statement has a different syntax but is a special case of while-statement
 
 ```
@@ -1307,12 +610,9 @@ while (condition) {
 }
 ```
 
-
-<!--- end md --->
-
 <!--- code w kernel=python --->
 %%writefile ax_b.c
-<!--- include nb/source/pl08_hand_compile/include/ax_b.c --->
+<!--- include nb/source/pl07_hand_compile/include/ax_b.c --->
 <!--- end code --->
 
 <!--- code w kernel=bash --->
@@ -1320,24 +620,20 @@ gcc -O3 -S ax_b.c
 cat ax_b.s
 <!--- end code --->
 
-<!--- md --->
-
 <a name="problem_sum_array_long"> </a>
 #*P sum of long arrays
 
 * write a function `sum_array(a, n)` that computes the sum of an n-element array of longs `a` in assembly
-* see the following sum_array_c for the equivalent C function (your jobs is to write sum_array in assembly language equivalent to it)
-
-<!--- end md --->
+* see the `sum_array_c` below for the equivalent C function (your jobs is to write sum_array in assembly language equivalent to it)
 
 <!--- code w points=1 kernel=python --->
 %%writefile sum_array.s
-<!--- include nb/source/pl08_hand_compile/include/sum_array.s --->
+<!--- include nb/source/pl07_hand_compile/include/empty_asm/sum_array.s --->
 <!--- end code --->
 
 <!--- code w points=1 kernel=python --->
 %%writefile check_sum_array.c
-<!--- include nb/source/pl08_hand_compile/include/check_sum_array.c --->
+<!--- include nb/source/pl07_hand_compile/include/check_sum_array.c --->
 <!--- end code --->
 
 <!--- code w points=1 kernel=bash --->
@@ -1350,8 +646,6 @@ gcc -o check_sum_array -O3 check_sum_array.c sum_array.s
 ./check_sum_array 1 -2 3 -4 5 -6 7
 <!--- end code --->
 
-<!--- md --->
-
 <a name="problem_max_array_double"> </a>
 #*P maximum value in double array
 
@@ -1359,16 +653,14 @@ gcc -o check_sum_array -O3 check_sum_array.c sum_array.s
 * you may assume all elements are positive and return 0 if there are no elements (i.e., n = 0)
 * see `max_array_c` for an equivalent C function
 
-<!--- end md --->
-
 <!--- code w points=1 kernel=python --->
 %%writefile max_array.s
-<!--- include nb/source/pl08_hand_compile/include/max_array.s --->
+<!--- include nb/source/pl07_hand_compile/include/max_array.s --->
 <!--- end code --->
 
 <!--- code w points=1 kernel=python --->
 %%writefile check_max_array.c
-<!--- include nb/source/pl08_hand_compile/include/check_max_array.c --->
+<!--- include nb/source/pl07_hand_compile/include/check_max_array.c --->
 <!--- end code --->
 
 <!--- code w points=1 kernel=bash --->
@@ -1382,256 +674,4 @@ gcc -o check_max_array -O3 check_max_array.c max_array.s
 ./check_max_array
 <!--- end code --->
 
-<!--- md ---> 
-
-<a name="functions_that_call_functions"> </a>
-# A general mechanism behind function calls (stack)
-
-* functions we have seen so far never call another function
-* in them, it has been enough to carry out the specified computation, given which registers hold inputs and which register should hold the return value
-* there are few more things you have to understand when the function calls another function
-* let's consider the following
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile call_gg_hh.c 
-<!--- include nb/source/pl08_hand_compile/include/call_gg_hh.c  --->
-<!--- end code --->
-
-<!--- code w kernel=bash --->
-gcc -O3 -S call_gg_hh.c 
-cat call_gg_hh.cs
-<!--- end code --->
-
-<!--- md --->
-
-* consider you are at `-->`, the instruction right after `gg(1)` returns
-
-```
-    call gg@PLT
---> ...
-```
-
-* at this point the return value of `gg(1)` should be on `%rax`
-* what to do next is to call `hh(2)`, but just calling it would obviously destroy the return value of `gg(1)`, as `hh(2)` too will put the return value on `%rax`
-* it is therefore necessary to save the return value of `gg(1)` somewhere, before calling `hh(2)`
-* a similar situation arises whenever a value (local variables, arrays, intermediate results of an expression, etc.) needs to be preserved _<font color="blue">across function calls</font>_
-* where should we save such values? it must be regions that are not destroyed across function calls
-* there are two such regions
- 1. a memory area, called the _<font color="blue">stack</font>_
- 1. _<font color="blue">callee-save registers</font>_ registers so designated by ABI that they ought to be preserved across function calls
-
-<!--- end md --->
-
-<!--- md --->
-
-<a name="stack"> </a>
-## stack region
-
-* a stack region is a part of address space that is managed by a convention and used for holding values that cannot be held on registers
-* as a basis, a designated register called `%rsp` always points to an end of the stack region
-* the addresses equal to or higher than the address in `%rsp` ($a \geq$ `%rsp`) are the region "being used" and the addresses below `%rsp` ($a <$ `%rsp`) are free
-
-<img src="img/stack_1.svg" /> 
-
-<!--- end md --->
-
-<!--- md --->
-
-<a name="callee_save_regs"> </a>
-## callee-save registers
-
-* callee-save registers are registers so specified in ABI that they should be preserved across function calls
-* in x86_64 ABI, following registers are designated as callee-save registers
-
-|callee-save registers|
-|----------|
-|%rbx      |
-|%rbp      |
-|%r12      |
-|%r13      |
-|%r14      |
-|%r15      |
-
-* let's say a function `f` calls another function `g`
-* if `f` wants to preserve a value across the call to `g()`, it could put it on a callee-save register instead of the stack 
-* in that case, on the other hand, `f` needs to preserve the value originally in that register when `f` starts execution and restores it when `f` returns; the reason is obvious, as any caller of `f` also expects `f` to preserve values on callee-save registers as well (there are no free lunch)
-* a function needs to use the stack region to save and restore callee-save registers
-* a function usually saves and restores them upon entry to the function and return from it, respectively
-
-<!--- end md --->
-
-<!--- md --->
-
-* with that in mind, let's take another look at the compilation result of that function
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile call_gg_hh.c 
-<!--- include nb/source/pl08_hand_compile/include/call_gg_hh.c  --->
-<!--- end code --->
-
-<!--- code w kernel=bash --->
-gcc -O3 -S call_gg_hh.c 
-cat call_gg_hh.cs
-<!--- end code --->
-
-<!--- md --->
-
-* generated instructions
-```
-ff:
-.LFB0:
-    pushq %rbx      # save rbx (a callee-save register) on stack
-    movl $1, %edi   # rdi = 1
-    call gg@PLT     # gg(1)
-    movq %rax, %rbx # save the return value on rbx
-    movl $2, %edi   # rdi = 2
-    call hh@PLT     # hh(2)
-    addq %rbx, %rax # rax += rbx
-    popq %rbx       # restore rbx
-    ret
-```
-
-* here
-```
-    pushq %rbx
-```
-is an instruction that (1) decrements `%rsp` by eight (quadword) and stores the value of `%rbx` there.  it is equivalent to
-```
-    subq $8,%rsp
-    movlq %rbx,(%rsp)
-```
-* recall that addresses below (lower than) `%rsp` are free, so `push X` essentially allocates a space for X and stores it there
-* the operation is often expressed as _<font color="blue">"pushing `%rbx` onto the stack"</font>_
-* on the contrary, 
-```
-    popq %rbx       # restore rbx
-```
-reads the value at the address pointed to by `%rsp` into `%rbx` and increments `%rsp` by eight.  it is equivalent to
-```
-    movlq (%rsp),%rbx
-    addq $8,%rsp
-```
-* it is often expressed as _<font color="blue">"popping a value (from the stack) to `%rbx`"</font>_
-
-* `ret` instruction is in fact an instruction that (1) pops an address from the stack and (2) jumps to the address.  semantically it is equivalent to this (remember that `%rip` is the register holding the address to fetch the next instruction from)
-```
-    popq %rip
-```
-
-<!--- end md --->
-
-<!--- md --->
-
-* the above example used the stack merely to save/restore ``rbx`
-* let's look at an example that uses the stack more extensively
-* functions that use lots of values that must be preserved across function call tend to do so
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile many_vars.c
-<!--- include nb/source/pl08_hand_compile/include/many_vars.c --->
-<!--- end code --->
-
-<!--- code w kernel=bash --->
-gcc -O1 -S many_vars.c
-cat many_vars.s
-<!--- end code --->
-
-<!--- md --->
-
-* observe
- * part of return values of `gg()` use callee-save registers
- * other values that do not fit callee-save registers use the stack
-
-<!--- end md --->
-
-<!--- md --->
-
-* you can observe the stack being used for large data structures such as arrays
-* omitting details, the compilation flag `-fno-stack-protector` below simplifies the generated code
-
-<!--- end md --->
-
-<!--- code w kernel=python --->
-%%writefile large_stack.c
-<!--- include nb/source/pl08_hand_compile/include/large_stack.c --->
-<!--- end code --->
-
-<!--- code w kernel=bash --->
-gcc -O1 -fno-stack-protector -S large_stack.c
-cat large_stack.s
-<!--- end code --->
-
-<!--- md --->
-
-* observe
- * two callee-save registers, `%rbp` and `%rbx`, are used
- * they are accordingly `pushq`'ed prior to execution of the function
- * in addition, a memory block for `long a[100]` (800 bytes) is allocated on the stack
-```
-    subq $808, %rsp
-```
-* `%rbp` holds the address of `a`
-* `%rbx` holds the return value of `gg` (`x`)
-
-<!--- end md --->
-
-<!--- md --->
-
-* x86_64 ABI specifies that during the execution of a function (right before it calls another function, more precisely), `%rsp` must be a multiple of sixteen
-* in other words, at the beginning of a function, the remainder of `%rsp` divided by sixteen is eight (as the `call` instruction decrements rsp by eight)
-* a function calling another function takes this into consideration when adjusting `%rsp`
-* observe that after the above function executes `subq $808, %rsp`, `%rsp` is a multiple of sixteen (the remainder of `%rsp` is eight at the beginning; the function then performs two pushq's (rsp -= 16) and rsp -= 808;
-
-<!--- end md --->
-
-<!--- md --->
-
-<a name="summary_of_stack"> </a>
-## summary of how the stack works
-
-<!--- end md --->
-
-<!--- md --->
-
-say function `f` calls `g`
-
-1.  right before the `call` instruction (`call g@PLT`)
-
-<img src="img/stack_1.svg" /> 
-
-2\. right after the `call` instruction = at the beginning of `g`
-
-<img src="img/stack_2.svg" /> 
-
-the `call` instruction decrements rsp and stores the address immediately following the call instruction at the end of the stack
-
-3\. if `g` uses any callee-save register, it saves whatever are used on the stack with `pushq` (the stack right after those `pushq`s)
-
-<img src="img/stack_3.svg" /> 
-
-4\. if `g` needs more memory space on the stack it allocates the space by decrementing `%rsp` as necessary (the stack right after that)
-
-<img src="img/stack_4.svg" /> 
-
-5\. executes `g`
-
-6\. when `g` returns, it deallocates the space by incrementing `%rsp` accordingly (the stack right after that)
-
-<img src="img/stack_3.svg" /> 
-
-7\. it restores callee-save registers by necessary `popq` instructions (the stack right after `popq`s)
-
-<img src="img/stack_2.svg" /> 
-
-8\. it executes `ret` instruction (the stack right after `ret`)
-
-<img src="img/stack_1.svg" /> 
-
-<!--- end md --->
 
