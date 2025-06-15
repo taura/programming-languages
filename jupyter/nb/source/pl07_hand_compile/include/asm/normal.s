@@ -1,11 +1,11 @@
 	.arch armv8-a
-	.file	"normal_dist.c"
+	.file	"normal.c"
 	.text
 	.align	2
 	.p2align 4,,11
-	.global	normal
-	.type	normal, %function
-normal:
+	.global	normal_dist
+	.type	normal_dist, %function
+normal_dist:
 .LFB0:
 	.cfi_startproc
 	fnmul	d0, d0, d0
@@ -27,7 +27,7 @@ normal:
 	ret
 	.cfi_endproc
 .LFE0:
-	.size	normal, .-normal
+	.size	normal_dist, .-normal_dist
 	.section	.rodata.cst8,"aM",@progbits,8
 	.align	3
 .LC0:
