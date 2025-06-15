@@ -15,17 +15,17 @@ long div(long x, long y, long z) {
 }
 
 double fadd(double x, double y, double z) {
-  return x + y + z + 150;
+  return x + y + z + 1.25;
 }
 
 double fsub(double x, double y, double z) {
-  return x - y - z - 150;
+  return x - y - z - 1.25;
 }
 
 double fmul(double x, double y, double z) {
-  return x * y * z * 1.3;
+  return x * y * z * 1.25;
 }
 
 double fdiv(double x, double y, double z) {
-  return x / y / z / 1.3;
+  return x / y / z / 1.25;
 }

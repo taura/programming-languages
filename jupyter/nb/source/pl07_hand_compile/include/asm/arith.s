@@ -10,6 +10,7 @@ add:
 	.cfi_startproc
 	add	x0, x0, x1
 	add	x0, x0, x2
+	add	x0, x0, 150
 	ret
 	.cfi_endproc
 .LFE0:
@@ -23,6 +24,7 @@ sub:
 	.cfi_startproc
 	sub	x0, x0, x1
 	sub	x0, x0, x2
+	sub	x0, x0, #150
 	ret
 	.cfi_endproc
 .LFE1:
@@ -61,7 +63,9 @@ fadd:
 .LFB4:
 	.cfi_startproc
 	fadd	d0, d0, d1
+	fmov	d3, 1.25e+0
 	fadd	d0, d0, d2
+	fadd	d0, d0, d3
 	ret
 	.cfi_endproc
 .LFE4:
@@ -74,7 +78,9 @@ fsub:
 .LFB5:
 	.cfi_startproc
 	fsub	d0, d0, d1
+	fmov	d3, 1.25e+0
 	fsub	d0, d0, d2
+	fsub	d0, d0, d3
 	ret
 	.cfi_endproc
 .LFE5:
@@ -87,7 +93,9 @@ fmul:
 .LFB6:
 	.cfi_startproc
 	fmul	d0, d0, d1
+	fmov	d3, 1.25e+0
 	fmul	d0, d0, d2
+	fmul	d0, d0, d3
 	ret
 	.cfi_endproc
 .LFE6:
@@ -100,7 +108,9 @@ fdiv:
 .LFB7:
 	.cfi_startproc
 	fdiv	d0, d0, d1
+	fmov	d3, 1.25e+0
 	fdiv	d0, d0, d2
+	fdiv	d0, d0, d3
 	ret
 	.cfi_endproc
 .LFE7:
