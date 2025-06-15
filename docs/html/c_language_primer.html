@@ -1,0 +1,88 @@
+<h1 id="c-language-primer">🌟 C Language Primer</h1>
+<h2 id="primitive-types">1. Primitive Types</h2>
+<p>C provides several built-in types. Common numeric types include:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>     a <span class="op">=</span> <span class="dv">10</span><span class="op">;</span>      <span class="co">// typically 4 bytes</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">long</span>    b <span class="op">=</span> <span class="dv">100000</span><span class="bu">L</span><span class="op">;</span> <span class="co">// typically 8 bytes</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">float</span>   c <span class="op">=</span> <span class="fl">3.14</span><span class="bu">f</span><span class="op">;</span>   <span class="co">// single-precision floating point</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span>  d <span class="op">=</span> <span class="fl">3.14159</span><span class="op">;</span> <span class="co">// double-precision floating point</span></span></code></pre></div>
+<p>Use <code>sizeof()</code> to check the exact size on your
+platform.</p>
+<hr />
+<h2 id="function-definition">2. Function Definition</h2>
+<p>A function consists of a return type, name, parameters, and a
+body:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> add<span class="op">(</span><span class="dt">int</span> x<span class="op">,</span> <span class="dt">int</span> y<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x <span class="op">+</span> y<span class="op">;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Usage:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> result <span class="op">=</span> add<span class="op">(</span><span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">);</span> <span class="co">// result = 5</span></span></code></pre></div>
+<hr />
+<h2 id="variables">3. Variables</h2>
+<p>Variables must be declared with a type:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> count <span class="op">=</span> <span class="dv">42</span><span class="op">;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">float</span> ratio <span class="op">=</span> <span class="dv">0</span><span class="er">.75</span><span class="op">;</span></span></code></pre></div>
+<p>Uninitialized variables contain garbage values.</p>
+<hr />
+<h2 id="expressions">4. Expressions</h2>
+<p>Expressions involve operators and operands:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> a <span class="op">=</span> <span class="dv">5</span><span class="op">,</span> b <span class="op">=</span> <span class="dv">3</span><span class="op">;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> sum <span class="op">=</span> a <span class="op">+</span> b<span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> product <span class="op">=</span> a <span class="op">*</span> b<span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="dt">float</span> quotient <span class="op">=</span> <span class="op">(</span><span class="dt">float</span><span class="op">)</span>a <span class="op">/</span> b<span class="op">;</span></span></code></pre></div>
+<p>C has standard arithmetic and logical operators.</p>
+<hr />
+<h2 id="pointers-and-arrays">5. Pointers and Arrays</h2>
+<h3 id="pointers">Pointers</h3>
+<p>A pointer stores the address of another variable:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>p <span class="op">=</span> <span class="op">&amp;</span>x<span class="op">;</span>   <span class="co">// p points to x</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="op">*</span>p <span class="op">=</span> <span class="dv">20</span><span class="op">;</span>       <span class="co">// x is now 20</span></span></code></pre></div>
+<h3 id="arrays">Arrays</h3>
+<p>Arrays are contiguous blocks of elements:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> arr<span class="op">[</span><span class="dv">3</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span><span class="dv">1</span><span class="op">,</span> <span class="dv">2</span><span class="op">,</span> <span class="dv">3</span><span class="op">};</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> first <span class="op">=</span> arr<span class="op">[</span><span class="dv">0</span><span class="op">];</span></span></code></pre></div>
+<p>Arrays and pointers are closely related:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> <span class="op">*</span>ptr <span class="op">=</span> arr<span class="op">;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> ptr<span class="op">[</span><span class="dv">1</span><span class="op">]);</span> <span class="co">// prints 2</span></span></code></pre></div>
+<hr />
+<h2 id="if-statements">6. <code>if</code> Statements</h2>
+<p>Conditional execution:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> x <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>x <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Positive</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>x <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Zero</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Negative</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="while-statements">7. <code>while</code> Statements</h2>
+<p>Loop while condition is true:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="op">(</span>i <span class="op">&lt;</span> <span class="dv">5</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    i<span class="op">++;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="for-statements">8. <code>for</code> Statements</h2>
+<p>More compact loop syntax:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="op">(</span><span class="dt">int</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="dv">5</span><span class="op">;</span> i<span class="op">++)</span> <span class="op">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> i<span class="op">);</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="typedef-struct-definitions">9. <code>typedef struct</code>
+Definitions</h2>
+<p>Custom types using <code>struct</code> and <code>typedef</code>:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> id<span class="op">;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> grade<span class="op">;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> Student<span class="op">;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>Student s <span class="op">=</span> <span class="op">{</span><span class="dv">123</span><span class="op">,</span> <span class="fl">95.5</span><span class="op">};</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>printf<span class="op">(</span><span class="st">&quot;ID: </span><span class="sc">%d</span><span class="st">, Grade: </span><span class="sc">%.1f\n</span><span class="st">&quot;</span><span class="op">,</span> s<span class="op">.</span>id<span class="op">,</span> s<span class="op">.</span>grade<span class="op">);</span></span></code></pre></div>
+<p>You can also use the traditional style:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Student <span class="op">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> id<span class="op">;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">float</span> grade<span class="op">;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span></code></pre></div>
+<hr />

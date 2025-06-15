@@ -23,6 +23,26 @@ Enter your name and student ID.
 * even if you are not building a compiler, such a knowledge is useful in its own right to understand how programming languages work, to write an efficient program in them, and/or to diagnose your programs (especially for unsafe languages such as C or C++)
 * to that end, the goal of this notebook is to look at and understand assembly code generated from C language and translate some C functions into assembly by hand
 
+# Prepare AI Tutor
+
+* execute the following cell to set up your tutor
+<!--- code w kernel=python --->
+from heytutor import *
+config(default_lang=" ... ")  # choose one of Go/Julia/OCaml/Rust
+<!--- end code --->
+* you may want to ask a few basics
+<!--- code w kernel=python --->
+hey("""explain this C program
+long sum_array(long * a, long n) {
+  long s = 0;
+  for (long i = 0; i < n; i++) {
+    s += a[i];
+  }
+  return s;
+}
+""")
+<!--- end code --->
+
 <a name="let_the_compiler_generate_assembly"> </a>
 # Let the C compiler generate assembly code
 
@@ -41,7 +61,7 @@ cat call.s
 
 * we choose 64 bit ARM instruction set (called _<font color="blue">arm64</font>_ or _<font color="blue">aarch64</font>_) as the target assembly code
  * this notebook teaches you the necessary part of arm64 assembly. don't worry if you do not know about it
- * this notebook requires a basic knowledge about C language; if you are new to C, study a C primer for this notebook
+ * this notebook requires a basic knowledge about C language; if you are new to C, study a [C primer](https://taura.github.io/programming-languages/html/c_language_primer.html) for this notebook
  * nobody can remember all instructions. the point is to understand the minimum set of instructions necessary by a compiler and to be able to examine instructions corresponding to specific C expressions
  <!-- * [reference](https://www.felixcloutier.com/x86/) -->
  * [cheat sheet](https://taura.github.io/programming-languages/html/arm64_assembly_cheat_sheet.html)
