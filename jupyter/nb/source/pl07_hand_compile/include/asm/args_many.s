@@ -10,22 +10,25 @@ add_many:
 	.cfi_startproc
 	add	x0, x0, x1
 	add	x0, x0, x2
-	ldp	x2, x1, [sp]
 	add	x0, x0, x3
 	add	x0, x0, x4
+	ldp	x4, x3, [sp]
 	add	x0, x0, x5
+	ldp	x2, x1, [sp, 16]
 	add	x0, x0, x6
-	ldp	x4, x3, [sp, 16]
 	add	x0, x0, x7
-	add	x0, x0, x2
-	add	x0, x0, x1
-	ldp	x2, x1, [sp, 32]
 	add	x0, x0, x4
 	add	x0, x0, x3
-	ldp	x4, x3, [sp, 48]
+	ldp	x4, x3, [sp, 32]
 	add	x0, x0, x2
 	add	x0, x0, x1
-	ldp	x2, x1, [sp, 64]
+	ldp	x2, x1, [sp, 48]
+	add	x0, x0, x4
+	add	x0, x0, x3
+	ldp	x4, x3, [sp, 64]
+	add	x0, x0, x2
+	add	x0, x0, x1
+	ldp	x2, x1, [sp, 80]
 	add	x0, x0, x4
 	add	x0, x0, x3
 	add	x0, x0, x2
