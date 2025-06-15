@@ -122,7 +122,7 @@ gcc -o check_ax_by_cz -O0 -g check_ax_by_cz.c ax_by_cz.s
 cd notebooks/pl07_compile_c
 gdb check_ax_by_cz
 (gdb) break ax_by_cz
-(gdb) run
+(gdb) run 1 2 3 4 5 6
 ```
 
 * This way, you can step into the ax_by_cz function
@@ -418,12 +418,12 @@ cat sigmoid.s
 #*P normal distribution
 
 * write a function that takes a floating-point (`double`) number $x$ and calculates the following value
-$$ \mbox{normal}(x) \equiv \frac{1}{2\pi}\exp(x^2/2) $$
+$$ \mbox{normal}(x) \equiv \frac{1}{\sqrt{2\pi}}\exp(-x^2/2) $$
 
-* to obtain the value of $\pi$, obtain $\pi/4$ by calling `atan(1.0, 1.0)` 
+* to obtain the value of $\pi$, use $\pi/4 = \atan2(1.0, 1.0)$
 * in other words, 
 
-$$ \mbox{normal}(x) = \frac{1}{8 \mbox{atan}(1.0, 1.0)} \exp(x^2/2) $$
+$$ \mbox{normal}(x) = \frac{1}{\sqrt{8 \;\mbox{atan2}(1.0, 1.0)}} \exp(-x^2/2) $$
 
 * see the `normal_c` below for the equivalent C function (your jobs is to write sum_array in assembly language equivalent to it)
 
@@ -438,7 +438,7 @@ $$ \mbox{normal}(x) = \frac{1}{8 \mbox{atan}(1.0, 1.0)} \exp(x^2/2) $$
 <!--- end code --->
 
 <!--- code w points=1 kernel=bash --->
-gcc -o check_normal -O3 check_normal.c normal.s
+gcc -o check_normal -O3 check_normal.c normal.s -lm
 <!--- end code --->
 
 <!--- code w points=1 kernel=bash --->
