@@ -8,8 +8,9 @@
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
 * <font color=blue>(2025/06/16)</font> Plan for June 16th
+  1. work on `pl06_how_it_gets_compiled` write to `pl06_how_it_gets_compiled/pl06_how_it_gets_compiled.xlsx` Excel book in your team's OneDrive folder
   1. [Writing Assembly](slides/08-writing-assembly.pdf)
-  1. work on `pl06_how_it_gets_compiled` and `pl07_hand_compile`
+  1. work on `pl07_hand_compile`
   1. [Garbage Collection Basics](slides/07-gc-basics.pdf)
 
 * <font color=blue>(2025/06/09)</font> Plan for June 09th
