@@ -5,7 +5,7 @@
 
 nb_srcs :=
 #nb_srcs += $(wildcard nb/source/pl08_*/*.sos)
-nb_srcs += $(wildcard nb/source/pl08_*/*.sos)
+nb_srcs += $(wildcard nb/source/pl07_*/*.sos)
 
 aux_srcs :=
 #aux_srcs += $(wildcard nb/source/pl06_*/??/Makefile)
