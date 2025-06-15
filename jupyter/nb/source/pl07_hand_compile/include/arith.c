@@ -1,5 +1,5 @@
 long add(long x, long y, long z) {
-  return x + 2 * y + 3 * z;
+  return x + y + z;
 }
 
 long sub(long x, long y, long z) {
@@ -15,7 +15,7 @@ long div(long x, long y, long z) {
 }
 
 double fadd(double x, double y, double z) {
-  return x + 2 * y + 3 * z;
+  return x + y + z;
 }
 
 double fsub(double x, double y, double z) {
