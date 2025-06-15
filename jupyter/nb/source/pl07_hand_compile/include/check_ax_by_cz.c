@@ -16,8 +16,9 @@ int main(int argc, char ** argv) {
   long rc = a * x + b * y + c * z;
   if (r == rc) {
     printf("OK %ld %ld\n", r, rc);
+    return 0;
   } else {
     printf("NG %ld %ld\n", r, rc);
+    return 1;
   }
-  return 0;
 }

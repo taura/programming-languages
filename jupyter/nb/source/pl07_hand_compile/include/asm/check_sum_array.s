@@ -143,9 +143,9 @@ main:
 	mov	w0, 2
 	add	x1, x1, :lo12:.LC1
 	bl	__printf_chk
-.L20:
+	mov	w0, 1
+.L11:
 	ldp	x21, x22, [sp, 32]
-	mov	w0, 0
 	ldp	x23, x24, [sp, 48]
 	ldp	x29, x30, [sp], 64
 	.cfi_remember_state
@@ -164,7 +164,8 @@ main:
 	mov	w0, 2
 	add	x1, x1, :lo12:.LC0
 	bl	__printf_chk
-	b	.L20
+	mov	w0, 0
+	b	.L11
 .L30:
 	.cfi_offset 19, -48
 	.cfi_offset 20, -40

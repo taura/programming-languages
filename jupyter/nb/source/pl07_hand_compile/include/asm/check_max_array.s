@@ -100,9 +100,9 @@ main:
 	mov	w0, 2
 	add	x1, x1, :lo12:.LC0
 	bl	__printf_chk
-.L19:
-	ldp	x19, x20, [sp, 16]
 	mov	w0, 0
+.L10:
+	ldp	x19, x20, [sp, 16]
 	ldp	x21, x22, [sp, 32]
 	ldr	x23, [sp, 48]
 	ldp	x29, x30, [sp], 64
@@ -126,7 +126,8 @@ main:
 	mov	w0, 2
 	add	x1, x1, :lo12:.LC1
 	bl	__printf_chk
-	b	.L19
+	mov	w0, 1
+	b	.L10
 .L11:
 	mov	x1, x23
 	bl	max_array

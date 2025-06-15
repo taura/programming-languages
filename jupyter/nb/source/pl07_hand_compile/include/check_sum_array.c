@@ -21,8 +21,9 @@ int main(int argc, char ** argv) {
   long sa_c = sum_array_c(a, n);
   if (sa == sa_c) {
     printf("OK %ld %ld\n", sa, sa_c);
+    return 0;
   } else {
     printf("NG %ld %ld\n", sa, sa_c);
+    return 1;
   }
-  return 0;
 }

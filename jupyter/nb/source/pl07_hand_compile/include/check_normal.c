@@ -15,8 +15,9 @@ int main(int argc, char ** argv) {
   double yc = normal_c(x);
   if (fabs(y - yc) < 1.0e-6) {
     printf("OK %f %f\n", y, yc);
+    return 0;
   } else {
     printf("NG %f %f\n", y, yc);
+    return 1;
   }
-  return 0;
 }

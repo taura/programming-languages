@@ -48,9 +48,9 @@ main:
 	adrp	x1, .LC3
 	add	x1, x1, :lo12:.LC3
 	bl	__printf_chk
-.L4:
+	mov	w0, 1
+.L1:
 	ldp	x19, x20, [sp, 16]
-	mov	w0, 0
 	ldp	x29, x30, [sp], 32
 	.cfi_remember_state
 	.cfi_restore 30
@@ -65,7 +65,8 @@ main:
 	adrp	x1, .LC2
 	add	x1, x1, :lo12:.LC2
 	bl	__printf_chk
-	b	.L4
+	mov	w0, 0
+	b	.L1
 .L7:
 	adrp	x3, .LANCHOR0
 	adrp	x1, .LC0

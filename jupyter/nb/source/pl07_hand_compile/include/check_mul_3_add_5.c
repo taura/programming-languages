@@ -10,8 +10,9 @@ int main(int argc, char ** argv) {
   long yc = 3 * x + 5;
   if (y == yc) {
     printf("OK %ld %ld\n", y, yc);
+    return 0;
   } else {
     printf("NG %ld %ld\n", y, yc);
+    return 1;
   }
-  return 0;
 }

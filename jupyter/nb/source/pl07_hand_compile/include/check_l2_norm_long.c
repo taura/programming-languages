@@ -10,8 +10,9 @@ int main(int argc, char ** argv) {
   long l2c = x[0] * x[0] + x[1] * x[1] + x[2] * x[2];
   if (l2 == l2c) {
     printf("OK %ld %ld\n", l2, l2c);
+    return 0;
   } else {
     printf("NG %ld %ld\n", l2, l2c);
+    return 1;
   }
-  return 0;
 }

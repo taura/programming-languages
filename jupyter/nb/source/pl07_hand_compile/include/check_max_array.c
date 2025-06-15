@@ -21,8 +21,9 @@ int main(int argc, char ** argv) {
   double ma_c = max_array_c(a, n);
   if (ma == ma_c) {
     printf("OK %f %f\n", ma, ma_c);
+    return 0;
   } else {
     printf("NG %f %f\n", ma, ma_c);
+    return 1;
   }
-  return 0;
 }

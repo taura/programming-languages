@@ -70,16 +70,16 @@ main:
 	mov	w0, 2
 	add	x1, x1, :lo12:.LC3
 	bl	__printf_chk
-.L4:
-	adrp	x0, :got:__stack_chk_guard
-	ldr	x0, [x0, :got_lo12:__stack_chk_guard]
-	ldr	x2, [sp, 24]
-	ldr	x1, [x0]
-	subs	x2, x2, x1
-	mov	x1, 0
+	mov	w0, 1
+.L1:
+	adrp	x1, :got:__stack_chk_guard
+	ldr	x1, [x1, :got_lo12:__stack_chk_guard]
+	ldr	x3, [sp, 24]
+	ldr	x2, [x1]
+	subs	x3, x3, x2
+	mov	x2, 0
 	bne	.L10
 	ldp	x29, x30, [sp, 32]
-	mov	w0, 0
 	ldr	x19, [sp, 48]
 	add	sp, sp, 64
 	.cfi_remember_state
@@ -95,7 +95,8 @@ main:
 	mov	w0, 2
 	add	x1, x1, :lo12:.LC2
 	bl	__printf_chk
-	b	.L4
+	mov	w0, 0
+	b	.L1
 .L8:
 	adrp	x3, .LANCHOR0
 	adrp	x1, .LC0
