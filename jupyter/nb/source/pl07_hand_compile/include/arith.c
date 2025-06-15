@@ -1,9 +1,9 @@
 long add(long x, long y, long z) {
-  return x + y + z;
+  return x + y + z + 150;
 }
 
 long sub(long x, long y, long z) {
-  return x - y - z;
+  return x - y - z - 150;
 }
 
 long mul(long x, long y, long z) {
@@ -15,17 +15,17 @@ long div(long x, long y, long z) {
 }
 
 double fadd(double x, double y, double z) {
-  return x + y + z;
+  return x + y + z + 150;
 }
 
 double fsub(double x, double y, double z) {
-  return x - y - z;
+  return x - y - z - 150;
 }
 
 double fmul(double x, double y, double z) {
-  return x * y * z;
+  return x * y * z * 1.3;
 }
 
 double fdiv(double x, double y, double z) {
-  return x / y / z;
+  return x / y / z / 1.3;
 }
