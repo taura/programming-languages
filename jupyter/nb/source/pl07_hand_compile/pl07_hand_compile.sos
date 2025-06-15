@@ -655,7 +655,7 @@ gcc -o check_sum_array -O3 check_sum_array.c sum_array.s
 
 <!--- code w points=1 kernel=python --->
 %%writefile max_array.s
-<!--- include nb/source/pl07_hand_compile/include/max_array.s --->
+<!--- include nb/source/pl07_hand_compile/include/empty_asm/max_array.s --->
 <!--- end code --->
 
 <!--- code w points=1 kernel=python --->
@@ -671,7 +671,7 @@ gcc -o check_max_array -O3 check_max_array.c max_array.s
 ./check_max_array 1.2 2.3 3.4
 ./check_max_array 1.2 3.4 2.3
 ./check_max_array 3.4 1.2 2.3
-./check_max_array
+./check_max_array 2.3 3.4 1.2
 <!--- end code --->
 
 
