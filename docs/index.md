@@ -7,10 +7,14 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2025/06/16)</font>
+  1. on [term report](html/final_report.html), grading, and assignment(s) to come
+
 * <font color=blue>(2025/06/16)</font> Plan for June 16th
   1. work on `pl06_how_it_gets_compiled` write to `pl06_how_it_gets_compiled/pl06_how_it_gets_compiled.xlsx` Excel book in your team's OneDrive folder
   1. [Writing Assembly](slides/08-writing-assembly.pdf)
   1. work on `pl07_hand_compile`
+     * [C language primer](html/c_language_primer.html) for those who are new to C
   1. [Garbage Collection Basics](slides/07-gc-basics.pdf)
 
 * <font color=blue>(2025/06/09)</font> Plan for June 09th
@@ -156,3 +160,5 @@
 * [COINS (in Japanese)](http://coins-compiler.sourceforge.jp/international/)
 
 # Grading
+
+* See [Programming Languages: the Term Report (2025)](html/final_report.html)

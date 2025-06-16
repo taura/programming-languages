@@ -1,11 +1,12 @@
+<link rel="stylesheet" href="../scripts/style.css">
 
-# AArch64 (ARM64) Assembly Cheat Sheet
+# AArch64 (ARM64) Assembly Cheat Sheet {.unnumbered}
 
 * [Authorative source](https://developer.arm.com/documentation/ddi0602/2025-03/?lang=en)
 
-## Registers
+# Registers
 
-### General Purpose (x0–x30)
+## General Purpose (x0–x30)
 
 * C convention
 
@@ -31,7 +32,7 @@
 
 ---
 
-## Stack & Calling Convention of C (AAPCS64)
+# Stack & Calling Convention of C (AAPCS64)
 
 - Arguments: x0-x7
 - Return: x0
@@ -42,7 +43,7 @@
 
 ---
 
-## Arithmetic and Logic
+# Arithmetic and Logic
 
 ```asm
 add x0, x1, x2        // x0 = x1 + x2
@@ -55,7 +56,7 @@ eor x0, x1, x2        // bitwise XOR
 
 ---
 
-## Load and Store
+# Load and Store
 
 * single-word load/stores
 
@@ -84,7 +85,7 @@ stp x0, x1, [sp, #-16]! // = sp -= 16; stp x0,[sp]; stp x1,[sp,#8]
 
 ---
 
-## Branch and Compare
+# Branch and Compare
 
 ```asm
 cmp x0, x1            // compare x0 and x1 and put the result into the condition flags register
@@ -103,7 +104,7 @@ ret                   // return
 
 ---
 
-## Function Prologue/Epilogue
+# Function Prologue/Epilogue
 
 * Any function that calls another function 
 
@@ -119,7 +120,7 @@ ret
 
 ---
 
-## Floating-Point Registers
+# Floating-Point Registers
 
 - sN = 32-bit float, dN = 64-bit float
 

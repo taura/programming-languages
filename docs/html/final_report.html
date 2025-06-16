@@ -1,407 +1,131 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-<script src="js/lang.js"></script>
-  
-<title>プログラミング言語: 最終レポート仕様 (2024)</title>
-
-<style>
-h1 {
-  font-size   : 14pt;
-  font-family : serif;
-  margin      : 10pt;
-  padding     : 3pt 20pt;
-  border-style     : solid;
-  border-width     : 1pt 1pt 0pt 15pt ;
-   
-  border-color     : #99A1AA;
-  background-color : #CCCCDD;
-}
-
-h2 {
-  font-size   : 14pt;
-  font-family : serif;
-  margin      : 10pt;
-  padding     : 3pt 20pt;
-  border-style     : solid;
-  border-width     : 1pt 1pt 0pt 15pt ;
-   
-  border-color     : #99A1AA;
-  background-color : #DDDDEE;
-}
-
-h3 {
-  font-size   : 12pt;
-  font-family : serif;
-  margin      : 14pt;
-  padding     : 3pt 20pt;
-  border-style     : solid;
-  border-width     : 1pt 1pt 0pt 15pt;
-  border-color     : #99A1AA;
-  background-color : #EEEEFF;
-}
-
-div {
-  font-size   : 12pt;
-  font-family : serif;
-  margin      : 10pt;
-  padding     : 3pt 20pt;
-  border-color     : #99A1AA;
-}
-
-p {
-  font-size   : 12pt;
-  font-family : serif;
-  border-color     : #99A1AA;
-}
-
-pre {
-  background-color:#efe;
-}
-
-</style>
-</head>
-
-<body onload="main()">
-
-<h1 class="ja">プログラミング言語: 期末レポート仕様 (2024) <br /> 田浦健次朗</h1>
-<h1 class="en">Programming Languages: the Term Report (2024)<br /> Kenjiro Taura</h1>
-<div>
-<font size=-1>(the page is encoded in UTF-8)</font>
-  <ul>
-    <li><a href=../ >top page</a></li>
-    <li><a href="?lang=ja"><img src=img/japan_flag.png border=1 height=16 alt=Japanese /></a> / <a href="?lang=en"><img src=img/english_flag.png border=1 height=16 alt=English /></a> </li>
-  </ul>
-</div>
-
-<h2 class="ja">成績の付け方</h2>
-<h2 class="en">Evaluation Criteria</h2>
-<div>
-  <p class="ja">
-    単位がつく条件は以下の条件0-3
-  </p>
-  <p class="en">
-    The conditions for the credit are the following condition #0-#3
-  </p>
-
+<p><link rel="stylesheet" href="../scripts/style.css"></p>
+<h1 class="unnumbered"
+id="programming-languages-the-term-report-2025">Programming Languages:
+the Term Report (2025)</h1>
+<h1 data-number="1" id="evaluation-criteria"><span
+class="header-section-number">1</span> Evaluation Criteria</h1>
 <ul>
-  <li class="ja">条件0: 授業への参加, 振り返りの提出</li>
-  <li class="en">condition #0: participate in the class and submit reflective essays</li>
-  <li class="ja">条件1: グループワークにきちんと参加している</li>
-  <li class="en">condition #1: engage in group work</li>
-  <li class="ja">条件2: UTOLに登録されている3つの課題2, 3, 4を提出している．
-  </li>
-  <li class="en">condition #2: submit 
-    the three assignments in UTOL Assignment 2, 3, and 4
-  </li>
-  <li class="ja">条件3:
-    以下の期末レポート提出(オプションA-D)．</li>
-  <li class="en">condition #3: submit the term report (option A-D)</li>
+<li>The conditions for the credit are the following condition #0-#3
+<ul>
+<li>condition #0: participate in the class and submit reflective essays
+sufficient number of times</li>
+<li>condition #1: engage in group work sufficiently</li>
+<li>condition #2: submit assignments in UTOL
+<ul>
+<li>Assignment 2 (<code>pl03_oop_basics</code>),</li>
+<li>Assignment 3 (<code>pl05_generic_fun_type</code>), and</li>
+<li>Assignment 4 (yet to come, about memory management)</li>
+</ul></li>
+<li>condition #3: submit the term report (option A-D)</li>
+</ul></li>
 </ul>
-</div>
-
-<h2 class="ja">期末レポート課題</h2>
-<h2 class="en">The Term Report</h2>
-<div>
-  <p class="ja">以下のオプションA, B, C, Dのいずれか</p>
-  <p class="en">one of the following option A, B, C, or D</p>
-
-  <h3 class="ja">オプションA:</h3>
-  <h3 class="en">Option A:</h3>
-  <div>
-    <p class="ja">
-      ミニコンパイラ作成でコード生成器を完成させる (
-      仕様詳細, もととなるコードはJupyter pl09_mincとして配布).
-      <ul class="ja">
-        <li>字句解析・構文解析器 (プログラムを読み取るコード)</li>
-        <li>構文木の定義 (プログラムを読み取ったあとのデータ構造)</li>
-      </ul>
-    </p>
-    <p class="en">
-      Finish code generator in the compiler 
-      construction exercise
-      (detailed spec and base code were distributed through Jupyter pl09_minc).
-      The following is included
-      <ul class="en">
-        <li>lexical analyzer and parser
-          (code that reads the source program) and </li>
-        <li>definition of syntax tree
-          (data structure you get after reading the source program)</li>
-      </ul>
-    </p>
-    <p class="ja">
-      具体的な提出物は
-      <font color="blue">「コメントがふんだんに入ったコード」</font>
-      コード生成器の仕組みの説明を書くつもりで.
-      コード内にコメントとして書く以外は,
-      人に読ませる「文章」を書いているつもりで書くこと
-    </p>
-    <p class="en">
-      What you need to submit is 
-      <font color="blue">"heavily commented code."</font>
-      Write comments with the mindset of
-      writing down the workings of the code generator.
-      You should write those comments as if you are writing
-      a "document" for others to read, except that they are
-      embedded within the code
-    </p>
-    <p class="ja">
-      評価は達成度(どのくらいテストをパスしたかどうか),
-      コード生成器のプログラムとコメントの質(読める文章になっているか),
-      発展的に取り組んだ課題(最適化, 仕様の拡張(for文, 浮動小数点数,
-      ポインタ, etc.))などで行う
-    </p>
-    <p class="en">
-      The submission is evaluated with criterion including
-      the level of accomplishment (how many tests you passed),
-      the quality of the code and documentation of the code generator,
-      and additional advanced topics you achieved
-      (optimization, exension (for statement, floating point numbers,
-      pointers, etc.)
-    </p>
-  </div>
-
-  <h3 class="ja">オプションB:</h3>
-  <h3 class="en">Option B:</h3>
-  <div>
-    <p class="ja">
-      この授業で学んだことや，
-      プログラミング言語に関連して自分が最近学んだことを，
-      今，自身が行っている研究，卒論などを改良するのに役に立てなさい
-      （もしくは，役に立ちそうな開発や予備実験を行いなさい）．
-      例えば，</p>
-  
-    <p class="en"><font color=blue>Option B:</font>
-      apply what you've learned in this lecture
-      or what you recently learned about programming
-      languages to your bachelor thesis research or
-      other ongoing projects
-      (or conduct a development or an experiment 
-      hopefully useful for it).
-      Here are some examples, among others.</p>
-    
-    <ul>
-      <li class="ja">卒論やその他のプロジェクト
-        で開発する必要のあるプログラムの品質を高めるため，
-        OCaml, Julia, Go, Rustのどれかを使って開発する．
-        それらの言語の生産性の高さを活かして，プログラムを高機能化する,
-        より堅牢にする, などの試み.
-        開発の経験を通してわかった言語の利点・欠点など.
-      </li>
-      <li class="en">
-        Use OCaml, Julia, Go, or Rust to 
-        develop programs you need to develop in your bachelor thesis
-        or other research projects,
-        to the end of enhancing their quality.
-        Attempts to enhance their functionality and/or robustness
-        thanks to the programability of
-        such languages. Investigate their advantages or shortages
-        you learned through the experiences.
-      </li>
-      
-    </ul>
-
-    <p class="ja">
-    どの内容が，マスターすれば自分にとって今後有用かを考え，
-    それらについて，授業の演習で取り上げたものよりは，
-    最低一段掘り下げた実験を行ってください．
-    </p>
-    <p class="en">
-      Consider which topics are most useful
-      to your future task and conduct an experiment or
-      development at least one step deeper
-      than the exercises of the lecture.
-    </p>
-  
-    <p class="ja">
-      期待するレポートの内容:
-    </p>
-    <p class="en">
-      Expected contents:
-    </p>
-    <ul>
-      <li class="ja">行っている，あるいは行う予定の研究の内容</li>
-      <li class="en">research being conducted or planned</li>
-      <li class="ja">それに役立てるために，今回設定した目標</li>
-      <li class="en">the goal you set this time, toward the end of
-        using it in your research</li>
-      <li class="ja">開発や実験の内容</li>
-      <li class="en">programs you developed and/or experiments you conducted</li>
-      <li class="ja">結果</li>
-      <li class="en">results</li>
-      <li class="ja">考察</li>
-      <li class="en">your thoughts</li>
-    </ul>
-    
-    <p class="ja">
-      自身の卒論研究やプロジェクトとの関連について何度か述べていますが,
-      それはレポートが卒論・研究に役立ち, 使った時間が価値あるものになって
-      ほしいという願いから言っているもので，
-      内容に制限を課そうという意図はありません.
-      興味あるトピックだが,
-      適用できる研究をやっているわけではないとか,
-      自分の研究はそこから遠いと思う場合はこだわらず,
-      興味あるトピックを選んで下さい.
-    </p>
-    
-    <p class="en">
-      I mentioned connection to your bachelor thesis research or
-      other projects several times above;
-      I did so in the hope that you can use your time most effectively
-      and profitably; I do not have any intention to
-      narrow the range of topics you can choose from.
-      If you have a topic of your interest but have
-      no relevant projects you may apply it to
-      or think your projects are too far from it,
-      never mind and choose the topic you are interested in.
-    </p>
-  </div>
-
-  <h3 class="ja">オプションC:</h3>
-  <h3 class="en">Option C:</h3>
-  <div>
-    <p class="ja">
-      この授業でやったことを踏まえ，
-      それに関連した英語の論文を読み，自分の考察と共にまとめる．
-    </p>
-    <p class="en">Based on what you have learned in this
-      lecture, read a related paper in English and summarize
-      it with your own thought.
-    </p>
-    <p class="ja">
-      期待するレポートの内容:
-    </p>
-    <p class="en">
-      Expected contents:
-    </p>
-    
-    <ul>
-      <li class="ja">その文献を読んだ目的: 自分がその文献から得ようとしたこと
-        (「レポートを書くために読みました」ではなく)</li>
-      <li class="en">The purpose of your reading the paper:
-        What did you try to learn from the paper?
-        (not just to "write the report")</li>
-      <li class="ja">文献の内容のまとめ(ただの和訳にならないように．
-        自分がその文献の紹介記事を別の雑誌に書くと思って)</li>
-      <li class="en">Summary of the paper
-        (bear in mind that it is not just a translation.
-        Imagine you are writing an article in another magazine
-        introducing the paper)</li>
-      <li class="ja">自分が考えるその研究の意義</li>
-      <li class="en">The value of the paper, in your own thoughts and terms</li>
-      <li class="ja">その他の考察．
-        建設的批判やその文献の内容を踏まえて次にやるべきことは何
-        だと思うか，など</li>
-      <li class="en">Other thoughts, including
-        constructive criticism or what you think should follow
-        this paper, etc.</li>
-    </ul>
-    
-    <p class="ja">
-      分量の上限は指定しませんが, 最低ラインは4ページ程度.
-    </p>
-    <p class="en">
-      I don't put an upper bound on the length; 
-      the minimum is three pages.
-    </p>
-
-    <p class="ja">
-      今年は特に, 大規模言語モデルによるプログラムの生成について
-      の調査に期待します. 以下など
-    </p>
-    <p class="en">
-      I especially look forward to researches on
-      program code generation using large language models, including
-      but not limited to
-    </p>
-
-    <ul>
-      <li>
-        <a href="https://www.science.org/stoken/author-tokens/ST-905/full"
-           target="_blank">
-          Competition-level code generation with AlphaCode
-        </a>
-      </li>
-      <li>
-        <a href="https://arxiv.org/abs/2107.03374" target="_blank">
-          Evaluating Large Language Models Trained on Code
-        </a>
-      </li>
-    </ul>
-    
-    <p class="ja">
-      論文を探すのに推奨する学会 (以下に限定する意図ではない)
-    </p>
-    <p class="en">
-      Recommended venues to search for papers (but not limited to them) 
-    </p>
-
-    <ul>
-      <li><a href="https://dl.acm.org/conference/pldi"
-             target="_blank">PLDI</a></li>
-      <li><a href="https://dl.acm.org/conference/ismm"
-             target="_blank">ISMM</a></li>
-      <li><a href="https://dl.acm.org/conference/cgo"
-             target="_blank">CGO</a></li>
-    </ul>
-    
-  </div>
-
-
-  <h3 class="en">Option D:</h3>
-  <div>
-    <p class="ja">
-      Option C と同じ. ただしレポートの代わりに最終回に発表を行う.
-      ただしすでにほとんど準備ができているのでない限りすでに時間はないと思われる.
-      もしやりたい場合はすぐに知らせてください.
-    </p>
-    <p class="en">The same as Option C, but
-      you do a presentation in the final week instead of
-      writing a report.
-      However, you will not have sufficient time to prepare, unless it has almost already been done.
-      Please let me know immediately if you want to choose this option.
-    </p>
-  </div>
-  
-  <h3 class="ja">締め切り</h2>
-  <h3 class="en">Due</h2>
-  <div>
-    <ul>
-      <li class="ja">
-        <font color=red>2024年 8月10 日</font>
-      </p>
-      <li class="en">
-        <font color=red>August 10th, 2024</font>
-      </p>
-
-      <li class="ja">
-        本提出前に, 何をするかの宣言を提出してください
-        (<font color=red>〆切 7月6日</font>)
-      </p>
-      <li class="en">
-        before you submit it, make sure you declare what you will work on
-        (Due: <font color=red>July 6th</font>)
-      </p>
-
-    </ul>
-  </div>
-
-  <h3 class="ja">提出方法</h2>
-  <h3 class="en">How to submit</h2>
-  <div>
-    <p class="ja">
-      UTOLで提出.
-      実際の提出物はUTOL上での課題の指示に従うこと.
-    </p>
-    <p class="en">
-      Submit via UTOL.
-      Follow the instruction on UTOL for details.
-    </p>
-  </div>
-</div>
-
-</body>
-</html>
+<h1 data-number="2" id="the-term-report"><span
+class="header-section-number">2</span> The Term Report</h1>
+<ul>
+<li>One of the following options A, B, or C</li>
+</ul>
+<h2 data-number="2.1" id="option-a-build-a-compiler"><span
+class="header-section-number">2.1</span> Option A (build a
+compiler)</h2>
+<ul>
+<li>Finish code generator in the MinC (minimum subset of C) compiler
+construction exercise (detailed spec and base code will be announced
+soon). The following baseline code and test code will be given
+<ul>
+<li>lexical analyzer and parser (code that reads the source
+program)</li>
+<li>definition of syntax tree (data structure you get after reading the
+source program)</li>
+</ul></li>
+<li>What you need to submit is “heavily commented code.” Write comments
+with the mindset of writing down the workings of the code generator. You
+should write those comments as if you are writing a “document” for
+others to read, except that they are embedded within the code</li>
+<li>The submission is evaluated with criterion including
+<ul>
+<li>the level of accomplishment (how many tests you passed),</li>
+<li>the quality of the code and documentation of the code
+generator,</li>
+<li>and additional advanced topics you achieved (optimization, exension
+(for statement, floating point numbers, pointers, etc.)</li>
+</ul></li>
+</ul>
+<h2 data-number="2.2" id="option-b-apply-to-your-project"><span
+class="header-section-number">2.2</span> Option B (apply to your
+project)</h2>
+<ul>
+<li><p>Apply what you’ve learned in this lecture or what you recently
+learned about programming languages to your bachelor thesis research or
+other ongoing projects (or conduct a development or an experiment
+hopefully useful for it). Here are some examples, among others.</p>
+</p></li>
+<li><p>Use OCaml, Julia, Go, or Rust to develop programs you need to
+develop in your bachelor thesis or other research projects, to the end
+of enhancing their quality. Attempts to enhance their functionality
+and/or robustness thanks to the programability of such languages.
+Investigate their advantages or shortages you learned through the
+experiences.</p></li>
+<li><p>Consider which topics are most useful to your future task and
+conduct an experiment or development at least one step deeper than the
+exercises of the lecture.</p></li>
+<li><p>Expected contents:</p>
+<ul>
+<li>research being conducted or planned</li>
+<li>the goal you set this time, toward the end of using it in your
+research</li>
+<li>programs you developed and/or experiments you conducted</li>
+<li>results</li>
+<li>discussion and your thoughts</li>
+</ul></li>
+<li><p>I mentioned connection to your bachelor thesis research or other
+projects several times above; I did so in the hope that you can use your
+time most effectively and profitably; I do not have any intention to
+narrow the range of topics you can choose from. If you have a topic of
+your interest but have no relevant projects you may apply it to or think
+your projects are too far from it, never mind and choose the topic you
+are interested in.</p></li>
+</ul>
+<h2 data-number="2.3" id="option-c-read-a-paper"><span
+class="header-section-number">2.3</span> Option C (read a paper)</h2>
+<ul>
+<li>Based on what you have learned in this lecture, read a related paper
+in English and summarize it with your own thought.</li>
+<li>Expected contents:
+<ul>
+<li>The purpose of your reading the paper: What did you try to learn
+from the paper? (not just to “write the report”)</li>
+<li>Summary of the paper (bear in mind that it is not just a
+translation. Imagine you are writing an article in another magazine
+introducing the paper)</li>
+<li>The value of the paper, in your own thoughts and terms</li>
+<li>Other thoughts, including constructive criticism or what you think
+should follow this paper, etc.</li>
+</ul></li>
+<li>I don’t put an upper bound on the length; the minimum is three
+pages.</li>
+<li>I especially look forward to researches on program code generation
+using large language models</li>
+<li>A few recommended venues to search for papers (but not limited to
+them)
+<ul>
+<li><a href="https://dl.acm.org/conference/pldi" target="_blank"
+rel="noopener">PLDI</a></li>
+<li><a href="https://dl.acm.org/conference/ismm" target="_blank"
+rel="noopener">ISMM</a></li>
+<li><a href="https://dl.acm.org/conference/cgo" target="_blank"
+rel="noopener">CGO</a></li>
+</ul></li>
+</ul>
+<h1 data-number="3" id="due"><span
+class="header-section-number">3</span> Due</h1>
+<ul>
+<li>report is due: August 9th, 2025</li>
+<li>before you submit the final report, submit an abstract (declaration
+of what you will work on) which is due: July 12th</li>
+</ul>
+<h1 data-number="4" id="how-to-submit"><span
+class="header-section-number">4</span> How to submit</h1>
+<ul>
+<li>watch UTOL (submissions will be open soon) and this page for
+follow-up announcements</li>
+</ul>

@@ -1,6 +1,8 @@
-# 🌟 C Language Primer
+<link rel="stylesheet" href="../scripts/style.css">
 
-## 1. Primitive Types
+# 🌟 C Language Primer {.unnumbered}
+
+# Primitive Types
 
 C provides several built-in types. Common numeric types include:
 
@@ -15,7 +17,7 @@ Use `sizeof()` to check the exact size on your platform.
 
 ---
 
-## 2. Function Definition
+# Function Definition
 
 A function consists of a return type, name, parameters, and a body:
 
@@ -33,7 +35,7 @@ int result = add(2, 3); // result = 5
 
 ---
 
-## 3. Variables
+# Variables
 
 Variables must be declared with a type:
 
@@ -46,7 +48,7 @@ Uninitialized variables contain garbage values.
 
 ---
 
-## 4. Expressions
+# Expressions
 
 Expressions involve operators and operands:
 
@@ -61,9 +63,9 @@ C has standard arithmetic and logical operators.
 
 ---
 
-## 5. Pointers and Arrays
+# Pointers and Arrays
 
-### Pointers
+## Pointers
 
 A pointer stores the address of another variable:
 
@@ -73,7 +75,7 @@ int *p = &x;   // p points to x
 *p = 20;       // x is now 20
 ```
 
-### Arrays
+## Arrays
 
 Arrays are contiguous blocks of elements:
 
@@ -91,7 +93,7 @@ printf("%d\n", ptr[1]); // prints 2
 
 ---
 
-## 6. `if` Statements
+# `if` Statements
 
 Conditional execution:
 
@@ -108,7 +110,7 @@ if (x > 0) {
 
 ---
 
-## 7. `while` Statements
+# `while` Statements
 
 Loop while condition is true:
 
@@ -122,7 +124,7 @@ while (i < 5) {
 
 ---
 
-## 8. `for` Statements
+# `for` Statements
 
 More compact loop syntax:
 
@@ -134,7 +136,7 @@ for (int i = 0; i < 5; i++) {
 
 ---
 
-## 9. `typedef struct` Definitions
+# `typedef struct` Definitions
 
 Custom types using `struct` and `typedef`:
 
