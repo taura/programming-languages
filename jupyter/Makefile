@@ -4,7 +4,7 @@
 #mk_nb_flags := --dbg 2
 
 nb_srcs :=
-nb_srcs += $(wildcard nb/source/pl07_hand_compile/pl07_hand_compile.sos)
+nb_srcs += $(wildcard nb/source/pl08_minc/*.sos)
 
 aux_srcs :=
 #aux_srcs += $(wildcard nb/source/pl06_*/??/Makefile)
@@ -18,20 +18,20 @@ aux_srcs += $(wildcard nb/source/pl06_*/??/_)
 #aux_srcs += $(wildcard nb/source/*/img/*.png)
 aux_srcs += $(wildcard nb/source/*/img/*.svg)
 #aux_srcs += $(wildcard nb/source/*/misc/*.html)
-aux_srcs += $(wildcard nb/source/pl09_minc/parser/*.*)
-aux_srcs += $(wildcard nb/source/pl09_minc/parser/Makefile)
-aux_srcs += $(wildcard nb/source/pl09_minc/parser/example/*.*)
-aux_srcs += $(wildcard nb/source/pl09_minc/go/minc/*.*)
-aux_srcs += $(wildcard nb/source/pl09_minc/jl/minc/*.*)
-aux_srcs += $(wildcard nb/source/pl09_minc/ml/minc/?????*)
-aux_srcs += $(wildcard nb/source/pl09_minc/ml/minc/*/*)
-aux_srcs += $(wildcard nb/source/pl09_minc/rs/minc/*.*)
-aux_srcs += $(wildcard nb/source/pl09_minc/rs/minc/src/*.*)
-aux_srcs += $(wildcard nb/source/pl09_minc/test/main.c)
-aux_srcs += $(wildcard nb/source/pl09_minc/test/Makefile)
-aux_srcs += $(wildcard nb/source/pl09_minc/test/src/*.c)
-aux_srcs += $(wildcard nb/source/pl09_minc/test/src/src/fun.c)
-aux_srcs += $(wildcard nb/source/pl09_minc/test/src/src/Makefile)
+aux_srcs += $(wildcard nb/source/pl08_minc/parser/*.*)
+aux_srcs += $(wildcard nb/source/pl08_minc/parser/Makefile)
+aux_srcs += $(wildcard nb/source/pl08_minc/parser/example/*.*)
+aux_srcs += $(wildcard nb/source/pl08_minc/go/minc/*.*)
+aux_srcs += $(wildcard nb/source/pl08_minc/jl/minc/*.*)
+aux_srcs += $(wildcard nb/source/pl08_minc/ml/minc/?????*)
+aux_srcs += $(wildcard nb/source/pl08_minc/ml/minc/*/*)
+aux_srcs += $(wildcard nb/source/pl08_minc/rs/minc/*.*)
+aux_srcs += $(wildcard nb/source/pl08_minc/rs/minc/src/*.*)
+aux_srcs += $(wildcard nb/source/pl08_minc/test/main.c)
+aux_srcs += $(wildcard nb/source/pl08_minc/test/Makefile)
+aux_srcs += $(wildcard nb/source/pl08_minc/test/src/*.c)
+aux_srcs += $(wildcard nb/source/pl08_minc/test/src/src/fun.c)
+aux_srcs += $(wildcard nb/source/pl08_minc/test/src/src/Makefile)
 
 ans_aux_srcs :=
 # ans_aux_srcs += $(wildcard nb/source/pl04_*/01build_sys/??/*/*/*)
