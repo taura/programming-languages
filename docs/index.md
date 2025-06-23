@@ -7,6 +7,11 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2025/06/23)</font> Plan for June 23rd
+  1. work on `pl07_hand_compile`
+  1. [Implementing a Compiler](slides/09-compiler.pdf)
+  1. work on `pl08_minc`
+  
 * <font color=blue>(2025/06/16)</font>
   * on [term report](html/final_report.html), grading, and assignment(s) to come
 
@@ -136,9 +141,9 @@
 * [Garbage Collection (GC) : A Brief Introductions](slides/07-gc-basics.pdf)
 * [Writing Aseembly](slides/08-writing-assembly.pdf)
 
+* [Writing a Compiler](slides/09-compiler.pdf )
 * [Rust Memory Management](slides/08-rust.pdf)
 * [Garbage Collection](slides/09-gc-adv.pdf)
-* [Making a Compiler](slides/10-compiler.pdf )
 
 # References
 
