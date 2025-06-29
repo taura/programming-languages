@@ -7,6 +7,11 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2025/06/30)</font> Plan for June 30th
+  1. [Implementing a Compiler](slides/09-compiler.pdf) code generation
+  1. work on `pl08_minc`
+  1. [Garbage Collection Basics](slides/07-gc-basics.pdf)
+
 * <font color=blue>(2025/06/23)</font> Plan for June 23rd
   1. work on `pl07_hand_compile`
   1. [Implementing a Compiler](slides/09-compiler.pdf)
