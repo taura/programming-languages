@@ -11,6 +11,7 @@
   1. [Implementing a Compiler](slides/09-compiler.pdf) code generation
   1. work on `pl08_minc`
   1. [Garbage Collection Basics](slides/07-gc-basics.pdf)
+  1. work on `pl09_memory_management` if time permits (Excel book is already in `pl09_memory_management` folder in your team's OneDrive folder)
 
 * <font color=blue>(2025/06/23)</font> Plan for June 23rd
   1. work on `pl07_hand_compile`
