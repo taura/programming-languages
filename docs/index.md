@@ -7,6 +7,11 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2025/07/07)</font> Plan for July 7th
+  1. [Garbage Collection Basics](slides/07-gc-basics.pdf)
+  1. work on `pl09_memory_management` if time permits (Excel book is in `pl09_memory_management` folder in your team's OneDrive folder)
+  1. [Rust Memory Management](slides/10-rust.pdf)
+
 * <font color=blue>(2025/06/30)</font> Plan for June 30th
   1. [Implementing a Compiler](slides/09-compiler.pdf) code generation
   1. work on `pl08_minc`
@@ -146,9 +151,8 @@
 * [Memory Management](slides/06-memory-management.pdf)
 * [Garbage Collection (GC) : A Brief Introductions](slides/07-gc-basics.pdf)
 * [Writing Aseembly](slides/08-writing-assembly.pdf)
-
 * [Writing a Compiler](slides/09-compiler.pdf )
-* [Rust Memory Management](slides/08-rust.pdf)
+* [Rust Memory Management](slides/10-rust.pdf)
 * [Garbage Collection](slides/09-gc-adv.pdf)
 
 # References
