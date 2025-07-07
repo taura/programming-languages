@@ -12,6 +12,9 @@
   1. work on `pl09_memory_management` if time permits (Excel book is in `pl09_memory_management` folder in your team's OneDrive folder)
   1. [Rust Memory Management](slides/10-rust.pdf)
 
+* <font color=blue>(2025/07/07)</font> 
+  * I keep forgetting to make an entry to UTOL to submit your abstract (declaration of the option and a topic), which is due July 12th.  I will make it later today
+
 * <font color=blue>(2025/06/30)</font> Plan for June 30th
   1. [Implementing a Compiler](slides/09-compiler.pdf) code generation
   1. work on `pl08_minc`
