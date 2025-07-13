@@ -7,6 +7,11 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2025/07/13)</font> Plan for July 14th
+  1. [Rust Memory Management](slides/10-rust.pdf)
+  1. work on `pl09_memory_management`
+  1. [Rust Memory Management](slides/10-rust.pdf)
+
 * <font color=blue>(2025/07/07)</font> Plan for July 7th
   1. [Garbage Collection Basics](slides/07-gc-basics.pdf)
   1. work on `pl09_memory_management` if time permits (Excel book is in `pl09_memory_management` folder in your team's OneDrive folder)
