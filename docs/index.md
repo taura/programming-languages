@@ -11,6 +11,7 @@
   1. [Rust Memory Management](slides/10-rust.pdf)
   1. work on `pl09_memory_management`
   1. [Rust Memory Management](slides/10-rust.pdf)
+  1. examples are given in `pl10_rust` to check your understanding
 
 * <font color=blue>(2025/07/07)</font> Plan for July 7th
   1. [Garbage Collection Basics](slides/07-gc-basics.pdf)
