@@ -349,6 +349,7 @@ and login with the user name and password.
     </div>
 
 
+    <a name="if_things_go_wrong"> </a>
     <h2 class="ja">
       おかしなことになったら
     </h2>
@@ -395,7 +396,7 @@ and login with the user name and password.
       
     </div>
 
-
+    <a name="refetch_notebook"> </a>
     <h2 class="ja">
       Notebookをfetchし直して始めからやり直したい ...
     </h2>
@@ -407,20 +408,19 @@ and login with the user name and password.
         <li class="ja">
           Notebookを破壊してしまったとか, 何か分け合って課題をfetch
           し直して初期状態からやり直したい場合は,
-          fetchし直したい課題のフォルダをまるごと削除して,
-          上記の
-          <a name=if_thigs_go_wrong>おかしなことになったら</a>
+          fetchし直したい課題のフォルダをまるごと削除
+          (... は危険なので名前を変更) して, 上記の
+          <a href="#if_things_go_wrong">おかしなことになったら</a>
           の「すべてがダメなときのリセット方法」に従って
           Jupyterサーバを再起動してください.
           詳しい手順.
           <ol>
-            <li>左ペインから「notebooks」 -&gt;
-              をそれぞれダブルクリックして, fetchし直したい課題のフォルダの中身を表示
+            <li>左ペインからフォルダアイコンを選び,
+              「notebooks」を表示 (課題フォルダ一覧が表示されるはず)
             </li>
             <li>
-              そのフォルダ内のファイルを全て選択して全て削除.
-              サブフォルダがある場合は, それらが空でないと消せないので, 
-              一旦それらサブフォルダ内のファイルを削除してから行う
+              やり直したい課題のフォルダを右クリック -&gt; Rename
+              して適当な名前に変更 (e.g., <tt>pl00_intro</tt> -&gt; <tt>pl00_intro_xxx</tt>)
             </li>
             <li>
               上部のメニューから<font color="blue">File</font>-&gt;
@@ -428,38 +428,44 @@ and login with the user name and password.
               を押して, <font color="blue">Start My Server</font>を押す.
             </li>
             <li>
-              メニュから
+              メニューから
               <font color="blue">Nbgrader</font>-&gt;
               <font color="blue">Assignment List</font>
               を表示すると, 課題が再びFetch可能になっているはずなのでFetchする
             </li>
+            <li>
+              適宜, 元フォルダの作業内容を新しくfetchしたファイルに移植する
+              (逆に, 新しくfetchしたフォルダをrename,
+              古いフォルダの名前を元に戻す,
+              新しくfetchしたフォルダから直したいファイルだけをコピーする,
+              という方法も考えられる)
+            </li>
           </ol>
-          注: フォルダを消す作業は以下の, 端末経由で行うことも可能. その場合,
+          注: 当然上記の作業は端末(SSH, Jupyter terminal)経由で行うことも可能. その場合の例:
 <pre>
 cd ~/notebooks/
-rm -rf 消したい課題のフォルダ
+mv pl00_intro pl00_intro_xxx
+# Stop My Server -> Start My Server
+# 再fetch
+# 必要な作業を移植
 </pre>
         </li>
 
         <li class="en">
-          In case you want to re-fetch the assignment and start over
-          for a reason, like you somehow corrupted the notebook,
-          you first delete the whole folder of the assignment
-          you want to start over and reset your Jupyter server
-          following the procedure <a name=if_thigs_go_wrong>
-            If things go wrong ...</a> above.
+          In case you screw up your notebook or accidentally remove a file
+          and start over, 
+          first rename the assignment folder and restart your Jupyter server
+          following the procedure 
+          <a href="#if_things_go_wrong">If things go wrong ...</a> above.
           Details:
           <ol>
-            <li>In the left pane,
-              double-click <tt>notebooks</tt> folder -&gt;
-              the folder of the assignment you want to delete
-              to show the contents of the assignment folder.
+            <li>Select the folder icon in the left pane,
+              and show <tt>notebooks</tt> folder.
+              You should see folders of assignment names.
             </li>
             <li>
-              Select all files and delete them of that folder.
-              To delete a folder, it must be empty.
-              When it has subfolders, you must first delete
-              contents in each of them before deleting them.
+              Right click the folder for the assignment you want to start over
+              and rename it (e.g., <tt>pl00_intro</tt> -&gt; <tt>pl00_intro_xxx</tt>)
             </li>
             <li>
               Select <font color="blue">File</font>-&gt;
@@ -471,19 +477,26 @@ rm -rf 消したい課題のフォルダ
               From the menu, select
               <font color="blue">Nbgrader</font>-&gt;
               <font color="blue">Assignment List</font>
-              and you should be able to find it.
+              and you should be able to fetch it again.
             </li>
           </ol>
           Note: when deleting a folder, you can do it in a terminal
-          as explained below.  In that case, just do
+          (SSH or Jupyter terminal).  For example,
 <pre>
 cd ~/notebooks/
-rm -rf the-folder-you-want-to-delete
+mv pl00_intro pl00_intro_xxx
+# Stop My Server -> Start My Server
+# re-fetch
+# transplant the work you need
 </pre>
         </li>
       </ul>
 
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/5SO6KTaYwSk?si=vp9I6CWNwMpra5K1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/QqE18GAT4S0?si=2VJNYg3JaQzJB3m7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+      <!--
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/5SO6KTaYwSk?si=vp9I6CWNwMpra5K1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          -->
 
     </div>
 
