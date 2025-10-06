@@ -62,7 +62,7 @@ func main() {
         y := xy[1]
         return x * x + y * y
     }
-    rg := mk_ellipse_generator(3.0, 3.0, 2.0, 1.0, 10000)
+	rg := mk_ellipse_generator(3.0, 3.0, 2.0, 1.0, 10000)
     xy, z, some := minimize[[2]float64](f, rg)
     if some {
         fmt.Printf("(x, y) = (%f, %f), f(x, y) = %f\n", xy[0], xy[1], z);

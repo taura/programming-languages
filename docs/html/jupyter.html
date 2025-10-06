@@ -175,18 +175,13 @@
         <li class="ja">
           「教員からのコメント」に
 <pre>visit https://xxxx.xxxx.xxxx:8000/ user=u2xxxx password=xxxxxxxx</pre>
-と書かれているのを見る. 書かれているURL (<a href="https://taulec.zapto.org:8000/" target="_blank" rel="noopener">https://taulec.zapto.org:8000/</a>,
-<a href="https://tauleg.zapto.org:8000/" target="_blank" rel="noopener">https://tauleg.zapto.org:8000/</a>,
-<a href="https://python.mi.u-tokyo.ac.jp:8000/" target="_blank" rel="noopener">python.mi.u-tokyo.ac.jp</a> など)にアクセスしてユーザ名とパスワードを入力してログイン. 
+と書かれているのを見る. 書かれているURLにアクセスしてユーザ名とパスワードを入力してログイン. 
         </li>
         <li class="en">
           Find something like
 <pre>visit https://xxxx.xxxx.xxxx:8000/ user=u2xxxx password=xxxxxxxx</pre>
 in "comments from the instructor".
-Visit the specified URL (<a href="https://taulec.zapto.org:8000/" target="_blank" rel="noopener">https://taulec.zapto.org:8000/</a>,
-<a href="https://tauleg.zapto.org:8000/" target="_blank" rel="noopener">https://tauleg.zapto.org:8000/</a>,
-<a href="https://python.mi.u-tokyo.ac.jp:8000/" target="_blank" rel="noopener">python.mi.u-tokyo.ac.jp</a>, etc.)
-and login with the user name and password. 
+Visit the specified URL and login with the user name and password. 
         </li>
       </ul>
 
@@ -529,7 +524,7 @@ mv pl00_intro pl00_intro_xxx
           以下のような状態を作る必要がある. すなわち
           <ul>
             <li>SSHの秘密鍵が自分のマシンのホームディレクトリの <tt>.ssh/id_rsa</tt>という名前で,</li>
-            <li>SSHの公開鍵がJupyterサーバ(taulec.zapto.org)の <tt>.ssh/authorized_keys</tt>という名前で</li>
+            <li>SSHの公開鍵がJupyterサーバの <tt>.ssh/authorized_keys</tt>という名前で</li>
           </ul>
           保存されている状態.
         </li>
@@ -537,7 +532,7 @@ mv pl00_intro pl00_intro_xxx
           state for public key authentication to work. That is, you have
           <ul>
             <li>SSH private key with the name <tt>.ssh/id_rsa</tt> in your machine</li>
-            <li>SSH public key with the name <tt>.ssh/authorized_keys</tt> in the Jupyter server (taulec.zapto.org)</li>
+            <li>SSH public key with the name <tt>.ssh/authorized_keys</tt> in the Jupyter server</li>
           </ul>
         </li>
 
@@ -706,11 +701,11 @@ tuireuproeqiutreiurewuriouoweu0
     <div>
       <ul>
         <li class="ja">自分のコンピュータのコマンドライン端末から
-<pre>$ ssh ユーザ名@taulec.zapto.org
+<pre>$ ssh ユーザ名@サーバー名
 </pre>
         </li>
         <li class="en">From your machine's command line terminal, do
-<pre>$ ssh your_username@taulec.zapto.org
+<pre>$ ssh your_username@サーバー名
 </pre>
         </li>
         <li class="ja"><font color="blue">ユーザ名</font> の部分はJupyter環境での自分のユーザ名でu2xxxx のような文字列で. ITC-LMS経由の課題のフィードバックとして各人に通知している</li>
@@ -718,7 +713,7 @@ tuireuproeqiutreiurewuriouoweu0
         
         <li class="ja">うまく行くと, サーバのコマンドプロンプトが現れるはずである.</li>
         <li class="en">If everything goes alright, you should see the server's command prompt</li>
-<pre>$ ssh u2xxxx@taulec.zapto.org
+<pre>$ ssh u2xxxx@サーバー名
 Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 4.15.0-1054-aws x86_64)
 
  * Documentation:  https://help.ubuntu.com
