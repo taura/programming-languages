@@ -1,0 +1,416 @@
+<p><link rel="stylesheet" href="../scripts/style.css"></p>
+<h1 class="unnumbered" id="how-to-access-jupyter-environment">How to
+access Jupyter environment</h1>
+<h1 data-number="1" id="login"><span
+class="header-section-number">1</span> Login</h1>
+<ul>
+<li><p>Go to
+<a href="https://utol.ecc.u-tokyo.ac.jp/" target="_blank" rel="noopener">UTOL</a>
+and open the course page.</p></li>
+<li><p>From the assignment list, find <font color=blue>“Assignment 0:
+Jupyter environment”</font> and check its <font color=blue>“Comments
+from the instructor”</font> (「教員からのコメント」). You do not need to
+submit anything for this assignment.</p>
+<ul>
+<li>Note: If you cannot find the assignment, register for the course
+using the <font color=blue>“Register a course”</font> button in UTOL
+(see:
+<a href="https://utol.ecc.u-tokyo.ac.jp/common/manual/download?file=1" target="_blank" rel="noopener">UTOL
+User Manual for Students p. 28</a>).</li>
+<li>Note: Registering for the course in UTOL does not mean you are
+officially enrolled. If you decide to enroll, do so via
+<a href="https://utas.adm.u-tokyo.ac.jp/" target="_blank" rel="noopener">UTAS</a>.</li>
+</ul></li>
+<li><p>In the “Comments from the instructor”, find a message like:
+“Visit https://xxxx.xxxx.xxxx:xxxx/ and sign in with your UTokyo
+Account. Your username will be u2xxxx.” Then visit the URL and sign in
+with your UTokyo Account.</p></li>
+<li><p>After signing in, check the browser address bar and confirm that
+you are on a URL like
+<font color=blue>https://xxxx.xxxx.xxxx:xxxx/user/u2xxxx/lab</font>,
+which matches your assigned username.</p></li>
+<li><p>If you see the error <font color=blue>403: Forbidden: cannot
+assign local user for xxxxxxxxxx@utac.u-tokyo.ac.jp</font>, it means
+your account is not ready yet. Make sure you have registered in UTOL
+(see above), and let the instructor know you are waiting.<br/><br/>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/eTE1FK2IE7A?si=dBnZNWptJ0QLdO9i" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></p></li>
+</ul>
+<h1 data-number="2" id="working-with-nbgrader"><span
+class="header-section-number">2</span> Working with Nbgrader</h1>
+<h2 data-number="2.1" id="fetching-an-assignment"><span
+class="header-section-number">2.1</span> Fetching an Assignment</h2>
+<ul>
+<li>We use <a href="https://nbgrader.readthedocs.io/en/stable/"
+target="_blank" rel="noopener">Nbgrader</a> to distribute files for
+assignments and exercises.</li>
+<li>After signing in to Jupyter, open <font color="blue">Nbgrader</font>
+-&gt; <font color="blue">Assignment List</font> from the top menu to see
+a page like this.
+<ul>
+<li>When an assignment is available, you will see its name along with a
+<font color="blue">Fetch</font> button near the top of the page. Click
+the button to retrieve it.</li>
+<li>Click ▶ to display the fetched files. Then click a notebook (a file
+ending with <code>.ipynb</code>) to open it.</li>
+<li>Follow the instructions in the notebook.<br/><br/>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BNbM9nLqqLU?si=1e5V5nNCr9sU_tSx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+</ul></li>
+</ul>
+<h2 data-number="2.2" id="note-do-not-copy-existing-cells"><span
+class="header-section-number">2.2</span> Note: <font color="red">Do not
+copy</font> existing cells</h2>
+<ul>
+<li>Some cells are intended for entering your answers and are used for
+grading.</li>
+<li>If you duplicate (copy and paste) such a cell, the notebook may
+break and cannot be graded.</li>
+<li>If you need an extra cell that does not exist in the distributed
+notebook, create a new one instead (<code>a</code> to create above,
+<code>b</code> to create below, etc.), rather than copying an existing
+cell.</li>
+</ul>
+<h2 data-number="2.3" id="validate-notebook"><span
+class="header-section-number">2.3</span> Validate Notebook</h2>
+<ul>
+<li>Clicking the <font color="blue">Validate</font> button near the top
+of a notebook or on the <font color="blue">Assignment List</font> page
+checks whether:
+<ul>
+<li>the notebook is not broken (e.g., answer cells are not duplicated),
+and</li>
+<li>the cells have been modified at least slightly.</li>
+</ul></li>
+<li>Before submitting a notebook, validate it to ensure that it is not
+broken.</li>
+<li>Note: The <font color="blue">Validate</font> function may not always
+work reliably. Ask the instructor whether you should use it or ignore
+it.<br />
+<br/><br/>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/eZQ1Z89VQRU?si=JzImqfRFxtH6vzjL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+</ul>
+<h2 data-number="2.4" id="submitting-an-assignment"><span
+class="header-section-number">2.4</span> Submitting an Assignment</h2>
+<ul>
+<li>To submit your work from a Jupyter notebook, go to
+<font color="blue">Nbgrader</font> -&gt; <font color="blue">Assignment
+List</font> in the menu, and click the <font color="blue">Submit</font>
+button.</li>
+<li>Some notebooks are for self-learning and are not graded. You do not
+need to submit those notebooks.</li>
+<li>Assignments that are graded will always be clearly announced in
+<font color="blue">UTOL Assignments</font>. For such assignments, make
+sure to:
+<ul>
+<li>submit your work via Jupyter, and</li>
+<li>report your submission in the corresponding UTOL assignment (e.g.,
+just state that you have submitted it on Jupyter).</li>
+<li>The actual content of your work is submitted via
+Jupyter.<br/><br/><iframe width="560" height="315" src="https://www.youtube.com/embed/b2BX6X2SgoQ?si=DBhMWDRZ6ghCbxSc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+</ul></li>
+</ul>
+<h1 data-number="3" id="optional-a-few-jupyter-notebook-basics"><span
+class="header-section-number">3</span> (Optional) A Few Jupyter Notebook
+Basics</h1>
+<ul>
+<li>In this course, you do not need to become a master of Jupyter
+notebooks; you will mainly work with given notebooks by modifying and
+executing existing cells.</li>
+<li>However, knowing some basics will help you work more
+comfortably.</li>
+<li><font color="blue">Create a new notebook</font>: open the “Launcher”
+tab (<font color="blue">+</font> in the tab bar) and click an
+appropriate button.</li>
+</ul>
+<h2 data-number="3.1" id="python-notebook"><span
+class="header-section-number">3.1</span> Python Notebook</h2>
+<ul>
+<li>This is the most common type of notebook in the Jupyter
+environment.</li>
+<li>In the Launcher tab, click <font color="blue">“Python 3
+(ipykernel)”</font> in the Notebook section.</li>
+<li><font color="blue">In a notebook</font>:
+<ul>
+<li>A new notebook initially contains a code cell.</li>
+<li>Click inside a cell to edit it (<em><font color=blue>edit
+mode</font></em>).</li>
+<li>Press <code>Esc</code> (or click outside the cell) to exit editing
+(<em><font color=blue>command mode</font></em>).</li>
+<li>There are three types of cells: <font color="blue">code</font>,
+<font color="blue">markdown</font>, and raw. In this course, we use only
+code and markdown.</li>
+<li>You can change the cell type using the toolbar at the top of the
+tab.</li>
+<li>In a code cell:
+<ul>
+<li>Write Python code. Press SHIFT + ENTER to execute it.</li>
+<li>Cells beginning with <font color=blue><tt>%%</tt></font> behave
+differently depending on the command; they may not contain Python
+code.</li>
+<li>In particular, cells beginning with
+<font color=blue><tt>%%bash</tt></font> allow you to run shell
+commands.</li>
+</ul></li>
+<li>In a markdown cell:
+<ul>
+<li>Write text. Press SHIFT + ENTER to render it.</li>
+</ul></li>
+<li>In command mode:
+<ul>
+<li><font color=blue><tt>a</tt></font> : create a cell above</li>
+<li><font color=blue><tt>b</tt></font> : create a cell below</li>
+<li><font color=blue><tt>dd</tt></font> : delete a cell</li>
+<li>You can learn other shortcuts from the main menu.</li>
+</ul></li>
+<li>To rename a notebook, right-click the tab.</li>
+<li>To delete a notebook, open the file browser in the left pane,
+right-click the file, and choose “Delete”.</li>
+</ul></li>
+</ul>
+<p><a name="bash_notebook"> </a></p>
+<h2 data-number="3.2" id="bash-notebook"><span
+class="header-section-number">3.2</span> Bash Notebook</h2>
+<ul>
+<li>This is a notebook for executing shell commands.</li>
+<li>Code cells should contain shell commands, not Python code.</li>
+<li>Otherwise, it is very similar to a Python notebook.</li>
+<li>A Python notebook can execute shell commands using
+<code>%%bash</code>, but an important difference is that each
+<code>%%bash</code> cell runs in a separate (fresh) shell. As a result,
+shell state (such as the current working directory or environment
+variables) does not persist across cells.</li>
+<li>In contrast, a Bash notebook communicates with a single shell for
+the entire session, so it behaves more like a traditional command-line
+environment, while still providing the recording and documentation
+features of Jupyter notebooks.</li>
+</ul>
+<h2 data-number="3.3" id="terminal"><span
+class="header-section-number">3.3</span> Terminal</h2>
+<ul>
+<li>This provides a terminal where you can execute shell commands.</li>
+<li>In the Launcher tab, click “Terminal” in the Other section.</li>
+<li>It is a standard command-line environment and does not create a
+notebook.</li>
+</ul>
+<p><a name="if_jupyter_goes_wrong"> </a></p>
+<h1 data-number="4" id="if-jupyter-goes-wrong"><span
+class="header-section-number">4</span> If Jupyter goes wrong …</h1>
+<ul>
+<li>Things can sometimes go wrong in Jupyter. It is important to know
+how to recover from such situations.</li>
+<li>A “soft” reset:
+<ul>
+<li>From the top menu, select <font color="blue">Kernel</font> -&gt;
+<font color="blue">Restart Kernel</font> (or <font color="blue">Restart
+Kernel and Clear Output</font>).</li>
+</ul></li>
+<li>A “hard” reset (when nothing else works):
+<ul>
+<li>From the top menu, select <font color="blue">File</font> -&gt;
+<font color="blue">Hub Control Panel</font>. Then click
+<font color="red">Stop My Server</font> and restart it by clicking
+<font color="blue">Start My Server</font>.</li>
+</ul></li>
+<li>Also, make sure to press <code>Ctrl-S</code> frequently to save your
+notebooks. Notebooks are saved automatically from time to time, but you
+should not rely on
+this.<br/><br/><iframe width="560" height="315" src="https://www.youtube.com/embed/j3HfHuIxADg?si=dZIUfR5PyH7cSqpF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+</ul>
+<h1 data-number="5"
+id="i-want-to-start-over-by-re-fetching-the-assignment"><span
+class="header-section-number">5</span> I want to start over by
+re-fetching the assignment …</h1>
+<ul>
+<li>If you accidentally break your notebook or delete files and want to
+start over, rename the assignment folder and restart your Jupyter server
+by following the procedure in <a href="#if_jupyter_goes_wrong">If
+Jupyter goes wrong …</a> above.</li>
+<li>Details:
+<ul>
+<li>In the left pane, open the file browser and navigate to the notebook
+directory.</li>
+<li>Right-click the folder for the assignment you want to restart and
+rename it (e.g., <code>pl00_intro</code> -&gt;
+<code>pl00_intro_xxx</code>).</li>
+<li>Renaming a directory that contains open files may confuse the
+server, so perform a hard reset by following the procedure in
+<a href="#if_jupyter_goes_wrong">If Jupyter goes wrong …</a>.</li>
+<li>Open <font color="blue">Nbgrader</font> -&gt;
+<font color="blue">Assignment List</font> again, and you should be able
+to fetch the assignment.<br/><br/>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/QqE18GAT4S0?si=2VJNYg3JaQzJB3m7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></li>
+</ul></li>
+<li>Note: You can also perform these steps in a terminal (SSH or Jupyter
+Terminal). For example:</li>
+</ul>
+<pre><code>cd ~/notebooks/
+mv pl00_intro pl00_intro_xxx
+# Stop My Server -&amp;gt; Start My Server
+# re-fetch
+# transplant the work you need</code></pre>
+<h1 data-number="6"
+id="i-want-to-work-with-command-line-ssh-not-within-jupyter-web-browser"><span
+class="header-section-number">6</span> I want to work with command line
+(SSH), not within Jupyter (web browser) …</h1>
+<ul>
+<li>Jupyter is great for distributing texts and sample programs and
+lightly editing them.</li>
+<li>However, it is not an ideal environment for editing and writing
+programs.</li>
+<li>You might want to use your favorite editors such as VSCode, Vim, or
+Emacs to edit programs.</li>
+<li>To do so, you need to be able to remote-login the server using
+SSH</li>
+<li>To remote-login with SSH, you need to set up the following state for
+public key authentication to work. That is, you have
+<ul>
+<li>SSH private key with a name like <code>.ssh/id_ed25519</code> in
+your machine</li>
+<li>SSH public key with the name <code>.ssh/authorized_keys</code> in
+the Jupyter server<br/><br/><img src="svg/ssh.svg"
+style="width:70.0%" /></li>
+</ul></li>
+<li>The filename (<code>id_ed25519</code>) depends on the crypto and it
+may be <tt>id_rsa, id_dsa</tt> etc.</li>
+<li>If you do not have a pair of private/public key, generate them on
+<em>your machine</em> and upload the public key to the Jupyter
+server</li>
+</ul>
+<h2 data-number="6.1" id="how-to-set-up-for-ssh-login"><span
+class="header-section-number">6.1</span> How to set up for SSH
+login</h2>
+<h3 data-number="6.1.1" id="a-video-for-inpatients"><span
+class="header-section-number">6.1.1</span> A video for inpatients</h3>
+<ul>
+<li>The video below covers steps explained in the following
+text<br/><br/><iframe width="560" height="315" src="https://www.youtube.com/embed/Yv10Ul3PIzY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></li>
+</ul>
+<h3 data-number="6.1.2" id="prepare-an-ssh-key-pair"><span
+class="header-section-number">6.1.2</span> Prepare an SSH key pair</h3>
+<ul>
+<li>This step must be done <em><font color=blue>ON YOUR
+COMPUTER</font></em> (probably your laptop, the machine from which you
+want to SSH the Jupyter)</li>
+<li>If an SSH key pair (<code>~/.ssh/id_ed25519</code> and
+<code>~/.ssh/id_ed25519.pub</code> or something similar, like
+<code>id_rsa</code> and <code>id_rsa.pub</code> etc.) already exist on
+your computer, you have a key pair and can skip this step</li>
+<li>How to check if you already have one: open the command line terminal
+in your computer and execute the following.</li>
+</ul>
+<pre><code>your_computer$ cd ~/.ssh/
+your_computer$ ls
+id_ed25519 id_ed25519.pub</code></pre>
+<ul>
+<li>Note: on Windows, use powershell instead of the legacy command
+prompt (cmd). Powershell has <code>ls</code> command but cmd doesn’t,
+for example.</li>
+<li>If you see the above two files, among others, it means you already
+have a key pair
+<ul>
+<li><font color="red">id_ed25519</font> is <font color="red">the private
+key</font>, and</li>
+<li><font color="blue">id_ed25519.pub</font> (ends with .pub)
+<font color="blue">the public key</font></li>
+</ul></li>
+<li>If you don’t have a key pair, generate one by the following
+command</li>
+</ul>
+<pre><code>your_computer$ ssh-keygen</code></pre>
+<ul>
+<li>If they already exist, this command asks if you want to overwrite
+them; you’d better NOT overwrite them</li>
+</ul>
+<h3 data-number="6.1.3"
+id="uploading-public-key-to-jupyter-server"><span
+class="header-section-number">6.1.3</span> Uploading public key to
+Jupyter server</h3>
+<ul>
+<li>Once you have a key pair, the next step is to upload the public key
+on the Jupyter server</li>
+<li>In the left pane of the Jupyterlab, choose the home directory so
+<code>notebooks</code> is shown there. Click the Upload Files icon
+<img src="img/upload.png" /> right below the Jupyter menu to upload the
+public key file (<font color="blue">id_ed25519.pub</font> or something
+similar). You will have the file <code>id_ed25519.pub</code> under the
+server’s home directory</li>
+<li>Execute the following commands on the Jupyter server (change
+<code>~/notebooks/id_ed25519.pub</code> below accordingly if the file
+name is different)</li>
+<li>To do so, you may want to use <a href="#bash_notebook">Bash
+notebook</a> or just <code>%%bash</code> cell in Python notebook</li>
+</ul>
+<pre><code>mkdir -p ~/.ssh/
+cp ~/id_ed25519.pub ~/.ssh/authorized_keys
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys</code></pre>
+<ul>
+<li>Execute the following to check</li>
+</ul>
+<pre><code>ls -ld ~/.ssh
+ls -l ~/.ssh/authorized_keys
+cat ~/.ssh/authorized_keys</code></pre>
+<ul>
+<li>If you see something like this, you are all set!</li>
+</ul>
+<pre><code>drwx------ 2 u2xxxx u2xxxx 4096 Oct  4 22:19 /home/u2xxxx/.ssh
+-rw------- 1 u2xxxx u2xxxx 394 Oct  4 22:19 /home/u2xxxx/.ssh/authorized_keys
+ssh-ed25519 AAAAB3NzaC1yc2EAAAADAQABAAABAQC9s/2Uiy187pQvMNVwlNMRTSNFnvj9EVwOPx9/qLuiQg086zXFB2eugxTL1Pw+ViQ  ...  ... uB/TiOnA0e6KDpU2h4 </code></pre>
+<ul>
+<li>The points to check are <code>drwx------</code> and
+<code>-rw-------</code> and whether the string in the last line looks
+like <code>ssh-ed25519 AAAAB3Nza ...</code>. If the last line looks like
+the following, it means the key format is wrong</li>
+<li>A key in a wrong format</li>
+</ul>
+<pre><code>=== BEGIN SSH2 PUBLIC KEY ===
+gakjjkgdslkjgkljkjdakjdakljdkff
+tuireuproeqiutreiurewuriouoweu0
+      ...
+
+=== END SSH2 PUBLIC KEY ===</code></pre>
+<h3 data-number="6.1.4"
+id="checking-if-you-are-able-to-login-with-ssh"><span
+class="header-section-number">6.1.4</span> Checking if you are able to
+login with SSH</h3>
+<ul>
+<li>From your machine’s command line terminal, do</li>
+</ul>
+<pre><code>your_computer$ ssh u2xxxxx@server_name</code></pre>
+<ul>
+<li><font color="blue">u2xxxx</font> should be replaced with your user
+name <em>in the Jupyter environment</em>. It is <em>DIFFERENT FROM</em>
+your UTokyo Account.</li>
+<li><font color="blue">server_name</font> should be replaced with the
+host name part of the URL (e.g., if the Juptyer URL is
+https://abc.def.org:8000/, it is <code>abc.def.org</code>)</li>
+<li>To know your user name in the Jupyter environment, execute the
+following on the Jupyter server</li>
+</ul>
+<pre><code>whoami</code></pre>
+<ul>
+<li>If everything goes alright, you should see the server’s command
+prompt</li>
+</ul>
+<pre><code>your_computer$ ssh u2xxxx@server_name
+Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 4.15.0-1054-aws x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+
+   ..nn.
+
+Last login: Sun Dec 15 16:29:26 2019 from 111.99.149.67
+$ </code></pre>
+<ul>
+<li>Then you should be able to run any editor running within a terminal
+(emacs, vim, nano, etc.)</li>
+<li>All files distributed as part of assignments are in
+<code>notebook</code> directory right under your home directory.</li>
+</ul>
+<h1 data-number="7" id="using-vscode-remote-extension"><span
+class="header-section-number">7</span> Using VSCode Remote
+Extension</h1>
+<ul>
+<li>Using VSCode, you can edit remote files fetched into your Jupyter
+environment</li>
+<li>First make sure you are able to SSH-login to the Jupyter server</li>
+</ul>
