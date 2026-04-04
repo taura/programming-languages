@@ -210,7 +210,7 @@ println("hello go")
 * To use in a command line (Jupyter terminal or SSH), execute the following (in the Jupyter terminal or SSH terminal)
 
 <!--- code kernel=bash --->
-export PATH=~/go/bin:$PATH
+export PATH=~/.local/go/bin:$PATH
 <!--- end code --->
 
 * 毎回実行し直さなくて良いようにするには `~/.bashrc` に書いておく
@@ -244,11 +244,11 @@ go build hello.go
 
 ### Jupyterで使う場合 / Using in Jupyter
 
-* 以下のセルをクリックして右上の言語選択メニューに「Juila 1.11.4」と表示されることを確認せよ
+* 以下のセルをクリックして右上の言語選択メニューに「Juila 1.12」と表示されることを確認せよ
 * 以下を下のセルにコピーして実行してみよ
 
 * Copy the following to the cell below and execute it
-* Click the cell below and confirm "Julia 1.11.4" is selected in the language menu on the right
+* Click the cell below and confirm "Julia 1.12" is selected in the language menu on the right
 ```
 println("hello Julia")
 ```
@@ -309,10 +309,10 @@ julia hello.jl
 
 ### Jupyterで使う場合 / Using in Jupyter
 
-* 以下のセルをクリックして右上の言語選択メニューに「OCaml 4.14.2」と表示されることを確認せよ
+* 以下のセルをクリックして右上の言語選択メニューに「OCaml default」と表示されることを確認せよ
 * 以下を下のセルにコピーして実行してみよ
 
-* Click the cell below and confirm "OCaml 4.14.2" is selected in the language menu on the right
+* Click the cell below and confirm "OCaml default" is selected in the language menu on the right
 * Copy the following to the cell below and execute it
 ```
 Printf.printf("hello ocaml\n");

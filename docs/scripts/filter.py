@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # open_in_new_tab.py
 from panflute import run_filter, Link, Span, Str
 
