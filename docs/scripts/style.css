@@ -22,7 +22,7 @@ body {
 }
 
 h1 {
-  font-size   : 14pt;
+  font-size   : 18pt;
   margin      : 10pt;
   padding     : 3pt 20pt;
   border-style     : solid;
@@ -33,7 +33,7 @@ h1 {
 }
 
 h2 {
-  font-size   : 13pt;
+  font-size   : 16pt;
   margin      : 10pt;
   padding     : 3pt 20pt;
   border-style     : solid;
@@ -44,7 +44,7 @@ h2 {
 }
 
 h3 {
-  font-size   : 12pt;
+  font-size   : 14pt;
   margin      : 10pt;
   padding     : 3pt 20pt;
   border-style     : solid;
@@ -54,14 +54,14 @@ h3 {
 }
 
 div {
-  font-size   : 12pt;
+  font-size   : 14pt;
   margin      : 10pt;
   padding     : 3pt 20pt;
   border-color     : #99A1AA;
 }
 
 p {
-  font-size   : 12pt;
+  font-size   : 14pt;
   border-color     : #99A1AA;
 }
 
@@ -71,6 +71,7 @@ pre {
 }
 
 li {
+  font-size   : 14pt;
   display: list-item;
 }
 li pre {
