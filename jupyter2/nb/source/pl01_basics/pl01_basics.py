@@ -61,7 +61,7 @@ import heytutor
 """
 
 """ code """
-TOPICS = ["minimum", "fundef", "variables", "conditional"]
+TOPICS = ["minimum", "function", "variables", "conditional"]
 heytutor.show_status(topics=TOPICS)
 """ """
 

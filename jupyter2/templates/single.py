@@ -22,18 +22,21 @@ import heytutor
 ## Examples
 
 ### A general question
+
 ```
 %%hey
 How to write a function in Go?
 ```
 
 ### A hint on this specific problem
+
 ```
 %%hey
 Give me a hint on this problem for Rust
 ```
 
 ### Help when you struggle
+
 ```
 %%hey answer_file=go/foo.go
 I get this error when I compile it. What's wrong?"
@@ -45,9 +48,11 @@ Error message:
   <paste the compile error message> 
 
 ```
+
 ### Ask feedback
 
 * You are encouraged to ask a feedback once you think you are done with the problem, to know if there is a better answer.  You can do so by something like:
+
 ```
 %%hey problem_file=foo.md answer_file=go/foo.md
 Give me a feedback to my answer.
