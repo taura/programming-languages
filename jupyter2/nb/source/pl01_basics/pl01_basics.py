@@ -104,6 +104,20 @@ heytutor.gen_problem(topics=TOPICS, pref=PREFERENCE)
 """ """
 
 """ md
+# Your workflow
+
+1. Execute the `gen_problem` above
+1. Work on the generated problem
+1. When done, go back to 1.
+
+* Change `PREFERENCE` variable when you have a preference on the problem you work on next
+* Execute the `show_status` above if you want to know the status without generating a problem
+
+* Your goal in this notebook is to solve at least <font color=blue>TWO</font> problems from the last topic <font color=blue>(Iterations)</font>
+
+"""
+
+""" md
 # How to Use AI tutor
 """
 

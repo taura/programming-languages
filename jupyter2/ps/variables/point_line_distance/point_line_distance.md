@@ -1,6 +1,6 @@
 # <font color="green">Point-Line Distance</font>
 
-* Write a function `point_line_distance` that takes six 64-bit floating point numbers:
+* Write a function `point_line_distance` (or `pointLineDistance`, according to your language's case convention) that takes six 64-bit floating point numbers:
   * $x_0$, $y_0$, $x_1$, $y_1$ --- coordinates of two distinct points $(x_0, y_0)$ and $(x_1, y_1)$ on a line
   * $p$, $q$ --- the coordinates of a point $(p, q)$
 and returns the distance from the point to the line through $(x_0, y_0)$ and $(x_1, y_1)$.

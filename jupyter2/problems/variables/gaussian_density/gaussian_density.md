@@ -1,6 +1,6 @@
 # <font color="green">Gaussian Density</font>
 
-* Write a function `gaussian_density` (or `GaussianDensity`, according to your language's case convention) that takes `x`, `mu` (mean), and `sigma` (standard deviation, you may assume `sigma > 0`) and returns the value of the Gaussian (normal) probability density function at `x`:
+* Write a function `gaussian_density` (or `gaussianDensity`, according to your language's case convention) that takes $x$, $\mu$ (mu, representing the mean), and $\sigma$ (sigma, representing the standard deviation) and returns the value of the Gaussian (normal) probability density function at $x$:
 
 $$
 \frac{1}{ \sqrt{2\pi}\,\sigma } \exp\!\left(-\frac{ (x-\mu)^2} {2\sigma^2} \right)

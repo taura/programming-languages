@@ -5,9 +5,9 @@ import "fmt"
 
 /** end my answer */
 func main() {
-	if !IsLeapYear(2000) { panic("wrong") }
-	if  IsLeapYear(1900) { panic("wrong") }
-	if !IsLeapYear(2024) { panic("wrong") }
-	if  IsLeapYear(2023) { panic("wrong") }
+	if !isLeapYear(2000) { panic("wrong") }
+	if  isLeapYear(1900) { panic("wrong") }
+	if !isLeapYear(2024) { panic("wrong") }
+	if  isLeapYear(2023) { panic("wrong") }
 	fmt.Println("OK")
 }

@@ -1,6 +1,8 @@
 # <font color="green">In Circle?</font>
 
-* Write a function `in_circle` that checks if a point $(x,y)$ is inside the circle centered at the origin and of radius $r$.  That is,
+* Write a function `in_circle` that checks if a point $(x,y)$ is inside the circle centered at the origin and of radius $r$. 
+
+* In a mathematical expression,
 
 $$ x^2 + y^2 \le r^2 $$
 

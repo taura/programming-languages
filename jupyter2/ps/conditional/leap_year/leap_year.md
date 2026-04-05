@@ -1,6 +1,6 @@
 # <font color="green">Leap Years</font>
 
-* Write a function `is_leap_year` (or `IsLeapYear`, according to your language's case convention) that takes an integer `year` and returns a boolean value indicating whether the year is a leap year.
+* Write a function `is_leap_year` (or `isLeapYear`, according to your language's case convention) that takes an integer _year_ and returns a boolean value indicating whether the year is a leap year.
 
 * A year is a leap year if it is divisible by four, except when it is divisible by 100, in which case it is a leap year if divisible by 400.
 

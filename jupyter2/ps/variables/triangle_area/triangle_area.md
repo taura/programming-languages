@@ -1,6 +1,6 @@
 # <font color="green">Area of Triangle</font>
 
-* Write a function `triangle_area` (or `TriangleArea`, according to your language's case convention) that takes six 64-bit floating point numbers `x1`, `y1`, `x2`, `y2`, `x3`, `y3` --- the coordinates of three points in the plane --- and returns the area of the triangle formed by these points.
+* Write a function `triangle_area` (or `triangleArea`, according to your language's case convention) that takes six 64-bit floating point numbers $x_1$, $y_1$, $x_2$, $y_2$, $x_3$, $y_3$ --- the coordinates of three points in the plane --- and returns the area of the triangle formed by these points.
 
 * In a mathematical expression,
 

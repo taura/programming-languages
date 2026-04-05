@@ -1,6 +1,8 @@
 # <font color="green">Compound Interest</font>
 
-* Write a function `compound` that computes the final value after $t$ years given the initial principal $p$ and annual interest rate $r$.  That is,
+* Write a function `compound` that computes the final value after $t$ years given the initial principal $p$ and annual interest rate $r$.  
+
+* In a mathematical expression,
 
 $$ p(1+r)^t $$
 

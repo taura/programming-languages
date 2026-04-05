@@ -94,6 +94,18 @@ define ext_in
 $(shell find $(1) -name '*.$(2)' -exec basename -s .$(2) {} +)
 endef
 
+ifeq (a,b)
+$(foreach concept,iteration, \
+ $(foreach problem,series_sum minimize_polynomial gaussian_integral gcd find_root, \
+  $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),md),$(eval $(call deploy_md))) \
+  $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),py),$(eval $(call deploy_ipynb))) \
+  $(foreach ext,go jl ml rs, \
+   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(eval $(call deploy_code))) \
+   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(eval $(call check_code)))) \
+))
+endif
+
+ifeq (a,a)
 $(foreach concept,$(call dir_in,$(in_dir)), \
  $(foreach problem,$(call dir_in,$(in_dir)/$(concept)), \
   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),md),$(eval $(call deploy_md))) \
@@ -102,6 +114,7 @@ $(foreach concept,$(call dir_in,$(in_dir)), \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(eval $(call deploy_code))) \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(eval $(call check_code)))) \
 ))
+endif
 
 clean:
 	rm -f ps/*/*/*/*~ ps/*/*/*~ ps/*/*/*/*.exe ps/*/*/*/*.cmi ps/*/*/*/*.cmo ps/*/*/*/*.ok
