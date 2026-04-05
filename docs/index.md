@@ -90,6 +90,7 @@
 
 * There will always be borderline cases, however. When unsure, get back to the principles or consult me.
 
+<a name="data_sharing"> </a>
 # Data Sharing Request
 
 * In this course, we provide a dedicated Jupyter environment along with an AI tutor that you can interact with.
@@ -126,10 +127,7 @@
   * You will still be able to use the provided system
   * You will not be disadvantaged in grading or any aspect of the course
 * You may also withdraw your consent later by sending this form again
-* If you are willing to contribute your data, please indicate your consent using the form below at any time you feel comfortable:
-
-<iframe width="640px" height="480px" src="https://forms.cloud.microsoft/r/ndZtbg9Lgs?embed=true" frameborder="0" marginwidth="0" marginheight="0" style="border: none; max-width:100%; max-height:100vh" allowfullscreen webkitallowfullscreen mozallowfullscreen msallowfullscreen> </iframe>
-
+* If you are willing to contribute your data, [please indicate your consent using this form](https://forms.cloud.microsoft/r/ndZtbg9Lgs) at any time you feel comfortable:
 * We appreciate your cooperation in helping us improve learning for future students.
 
 
