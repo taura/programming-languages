@@ -1,0 +1,11 @@
+#!/bin/bash
+p=$1
+
+cp -r ../../templates/single ${p}
+mv ${p}/template.md ${p}/${p}.md
+mv ${p}/go/template.go ${p}/go/${p}.go
+mv ${p}/jl/template.jl ${p}/jl/${p}.jl
+mv ${p}/ml/template.ml ${p}/ml/${p}.ml
+mv ${p}/rs/template.rs ${p}/rs/${p}.rs
+ln -s ../../../templates/single.py ${p}/${p}.py
+
