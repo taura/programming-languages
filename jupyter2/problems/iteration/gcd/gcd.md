@@ -1,6 +1,6 @@
 # <font color="green">Greatest Common Divisor</font>
 
-* Write a function `gcd` that takes two non-negative integers \(a\) and \(b\) (not both zero and \(a \ge b\) ) and returns their greatest common divisor.
+* Write a function `gcd` that takes two non-negative integers $a$ and $b$ (not both zero and $a \ge b$) and returns their greatest common divisor.
 
 * Use the recurrence:
 

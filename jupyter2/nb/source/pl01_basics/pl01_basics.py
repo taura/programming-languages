@@ -61,7 +61,7 @@ import heytutor
 """
 
 """ code """
-TOPICS = ["minimum", "function", "variables", "conditional"]
+TOPICS = ["minimum", "function", "variables", "conditional", "iteration"]
 heytutor.show_status(topics=TOPICS)
 """ """
 
@@ -93,8 +93,8 @@ heytutor.show_status(topics=TOPICS)
 
 """ code """
 PREFERENCE = "next_topic"
-#PREFERENCE = "last_topic"
 #PREFERENCE = "prev_topic"
+#PREFERENCE = "last_topic"
 #PREFERENCE = "first_topic"
 #PREFERENCE = "random"
 #PREFERENCE = "match:conditional/.*"
