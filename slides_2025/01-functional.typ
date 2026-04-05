@@ -11,7 +11,7 @@
 #show: metropolis-theme.with(
   aspect-ratio: "16-9",
   config-info(
-    title: [Object-Oriented Programming],
+    title: [Functional Programming],
     author: [Kenjiro Taura],
     date: [2024/04/28],
   ),
