@@ -76,7 +76,7 @@ Give me a feedback to my answer.
 
 """ codex
 %%bash_
-export PATH=${{PATH}}:~/go/bin
+export PATH=${{PATH}}:~/.local/go/bin:~/go/bin
 go build -o go/{base} go/{base}.go
 """
 
@@ -261,7 +261,7 @@ Give me a feedback to my answer.
 """ codex
 %%bash_
 . ~/.cargo/env
-rustc {base}.rs -o rs/{base}
+rustc rs/{base}.rs -o rs/{base}
 """
 
 """ md
