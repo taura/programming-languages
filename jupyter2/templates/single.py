@@ -19,26 +19,23 @@ import heytutor
 """ """
 
 """ md
-## How to Use It
+## Examples
 
-* You can talk to AI by executing a Python code cell starting with the magic keyword `%%hey problem_file=... [answer_file=]`
-* Write any text below the `%%hey ...` and execute it
-* `{{problem}}` is automatically replaced by the contents of the file specified with `problem_file=`
-* `{{answer}}` is automatically replaced by the contents of the file specified with `answer_file=`
-* For example,
-* A general question
+### A general question
 ```
-%%hey problem_file=...
+%%hey
 How to write a function in Go?
 ```
-* A hint on this specific problem
+
+### A hint on this specific problem
 ```
-%%hey problem_file=...
-I am working on Rust. Give me a hint on this problem.
+%%hey
+Give me a hint on this problem for Rust
 ```
-* Help when you struggle
+
+### Help when you struggle
 ```
-%%hey problem_file=... answer_file=...
+%%hey answer_file=go/foo.go
 I get this error when I compile it. What's wrong?"
 
 My program:
@@ -48,13 +45,18 @@ Error message:
   <paste the compile error message> 
 
 ```
+### Ask feedback
+
 * You are encouraged to ask a feedback once you think you are done with the problem, to know if there is a better answer.  You can do so by something like:
 ```
-%%hey problem_file=... answer_file=...
+%%hey problem_file=foo.md answer_file=go/foo.md
+Give me a feedback to my answer.
+
+Problem:
+{{problem}}
+
 My Answer:
 {{answer}}
-
-Give me a feedback to my answer.
 ```
 """
 
