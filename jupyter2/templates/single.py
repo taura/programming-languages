@@ -73,9 +73,16 @@ Give me a feedback to my answer.
 """ md
 ## Compile
 """
+
 """ codex
 %%bash_
+export PATH=${{PATH}}:~/go/bin
 go build -o go/{base} go/{base}.go
+"""
+
+""" md
+* Note: when you run `go` or other Go commands in a terminal (SSH or Jupyter terminal), you need to execute the first line (`export PATH=${{PATH}}:~/go/bin`)
+* You may consider adding that line in your `~/.bash_profile`
 """
 
 """ md
@@ -124,7 +131,13 @@ Give me a feedback to my answer.
 """
 """ codex
 %%bash_
+export PATH=${{PATH}}:~/.juliaup/bin
 julia jl/{base}.jl
+"""
+
+""" md
+* Note: when you run `julia` or other Julia commands in a terminal (SSH or Jupyter terminal), you need to execute the first line (`export PATH=${{PATH}}:~/.juliaup/bin`)
+* You may consider adding that line in your `~/.bash_profile`
 """
 
 """ md
@@ -175,7 +188,13 @@ Give me a feedback to my answer.
 """
 """ codex
 %%bash_
+eval $(opam env)
 ocamlc ml/{base}.ml -o ml/{base}
+"""
+
+""" md
+* Note: when you run `ocamlc` or other OCaml commands (see below) in a terminal (SSH or Jupyter terminal), you need to execute the first line (`eval $(opam env)`)
+* You may consider adding that line in your `~/.bash_profile`
 """
 
 """ md
@@ -194,12 +213,14 @@ ml/{base}
 * In terminal (Jupyter or SSH), you can directly run a source code
 
 ```
+$ eval $(opam env)   # once in your session or put it in ~/.bash_profile
 $ ocaml ml/{base}.ml
 ```
 
 * You can run a source code and continue interaction
 
 ```
+$ eval $(opam env)   # once in your session or put it in ~/.bash_profile
 $ ocaml -init ml/{base}.ml
 ```
 
@@ -239,8 +260,15 @@ Give me a feedback to my answer.
 """
 """ codex
 %%bash_
+. ~/.cargo/env
 rustc {base}.rs -o rs/{base}
 """
+
+""" md
+* Note: when you run `rustc` or other Rust commands in a terminal (SSH or Jupyter terminal), you need to execute the first line (`. ~/.cargo/env`)
+* You may consider adding that line in your `~/.bash_profile`
+"""
+
 
 """ md
 ## Run

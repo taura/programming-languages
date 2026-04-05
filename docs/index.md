@@ -154,23 +154,45 @@
 * Yaron Minsky, Anil Madhavapeddy, and Jason Hickey. [Real World OCaml: Functional programming for the masses.](http://www.amazon.com/Real-World-OCaml-Functional-programming/dp/144932391X/ref=tmm_pap_title_0?ie=UTF8&qid=1396268703&sr=8-1-spell)
 * Benjamin Pierce. [Types and Programming Languages.](http://www.cis.upenn.edu/~bcpierce/tapl/)
 
+<a name="links"> </a>
+
 # Links
 
+* For each language, I recommend a few documents 
+ - Tutorial --- good to get started, good to sequentially read while commuting
+ - Cheetsheet --- good to remember syntax after you master the concept
+ - Reference/Spec --- good to know detailed spec when necessary
 
 * [Go](https://go.dev/)
   * [tutorial](https://www.tutorialspoint.com/go/go_basic_syntax.htm)
+    * Minumum read
+      * [Basic syntax](https://www.tutorialspoint.com/go/go_basic_syntax.htm)
+      * [If statement](https://www.tutorialspoint.com/go/go_if_statement.htm)
+      * [For loop](https://www.tutorialspoint.com/go/go_for_loop.htm)
+      * [Functions](https://www.tutorialspoint.com/go/go_functions.htm)
   * [cheatsheet](https://devhints.io/go)
   * [reference/spec](https://go.dev/ref/spec)
 * [Julia](https://julialang.org/)
   * [tutorial](https://syl1.gitbook.io/julia-language-a-concise-tutorial)
+	* Minimum read
+	  * [Getting started](https://syl1.gitbook.io/julia-language-a-concise-tutorial/language-core/getting-started)
+      * [Control flow](https://syl1.gitbook.io/julia-language-a-concise-tutorial/language-core/control-flow)
+      * [Function](https://syl1.gitbook.io/julia-language-a-concise-tutorial/language-core/functions)
   * [cheetsheet](https://cheatsheet.juliadocs.org/)
   * [reference](https://docs.julialang.org/en/v1/)
 * [OCaml](http://caml.inria.fr/)
   * [tutorial](https://ocaml.org/docs/tour-of-ocaml)
+	* Minimum read
+      * up to [Recursive Functions](https://ocaml.org/docs/tour-of-ocaml#recursive-functions)
   * [cheetsheet](https://ocamlpro.github.io/ocaml-cheat-sheets/ocaml-lang.pdf)
   * [reference](https://ocaml.org/manual/5.4/index.html)
 * [Rust](https://www.rust-lang.org/)
   * [tutorial](https://www.tutorialspoint.com/rust/index.htm)
+	* Minimum read
+      * [Functions](https://www.tutorialspoint.com/rust/rust_functions.htm)
+      * [Variables](https://www.tutorialspoint.com/rust/rust_variables.htm)
+      * [Decision Making](https://www.tutorialspoint.com/rust/rust_decision_making.htm)
+      * [Loop](https://www.tutorialspoint.com/rust/rust_loop.htm)
   * [cheetsheet](https://quickref.me/rust.html)
   * [reference](https://doc.rust-lang.org/reference/)
 * [Python](https://www.python.org/)
