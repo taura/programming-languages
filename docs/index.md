@@ -91,6 +91,7 @@
 * There will always be borderline cases, however. When unsure, get back to the principles or consult me.
 
 <a name="data_sharing"> </a>
+
 # Data Sharing Request
 
 * In this course, we provide a dedicated Jupyter environment along with an AI tutor that you can interact with.
