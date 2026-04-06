@@ -19,8 +19,8 @@
 * <font color=blue>(2026/04/03)</font> Plan for the first day (April 7th)
   1. Course introduction ([Roadmap](slides/00-roadmap.pdf))
   1. Answer a [survey](https://forms.office.com/r/pXQ5WbvgBJ) during the class today (before 11:45AM if possible)
-  1. Play with Jupyter; use `pl00_intro` to practice submitting your work, in Jupyter and [UTOL](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2026_0340_FEN-EE4d19L1_01) (Assignment 01 : `pl00_intro`)
-  1. Work on `pl01_basics` and submit it in Jupyter during the class by 11:45AM.  You don't have to complete everything (that's impossible); just submit the snapshot; you can continue working on it for your practice and submit it as many times as you want.  For today, no need to submit it to [UTOL](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2026_0340_FEN-EE4d19L1_01)
+  1. Play with Jupyter; use `pl00_intro` to practice submitting your work, in Jupyter and [UTOL](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2026_0340_FEN-EE4d19L1_01) (Assignment 1 : `pl00_intro`)
+  1. Work on `pl01_basics`; no need to submit it
   1. Submit a Reflective Essay to [UTOL](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2026_0340_FEN-EE4d19L1_01) after every class (due the next day).
 
 <a name="ai_policy"> </a>
