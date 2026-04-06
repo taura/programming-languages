@@ -10,8 +10,8 @@
 * <font color=blue>(2026/04/03)</font> Home page for AY2026 is out. Welcome!
 * <font color=blue>(2026/04/03)</font> We use PC during the class. Bring your device.
 * <font color=blue>(2026/04/03)</font> We are going to use Jupyter environment for your work. See [How to access Jupyter environment](html/jupyter2.html)
-* <font color=blue>(2026/04/03)</font> Your user name and password will be distributed via UTOL (see [How to access Jupyter environment](html/jupyter2.html) above). 
-* <font color=blue>(2026/04/03)</font> Accounts will be set up for the following people, so please make sure you will be included.
+* <font color=blue>(2026/04/03)</font> You use UTokyo Account (10-digits@utac.u-tokyo.ac.jp) to sign in; you will be assigned a separate user name on the Jupyter server.  Your user name has been distributed via UTOL (see [How to access Jupyter environment](html/jupyter2.html) above). 
+* <font color=blue>(2026/04/03)</font> Accounts have been set up for the following people, so please make sure you will be included.
   * Those who already registered to this course via [UTAS](https://utas.adm.u-tokyo.ac.jp/) _by the day before the first class_
   * Those who bookmarked this course in [UTAS](https://utas.adm.u-tokyo.ac.jp/) _by the day before the first class_
   * Those who self-registered yourself, by pressing the "register a course" button on the upper right of the [UTOL course page](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2026_0340_FEN-EE4d19L1_01) _by now (the first class)_.  I will add those who did it later than that during the first class.
