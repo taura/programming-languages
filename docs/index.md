@@ -7,6 +7,9 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2026/04/13)</font> No class today, due to entrance ceremony.
+* <font color=blue>(2026/04/13)</font> I made [errata of problems](#errata) below
+
 * <font color=blue>(2026/04/03)</font> Home page for AY2026 is out. Welcome!
 * <font color=blue>(2026/04/03)</font> We use PC during the class. Bring your device.
 * <font color=blue>(2026/04/03)</font> We are going to use Jupyter environment for your work. See [How to access Jupyter environment](html/jupyter2.html)
@@ -131,9 +134,11 @@
 * If you are willing to contribute your data, [please indicate your consent using this form](https://forms.cloud.microsoft/r/ndZtbg9Lgs) at any time you feel comfortable:
 * We appreciate your cooperation in helping us improve learning for future students.
 
+<a name=errata> </a>
+
 # Errata in problems 
 
-* in `variables/gaussian_density` problem, the problem states that the function takes "$x$, $\mu$, and $\sigma$" (suggesting this order of parameters), but the test code assumes it takes $\mu$, $\sigma$, and $x$ in this order; I found a few of you suffering from assertion error caused by this.  Apologies `m(_ _)m`
+1. <font color=blue>(2026/04/13)</font> in `variables/gaussian_density` problem, the problem states that the function takes "$x$, $\mu$, and $\sigma$" (suggesting this order of parameters), but the test code assumes it takes $\mu$, $\sigma$, and $x$ in this order; I found a few of you suffering from assertion error caused by this.  Apologies `m(_ _)m`
 
 # Slides and other materials
 
