@@ -131,6 +131,9 @@
 * If you are willing to contribute your data, [please indicate your consent using this form](https://forms.cloud.microsoft/r/ndZtbg9Lgs) at any time you feel comfortable:
 * We appreciate your cooperation in helping us improve learning for future students.
 
+# Errata in problems 
+
+* in `variables/gaussian_density` problem, the problem states that the function takes "$x$, $\mu$, and $\sigma$" (suggesting this order of parameters), but the test code assumes it takes $\mu$, $\sigma$, and $x$ in this order; I found a few of you suffering from assertion error caused by this.  Apologies `m(_ _)m`
 
 # Slides and other materials
 
@@ -146,6 +149,8 @@
 * [Writing a Compiler](slides/09-compiler.pdf )
 * [Rust Memory Management](slides/10-rust.pdf)
 * [Garbage Collection](slides/09-gc-adv.pdf)
+
+
 
 # References
 
