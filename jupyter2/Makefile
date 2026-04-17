@@ -4,6 +4,7 @@
 nb_srcs :=
 nb_srcs += $(wildcard nb/source/pl00_*/pl00_*.py)
 nb_srcs += $(wildcard nb/source/pl01_*/pl01_*.py)
+nb_srcs += $(wildcard nb/source/pl02_*/pl02_*.py)
 aux_srcs :=
 include ../../jupyter_tools/authoring/jupyter_tools.mk
 
@@ -74,7 +75,7 @@ ifeq ($(ext),ml)
 	ocamlc $$< -o $$@
 endif
 ifeq ($(ext),rs)
-	rustc $$< -o $$@
+	rustc -C opt-level=3 $$< -o $$@
 endif
 endef
 
@@ -94,9 +95,10 @@ define ext_in
 $(shell find $(1) -name '*.$(2)' -exec basename -s .$(2) {} +)
 endef
 
+# tail_recurrence 
 ifeq (a,b)
-$(foreach concept,iteration, \
- $(foreach problem,series_sum minimize_polynomial gaussian_integral gcd find_root, \
+$(foreach concept,recursion tail_recursion, \
+ $(foreach problem,continued_fraction, \
   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),md),$(eval $(call deploy_md))) \
   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),py),$(eval $(call deploy_ipynb))) \
   $(foreach ext,go jl ml rs, \
@@ -115,6 +117,10 @@ $(foreach concept,$(call dir_in,$(in_dir)), \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(eval $(call check_code)))) \
 ))
 endif
+
+deploy : $(out_dir)/problem_index.py
+$(out_dir)/problem_index.py : $(in_dir)/problem_index.py
+	cp $< $@
 
 clean:
 	rm -f ps/*/*/*/*~ ps/*/*/*~ ps/*/*/*/*.exe ps/*/*/*/*.cmi ps/*/*/*/*.cmo ps/*/*/*/*.ok

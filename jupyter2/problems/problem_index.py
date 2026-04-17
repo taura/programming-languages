@@ -1,0 +1,43 @@
+PROBLEM_INDEX = [
+    ("minimum",
+     [
+         "hello",
+     ]),
+    ("function",
+     [
+         "a2b2c2",
+         "compound",
+         "in_circle",
+         "projectile_height",
+         "sigmoid",
+         "similarity",
+     ]),
+    ("variables",
+     [
+         "gaussian_density",
+         "point_line_distance",
+         "triangle_area",
+     ]),
+    ("conditional",
+     [
+         "clamp",
+	 "leap_year",
+     ]),
+    ("iteration",
+     [
+         "series_sum",
+         "minimize_polynomial",
+         "gaussian_integral",
+         "gcd",
+         "find_root",
+     ]),
+    ("recursion",
+     [
+         "gcd",
+         "fast_power",
+         "fast_recurrence",
+         "continued_fraction",
+         "count_paths",
+     ]),
+]
+

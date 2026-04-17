@@ -72,6 +72,11 @@ My Answer:
 """ md
 ## Baseline code
 """
+
+""" code w """
+import heytutor
+""" """
+
 """ code w """
 %%writefile_ go/{base}.go
 """ include {out_dir}/{concept}/{problem}/go/{base}.go """
@@ -121,6 +126,11 @@ Give me a feedback to my answer.
 """ md
 ## Baseline code
 """
+
+""" code w """
+import heytutor
+""" """
+
 """ code w """
 %%writefile_ jl/{base}.jl
 """ include {out_dir}/{concept}/{problem}/jl/{base}.jl """
@@ -185,6 +195,11 @@ Give me a feedback to my answer.
 """ md
 ## Baseline code
 """
+
+""" code w """
+import heytutor
+""" """
+
 """ code w """
 %%writefile_ ml/{base}.ml
 """ include {out_dir}/{concept}/{problem}/ml/{base}.ml """
@@ -257,6 +272,11 @@ Give me a feedback to my answer.
 """ md
 ## Baseline code
 """
+
+""" code w """
+import heytutor
+""" """
+
 """ code w """
 %%writefile_ rs/{base}.rs
 """ include {out_dir}/{concept}/{problem}/rs/{base}.rs """
