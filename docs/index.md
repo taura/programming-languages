@@ -9,6 +9,7 @@
 
 * <font color=blue>(2026/04/20)</font> Plan for the second week (April 20th)
   1. [Functional programming](slides/01-functional.pdf) (problem solving by recursion)
+  1. [Extra: OCaml pitfalls](slides/0x-ocaml.pdf) (some OCaml syntactic pitfalls ...)
   1. Work on `pl02_recursion`
   1. [Tail recursion](slides/01-functional.pdf)
   1. Continue working on `pl02_recursion`

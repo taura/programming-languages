@@ -189,6 +189,80 @@ def n_regions(n):
         return n_regions(n - 1) + n
 ```])
 
+== Before you go, you might have already hate OCaml?
+
+- In my past experiences (and this time), OCaml seems by far the most confusing language for you
+- It _partly_ stems from its being _functional_ (i.e., encouraging functional programming and discouraging loops and variable updates), but it largely comes from syntax that has nothing to do with functional programming
+- I address some of them before you make your mind
+
+== Reasons you might hate OCaml?
+
+- function application by juxtaposition
+- parentheses are still often necessary in function applications
+- _partial applications_ turn missing arguments on a function call into confusing type errors
+- `f(a, b)` is not an immediate syntax error, but means something else
+- different operator for integers and floating point numbers
+- delimiters are often `;` not `,`
+- delimiting with `,` means something else (tuple), not an immediate syntax error
+
+== Function application by juxtaposition
+
+- `f x` instead of `f(x)`
+- this alone does not make it that confusing
+
+== Parentheses are still often necessary in function applications
+
+- `f x - 1` means $f(x) - 1$, not $f(x - 1)$
+- so, you need to write `f (x - 1)` to pass $(x - 1)$ to $f$
+- parentheses are necessary anyway here, but the purpose is different
+
+== _Partial applications_ turn missing arguments on a function call into confusing type errors
+
+- OCaml allows multi-parameter functions like
+```
+let f x y = x + y
+```
+to be applied to a single argument,e like
+```
+f 3
+```
+- it means _a function that takes $y$ and returns 3 + y_
+- thus, if you somehow miss an argument to a function, you end up putting a function where you meant to put an ordinary value (like int)
+- e.g., if you miss an argument to `g` below,
+```
+(g 1 2 3 ...) + 5
+```
+you get a _type error_ saying "a value of function type where int is expected" or something like that
+
+== `f(a, b)` is not an immediate syntax error, but means something else
+
+- `f(a, b)` is not a syntax error
+- it applies `f` to `(a, b)` and it is a _tuple_ consisting of `x` and `y`
+- if `f` is defined as a two-parameter function like `let f x y = ...`, then you probably get a _type error_ due to passing `(a, b)` to `x` (or the resulting expression missing the second argument `y`)
+
+== Different operator for integers and floating point numbers
+
+- OCaml uses `+` for integers and `+.` for floating point numbers (same for `-`, `*`, `/`, etc.)
+- it is partly to make it possible (or simple) to infer types of function parameters from function body
+    - e.g., `let f x y = x + y` $=>$ `x` and `y` are `int` because `+` applies only for int
+- you often write `x + y` when you in fact need to write `x +. y` etc.
+- in languages where the programmer has to declare types of function parameters (e.g., `x` and `y` above), this error is caught by "you apply `+` to floating point numbers", but in OCaml, the error happens when you _apply_ `f` (e.g., `f 3.1 4.1`) and the error message becomes "you put floating point numbers where integers are required", probably not the error you committed)
+
+== Delimiters are often `;` not `,`
+
+- you will later learn sequence data types (lists/arrays) and their syntax is not what you are accustomed to
+    - Python: `[1, 2, 3]`
+    - OCaml list: `[1; 2; 3]`
+    - OCaml array: `[| 1; 2; 3 | ]`
+- this alone is not that confusing
+
+== Delimiting with `,` means something else (tuple), not an immediate syntax erro
+
+- in OCaml, `[1, 2, 3]` is not a syntax error
+- it is a single-element list whose sole element is `1, 2, 3`, which is a tuple
+- remember I talked about `f(x,y)`?  `(x, y)` was a tuple
+- thus, passing `[1, 2, 3]` to a function that expects a list of integers like `f [1,2,3]` is not a syntax error, but a type error saying "a value of type `(int * int * int) list` appears where `int list` is expected"
+
 == Divide-and-conquer 
 - A powerful problem-solving paradigm that
   + _divides_ the input into smaller subproblems,
