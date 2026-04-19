@@ -13,7 +13,7 @@
   config-info(
     title: [Functional Programming],
     author: [Kenjiro Taura],
-    date: [2024/04/28],
+    date: [],
   ),
 )
 
@@ -41,7 +41,7 @@
 == 1st attempt
 
 #quote(attribution: [Wikipedia])[
-_... functional programming is a programming paradigm where programs are constructed by applying and composing functions._
+    _... functional programming is a programming paradigm where programs are constructed by #ao[applying and composing functions]._
 ]
 - ... well, I am almost always writing and applying functions, ...
 
@@ -71,7 +71,7 @@ def sum_array(a):
     return s
 ```
 
-== Thinking behind the procedural version
+== The "thinking" behind the procedural version
 - Well, to compute `a[0] + a[1] + ... + a[n-1]`,
  - start with `s = 0`, and
 ```python
@@ -103,9 +103,9 @@ def sum_array(a):
 - No *loops*
 ... but the point is not about *lack* of something
 
-== The thinking behind the functional version
+== The "thinking" behind the functional version
 - The key observation:
-$ ("sum of" a[0:n]) = a[0] + ("sum of" #ao[$a[1:n]$]) $
+$ "sum of" a[0:n] = a[0] + ("sum of" #ao[$a[1:n]$]) $
   and you can compute (sum of #ao[$a[1:n]$]) by a recursive call
 - As a minor note, we defined a function to compute sum of an array *range* $a[i:j]$ by:
 $ ("sum of" a[i:j]) = a[i] + ("sum of" a[i+1:j]), $
@@ -178,7 +178,7 @@ $ a_0 &= 1, \
 $ a_0 &= 1, \
   a_n &= a_(n-1) + n quad (n > 0) $
 
-- Code:
+- Code (can it be simpler?):
 
 #align(center,[
 ```python
@@ -335,7 +335,7 @@ let sum_square_pos l =
 
 - Note: the language you chose may or may not have similar functions builtin (you can roll it by yourself when it doesn't)
 
-= Deep Recursion, Stack Overflow, and Tail Recursion
+= Inconvenient Truth: Deep Recursion, Stack Overflow, and Tail Recursion
 
 == Deep recursion may lead to stack overflow
 
@@ -448,12 +448,43 @@ def sum_to_tail(n, s):
 
 == How to come up with a tail-recursive version?
 
-+ there is no universal formula
-+ adding an extra parameter storing "partial result" often does it
-  - e.g., `sum_to(`$n$`)` $->$ `sum_to_tail(`$n$, $s$`)`
-  - ... and slightly change the spec
-  - `sum_to_tail(`$n$, $s$`)` = $(1 + ... + n) + s$
-+ there is a general template for converting "loop" into tail recursion
++ a universal formula for a simple induction like:
+ $ a_n = ... med a_(n-1) med ... $
++ $->$ write a function that _#ao[finds $a_n$ given $m$ and $a_m$]_
+
+```
+def recurrence(m, am, n):
+  if m = n:
+    return am
+  else:
+    am_1 = ... am ... # a_{m+1}
+    return recurrence(m + 1, am_1, n)
+```
+
+== How to come up with a tail-recursive version?
+
+- as the previous example indicates, taking extra parameters that represent "results of earlier/smaller cases" often does it
+- another example: $a_0 = a_1 = 1; med a_n = a_(n-1) + a_(n-2)$
+- straight recursion:
+ 
+ ```
+def fib(n):
+  if n < 2:
+    return 1
+  else:
+    return fib(n - 1) + fib(n -2)
+```
+ 
+- tail recursion finds $a_n$ given $a_(m-1)$ and $a_m$ (note: invalid variable names used to be descriptive)
+ 
+```
+def fib(m, a_{m-1}, a_m, n):
+  if m == n:
+    return a_m
+  else:
+    a{m+1} = a_{m-1} + a_m
+    return fib(m + 1, a_m, a_{m+1}, n)
+```
 
 == Loop to tail-recursion
 - following is a _general_ template

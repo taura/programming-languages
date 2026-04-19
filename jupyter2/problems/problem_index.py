@@ -39,5 +39,21 @@ PROBLEM_INDEX = [
          "continued_fraction",
          "count_paths",
      ]),
+    ("tail_recursion",
+     [
+         "tail_recurrence",
+         "continued_fraction",
+     ]),
+    ("typedef",
+     [
+         "time",
+         "triangle",
+         "prng",
+     ]),
+    ("recursive_type",
+     [
+         "bintree",
+         "bstree",
+     ]),
 ]
 

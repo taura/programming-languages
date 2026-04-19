@@ -5,6 +5,7 @@ nb_srcs :=
 nb_srcs += $(wildcard nb/source/pl00_*/pl00_*.py)
 nb_srcs += $(wildcard nb/source/pl01_*/pl01_*.py)
 nb_srcs += $(wildcard nb/source/pl02_*/pl02_*.py)
+nb_srcs += $(wildcard nb/source/pl03_*/pl03_*.py)
 aux_srcs :=
 include ../../jupyter_tools/authoring/jupyter_tools.mk
 
@@ -56,6 +57,22 @@ $(out_dir)/$(concept)/$(problem)/$(base).ipynb : $(in_dir)/$(concept)/$(problem)
 	./format_string.py $$< out_dir=$(out_dir) concept=$(concept) problem=$(problem) base=$(base) | ../../jupyter_tools/authoring/mk_nb.py --syntax py - > $$@
 endef
 
+define deploy_svg
+deploy : $(out_dir)/$(concept)/$(problem)/svg/$(base).svg
+$(out_dir)/$(concept)/$(problem)/svg/dir :
+	mkdir -p $$@
+$(out_dir)/$(concept)/$(problem)/svg/L/dir :
+	mkdir -p $$@
+$(out_dir)/$(concept)/$(problem)/svg/$(base).svg : $(in_dir)/$(concept)/$(problem)/svg/$(base).svg $(in_dir)/$(concept)/$(problem)/$(base).py $(out_dir)/$(concept)/$(problem)/$(base).md $(out_dir)/$(concept)/$(problem)/svg/dir
+	cp $$< $$@
+endef
+
+define deploy_svg_L
+deploy : $(out_dir)/$(concept)/$(problem)/svg/L/$(base).svg
+$(out_dir)/$(concept)/$(problem)/svg/L/$(base).svg : $(in_dir)/$(concept)/$(problem)/svg/L/$(base).svg $(out_dir)/$(concept)/$(problem)/svg/L/dir
+	cp $$< $$@
+endef
+
 #
 # compile and run ps/fundef/compound/go/compound.go
 #
@@ -87,21 +104,27 @@ define dir_in
 $(shell find $(1) -mindepth 1 -maxdepth 1 -type d -printf "%f\n")
 endef
 
+define lang_in
+$(shell find $(1) -mindepth 1 -maxdepth 1 -type d -name '??' -printf "%f\n")
+endef
+
 #
 # $(call dir_in,D,ext) -> Dの中の *.ext の base部分
 # D/{a,b,c}.ext -> a b c
 #
 define ext_in
-$(shell find $(1) -name '*.$(2)' -exec basename -s .$(2) {} +)
+$(shell test -d $(1) && find $(1) -mindepth 1 -maxdepth 1 -name '*.$(2)' -exec basename -s .$(2) {} +)
 endef
 
 # tail_recurrence 
 ifeq (a,b)
-$(foreach concept,recursion tail_recursion, \
- $(foreach problem,continued_fraction, \
+$(foreach concept,$(call dir_in,$(in_dir)), \
+ $(foreach problem,$(call dir_in,$(in_dir)/$(concept)), \
   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),md),$(eval $(call deploy_md))) \
   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),py),$(eval $(call deploy_ipynb))) \
-  $(foreach ext,go jl ml rs, \
+  $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/svg,svg),$(eval $(call deploy_svg))) \
+  $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/svg/L,svg),$(eval $(call deploy_svg_L))) \
+  $(foreach ext,$(call lang_in,$(in_dir)/$(concept)/$(problem)), \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(eval $(call deploy_code))) \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(eval $(call check_code)))) \
 ))
@@ -112,7 +135,9 @@ $(foreach concept,$(call dir_in,$(in_dir)), \
  $(foreach problem,$(call dir_in,$(in_dir)/$(concept)), \
   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),md),$(eval $(call deploy_md))) \
   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),py),$(eval $(call deploy_ipynb))) \
-  $(foreach ext,$(call dir_in,$(in_dir)/$(concept)/$(problem)), \
+  $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/svg,svg),$(eval $(call deploy_svg))) \
+  $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/svg/L,svg),$(eval $(call deploy_svg_L))) \
+  $(foreach ext,$(call lang_in,$(in_dir)/$(concept)/$(problem)), \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(eval $(call deploy_code))) \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(eval $(call check_code)))) \
 ))
