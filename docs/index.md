@@ -7,6 +7,14 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2026/04/20)</font> Plan for the second week (April 20th)
+  1. Functional programming (problem solving by recursion)
+  1. Work on `pl02_recursion`
+  1. Tail recursion
+  1. Continue working on `pl02_recursion`
+  1. Working on `pl03_tyepdef`
+  1. Submit a Reflective Essay to [UTOL](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2026_0340_FEN-EE4d19L1_01) after every class (due the next day); I will not repeat this in subsequent weeks
+
 * <font color=blue>(2026/04/13)</font> No class today, due to entrance ceremony.
 * <font color=blue>(2026/04/13)</font> I made [errata of problems](#errata) below
 
