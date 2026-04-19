@@ -8,9 +8,9 @@
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
 * <font color=blue>(2026/04/20)</font> Plan for the second week (April 20th)
-  1. Functional programming (problem solving by recursion)
+  1. [Functional programming](slides/01-functional.pdf) (problem solving by recursion)
   1. Work on `pl02_recursion`
-  1. Tail recursion
+  1. [Tail recursion](slides/01-functional.pdf)
   1. Continue working on `pl02_recursion`
   1. Working on `pl03_tyepdef`
   1. Submit a Reflective Essay to [UTOL](https://utol.ecc.u-tokyo.ac.jp/lms/course?idnumber=2026_0340_FEN-EE4d19L1_01) after every class (due the next day); I will not repeat this in subsequent weeks
