@@ -7,6 +7,43 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2026/04/26)</font> Plan for the third week (April 27th)
+  1. [Tail recursion](slides/01-functional.pdf)
+  1. Work on `pl02_recursion` and `pl03_typedef`
+  1. [Object-Oriented Programming](slides/02-oop.pdf)
+* <font color=blue>(2026/04/26)</font>
+  * Released Assignment 2 in UTOL : exact spec
+	* in topic _recursion_, solve >=2 problems in >=2 languages (>= 4 programs in total)
+	* in topic _tail recursion_, solve >=1 problems in >=2 languages (>= 2 programs in total)
+	* due <font color=red>May 2nd 23:59</font>
+  * Released Assignment 3 in UTOL : exact spec
+	* in topic _typedef_, solve >=1 problems in >=2 languages (>= 2 programs in total)
+	* in topic _recursive type_, solve >=1 problems in >=2 languages (>= 2 programs in total)
+	* due <font color=red>May 9th 23:59</font>
+	* note: two problems `binheap` and `tttree` were added after the last lecture; they are beyond "learn-a-new-language" level and far more challenging than problems you have seen; I encourage you to tackle one of them there are bonus points associated with it
+* <font color=blue>(2026/04/26)</font>For any non-trivial program, you should master a skill to examine a program to get it right.  Here are a few basic things to remember.
+  * establish a comfortable way to edit, compile, and run your program with your favorite editor or IDE, rather than doing all the work in the browser (make sure you save your work in the right file before invoking the AI tutor for feedback); if you use VS Code, you can open a file on the server directly with remote file access
+  * find the _minimum_ input that your program does not work for.  Do not waste time trying to chase when things break in an execution taking 10000 steps. 
+  * use _interactive environment_ for OCaml (`ocaml` command) and Jupyter (`jupyter`) to run functions interactively and see their outputs; this way you can examine if each function is doing what it is supposed to do
+  * spend time to practice and master _debugger_, with which you can run your program step-by-step, seeing values along the way
+  * there are choices for debugger tools and VS Code may magically support a debugger within VS Code, but when it does not work immediately, start with something simpler and then figure out how to nicely integrate it in your editor
+  * you can always ask AI for help and alternatives, but here are the basic/standard tool you want to get started with
+     * Go : [dlv](https://github.com/go-delve/delve); start with
+```	 
+go build -gcflags="all=-N -l" program.go
+dlv exec ./program
+```	 
+     * Julia : [Debugger.jl](https://github.com/JuliaDebug/Debugger.jl)
+     * OCaml : [ocamldebug](https://ocaml.org/manual/5.4/debugger.html); start with
+```	 
+ocamlc -o program -g program.ml
+ocamldebug ./program
+```	 
+     * Rust : `gdb`
+```	 
+rustc -C opt-level=0 -C debuginfo=2 program.rs	 
+gdb ./program
+```
 * <font color=blue>(2026/04/20)</font> Plan for the second week (April 20th)
   1. [Functional programming](slides/01-functional.pdf) (problem solving by recursion)
   1. [Extra: OCaml pitfalls](slides/0x-ocaml.pdf) (some OCaml syntactic pitfalls ...)
