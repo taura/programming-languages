@@ -20,10 +20,10 @@
   * `binheap_add` (or `binHeapAdd`), which takes a non-negative integer $x$ and a binary heap $t$ and returns a new tree with $x$ added to $t$
   * `binheap_remove_min` (or `binHeapRemoveMin`), which takes a binary heap $t$ and returns a new tree with the minimum element (root) removed from $t$
 * There are implicit conditions imposed by test code; specifically
-  * In Go, use `nil` to represent a binary tree
-  * In Julia, use `nothing` to represent a binary tree
-  * In OCaml, use variant to define `binheap` and `Empty` to represent a binary tree
-  * In Rust, use `enum` to define `BinHeap` and `Empty` (`BinHeap::Empty`) to represent a binary tree
+  * In Go, use `nil` to represent an empty tree
+  * In Julia, use `nothing` to represent an empty tree
+  * In OCaml, use variant to define `binheap` and `Empty` to represent an empty tree
+  * In Rust, use `enum` to define `BinHeap` and `Empty` (`BinHeap::Empty`) to represent an empty tree
 * Check the test code before you proceed
 
 * <font color="red">Note:</font> Due to the shape property, the shape of a binary heap is uniquely determined solely by the number of nodes; if you imagine growing a tree by adding nodes one after another, the tree grows in the breadth-first and left-to-right order.

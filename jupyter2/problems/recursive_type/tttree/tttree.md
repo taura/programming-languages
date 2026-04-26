@@ -10,22 +10,29 @@
   - Only leaf nodes hold values.
   - Each internal node has either 2 or 3 children, and all leaves are at the same depth (except in the empty and singleton cases); in other words, all children of a node always have the same height.
   - When a node has children $u_0$, $u_1$, and possibly $u_2$, the following holds: any value in $u_0 \le$ any value in $u_1 \le$ any value in $u_2$. This is a property analogous to that of a binary search tree.
-  - Internal nodes maintain value(s) that separate their children. Specifically, a node with two children has a separator value $s$ such that any value in $u_0 < s \le$ any value in $u_1$; a node with three children has two separator values $s_0$ and $s_1$ such that any value in $u_0 < s_0 \le$ any value in $u_1 < s_1 \le$ any value in $u_2$.
+  - Internal nodes maintain value(s) that separate their children. Specifically, a node with two children has a separator value $s_0$ such that any value in $u_0 < s_0 \le$ any value in $u_1$; a node with three children has two separator values $s_0$ and $s_1$ such that any value in $u_0 < s_0 \le$ any value in $u_1 < s_1 \le$ any value in $u_2$.
   - Due to this ordering property and the balance property mentioned above, the tree guarantees $O(\log n)$ performance for search.
 * The main question is how to insert a value into, or remove a value from, a tree while maintaining the equal-height property in $O(\log n)$ time.
 * Below, we refer to a node with two children as a 2-node and a node with three children as a 3-node.
 
 ## In This Problem ...
 
-* Define a data type representing a 2-3 tree, called `tttree` (or `Tttree`)
-* Define four functions explained below `tttree_add, tttree_lookup, tttree_remove,` and `tttree_check`
+* Define a data type representing a 2-3 tree, called `tttree` (or `TTTree`)
+* Define four functions explained below `tttree_add, tttree_lookup, tttree_remove,` and `tttree_check` (or `TTTreeAdd, TTTreeLookup, TTTreeRemove`, and `TTTreeCheck`)
+* There are implicit conditions imposed by test code; specifically
+  * In Go, use `nil` to represent an empty tree
+  * In Julia, use `nothing` to represent an empty tree
+  * In OCaml, use variant to define 2-3 tree and `Empty` to represent an empty tree
+  * In Rust, use `enum` to define 2-3 tree and `Empty` (`TTTree::Empty`) to represent an empty tree
+* Check the test code before you proceed
+
 
 ## Adding a Value
 
 Let's consider adding an element $x$ to a 2-3 tree $t$.
 * (a) If $t$ is empty, create a singleton tree containing $x$.
 * (b) If $t$ is a singleton tree containing $y$, create a 2-node with two leaf children $x$ and $y$.
-* (c) Otherwise $t$ should have a 2- or 3-node as its the root; choose the appropriate child $u$ by comparing $x$ and the separator value(s), then add $x$ to $u$.
+* (c) Otherwise $t$ should have a 2- or 3-node as its root; choose the appropriate child $u$ by comparing $x$ and the separator value(s), then add $x$ to $u$.
 
 However, simply replacing $u$ with the result of adding $x$ to $u$ may break the equal-height property. Let's consider how to handle this, starting with the simple case of depth 2 (i.e., a 2- or 3-node whose children are leaves).
 * (*c2) If $t$ is a 2-node (i.e., has two leaf children $x_0$ and $x_1$), turn it into a 3-node with three leaves $x_0$, $x_1$, and $x$ in the appropriate order.
@@ -75,7 +82,7 @@ With this in mind, let's consider the general case where a 2-node may become a 1
 
 * Define a function `tttree_check` that takes a 2-3 tree $t$ and returns its depth, while verifying that all children of every internal node have the same height.
   * The depth of an empty tree is 0.
-  * The depth of a singleton tree is 1.
+  * The depth of a singleton tree or a tree consisting of a root + 2 or 3 leaves is 1.
   * The depth of a 2- or 3-node is the depth of its children (which must all be equal) plus 1.
 
 ## Note

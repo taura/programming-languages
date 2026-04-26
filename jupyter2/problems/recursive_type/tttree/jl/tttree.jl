@@ -54,7 +54,7 @@ end
    and returns the depth of the tree if it is a valid two-three-tree =#
 function tttree_check_(t)
     if is_leaf(t)       # leaf
-        1
+        0
     else
         n = length(t.children)
         d = tttree_check_(t.children[1])
@@ -79,7 +79,7 @@ end
 function tttree_print_(t, depth)
     if is_leaf(t)
         print(repeat(" ", depth), "Leaf(", t.keys[1], ")\n")
-        1
+        0
     else
         print(repeat(" ", depth), "Node(")
         n = length(t.children)
