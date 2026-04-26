@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="37.897881mm"
+   height="23.812498mm"
+   viewBox="0 0 37.89788 23.812498"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="g41"
+     transform="translate(-65.717723,-62.44167)"
+     style="display:inline">
+    <path
+       style="opacity:1;fill:#ffffff;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none;paint-order:markers stroke fill"
+       d="m 74.083328,70.114585 -7.9375,15.875 h 15.875004 z"
+       id="path32" />
+    <path
+       style="opacity:1;fill:#ffffff;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none;paint-order:markers stroke fill"
+       d="m 95.249993,70.114585 -7.937494,15.875 H 103.1875 Z"
+       id="path33" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;paint-order:markers stroke fill"
+       d="m 74.215635,70.246872 10.583324,-5.291667 10.583344,5.291667"
+       id="path34" />
+    <g
+       id="g42"
+       transform="translate(-10.583333,5.2916667)">
+      <ellipse
+         style="font-variation-settings:normal;display:inline;fill:#ffffff;fill-opacity:0.985835;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+         id="ellipse34"
+         cx="84.931267"
+         cy="64.822906"
+         rx="2.2489464"
+         ry="2.2489467" />
+      <text
+         xml:space="preserve"
+         style="font-size:2.82223px;line-height:1;font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#ff0000;stroke:#ff0000;stroke-width:0.264583;paint-order:markers stroke fill"
+         x="84.666656"
+         y="65.881248"
+         id="text34"><tspan
+           id="tspan34"
+           style="fill:#000000;stroke:none;stroke-width:0.264583"
+           x="84.666656"
+           y="65.881248">20</tspan></text>
+    </g>
+    <g
+       id="g35"
+       transform="translate(-22.225001,-1.0583331)">
+      <ellipse
+         style="font-variation-settings:normal;display:inline;fill:#ffffff;fill-opacity:0.985835;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+         id="ellipse35"
+         cx="107.15625"
+         cy="65.881241"
+         rx="2.2489464"
+         ry="2.2489467" />
+      <text
+         xml:space="preserve"
+         style="font-size:2.82223px;line-height:1;font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;opacity:1;fill:#ff0000;stroke:#ff0000;stroke-width:0.264583;paint-order:markers stroke fill"
+         x="106.89164"
+         y="66.939583"
+         id="text35"><tspan
+           id="tspan35"
+           style="fill:#000000;stroke:none;stroke-width:0.264583"
+           x="106.89164"
+           y="66.939583">10</tspan></text>
+    </g>
+    <g
+       id="g36"
+       transform="translate(-11.641667,4.2333336)">
+      <ellipse
+         style="font-variation-settings:normal;display:inline;fill:#ffffff;fill-opacity:0.985835;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+         id="ellipse36"
+         cx="107.15625"
+         cy="65.881241"
+         rx="2.2489464"
+         ry="2.2489467" />
+      <text
+         xml:space="preserve"
+         style="font-size:2.82223px;line-height:1;font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;opacity:1;fill:#ff0000;stroke:#ff0000;stroke-width:0.264583;paint-order:markers stroke fill"
+         x="106.89164"
+         y="66.939583"
+         id="text36"><tspan
+           id="tspan36"
+           style="fill:#000000;stroke:none;stroke-width:0.264583"
+           x="106.89164"
+           y="66.939583">30</tspan></text>
+    </g>
+  </g>
+</svg>

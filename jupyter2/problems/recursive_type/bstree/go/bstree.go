@@ -8,6 +8,9 @@ import (
 
 /** end my answer */
 
+/* test code below */
+
+// insert all numbers in xs into t, and return the resulting tree
 func insert_seq(xs []uint, t *BSTree) *BSTree {
 	for _, x := range xs {
 		t = insert(x, t)
@@ -15,6 +18,7 @@ func insert_seq(xs []uint, t *BSTree) *BSTree {
 	return t
 }
 
+// generate a sequence of n random numbers with seed
 func random_seq(n int, seed uint) []uint {
 	x := seed
 	xs := make([]uint, n)
@@ -25,6 +29,7 @@ func random_seq(n int, seed uint) []uint {
 	return xs
 }
 
+// insert all numbers in xs to an empty tree, and check that the m-th smallest number is correct
 func check_seq(xs []uint, m int) bool {
 	t := insert_seq(xs, nil)
 	sorted := slices.Clone(xs)
@@ -32,6 +37,8 @@ func check_seq(xs []uint, m int) bool {
 	return uint(nth(m, t)) == sorted[m]
 }
 
+// generate a sequence of n random numbers with seed, insert them to an empty tree,
+// and check that the m-th smallest number is correct
 func check_random(seed uint, n int, m int) bool {
 	xs := random_seq(n, seed)
 	return check_seq(xs, m)
