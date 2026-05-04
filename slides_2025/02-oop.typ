@@ -13,7 +13,7 @@
   config-info(
     title: [Object-Oriented Programming],
     author: [Kenjiro Taura],
-    date: [2024/04/28],
+//    date: [2024/04/28],
   ),
 )
 
@@ -32,9 +32,30 @@
 #show raw.where(block: true): it => text(size: 20pt, pad(left: 0.7em, it))
 #show raw.where(block: false): it => text(rgb(127,127,127), size: 20pt, it)
 
+#let comment(x) = ""
+
 #title-slide()
 
 #outline(depth: 1)
+
+= Before object-oriented programming
+
+== Composite data
+
+- composing multiple values into one is a fundamental mechanism in any programming language
+- common mechanisms: arrays, lists, tuples, pairs, etc.
+- they allow large collection of values to be referenced by a single variable, hiding details (abstraction)
+
+== New data types
+
+- programming languages also allow you to _introduce new composite data_
+    - Python: class
+    - C++: struct/class
+    - Go: struct
+    - Julia: struct
+    - OCaml: variant, record, class
+    - Rust: struct, enum
+    - ...
 
 = What is object-oriented programming?
 

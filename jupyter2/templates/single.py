@@ -35,6 +35,13 @@ How to write a function in Go?
 Give me a hint on this problem for Rust
 ```
 
+### <font color="red">NEW:</font> A few builtin variables
+
+* `{{file:FILENAME}}` is the content of FILE
+* `{{bash[-1]}}` is the output of the last `%%bash_` cell, `{{bash[-2]}}` that of the second last `%%bash_` cell, etc.
+* `{{problem}}` is the content of the file you specified by `%%hey problem_file=foo.md`
+* `{{answer}}` is the content of the file you specified by `%%hey answer_file=go/foo.go`
+
 ### Help when you struggle
 
 ```
@@ -45,7 +52,7 @@ My program:
 {{answer}}
 
 Error message:
-  <paste the compile error message> 
+{{bash[-1]}}
 
 ```
 

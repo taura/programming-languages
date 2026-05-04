@@ -57,5 +57,12 @@ PROBLEM_INDEX = [
          "binheap",
          "tttree",
      ]),
+    ("oop_basics",
+     [
+         "class",
+         "polymorphism",
+         "mixed_collection",
+         "subtyping",
+     ]),
 ]
 

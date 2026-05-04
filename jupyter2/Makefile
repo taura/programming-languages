@@ -2,10 +2,7 @@
 .SHELLFLAGS := -eu -o pipefail -c
 
 nb_srcs :=
-nb_srcs += $(wildcard nb/source/pl00_*/pl00_*.py)
-nb_srcs += $(wildcard nb/source/pl01_*/pl01_*.py)
-nb_srcs += $(wildcard nb/source/pl02_*/pl02_*.py)
-nb_srcs += $(wildcard nb/source/pl03_*/pl03_*.py)
+nb_srcs += $(wildcard nb/source/pl04_*/pl04_*.py)
 aux_srcs :=
 include ../../jupyter_tools/authoring/jupyter_tools.mk
 

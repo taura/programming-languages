@@ -11,7 +11,7 @@
   1. [Tail recursion](slides/01-functional.pdf)
   1. Work on `pl02_recursion` and `pl03_typedef`
   1. [Object-Oriented Programming](slides/02-oop.pdf)
-  1. Please take [a survey](https://forms.cloud.microsoft/r/sFU3TMPY1J) on languages you want to work on
+  1. Please take [a survey](https://forms.cloud.microsoft/r/sFU3TMPY1J) on languages you want to work on (due: end of Apr. 28th, the same as Reflective Essay)
 * <font color=blue>(2026/04/26)</font>
   * Released Assignment 2 in UTOL : exact spec
 	* in topic _recursion_, solve >=2 problems in >=2 languages (>= 4 programs in total)
