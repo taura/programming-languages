@@ -30,7 +30,8 @@
     - type error at compile time
     - type error at runtime
     - no errors
-- What rules govern the language's behavior here? 
+- Test them by commenting out lines that fail to compile in the test code.
+- What rules govern the language's behavior here?
 - <font color="green">Q: Discuss above points with your team members</font>
 - Boilerplate source files `{go,jl,ml,rs}/{base}.{go,jl,ml,rs}` containing the test code are generated and shown below.
 - Edit the source files either by opening them in a text editor (e.g., VS Code) or by editing and executing the cells below.
