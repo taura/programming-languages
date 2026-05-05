@@ -7,6 +7,18 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2026/05/05)</font>
+	* I set up a Microsoft OneDrive folder called "programming-languages-2026".  You should be able to find it in [OneDrive root page](https://univtokyo-my.sharepoint.com/) -> Shared; let me know if you cannot find it
+	* Find `teams_table.xlsx` in that directory to find your team number, other team members, and language assignment
+	* Also find `teamXX` folder in the same directory, where XX should be your team number.  Your team members and only your team members should be able to see this directory.  Use this directory to exchange information among team members and/or cooperate for assignments
+	* If you can look into folders of other teams, that's my mistake.  Please let me know ASAP. 
+* <font color=blue>(2026/05/05)</font> Plan for the fourth week (May 7th)
+  1. [Object-Oriented Programming](slides/02-oop.pdf)
+  1. Teams get together (remote teams go to break out rooms) and greet
+	 * make sure you can communicate via the shared folder for your team
+  1. [Object-Oriented Programming](slides/02-oop.pdf)
+  1. Teams work on `pl04_oop_basics`
+  1. `pl04_oop_basics` becomes next assignment, due May 23 (Sat); try to finish individual work before the class on May 18 and be prepared for team discussion on that day (you will have 30 minutes)
 * <font color=blue>(2026/04/26)</font> Plan for the third week (April 27th)
   1. [Tail recursion](slides/01-functional.pdf)
   1. Work on `pl02_recursion` and `pl03_typedef`
