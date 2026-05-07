@@ -312,7 +312,7 @@ for p in l:
 - Q : what's wrong with simply typed languages?
 
 == Why simply typed languages do not suffice?
-- they are _inflexible_ and hider _code reusability_. e.g.,
+- they are _inflexible_ and hinder _code reusability_. e.g.,
 - cannot put elements of different types in a single container
  ```python
 l = [rect(..), circle(..)]
