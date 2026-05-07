@@ -389,7 +389,7 @@ n_elems(["a", "b", "c"])
 - consider the following program in a hypothetical Python-like language
 ```python
 def small(s : shape) -> bool:
-  return s0.area() < 10.0
+  return s.area() < 10.0
 
 small(rect(..))  # or small(circle())
 ```
