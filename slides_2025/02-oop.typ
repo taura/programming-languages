@@ -313,7 +313,7 @@ for p in l:
 
 == Why simply typed languages do not suffice?
 - they are _inflexible_ and hinder _code reusability_. e.g.,
-- cannot put elements of different types in a single container
+- e.g., cannot put elements of different types in a single container
  ```python
 l = [rect(..), circle(..)]
 for s in l:
@@ -321,7 +321,7 @@ for s in l:
 ```
 
 == Why simply typed languages do not suffice?
-- cannot have a single function definition of an array of different types, even when element type should not matter
+- e.g., cannot have a single function definition of an array of different types, even when element type should not matter
 ```python
 def n_elems(l): # list of what?
   n = 0
