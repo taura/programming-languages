@@ -397,7 +397,16 @@ small(rect(..))  # or small(circle())
 == Type checking the function
 
 - define the `shape` type somewhere, in such a way that `shape` has `area()` method returning `float`
+```python
+type shape = ... area ...  # hypothetical
+```
+- and define `small` to take `shape` as input
+```python
+def small(s : shape) -> bool:
+  return s.area() < 10.0
+```
 
+== Type checking the function
 ```python
 def small(s : shape) -> bool:
   return s.area() < 10.0
