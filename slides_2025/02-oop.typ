@@ -356,17 +356,17 @@ n_elems(["a", "b", "c"])
 - forget about type safety $=>$ polymorphism is easy to achieve
   - Julia, Python, Javascript, or many scripting languages
 - forget about polymorphism (i.e., settle for simply typed languages) $=>$ type safety is easy to achieve
-- achieving _both_ polymorphism and type safety is difficult
+- achieving _*both*_ polymorphism and type safety is difficult
 
 == Static type system for polymorphism
 - informally, we need a static type that can represent multiple dynamic types
-- two complementary approaches
+- two broad categories
 + _*subtype polymorphism*_ : allows a single static type that accommodates multiple types
 + _*parametric polymorphism*_ : allows a static type having _parameter(s)_, which can be instantiated into multiple types
 
 == Subtype polymorphism example
 
-- `s` has a static type, like "shape", that accommodates both rect and circle
+- introduce a "shape" type, which accommodates both rect and circle, and let `s` have type "shape"
  ```python
 l = [rect(..), circle(..)]
 for s in l:
@@ -395,6 +395,9 @@ small(rect(..))  # or small(circle())
 ```
 
 == Type checking the function
+
+- define the `shape` type somewhere, in such a way that `shape` has `area()` method returning `float`
+
 ```python
 def small(s : shape) -> bool:
   return s.area() < 10.0
@@ -404,7 +407,7 @@ def small(s : shape) -> bool:
 - $=>$ ```python s.area()``` : ```python float```
 - $=>$ ```python s.area() < 10.0``` : ```python bool```
 
-- as straightforward as the simply-typed case
+- similar to the simply-typed case
 
 == Type checking the function call
 ```python
@@ -493,8 +496,10 @@ rect(...) if ... else circle(...) : shape
   + for each (public) _*mutable*_ field $m$,
     $ "type of" m "in" T = "type of" m "in" S $
 
-- note: the exact definition can vary between languages and can be stronger (more restrictive)
-- ($ast$) is a _necessary_ condition to achieve type safety
+- note: the exact definition can vary between languages
+- *($dagger$)* are _necessary_ conditions to achieve type safety
+    - you can make it stronger (i.e., more prohibitive or less permissive) without breaking type safety
+    - making it more permissive could risk type safety
 
 == Subtype relationship example (1)
 
