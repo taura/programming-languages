@@ -8,6 +8,17 @@
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
 * <font color=blue>(2026/05/05)</font>
+	- I have set up a UTokyo Slack workspace named `プログラミング言語 2026_0340_FEN-EE4d19L1_01`, with a dedicated channel for each team (`team01`, `team02`, ...).
+	- [Instructions on how to join the workspace](https://utelecon.adm.u-tokyo.ac.jp/en/utol/students/integrations/slack/)
+	- If you are new to UTokyo Slack, please refer to the [UTokyo Slack page](https://utelecon.adm.u-tokyo.ac.jp/en/slack/)
+	- Join your team's channel to coordinate with your teammates
+	- I will also use the `#general` and `#random` channels for quick informal announcements (e.g., "the server is going down") and to take quick questions
+	- Use of this Slack workspace is optional. Critical information such as assignment deadlines is always announced in UTOL, and course materials are posted on the home page (unless access needs to be restricted to enrolled students)
+	- Discuss with your teammates how you prefer to communicate, and use this Slack workspace if they agrees
+	- Each team channel is a public channel --- anyone enrolled in this course can join --- but please refrain from entering another team's channel without good reason. <font color="green">Let's observe the following convention: if you wish to join a team channel other than your own, ask a member of that team for permission via the `#general` channel.</font> Communication across teams is entirely welcome and encouraged
+	- Because public channels are public, keep in mind that your messages in your team channel may be visible to other course members.  That said, I believe this convention (not a strict enforcement) is sufficient for an academic setting.  Note that only students enrolled in this course may join the workspace and, by extension, any channel within it
+	- I am not certain whether you can create private channels on your own (I welcome anyone to give a shot let me know), but feel free to do so if you need one and are able to. If you need a private channel but cannot create it yourself, please ask me to create one
+* <font color=blue>(2026/05/05)</font>
 	* I set up a Microsoft OneDrive folder called "programming-languages-2026".  You should be able to find it in [OneDrive root page](https://univtokyo-my.sharepoint.com/) -> Shared; let me know if you cannot find it
 	* Find `teams_table.xlsx` in that directory to find your team number, other team members, and language assignment
 	* Also find `teamXX` folder in the same directory, where XX should be your team number.  Your team members and only your team members should be able to see this directory.  Use this directory to exchange information among team members and/or cooperate for assignments
