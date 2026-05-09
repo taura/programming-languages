@@ -7,6 +7,39 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2026/05/10)</font>
+    - Released sample answers for coding problems so far
+		- minimum
+			- [hello](html/answers/minimum/hello/hello.html)
+		- function
+			- [a2b2c2](html/answers/function/a2b2c2/function/a2b2c2.html)
+			- [compound](html/answers/function/compound/function/compound.html)
+			- [in\_circle](html/answers/function/in_circle/function/in_circle.html)
+			- [projectile\_height](html/answers/function/projectile_height/function/projectile_height.html)
+			- [sigmoid](html/answers/function/sigmoid/function/sigmoid.html)
+			- [similarity](html/answers/function/similarity/function/similarity.html)
+		- variables
+			- [triangle\_area](html/answers/variables/triangle_area/variables/triangle_area.html)
+			- [gaussian\_density](html/answers/variables/gaussian_density/variables/gaussian_density.html)
+			- [point\_line\_distance](html/answers/variables/point_line_distance/variables/point_line_distance.html)
+		- conditional
+			- [clamp](html/answers/conditional/clamp/conditional/clamp.html)
+			- [leap\_year](html/answers/conditional/leap_year/conditional/leap_year.html)
+		- iteration
+			- [series\_sum](html/answers/iteration/series_sum/iteration/series_sum.html)
+			- [minimize\_polynomial](html/answers/iteration/minimize_polynomial/iteration/minimize_polynomial.html)
+			- [gaussian\_integral](html/answers/iteration/gaussian_integral/iteration/gaussian_integral.html)
+			- [gcd](html/answers/iteration/gcd/iteration/gcd.html)
+			- [find\_root](html/answers/iteration/find_root/iteration/find_root.html)
+		- recursion
+			- [gcd](html/answers/recursion/gcd/recursion/gcd.html)
+			- [fast\_power](html/answers/recursion/fast_power/recursion/fast_power.html)
+			- [fast\_recurrence](html/answers/recursion/fast_recurrence/recursion/fast_recurrence.html)
+			- [continued\_fraction](html/answers/recursion/continued_fraction/recursion/continued_fraction.html)
+			- [count\_paths](html/answers/recursion/count_paths/recursion/count_paths.html)
+		- tail\_recursion
+			- [tail\_recurrence](html/answers/tail_recursion/tail_recurrence/tail_recursion/tail_recurrence.html)
+			- [continued\_fraction](html/answers/tail_recursion/continued_fraction/tail_recursion/continued_fraction.html)
 * <font color=blue>(2026/05/05)</font>
 	- I have set up a UTokyo Slack workspace named `プログラミング言語 2026_0340_FEN-EE4d19L1_01`, with a dedicated channel for each team (`team01`, `team02`, ...).
 	- [Instructions on how to join the workspace](https://utelecon.adm.u-tokyo.ac.jp/en/utol/students/integrations/slack/)
