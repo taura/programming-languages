@@ -7,22 +7,30 @@ aux_srcs :=
 include ../../jupyter_tools/authoring/jupyter_tools.mk
 
 in_dir:=ps
-out_dir:=problems
+prob_dir:=problems
+ans_dir:=answers
 
 deploy :
 check :
 
 #
-# ps/fundef/compound/go/compound.go -> out/fundef/compound/go/compound.go
+# ps/fundef/compound/go
 #
 define deploy_code_dir
-$(out_dir)/$(concept)/$(problem)/$(ext) :
+$(prob_dir)/$(concept)/$(problem)/$(ext) :
+	mkdir -p $$@
+$(ans_dir)/$(concept)/$(problem)/$(ext) :
 	mkdir -p $$@
 endef
 
 define deploy_code
-deploy : $(out_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
-$(out_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) | $(out_dir)/$(concept)/$(problem)/$(ext)
+#
+# ps/fundef/compound/go/compound.go -> problems/fundef/compound/go/compound.go
+#
+# remove all lines between ... begin hidden ... and ... end hidden ... for problems
+#
+deploy : $(prob_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
+$(prob_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) | $(prob_dir)/$(concept)/$(problem)/$(ext)
 ifeq ($(ext),go)
 	sed '/\/\*\* begin hidden \*\//,/\/\*\* end hidden \*\//d' $$< > $$@
 endif
@@ -35,10 +43,36 @@ endif
 ifeq ($(ext),rs)
 	sed '/\/\*\* begin hidden \*\//,/\/\*\* end hidden \*\//d' $$< > $$@
 endif
+
+#
+# ps/fundef/compound/go/compound.go -> answers/fundef/compound/go/compound.go
+#
+# remove lines /** (begin|end) hidden **/
+#
+deploy : $(ans_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
+$(ans_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) | $(ans_dir)/$(concept)/$(problem)/$(ext)
+ifeq ($(ext),go)
+	sed '/\/\*\* \(begin\|end\) hidden \*\//d' $$< > $$@
+endif
+ifeq ($(ext),jl)
+	sed '/### \(begin\|end\) hidden/d' $$< > $$@
+endif
+ifeq ($(ext),ml)
+	sed '/\(\*\* \(begin\|end\) hidden \*\)/d' $$< > $$@
+endif
+ifeq ($(ext),rs)
+	sed '/\/\*\* \(begin\|end\) hidden \*\//d' $$< > $$@
+endif
+
 endef
 
 define check_code
 check : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).ok
+#
+# ps/fundef/compound/go/compound.go -> ps/fundef/compound/go/compound.exe
+#
+# compile the source code
+#
 $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).ok : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe
 	$(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe | grep OK && touch $$@
 $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
@@ -57,53 +91,108 @@ ifeq ($(ext),rs)
 endif
 endef
 
-#
-# ps/fundef/compound/go/compound.md -> out/fundef/compound/compound.md
-#
 define deploy_md
-deploy : $(out_dir)/$(concept)/$(problem)/$(base).md
-$(out_dir)/$(concept)/$(problem) :
+#
+# ps/fundef/compound/go/compound.md -> problems/fundef/compound/compound.md
+#
+# replace {...}
+#
+deploy : $(prob_dir)/$(concept)/$(problem)/$(base).md
+$(prob_dir)/$(concept)/$(problem) :
 	mkdir -p $$@
-$(out_dir)/$(concept)/$(problem)/$(base).md : $(in_dir)/$(concept)/$(problem)/$(base).md $(out_dir)/$(concept)/$(problem)
-	./format_string.py $$< out_dir=$(out_dir) concept=$(concept) problem=$(problem) base=$(base) > $$@
-endef
+$(prob_dir)/$(concept)/$(problem)/$(base).md : $(in_dir)/$(concept)/$(problem)/$(base).md $(prob_dir)/$(concept)/$(problem)
+	./format_string.py $$< out_dir=$(prob_dir) concept=$(concept) problem=$(problem) base=$(base) > $$@
 
 #
-# ps/fundef/compound/go/compound.md -> out/fundef/compound/compound.ipynb
+# ps/fundef/compound/go/compound.md -> answers/fundef/compound/compound.md
 #
+# replace {...}
+#
+deploy : $(ans_dir)/$(concept)/$(problem)/$(base).md
+$(ans_dir)/$(concept)/$(problem) :
+	mkdir -p $$@
+$(ans_dir)/$(concept)/$(problem)/$(base).md : $(in_dir)/$(concept)/$(problem)/$(base).md $(ans_dir)/$(concept)/$(problem)
+	./format_string.py $$< out_dir=$(ans_dir) concept=$(concept) problem=$(problem) base=$(base) > $$@
+endef
+
 define deploy_ipynb
-deploy : $(out_dir)/$(concept)/$(problem)/$(base).ipynb
-$(out_dir)/$(concept)/$(problem)/$(base).ipynb : $(in_dir)/$(concept)/$(problem)/$(base).py $(out_dir)/$(concept)/$(problem)/$(base).md $(out_dir)/$(concept)/$(problem)/go/$(base).go $(out_dir)/$(concept)/$(problem)/jl/$(base).jl $(out_dir)/$(concept)/$(problem)/ml/$(base).ml $(out_dir)/$(concept)/$(problem)/rs/$(base).rs
-	./format_string.py $$< out_dir=$(out_dir) concept=$(concept) problem=$(problem) base=$(base) | ../../jupyter_tools/authoring/mk_nb.py --syntax py - > $$@
+#
+# ps/fundef/compound/go/compound.py -> problems/fundef/compound/compound.ipynb
+#
+deploy : $(prob_dir)/$(concept)/$(problem)/$(base).ipynb
+$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(in_dir)/$(concept)/$(problem)/$(base).py $(prob_dir)/$(concept)/$(problem)/$(base).md $(prob_dir)/$(concept)/$(problem)/go/$(base).go $(prob_dir)/$(concept)/$(problem)/jl/$(base).jl $(prob_dir)/$(concept)/$(problem)/ml/$(base).ml $(prob_dir)/$(concept)/$(problem)/rs/$(base).rs
+	./format_string.py $$< out_dir=$(prob_dir) concept=$(concept) problem=$(problem) base=$(base) | ../../jupyter_tools/authoring/mk_nb.py --syntax py - > $$@
+
+#
+# ps/fundef/compound/go/compound.py -> answers/fundef/compound/compound.ipynb
+#
+$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(in_dir)/$(concept)/$(problem)/$(base).py $(ans_dir)/$(concept)/$(problem)/$(base).md $(ans_dir)/$(concept)/$(problem)/go/$(base).go $(ans_dir)/$(concept)/$(problem)/jl/$(base).jl $(ans_dir)/$(concept)/$(problem)/ml/$(base).ml $(ans_dir)/$(concept)/$(problem)/rs/$(base).rs
+	./format_string.py $$< out_dir=$(ans_dir) concept=$(concept) problem=$(problem) base=$(base) | ../../jupyter_tools/authoring/mk_nb.py --syntax py - > $$@
+
+deploy : $(ans_dir)/$(concept)/$(problem)/$(base).html
+$(ans_dir)/$(concept)/$(problem)/$(base).html : $(ans_dir)/$(concept)/$(problem)/$(base).ipynb
+	jupyter-nbconvert --to html $$<
+
 endef
 
 define deploy_svg_dirs
-$(out_dir)/$(concept)/$(problem)/svg/dir :
+#
+# problems/fundef/compound/svg
+#
+$(prob_dir)/$(concept)/$(problem)/svg/dir :
 	mkdir -p $$@
-$(out_dir)/$(concept)/$(problem)/svg/L/dir :
+$(prob_dir)/$(concept)/$(problem)/svg/L/dir :
+	mkdir -p $$@
+
+#
+# answers/fundef/compound/svg
+#
+$(ans_dir)/$(concept)/$(problem)/svg/dir :
+	mkdir -p $$@
+$(ans_dir)/$(concept)/$(problem)/svg/L/dir :
 	mkdir -p $$@
 endef
 
 define deploy_svg
-deploy : $(out_dir)/$(concept)/$(problem)/svg/$(base).svg
-$(out_dir)/$(concept)/$(problem)/svg/$(base).svg : $(in_dir)/$(concept)/$(problem)/svg/$(base).svg | $(out_dir)/$(concept)/$(problem)/svg/dir
+#
+# ps/fundef/compound/svg/*.svg -> problems/fundef/compound/svg/*.svg
+#
+deploy : $(prob_dir)/$(concept)/$(problem)/svg/$(base).svg
+$(prob_dir)/$(concept)/$(problem)/svg/$(base).svg : $(in_dir)/$(concept)/$(problem)/svg/$(base).svg | $(prob_dir)/$(concept)/$(problem)/svg/dir
+	cp $$< $$@
+
+#
+# ps/fundef/compound/svg/*.svg -> answers/fundef/compound/svg/*.svg
+#
+deploy : $(ans_dir)/$(concept)/$(problem)/svg/$(base).svg
+$(ans_dir)/$(concept)/$(problem)/svg/$(base).svg : $(in_dir)/$(concept)/$(problem)/svg/$(base).svg | $(ans_dir)/$(concept)/$(problem)/svg/dir
 	cp $$< $$@
 endef
 
 define deploy_svg_L
-deploy : $(out_dir)/$(concept)/$(problem)/svg/L/$(base).svg
-$(out_dir)/$(concept)/$(problem)/svg/L/$(base).svg : $(in_dir)/$(concept)/$(problem)/svg/L/$(base).svg | $(out_dir)/$(concept)/$(problem)/svg/L/dir
+#
+# ps/fundef/compound/svg/L/*.svg -> problems/fundef/compound/svg/L/*.svg
+#
+deploy : $(prob_dir)/$(concept)/$(problem)/svg/L/$(base).svg
+$(prob_dir)/$(concept)/$(problem)/svg/L/$(base).svg : $(in_dir)/$(concept)/$(problem)/svg/L/$(base).svg | $(prob_dir)/$(concept)/$(problem)/svg/L/dir
+	cp $$< $$@
+
+#
+# ps/fundef/compound/svg/L/*.svg -> answers/fundef/compound/svg/L/*.svg
+#
+deploy : $(ans_dir)/$(concept)/$(problem)/svg/L/$(base).svg
+$(ans_dir)/$(concept)/$(problem)/svg/L/$(base).svg : $(in_dir)/$(concept)/$(problem)/svg/L/$(base).svg | $(ans_dir)/$(concept)/$(problem)/svg/L/dir
 	cp $$< $$@
 endef
 
 #
 # compile and run ps/fundef/compound/go/compound.go
 #
-define check_code
+define check_code_xxxx
 check : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).ok
 $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).ok : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe
 	$(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe | grep OK && touch $$@
-$(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) $(out_dir)/$(concept)/$(problem)/$(ext)
+$(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) $(prob_dir)/$(concept)/$(problem)/$(ext)
 ifeq ($(ext),go)
 	go build -o $$@ $$<
 endif
@@ -172,8 +261,12 @@ $(eval $(foreach concept,$(call dir_in,$(in_dir)), \
 )))
 endif
 
-deploy : $(out_dir)/problem_index.py
-$(out_dir)/problem_index.py : $(in_dir)/problem_index.py
+deploy : $(prob_dir)/problem_index.py
+$(prob_dir)/problem_index.py : $(in_dir)/problem_index.py
+	cp $< $@
+
+deploy : $(ans_dir)/problem_index.py
+$(ans_dir)/problem_index.py : $(in_dir)/problem_index.py
 	cp $< $@
 
 clean:
