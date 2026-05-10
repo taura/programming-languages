@@ -8,7 +8,7 @@ include ../../jupyter_tools/authoring/jupyter_tools.mk
 
 in_dir:=ps
 prob_dir:=problems
-ans_dir:=../docs/html/answers
+ans_dir:=answers
 
 deploy :
 check :
