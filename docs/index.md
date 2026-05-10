@@ -7,6 +7,10 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2026/05/11)</font>Plan for the fourth week (May 11th)
+	1. [Object-Oriented Programming](slides/02-oop.pdf)
+	1. Teams work on `pl04_oop_basics`
+	1. [Parametric Polymorphism (aka Generic Types/Functions)](slides/03-parametric.pdf)
 * <font color=blue>(2026/05/10)</font>
     - Released [sample answers](html/answers.html) for coding problems so far
 * <font color=blue>(2026/05/05)</font>
@@ -218,8 +222,8 @@ gdb ./program
 * [Roadmap](slides/00-roadmap.pdf)
 * [Functional Programming Basics](slides/01-functional.pdf)
 * [Essence of Object-Oriented Programming](slides/02-oop.pdf)
+* [Parametric Polymorphism (aka Generic Types/Functions)](slides/03-parametric.pdf)
 * [Going outside Jupyter and Using Libraries](slides/03-standalone-and-libraries.pdf)
-* [Parametric Polymorphism (aka Generic Types/Functions)](slides/04-parametric.pdf)
 * [Basics of programming language implementation](slides/05-implementation-basics.pdf)
 * [Memory Management](slides/06-memory-management.pdf)
 * [Garbage Collection (GC) : A Brief Introductions](slides/07-gc-basics.pdf)
