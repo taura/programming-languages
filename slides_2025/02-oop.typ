@@ -496,127 +496,125 @@ rect(...) if ... else circle(...) : shape
 
 = Establishing subtype relationship
 
-== Most general subtype relationship of record-like types
+== A model language
 
-- when both $S$ and $T$ are record-like types (struct, class, etc.), $T <= S$ holds if the following two conditions *($dagger$)* are met
++ some primitive types (imagine integers, floating point numbers, characters, etc.)
++ record-like types
+    - class, struct, etc.
+    - arrays are structs whose fields are integers
+    - methods are just functions in a record
++ functions
+
+== Subtype relationships between record-like types
+
+- when both $S$ and $T$ are record-like types, the following conditions *($dagger$)* must hold for $T <= S$
   + $T$ has all the (public) methods/fields of $S$
   + for each (public) _*immutable*_ field or method $m$,
     $ "type of" m "in" T <= "type of" m "in" S $
   + for each (public) _*mutable*_ field $m$,
     $ "type of" m "in" T = "type of" m "in" S $
 
-- note: the exact definition can vary between languages
+#pagebreak()
+
 - *($dagger$)* are _necessary_ conditions to achieve type safety
     - you can make it stronger (i.e., more prohibitive or less permissive) without breaking type safety
     - making it more permissive could risk type safety
+- note: the exact definition can vary between languages
 
 == Subtype relationship example (1)
 
-```python
+- assume both `area` methods return the same type (presumably `float`)
+- Q: `rect` $<=$ `shape` (is `shape` $<-$ `rect` safe)?
+#grid(columns: 2, align: top, [```python
 class shape:
   def area(self): ...
-
+```],[```python
 class rect:
   def area(self): ...
   def width(self): ...
   def height(self): ...
-```
+```])
 
-- Q: `rect` $<=$ `shape` (is `shape` $<-$ `rect` safe)?
+#uncover(2)[- A: Yes]
 
 == Subtype relationship example (2)
 
-```python
+- Q: `rect` $<=$ `shape` (is `shape` $<-$ `rect` safe)?
+#grid(columns: 2, align: top, [```python
 class shape:
   def area(self): ...
   def perimeter(self): ...
-
+```],[```python
 class rect:
   def area(self): ...
   def width(self): ...
   def height(self): ...
-```
-- Q: `rect` $<=$ `shape` (is `shape` $<-$ `rect` safe)?
-#pagebreak()
-- A: no
-```
+```])
+
+#uncover(2)[- A: No (obvious)
+```python
 s : shape = rect(..)
 s.perimeter()
-```
+```]
 
 == Subtype relationship example (3)
 
-```python
-class node:
+- assume `rect` $<=$ `shape`
+- assume `s` is public (visible from outside)
+- Q: `rect_cell` $<=$ `shape_cell` (is `shape_cell` $<-$ `rect_cell` safe)?
+
+#grid(columns: 2, align: top, [```python
+class shape_cell:
   def __init__(self):
-    self.left : node
-    self.right : node
-
-class node_w_color:
-  def __init__(self, col):
-    self.left : node_w_color
-    self.right : node_w_color
-    self.color = col
+      self.s : shape
 ```
-
-- Q: `node_w_color` $<=$ `node` (is `node` $<-$ `nodw_w_color` safe)?
-
-#pagebreak()
-
-- A: no
+],[```python
+class rect_cell:
+  def __init__(self):
+      self.s : rect
 ```
-nc : node_w_color = node_w_color("red")
-no : node = nc
-no.left = node()
-nc.left.color    # calling .color on node!
+])
+#uncover(2)[- A: Yes if `s` is immutable; no if `s` is mutable]
+
+== If s is mutable ...
+
+```python
+rc : rect_cell = rect_cell(rect())
+sc : shape_cell = rc
+sc.s = any_shape()  # may not be rect
+rc.s.width()        # width not found!
 ```
-
-- the assignment ```python no : node = nc``` should have been disallowed
-
-/*
-- for reasoning, just consider having mutable field `sib : `$T$ is equivalent to having a method `set_sib(`$s$ : $T$`)`
-  - node has `set_sib(s : node)`
-  - node_w_color has `set_sib(s : node_w_color)`
-*/
+- this shows `shape_cell` $<-$ `rect_cell` is _not_ safe
 
 == Subtype relationship example (4)
 
-- Q : given `rect` $<=$ `shape`,  is `array rect` $<=$ `array shape`?
-- i.e., is the following assignment safe?
+- assume `rect` $<=$ `shape`
+- Q: `array of rect` $<=$ `array of shape` (is `array of shape` $<-$ `array of rect` safe)?
+#uncover(2)[- A: No, as arrays are mutable
 ```python
-ar : array rect = [rect(), rect()]
-as : array shape = ar
+ar : array of rect = [rect(), rect()]
+as : array of shape = ar
+as[0] = any_shape()  # may not be rect
+ar[0].width()        # width not found!
 ```
+- the same as the example (3)
+]
 
-#pagebreak()
-
-- A : No
-```python
-ar : array rect = [rect(), rect()]
-as : array shape = ar
-as[0] = circle()
-ar[0].width()   # calling .width() on circle()!
-```
-
-- assignment ```python as : array shape = ar``` should have been disallowed
-
-- for reasoning, just consider each element of a mutable array is a mutable field
-
-== A side story
+== A side story --- Java
 
 ```python
-ar : array rect = [rect(), rect()]
-as : array shape = ar
+ar : array of rect = [rect(), rect()]
+as : array of shape = ar
 as[0] = circle()
 ar[0].width()   # calling .width() on circle()!
 ```
 
 - Java got it wrong and allows this assignment
-  - a runtime exception occurs at ```java as[0] = circle()```
+  - a _runtime_ exception occurs at ```java as[0] = circle()```
 - there is another OOP language, called Eiffel, that got it wrong
   - anything (segfault or returning junk data) can happen at ```eiffel ar[0].width()```
 
-#pagebreak()
+== A side story --- Julia
 
 - Julia allows this assignment, too
 ```julia
@@ -627,20 +625,94 @@ ar[1].width()   # calling .width() on circle()!
 ```
 but ```julia as : Vector{Shape} = ar``` creates a copy of `ar` (wierd)
 
-== Subtype relationship tricky example (5)
-```python
-class shape:
-  def area(self): ...
-  def eq(self, s : shape): ...
+== A similar example --- recursive types
 
-class rect:
-  def area(self): ...
-  def width(self): ...
-  def height(self): ...
-  def eq(self, s : rect): ...
+- Q: `node_w_color` $<=$ `node` (is `node` $<-$ `nodw_w_color` safe)?
+#grid(columns: 2, align: top, [```python
+class node:
+  def __init__(self):
+    self.left : node
+    self.right : node
+```],[```python
+class node_w_color:
+  def __init__(self, col):
+    self.left : node_w_color
+    self.right : node_w_color
+    self.color = col
+```])
+
+#uncover(2)[- A: Yes only if `left` and `right` are immutable]
+
+== If left (or right) is mutable ...
+
+```python
+nc : node_w_color = node_w_color("red")
+no : node = nc
+no.left = node()
+nc.left.color    # calling .color on node!
 ```
 
+- this shows `node` $<-$ `nodw_w_color` is _not_ safe
+
+/*
+- for reasoning, just consider having mutable field `sib : `$T$ is equivalent to having a method `set_sib(`$s$ : $T$`)`
+  - node has `set_sib(s : node)`
+  - node_w_color has `set_sib(s : node_w_color)`
+*/
+
+== Subtype relationship between functions
+
+- suppose both $S$ and $T$ are function types:
+    - $S = A -> B$
+    - $T = A' -> B'$
+- for $T <= S$, it must be that
+  $ #ao[$B' <= B$] "and" #aka[$A' >= A$] $
+- to see why, assume $f'$ : $A' -> B'$ and $f$ : $A -> B$,
+- and ask when $f <- f'$ is safe?
+
+#pagebreak()
+
+- recall substitution principle ($ast$)
+    + $f'(a)$ must be valid for any $a : A$; #h(1em) $=> A' >= A$
+    + $f'(a) : B$ must hold for any $a : A$; #h(1em) $=> B' <= B$
+
+== Understanding subtyping between functions
+
+- the first condition may be counterintuitive at first
+- analogy
+    - a function #aka[$A$] $ -> B$ is like an animal that eats #aka[$A$] and emits $B$
+    - carnivore (肉食) $= #aka[meat] -> "pXXp"$
+    - ominivore (雑食) $= #aka[any food] -> "pXXp"$
+    - _"ominivore can eat any thing carnivore can eat"_ \
+        $=>$ omnivore can replace carnivore \
+        $=>$ $"omnivore" <= "carnivore"$
+- note: analogy between subtyping and set inclusion is broken
+
+== Covariant and contravariant
+- in general, a type $T(alpha)$ parameterized by $alpha$, is said to be
+  - _*covariant on $alpha$*_ if replacing $alpha$ with its subtype $alpha'$ yields its subtype (i.e., $alpha' <= alpha => T(alpha') <= T(alpha)$)
+  - _*contravariant on $alpha$*_ if replacing $alpha$ with its supertype $alpha'$ yields its subtype (i.e., $alpha' >= alpha => T(alpha') <= T(alpha)$)
+
+- in this terminology, a function type is
+  - _covariant_ on output ($B' <= B => A -> B <= A -> B'$)
+  - _contravariant_ on input ($A' <= A => A' -> B <= A -> B$)
+
+== Subtype relationship example --- a method taking different types
+
+- two `eq` methods take different parameters
 - Q : `rect` $<=$ `shape` (assignment `shape` $<-$ `rect` safe)?
+#grid(columns: 2, align: top, [```python
+class shape:
+  def area(self): ...
+  def eq(self, s:shape): ...
+```],[```python
+class rect:
+  def area(self): ...
+  def eq(self, s:rect): ...
+  def width(self): ...
+  def height(self): ...
+```])
+
 
 #pagebreak()
 
@@ -648,7 +720,7 @@ class rect:
 
 ```python
 s : shape = rect(..)
-s.eq(circle(..))
+s.eq(any_shape(..))
 ```
 - would pass a `circle` to a formal argument of `eq` (`rect` type)
 
@@ -658,28 +730,11 @@ s.eq(circle(..))
 `rect` $<=$ `shape` \
 $=>$ (type of `eq` in `rect`) $<=$ (type of `eq` in `shape`) \
 $=>$ `rect` $->$ `bool` $<=$ `shape` $->$ `bool` \
+$=>$ `shape` $<=$ `rect` (contravariant)
 
-- in general, $a' -> b <= a -> b$ holds when #aka[$a' >= a$] (next slide)
+but this is clearly false
 
-$=>$ `shape` $<=$ `rect` (false)
 
-== Subtype relationship between functions
-
-- $a' -> b' <= a -> b$ holds when
-  $ #ao[$b' <= b$] "and" #aka[$a' >= a$] $
-- to see why, assume $f'$ : $a' -> b'$ and $f$ : $a -> b$,
-  - and ask when $f <- f'$ is safe?
-- recall substitution principle ($ast$); it is when "$f'$ can take any data $f$ can take ($a$)". i.e.,
-  - $a' >= a$ ($a'$ is a _supertype_ of $a$)
-
-== Covariant and contravariant
-- in general, a type $T(alpha)$ parameterized by $alpha$, is said to be
-  - _*covariant on $alpha$*_ if replacing $alpha$ with its subtype $alpha'$ yields its subtype (i.e., $alpha' <= alpha => T(alpha') <= T(alpha)$)
-  - _*contravariant on $alpha$*_ if replacing $alpha$ with its supertype $alpha'$ yields its subtype (i.e., $alpha' >= alpha => T(alpha') <= T(alpha)$)
-
-- in this terminology, a function type is
-  - _covariant_ on output type ($b' <= b => a -> b <= a -> b'$)
-  - _contravariant_ on input type ($a' <= a => a' -> b <= a -> b$)
 
 = Subtypes in actual languages : a taxonomy
 
@@ -760,7 +815,7 @@ let s : &dyn Shape = &Rect{ ... };
 
 - you can use _type cast_ (`(`$e$ `:>` $S$`)`) to treat $e$ as if it is $S$
   - valid only when $e$'s (naturally derived) static type $T <= S$
-  - not the cast you may know in C
+  - not the cast as you may know it in C/C++
 - e.g.,
   - ```ocaml [(new rect() :> shape); (new circle() :> shape); ...]```
   - valid if `rect` $<=$ `shape` (determined by their method signatures)
