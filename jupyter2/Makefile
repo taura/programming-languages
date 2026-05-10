@@ -2,7 +2,7 @@
 .SHELLFLAGS := -eu -o pipefail -c
 
 nb_srcs :=
-nb_srcs += $(wildcard nb/source/pl04_*/pl04_*.py)
+nb_srcs += $(wildcard nb/source/pl05_*/pl05_*.py)
 aux_srcs :=
 include ../../jupyter_tools/authoring/jupyter_tools.mk
 
@@ -77,7 +77,7 @@ $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).ok : $(in_dir)/$(concept)/$(probl
 	$(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe | grep OK && touch $$@
 $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
 ifeq ($(ext),go)
-	go build -o $$@ $$
+	go build -o $$@ $$<
 endif
 ifeq ($(ext),jl)
 	echo '#!/usr/bin/env julia' | cat - $$< > $$@
