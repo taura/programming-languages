@@ -64,5 +64,12 @@ PROBLEM_INDEX = [
          "mixed_collection",
          "subtyping",
      ]),
+    ("parametric",
+     [
+         "basics",
+         "function_in_parameters",
+         "optimize_float",
+         "generic_optimize",
+     ]),
 ]
 
