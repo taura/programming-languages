@@ -7,7 +7,7 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
-* <font color=blue>(2026/05/11)</font>Plan for the fourth week (May 11th)
+* <font color=blue>(2026/05/11)</font>Plan for the fifth week (May 11th)
 	1. [Object-Oriented Programming](slides/02-oop.pdf)
 	1. Teams work on `pl04_oop_basics`
 	1. [Parametric Polymorphism (aka Generic Types/Functions)](slides/03-parametric.pdf)
