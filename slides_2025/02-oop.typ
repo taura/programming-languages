@@ -510,7 +510,7 @@ rect(...) if ... else circle(...) : shape
 - when both $S$ and $T$ are record-like types, the following conditions *($dagger$)* must hold for $T <= S$
   + $T$ has all the (public) methods/fields of $S$
   + for each (public) field or method $m$,
-    $ "type of" m "in" T <= "type of" m "in" S $ \
+    $ "type of" m "in" T <= "type of" m "in" S $
   + if field $m$ is _*mutable*_, 
     $ "type of" m "in" T = "type of" m "in" S $
 
