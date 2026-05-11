@@ -567,12 +567,12 @@ s.perimeter()
 
 #grid(columns: code_block_widths, align: top, [```python
 class shape_cell:
-  def __init__(self, s):
+  def __init__(self, s:shape):
       self.s : shape = s
 ```
 ],[```python
 class rect_cell:
-  def __init__(self, s):
+  def __init__(self, s:rect):
       self.s : rect = s
 ```
 ])
@@ -581,12 +581,12 @@ class rect_cell:
 
 #grid(columns: code_block_widths, align: top, [```python
 class shape_cell:
-  def __init__(self, s):
+  def __init__(self, s:shape):
       self.s : shape = s
 ```
 ],[```python
 class rect_cell:
-  def __init__(self, s):
+  def __init__(self, s:rect):
       self.s : rect = s
 ```
 ])
