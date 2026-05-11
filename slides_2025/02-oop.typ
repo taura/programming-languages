@@ -607,12 +607,12 @@ sc : shape_cell = rc
 sc.s = any_shape()  # may not be rect
 rc.s.width()        # width not found!
 ```
-- this shows `shape_cell` $<-$ `rect_cell` is _not_ safe
+- this shows `shape_cell` $<-$ `rect_cell` is #aka[_not safe if `s` is mutable_]
 
 == Subtype relationship example (4)
 
+- assume `rect` $<=$ `shape` and `shape` $lt.eq.not$ `rect`
 - Q: `array of rect` $<=$ `array of shape` (is `array of shape` $<-$ `array of rect` safe)?
-- assume `rect` $<=$ `shape`
 #uncover(2)[- A: No, if arrays are mutable
 ```python
 ar : array of rect = [rect(), rect()]
