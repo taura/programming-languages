@@ -499,40 +499,40 @@ rect(...) if ... else circle(...) : shape
 == A model language
 
 + some primitive types (imagine integers, floating point numbers, characters, etc.)
-+ record-like types
++ _*record-like types*_
     - class, struct, etc.
-    - arrays are structs whose fields are integers
-    - methods are just functions in a record
-+ functions
+    - arrays $approx$ structs whose fields are integers
+    - methods $approx$ functions in a record
++ _*functions*_
 
 == Subtype relationships between record-like types
 
 - when both $S$ and $T$ are record-like types, the following conditions *($dagger$)* must hold for $T <= S$
   + $T$ has all the (public) methods/fields of $S$
-  + for each (public) _*immutable*_ field or method $m$,
-    $ "type of" m "in" T <= "type of" m "in" S $
-  + for each (public) _*mutable*_ field $m$,
+  + for each (public) field or method $m$,
+    $ "type of" m "in" T <= "type of" m "in" S $ \
+  + if field $m$ is _*mutable*_, 
     $ "type of" m "in" T = "type of" m "in" S $
 
 #pagebreak()
 
 - *($dagger$)* are _necessary_ conditions to achieve type safety
-    - you can make it stronger (i.e., more prohibitive or less permissive) without breaking type safety
+    - a language designer can make it stronger (i.e., more prohibitive or less permissive) without breaking type safety
     - making it more permissive could risk type safety
-- note: the exact definition can vary between languages
 
 == Subtype relationship example (1)
 
-- assume both `area` methods return the same type (presumably `float`)
 - Q: `rect` $<=$ `shape` (is `shape` $<-$ `rect` safe)?
-#grid(columns: 2, align: top, [```python
+
+#let code_block_widths = (380pt, 380pt)
+#grid(columns: code_block_widths, align: top, column-gutter: 0pt, [```python
 class shape:
-  def area(self): ...
+  def area(self)->float: ...
 ```],[```python
 class rect:
-  def area(self): ...
-  def width(self): ...
-  def height(self): ...
+  def area(self)->float: ...
+  def width(self) ...
+  def height(self) ...
 ```])
 
 #uncover(2)[- A: Yes]
@@ -540,18 +540,18 @@ class rect:
 == Subtype relationship example (2)
 
 - Q: `rect` $<=$ `shape` (is `shape` $<-$ `rect` safe)?
-#grid(columns: 2, align: top, [```python
+#grid(columns: code_block_widths, align: top, [```python
 class shape:
-  def area(self): ...
-  def perimeter(self): ...
+  def area(self)->float: ...
+  def perimeter(self) ...
 ```],[```python
 class rect:
-  def area(self): ...
-  def width(self): ...
-  def height(self): ...
+  def area(self)->float: ...
+  def width(self) ...
+  def height(self) ...
 ```])
 
-#uncover(2)[- A: No (obvious)
+#uncover(2)[- A: (Obviously) no
 ```python
 s : shape = rect(..)
 s.perimeter()
@@ -559,22 +559,45 @@ s.perimeter()
 
 == Subtype relationship example (3)
 
-- assume `rect` $<=$ `shape`
-- assume `s` is public (visible from outside)
-- Q: `rect_cell` $<=$ `shape_cell` (is `shape_cell` $<-$ `rect_cell` safe)?
+- What if the same field has different types?
+- assume `rect` $<=$ `shape` and `shape` $lt.eq.not$ `rect`
+- `s` is public (visible from outside)
+- Q1: `shape_cell` $<=$ `rect_cell` (is `rect_cell` $<-$ `shape_cell` safe)?
+- Q2: `rect_cell` $<=$ `shape_cell` (is `shape_cell` $<-$ `rect_cell` safe)?
 
-#grid(columns: 2, align: top, [```python
+#grid(columns: code_block_widths, align: top, [```python
 class shape_cell:
-  def __init__(self):
-      self.s : shape
+  def __init__(self, s):
+      self.s : shape = s
 ```
 ],[```python
 class rect_cell:
-  def __init__(self):
-      self.s : rect
+  def __init__(self, s):
+      self.s : rect = s
 ```
 ])
-#uncover(2)[- A: Yes if `s` is immutable; no if `s` is mutable]
+
+== Subtype relationship example (3)
+
+#grid(columns: code_block_widths, align: top, [```python
+class shape_cell:
+  def __init__(self, s):
+      self.s : shape = s
+```
+],[```python
+class rect_cell:
+  def __init__(self, s):
+      self.s : rect = s
+```
+])
+
+#uncover("2-")[- A1: No
+```python
+rc : rect_cell = shape_cell(any_shape())
+rc.s.width()
+```
+]
+#uncover(3)[- A2: Yes if `s` is immutable; #aka[No if `s` is _mutable_]]
 
 == If s is mutable ...
 
@@ -588,9 +611,9 @@ rc.s.width()        # width not found!
 
 == Subtype relationship example (4)
 
-- assume `rect` $<=$ `shape`
 - Q: `array of rect` $<=$ `array of shape` (is `array of shape` $<-$ `array of rect` safe)?
-#uncover(2)[- A: No, as arrays are mutable
+- assume `rect` $<=$ `shape`
+#uncover(2)[- A: No, if arrays are mutable
 ```python
 ar : array of rect = [rect(), rect()]
 as : array of shape = ar
@@ -625,10 +648,11 @@ ar[1].width()   # calling .width() on circle()!
 ```
 but ```julia as : Vector{Shape} = ar``` creates a copy of `ar` (wierd)
 
+#comment[
 == A similar example --- recursive types
 
 - Q: `node_w_color` $<=$ `node` (is `node` $<-$ `nodw_w_color` safe)?
-#grid(columns: 2, align: top, [```python
+#grid(columns: code_block_widths, align: top, [```python
 class node:
   def __init__(self):
     self.left : node
@@ -659,6 +683,7 @@ nc.left.color    # calling .color on node!
   - node has `set_sib(s : node)`
   - node_w_color has `set_sib(s : node_w_color)`
 */
+]
 
 == Subtype relationship between functions
 
@@ -673,8 +698,9 @@ nc.left.color    # calling .color on node!
 #pagebreak()
 
 - recall substitution principle ($ast$)
-    + $f'(a)$ must be valid for any $a : A$; #h(1em) $=> A' >= A$
-    + $f'(a) : B$ must hold for any $a : A$; #h(1em) $=> B' <= B$
+- $f'$ must be able to replace safely $f$. i.e.,
+    + $f'(a)$ must be valid for any $a : A$ #h(1em) $=>$ #aka[$A' >= A$]
+    + $f'(a) : B$ must hold for any $a : A$ #h(1em) $=>$ #ao[$B' <= B$]
 
 == Understanding subtyping between functions
 
@@ -697,7 +723,7 @@ nc.left.color    # calling .color on node!
   - _covariant_ on output ($B' <= B => A -> B <= A -> B'$)
   - _contravariant_ on input ($A' <= A => A' -> B <= A -> B$)
 
-== Subtype relationship example --- a method taking different types
+== Subtype relationship example (5) --- a method taking different types
 
 - two `eq` methods take different parameters
 - Q : `rect` $<=$ `shape` (assignment `shape` $<-$ `rect` safe)?
@@ -801,22 +827,28 @@ impl Shape for Rect {
 let s : &dyn Shape = &Rect{ ... };
 ```
 
-== OCaml
+== OCaml --- purely structured subtyping
 - OCaml requires no type (class) definitions to make objects
+- every expression/variable still has static types (the name may be lacking)
 - type of an object expression is automatically derived from methods
-- even if they have different names, they are the same if their structures are the same
-- you may need a type annotation (actually, a cast) for
-  - if expressions having different types in then/else clauses
-    - ```ocaml if ... new rect() else new circle()```
-  - heterogeneous list/array expressions
+- e.g., the "object expression" below has a type `< area: float >`
+```ocaml
+object method area = 10.0 end
+```
+- `class` is just a way to give a name to an object type
+
+== OCaml --- purely structured subtyping
+- even if two object types have different names, they are the same if their signatures (methods and their types) are the same
+- the following just works if `rect` and `circle` have identical signatures
     - ```ocaml [new rect(); new circle(); ...]```
+    - ```ocaml if ... new rect() else new circle()```
+- otherwise you need a _type cast_ to indicate a common supertype
 
-#pagebreak()
+== OCaml --- type cast
 
-- you can use _type cast_ (`(`$e$ `:>` $S$`)`) to treat $e$ as if it is $S$
-  - valid only when $e$'s (naturally derived) static type $T <= S$
+- you can use _type cast_ `(`$e$ `:>` $S$`)` to treat $e$ as if it is $S$
+  - valid only when $e$'s static type $T <= S$
   - not the cast as you may know it in C/C++
-- e.g.,
+- e.g., if `rect` and `circle` are different but both have `area : float`, 
+  - ```ocaml type shape = < area : float >```
   - ```ocaml [(new rect() :> shape); (new circle() :> shape); ...]```
-  - valid if `rect` $<=$ `shape` (determined by their method signatures)
-  - note: unnecessary if `rect` and `circle` happen to have the same method signatures

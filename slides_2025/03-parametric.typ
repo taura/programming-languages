@@ -11,10 +11,9 @@
 #show: metropolis-theme.with(
   aspect-ratio: "16-9",
   config-info(
-    title: [Generic Functions and Types or \
-    Parametric Polymorphism],
-    author: [Kenjiro Taura],
-    date: [2024/05/09],
+      title: [Parametric Polymorphism \ a.k.a. _Generic_ Functions and Types],
+      author: [Kenjiro Taura],
+      date: [2024/05/09],
   ),
 )
 
@@ -159,4 +158,28 @@ and a version that can work for _*any subtype of S*_
 [Rust],  [```rust bfs::<i64>(...)```],    [],
 )])
 
+== Type inference
 
+- _type inference_ generally refers to any algorithm that determines the static type of an expression without programmer's annotation
+- many languages infer types of local variables
+    - Go : type of a local variable initialized with `:=` is inferred by RHS
+    - Rust : type of a local variable is inferred by RHS (or the unique assignment)
+- but they assume types of function parameters are given
+- they infer type of a compound expression from the types of its sub-expressions
+
+== OCaml type inference (reconstruction)
+
+- OCaml's type inference is remarkable in that it infers types of _incoming_ parameters from function body
+- intuitively, it works by collecting _constraints_ 
+    - `x + y` $->$ `x : int`, `y : int` (assumption: `+ : int -> int`)
+    - `match l with [] -> ... | a::r -> ...` $->$ `l : 'a list`
+    - `b.[i]` $->$ `b : 'a array`
+    - `b.[i] + 1` $->$ `b : int array`
+    - `s#area < 10.0` $->$ `s : < area : float; ... >`
+
+== OCaml type inference (reconstruction)
+
+- thanks to type inference, you can omit most type annotations in OCaml, but it's not that it does not do static type checking (unlike Python or Julia)
+- it is indeed type safe
+- to reason about what kind of programs are type-checked, you have to know possible types and their syntax (e.g., to understand error messages)
+- it is possible, and indeed useful, to give type annotations for documentation and diagnosing type errors
