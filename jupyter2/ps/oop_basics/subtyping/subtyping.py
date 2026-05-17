@@ -1,0 +1,1 @@
+../../../templates/single_w_discussion.py

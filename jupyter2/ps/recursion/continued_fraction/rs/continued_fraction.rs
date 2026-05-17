@@ -1,0 +1,19 @@
+/** begin my answer */
+
+/** begin hidden */
+fn continued_fraction(a: f64, n: i64) -> f64 {
+    if n == 0 {
+        1.0
+    } else {
+        1.0 / (a + continued_fraction(a, n - 1))
+    }
+}
+/** end hidden */
+/** end my answer */
+
+fn main() {
+    assert!((continued_fraction(2.0, 100) - 0.4142136).abs() < 1.0e-6);
+    assert!((continued_fraction(3.0, 100) - 0.3027756).abs() < 1.0e-6);
+    assert!((continued_fraction(4.0, 100) - 0.2360680).abs() < 1.0e-6);
+    println!("OK");
+}

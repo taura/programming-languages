@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="80.231239mm"
+   height="23.8125mm"
+   viewBox="0 0 80.231239 23.8125"
+   version="1.1"
+   id="svg1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1">
+    <marker
+       style="overflow:visible"
+       id="marker43"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         transform="scale(-0.5)"
+         id="path43" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="marker11"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         transform="scale(-0.5)"
+         id="path11" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="DartArrow"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         transform="scale(-0.5)"
+         id="path10" />
+    </marker>
+  </defs>
+  <g
+     id="layer1"
+     transform="translate(-65.717723,-62.441668)"
+     style="display:inline">
+    <path
+       style="opacity:1;fill:#ffffff;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none;paint-order:markers stroke fill"
+       d="m 74.083328,70.114585 -7.9375,15.875 h 15.875004 z"
+       id="path3" />
+    <path
+       style="opacity:1;fill:#ffffff;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none;paint-order:markers stroke fill"
+       d="m 95.249993,70.114585 -7.937494,15.875 H 103.1875 Z"
+       id="path4" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;paint-order:markers stroke fill"
+       d="m 74.215635,70.246872 10.583324,-5.291667 10.583344,5.291667"
+       id="path99" />
+    <ellipse
+       style="font-variation-settings:normal;display:inline;fill:#ffffff;fill-opacity:0.985835;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+       id="ellipse132"
+       cx="84.931267"
+       cy="64.822906"
+       rx="2.2489464"
+       ry="2.2489467" />
+    <text
+       xml:space="preserve"
+       style="font-size:2.82223px;line-height:1;font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#ff0000;stroke:#ff0000;stroke-width:0.264583;paint-order:markers stroke fill"
+       x="84.666656"
+       y="65.881248"
+       id="text1"><tspan
+         id="tspan1"
+         style="fill:#000000;stroke:none;stroke-width:0.264583"
+         x="84.666656"
+         y="65.881248">20</tspan></text>
+    <g
+       id="g2"
+       transform="translate(-32.808335,4.2333336)">
+      <ellipse
+         style="font-variation-settings:normal;display:inline;fill:#ffffff;fill-opacity:0.985835;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+         id="ellipse1"
+         cx="107.15625"
+         cy="65.881241"
+         rx="2.2489464"
+         ry="2.2489467" />
+      <text
+         xml:space="preserve"
+         style="font-size:2.82223px;line-height:1;font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;opacity:1;fill:#ff0000;stroke:#ff0000;stroke-width:0.264583;paint-order:markers stroke fill"
+         x="106.89164"
+         y="66.939583"
+         id="text2"><tspan
+           id="tspan2"
+           style="fill:#000000;stroke:none;stroke-width:0.264583"
+           x="106.89164"
+           y="66.939583">10</tspan></text>
+    </g>
+    <g
+       id="g3"
+       transform="translate(-11.641667,4.2333336)">
+      <ellipse
+         style="font-variation-settings:normal;display:inline;fill:#ffffff;fill-opacity:0.985835;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+         id="ellipse2"
+         cx="107.15625"
+         cy="65.881241"
+         rx="2.2489464"
+         ry="2.2489467" />
+      <text
+         xml:space="preserve"
+         style="font-size:2.82223px;line-height:1;font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;opacity:1;fill:#ff0000;stroke:#ff0000;stroke-width:0.264583;paint-order:markers stroke fill"
+         x="106.89164"
+         y="66.939583"
+         id="text3"><tspan
+           id="tspan3"
+           style="fill:#000000;stroke:none;stroke-width:0.264583"
+           x="106.89164"
+           y="66.939583">30</tspan></text>
+    </g>
+    <path
+       style="opacity:1;fill:#ffffff;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none;paint-order:markers stroke fill"
+       d="m 116.41667,70.114585 -7.9375,15.875 h 15.87501 z"
+       id="path5" />
+    <path
+       style="opacity:1;fill:#ffffff;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none;paint-order:markers stroke fill"
+       d="m 137.58335,70.114585 -7.9375,15.875 h 15.87501 z"
+       id="path6" />
+    <path
+       style="display:inline;fill:none;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;paint-order:markers stroke fill"
+       d="m 116.54898,70.246872 10.58333,-5.291667 10.58335,5.291667"
+       id="path7" />
+    <g
+       id="g8"
+       transform="translate(20.108333,-1.0583331)">
+      <ellipse
+         style="font-variation-settings:normal;display:inline;fill:#ffffff;fill-opacity:0.985835;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+         id="ellipse8"
+         cx="107.15625"
+         cy="65.881241"
+         rx="2.2489464"
+         ry="2.2489467" />
+      <text
+         xml:space="preserve"
+         style="font-size:2.82223px;line-height:1;font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;opacity:1;fill:#ff0000;stroke:#ff0000;stroke-width:0.264583;paint-order:markers stroke fill"
+         x="106.89164"
+         y="66.939583"
+         id="text8"><tspan
+           id="tspan8"
+           style="fill:#000000;stroke:none;stroke-width:0.264583"
+           x="106.89164"
+           y="66.939583">10</tspan></text>
+    </g>
+    <g
+       id="g9"
+       transform="translate(30.691667,4.2333336)">
+      <ellipse
+         style="font-variation-settings:normal;display:inline;fill:#ffffff;fill-opacity:0.985835;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+         id="ellipse9"
+         cx="107.15625"
+         cy="65.881241"
+         rx="2.2489464"
+         ry="2.2489467" />
+      <text
+         xml:space="preserve"
+         style="font-size:2.82223px;line-height:1;font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;opacity:1;fill:#ff0000;stroke:#ff0000;stroke-width:0.264583;paint-order:markers stroke fill"
+         x="106.89164"
+         y="66.939583"
+         id="text9"><tspan
+           id="tspan9"
+           style="fill:#000000;stroke:none;stroke-width:0.264583"
+           x="106.89164"
+           y="66.939583">30</tspan></text>
+    </g>
+    <path
+       style="opacity:1;fill:#ffffff;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;marker-start:url(#DartArrow);marker-end:url(#marker11);paint-order:markers stroke fill"
+       d="M 75.141663,66.145835 80.43333,63.500002"
+       id="path9" />
+    <path
+       style="opacity:1;fill:#ffffff;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;paint-order:markers stroke fill"
+       d="m 101.20312,76.729169 h 3.96875 v 1.322917 l 3.96875,-2.645834 -3.96875,-2.645833 v 1.322917 h -3.96875 z"
+       id="path12" />
+    <path
+       style="opacity:1;fill:#ffffff;stroke:#000000;stroke-width:0.264583;stroke-dasharray:none;marker-end:url(#marker43);paint-order:markers stroke fill"
+       d="m 116.54898,70.246872 -0.13233,5.159381"
+       id="path42" />
+    <g
+       id="g11"
+       transform="translate(-10.583333,5.2916667)">
+      <ellipse
+         style="font-variation-settings:normal;display:inline;fill:#ffffff;fill-opacity:0.985835;fill-rule:evenodd;stroke:#000000;stroke-width:0.264583;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+         id="ellipse7"
+         cx="127.2646"
+         cy="64.822906"
+         rx="2.2489464"
+         ry="2.2489467" />
+      <text
+         xml:space="preserve"
+         style="font-size:2.82223px;line-height:1;font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#ff0000;stroke:#ff0000;stroke-width:0.264583;paint-order:markers stroke fill"
+         x="126.99998"
+         y="65.881248"
+         id="text7"><tspan
+           id="tspan7"
+           style="fill:#000000;stroke:none;stroke-width:0.264583"
+           x="126.99998"
+           y="65.881248">20</tspan></text>
+    </g>
+  </g>
+</svg>
