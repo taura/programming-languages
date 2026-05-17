@@ -71,5 +71,11 @@ PROBLEM_INDEX = [
          "optimize_float",
          "generic_optimize",
      ]),
+    ("build_system",
+     [
+         "cat",
+         "readxml",
+         "readxml2",
+     ]),
 ]
 

@@ -2,7 +2,7 @@
 .SHELLFLAGS := -eu -o pipefail -c
 
 nb_srcs :=
-nb_srcs += $(wildcard nb/source/pl05_*/pl05_*.py)
+nb_srcs += $(wildcard nb/source/pl06_*/pl06_*.py)
 aux_srcs :=
 include ../../jupyter_tools/authoring/jupyter_tools.mk
 
@@ -29,7 +29,9 @@ define deploy_code
 #
 # remove all lines between ... begin hidden ... and ... end hidden ... for problems
 #
-deploy : $(prob_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
+
+##### DO NOT DEPLOY boilerplates #######
+##### deploy : $(prob_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
 $(prob_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) | $(prob_dir)/$(concept)/$(problem)/$(ext)
 ifeq ($(ext),go)
 	sed '/\/\*\* begin hidden \*\//,/\/\*\* end hidden \*\//d' $$< > $$@
@@ -49,7 +51,8 @@ endif
 #
 # remove lines /** (begin|end) hidden **/
 #
-deploy : $(ans_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
+##### DO NOT DEPLOY boilerplates #######
+##### deploy : $(ans_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
 $(ans_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) | $(ans_dir)/$(concept)/$(problem)/$(ext)
 ifeq ($(ext),go)
 	sed '/\/\*\* \(begin\|end\) hidden \*\//d' $$< > $$@
@@ -101,7 +104,7 @@ deploy : $(prob_dir)/$(concept)/$(problem)/$(base).md
 $(prob_dir)/$(concept)/$(problem) :
 	mkdir -p $$@
 $(prob_dir)/$(concept)/$(problem)/$(base).md : $(in_dir)/$(concept)/$(problem)/$(base).md $(prob_dir)/$(concept)/$(problem)
-	./format_string.py $$< out_dir=$(prob_dir) concept=$(concept) problem=$(problem) base=$(base) > $$@
+	./format_string.py $$< in_dir=$(in_dir) out_dir=$(prob_dir) concept=$(concept) problem=$(problem) base=$(base) > $$@
 
 #
 # ps/fundef/compound/go/compound.md -> answers/fundef/compound/compound.md
@@ -112,7 +115,7 @@ deploy : $(ans_dir)/$(concept)/$(problem)/$(base).md
 $(ans_dir)/$(concept)/$(problem) :
 	mkdir -p $$@
 $(ans_dir)/$(concept)/$(problem)/$(base).md : $(in_dir)/$(concept)/$(problem)/$(base).md $(ans_dir)/$(concept)/$(problem)
-	./format_string.py $$< out_dir=$(ans_dir) concept=$(concept) problem=$(problem) base=$(base) > $$@
+	./format_string.py $$< in_dir=$(in_dir) out_dir=$(ans_dir) concept=$(concept) problem=$(problem) base=$(base) > $$@
 endef
 
 define deploy_ipynb
@@ -120,16 +123,27 @@ define deploy_ipynb
 # ps/fundef/compound/go/compound.py -> problems/fundef/compound/compound.ipynb
 #
 deploy : $(prob_dir)/$(concept)/$(problem)/$(base).ipynb
-$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(in_dir)/$(concept)/$(problem)/$(base).py $(prob_dir)/$(concept)/$(problem)/$(base).md $(prob_dir)/$(concept)/$(problem)/go/$(base).go $(prob_dir)/$(concept)/$(problem)/jl/$(base).jl $(prob_dir)/$(concept)/$(problem)/ml/$(base).ml $(prob_dir)/$(concept)/$(problem)/rs/$(base).rs
-	./format_string.py $$< out_dir=$(prob_dir) concept=$(concept) problem=$(problem) base=$(base) | ../../jupyter_tools/authoring/mk_nb.py --syntax py - > $$@
+##### DO NOT DEPLOY boilerplates #######
+##### $(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/go/$(base).go
+##### $(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/jl/$(base).jl
+##### $(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/ml/$(base).ml
+##### $(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/rs/$(base).rs
+$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(in_dir)/$(concept)/$(problem)/$(base).py $(prob_dir)/$(concept)/$(problem)/$(base).md 
+	./format_string.py $$< in_dir=$(in_dir) out_dir=$(prob_dir) concept=$(concept) problem=$(problem) base=$(base) | ../../jupyter_tools/authoring/mk_nb.py --syntax py - > $$@
 
 #
 # ps/fundef/compound/go/compound.py -> answers/fundef/compound/compound.ipynb
 #
-$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(in_dir)/$(concept)/$(problem)/$(base).py $(ans_dir)/$(concept)/$(problem)/$(base).md $(ans_dir)/$(concept)/$(problem)/go/$(base).go $(ans_dir)/$(concept)/$(problem)/jl/$(base).jl $(ans_dir)/$(concept)/$(problem)/ml/$(base).ml $(ans_dir)/$(concept)/$(problem)/rs/$(base).rs
-	./format_string.py $$< out_dir=$(ans_dir) concept=$(concept) problem=$(problem) base=$(base) | ../../jupyter_tools/authoring/mk_nb.py --syntax py - > $$@
+##### DO NOT DEPLOY boilerplates #######
+##### $(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/go/$(base).go
+##### $(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/jl/$(base).jl
+##### $(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/ml/$(base).ml
+##### $(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/rs/$(base).rs
+$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(in_dir)/$(concept)/$(problem)/$(base).py $(ans_dir)/$(concept)/$(problem)/$(base).md
+	./format_string.py $$< in_dir=$(in_dir) out_dir=$(ans_dir) concept=$(concept) problem=$(problem) base=$(base) | ../../jupyter_tools/authoring/mk_nb.py --syntax py - > $$@
 
-deploy : $(ans_dir)/$(concept)/$(problem)/$(base).html
+# deploy : $(ans_dir)/$(concept)/$(problem)/$(base).html
+deploy : $(ans_dir)/$(concept)/$(problem)/$(base).ipynb
 $(ans_dir)/$(concept)/$(problem)/$(base).html : $(ans_dir)/$(concept)/$(problem)/$(base).ipynb
 	jupyter-nbconvert --to html $$<
 
@@ -183,29 +197,6 @@ $(prob_dir)/$(concept)/$(problem)/svg/L/$(base).svg : $(in_dir)/$(concept)/$(pro
 deploy : $(ans_dir)/$(concept)/$(problem)/svg/L/$(base).svg
 $(ans_dir)/$(concept)/$(problem)/svg/L/$(base).svg : $(in_dir)/$(concept)/$(problem)/svg/L/$(base).svg | $(ans_dir)/$(concept)/$(problem)/svg/L/dir
 	cp $$< $$@
-endef
-
-#
-# compile and run ps/fundef/compound/go/compound.go
-#
-define check_code_xxxx
-check : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).ok
-$(in_dir)/$(concept)/$(problem)/$(ext)/$(base).ok : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe
-	$(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe | grep OK && touch $$@
-$(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) $(prob_dir)/$(concept)/$(problem)/$(ext)
-ifeq ($(ext),go)
-	go build -o $$@ $$<
-endif
-ifeq ($(ext),jl)
-	echo '#!/usr/bin/env julia' | cat - $$< > $$@
-	chmod +x $$@
-endif
-ifeq ($(ext),ml)
-	ocamlc $$< -o $$@
-endif
-ifeq ($(ext),rs)
-	rustc -C opt-level=3 $$< -o $$@
-endif
 endef
 
 #

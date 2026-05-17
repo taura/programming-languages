@@ -720,8 +720,8 @@ nc.left.color    # calling .color on node!
   - _*contravariant on $alpha$*_ if replacing $alpha$ with its supertype $alpha'$ yields its subtype (i.e., $alpha' >= alpha => T(alpha') <= T(alpha)$)
 
 - in this terminology, a function type is
-  - _covariant_ on output ($B' <= B => A -> B <= A -> B'$)
-  - _contravariant_ on input ($A' <= A => A' -> B <= A -> B$)
+  - _covariant_ on output ($B' <= B => A -> B' <= A -> B$)
+  - _contravariant_ on input ($A' <= A => A' -> B >= A -> B$)
 
 == Subtype relationship example (5) --- a method taking different types
 
