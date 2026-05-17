@@ -13,7 +13,7 @@
   config-info(
       title: [Parametric Polymorphism \ a.k.a. _Generic_ Functions and Types],
       author: [Kenjiro Taura],
-      date: [2024/05/09],
+      date: [],
   ),
 )
 

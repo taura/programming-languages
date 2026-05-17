@@ -11,10 +11,9 @@
 #show: metropolis-theme.with(
   aspect-ratio: "16-9",
   config-info(
-    title: [Building Standalone Programs \
-  and Using Libraries],
+    title: [Build Systems, Libraries, and Compiling Multiple Files],
     author: [Kenjiro Taura],
-    date: [2024/05/09],
+    date: [],
   ),
 )
 
