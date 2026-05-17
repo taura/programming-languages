@@ -222,7 +222,7 @@ endef
 EVAL=$(eval $(1))
 #EVAL=$(info $(1))
 
-ifeq (a,a)
+ifeq (a,b)
 $(foreach concept,$(call dir_in,$(in_dir)), \
  $(foreach problem,$(call dir_in,$(in_dir)/$(concept)), \
   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),md),$(call EVAL,$(call deploy_md))) \
@@ -237,8 +237,8 @@ $(foreach concept,$(call dir_in,$(in_dir)), \
 ))
 endif
 
-ifeq (a,b)
-$(eval $(foreach concept,$(call dir_in,$(in_dir)), \
+ifeq (a,a)
+$(eval $(foreach concept,build_system, \
  $(foreach problem,$(call dir_in,$(in_dir)/$(concept)), \
   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),md),$(call deploy_md)) \
   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),py),$(call deploy_ipynb)) \
