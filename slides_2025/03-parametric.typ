@@ -36,15 +36,23 @@
 
 // #outline(depth: 1)
 
-== Motivation
+== Motivations
 say want to write …
-- a function that _*sorts arrays of various types*_ (e.g., ints, floats, strings, structs, …)
-- a function that _*extracts elements from a list satisfying*_ $p(x)$
-- _*stacks, queues, trees, graphs, hashtables, etc.*_
-- many _*graph algorithms (breadth-first search, depth-first search, connected components, partitioning, etc.)*_
-- ... _*without duplicating code*_ for each element type
+- a function that _sorts arrays of various types_ (e.g., ints, floats, strings, structs, …)
+- a function that _extracts elements from a list satisfying_ $p(x)$
+- _stacks, queues, trees, graphs, hashtables, etc._
+- many _graph algorithms (breadth-first search, depth-first search, connected components, partitioning, etc.)_
 
-== A trivial example (generic function)
+... _*without duplicating code*_ for each element type
+
+== Type-Parameterized Functions/Data
+
+- what we need are functions or data structures that are _parameterized_ by component type(s)
+- something like:
+    - $alpha -> "int"$ (a function taking any type and returning int)
+    - array of $alpha$ (an array of any type)
+
+== What is an issue? --- a trivial example
 write a generic function  
 $f(a) = a[0]$  
 in your language (an element of an array) that works for any element type
@@ -52,10 +60,12 @@ in your language (an element of an array) that works for any element type
 Questions:
 - do you have to specify the type of $a$?
 - if so, how can you say _*$a$ must be an array but whose element can be any type*_
-- if not, can it automatically apply to any array?
-  - _*does it type-check statically*_ (i.e., what if you pass something not an array)?
+- if not, what does its type become?
+    - take _anything_, array of _anything_, ...?
+    - _*does it type-check statically*_?
 
 == Type expressions
+
 - things are conceptually straightforward
 - but _*spelling out types*_ needs a practice (for languages that require type annotations)
 - master the syntax of _*type expressions, parameterized types/functions, and instantiation thereof*_
@@ -77,13 +87,16 @@ ex. a type of _*functions taking an integer and returning a float*_
 == Type expressions for array-like data
 ex. (one-dimensional) array (or likes) of 64-bit floats
 
+#text(24pt)[
 #align(center, [
-#table(columns: (auto,auto,auto), align: left, inset: 10pt,
-[Go],    [fixed-size ($n$-element) array \ slice], [```go [n]float64``` \ ```go []float64```],
+    #table(columns: (0.1fr,0.3fr,0.2fr), align: left, inset: 10pt,
+        [Go],    [fixed-size ($n$-element) array \ slice], [```go [n]float64``` ($ast$) \ ```go []float64```],
 [Julia], [],                  [```julia Vector{Float64}```],
 [OCaml], [],                  [```ocaml float array```],
-[Rust],  [fixed-size ($n$-element) array \ vector \ slice], [```rust [f64; n]``` \ ```rust Vec<f64>``` \ ```rust [f64]```],
+        [Rust],  [fixed-size ($n$-element) array \ vector \ slice], [```rust [f64; n]``` ($ast$) \ ```rust Vec<f64>``` \ ```rust [f64]```],
 )])
+]
+- ($ast$) `n` has to be a compile-time constant
 
 == Defining parameterized types
 ex. `Node` (or `Tree`) of any type
@@ -158,28 +171,46 @@ and a version that can work for _*any subtype of S*_
 [Rust],  [```rust bfs::<i64>(...)```],    [],
 )])
 
-== Type inference
+== Type inference of compound expressions
 
 - _type inference_ generally refers to any algorithm that determines the static type of an expression without programmer's annotation
-- many languages infer types of local variables
-    - Go : type of a local variable initialized with `:=` is inferred by RHS
-    - Rust : type of a local variable is inferred by RHS (or the unique assignment)
-- but they assume types of function parameters are given
-- they infer type of a compound expression from the types of its sub-expressions
+- virtually all languages infer types of compound expressions from their components
+    - e.g., $e_0$ and $e_1$ are `int` $=>$ $e_0 + e_1$ is `int`
 
-== OCaml type inference (reconstruction)
+== Type inference of local variables
 
-- OCaml's type inference is remarkable in that it infers types of _incoming_ parameters from function body
-- intuitively, it works by collecting _constraints_ 
+- many languages automatically infer types of local variables
+    - Go : type of a local variable introduced by $x$ `:=` $e$ is inferred from $e$
+    - Rust : type of a local variable introduced by `let `$x$ ` = ` $e$ is inferred from $e$
+    - C++ has a similar mechanism (`auto`)
+- _they all infer type of a compound expression from the types of its sub-expressions_
+- for it to work, _type of function parameters must be given_
+
+== Type reconstruction (e.g., type inference in OCaml)
+
+- OCaml's type inference is remarkable in that it infers types of function parameters from function body
+- e.g.,
+    - `let f x y = x + y` #h(0.3em) : #h(0.3em) $"int" -> "int" -> "int"$
+    - `let f x = x` #h(0.3em) : #h(0.3em) $alpha -> alpha$
+    - `let f a = a.[0]` #h(0.3em) : #h(0.3em) $alpha "array" -> alpha$
+    - `let f a = a.[0] + 1` #h(0.3em) : #h(0.3em) $"int" "array" -> "int"$
+    - `let f o = o#area < 1.0` #h(0.3em) : #h(0.3em) $"< area : float; ..>" -> "bool"$
+
+== How type reconstruction works
+
+- intuitively, it works by collecting _constraints_ and solving them
     - `x + y` $->$ `x : int`, `y : int` (assumption: `+ : int -> int`)
-    - `match l with [] -> ... | a::r -> ...` $->$ `l : 'a list`
-    - `b.[i]` $->$ `b : 'a array`
-    - `b.[i] + 1` $->$ `b : int array`
-    - `s#area < 10.0` $->$ `s : < area : float; ... >`
+    - `a.[i]` $->$ `a : 'a array`
+    - `s#area` $->$ `s : < area : 'a; ... >`
+- e.g., from `a.[i] + 1`
+    - `a : 'a array`
+    - `a.[i] : int`  (because of `+`)
+    - $=>$ `'a = int`
 
-== OCaml type inference (reconstruction)
+== Remarks about OCaml
 
-- thanks to type inference, you can omit most type annotations in OCaml, but it's not that it does not do static type checking (unlike Python or Julia)
-- it is indeed type safe
-- to reason about what kind of programs are type-checked, you have to know possible types and their syntax (e.g., to understand error messages)
+- thanks to type inference, you can omit most type annotations in OCaml, but it still does static type checking
+    - not like Python or Julia
+- it is indeed _type safe_
+- to reason about what kind of programs are statically type-checked, you have to know possible types and their syntax (e.g., to understand error messages)
 - it is possible, and indeed useful, to give type annotations for documentation and diagnosing type errors
