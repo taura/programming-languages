@@ -1,0 +1,353 @@
+""" md 
+
+""" include {out_dir}/{concept}/{problem}/{base}.md """
+
+"""
+
+""" md
+
+# AI tutor
+
+## Prepare
+
+* Your personal AI tutor is provided for questions and feedback
+* Execute the following cell before you use it
+"""
+
+""" code w """
+import heytutor
+""" """
+
+""" md
+## Examples
+
+### A general question
+
+```
+%%hey
+How to write a function in Go?
+```
+
+### A hint on this specific problem
+
+```
+%%hey
+Give me a hint on this problem for Rust
+```
+
+### <font color="green">NEW: A few builtin variables</font>
+
+* `{{file:FILENAME}}` is the content of FILE
+* `{{bash[-1]}}` is the output of the last `%%bash_` cell, `{{bash[-2]}}` that of the second last `%%bash_` cell, etc.
+* `{{problem}}` is the content of the file you specified by `%%hey problem_file=foo.md`
+* `{{answer}}` is the content of the file you specified by `%%hey answer_file=go/foo.go`
+
+### Help when you struggle
+
+```
+%%hey answer_file=go/foo.go
+I get this error when I compile it. What's wrong?"
+
+My program:
+{{answer}}
+
+Error message:
+{{bash[-1]}}
+
+```
+
+### Ask feedback
+
+* You are encouraged to ask a feedback once you think you are done with the problem, to know if there is a better answer.  You can do so by something like:
+
+```
+%%hey problem_file=foo.md answer_file=go/foo.md
+Give me a feedback to my answer.
+
+Problem:
+{{problem}}
+
+My Answer:
+{{answer}}
+```
+"""
+
+""" md
+# <font color="green">Discussion</font>
+
+* Answer the discussion question Q above and write your answer in the file `discussion.md` below. 
+"""
+
+""" codex w points=1
+%%writefile_ discussion.md
+
+"""
+
+""" md
+# Go
+"""
+
+""" md
+## Baseline code
+"""
+
+""" code w """
+import heytutor
+""" """
+
+""" code w """
+%%writefile_ go/{base}.go
+""" include {out_dir}/{concept}/{problem}/go/{base}.go """
+""" """
+
+""" md
+## Compile
+"""
+
+""" codex w points=1
+%%bash_
+export PATH=${{PATH}}:~/.local/go/bin:~/go/bin
+go build -o go/{base} go/{base}.go
+"""
+
+""" md
+* Note: when you run `go` or other Go commands in a terminal (SSH or Jupyter terminal), you need to execute the first line (`export PATH=${{PATH}}:~/go/bin`)
+* You may consider adding that line in your `~/.bash_profile`
+"""
+
+""" md
+## Run
+"""
+""" codex w points=1
+%%bash_
+go/{base}
+"""
+
+""" md
+## Ask Questions or Get Feedback
+"""
+""" codex w
+%%hey problem_file={base}.md answer_file=go/{base}.go
+
+Problem:
+{{problem}}
+
+My Code (between /** begin my answer */ and /** end my answer */):
+{{answer}}
+
+My Discussion:
+{{file:discussion.md}}
+
+Give me a feedback to my answer.
+"""
+
+""" md
+# Julia
+"""
+
+""" md
+## Baseline code
+"""
+
+""" code w """
+import heytutor
+""" """
+
+""" code w points=1 """
+%%writefile_ jl/{base}.jl
+""" include {out_dir}/{concept}/{problem}/jl/{base}.jl """
+""" """
+
+""" md
+## Compile
+"""
+""" md
+* Julia code is compiled "just in time" (compiled upon executed), so does not need a specific action for compilation before you run
+"""
+
+""" md
+## Run
+"""
+""" codex w points=1
+%%bash_
+export PATH=${{PATH}}:~/.juliaup/bin
+julia jl/{base}.jl
+"""
+
+""" md
+* Note: when you run `julia` or other Julia commands in a terminal (SSH or Jupyter terminal), you need to execute the first line (`export PATH=${{PATH}}:~/.juliaup/bin`)
+* You may consider adding that line in your `~/.bash_profile`
+"""
+
+""" md
+## Interactive execution
+
+* `julia` command  also serves is an interactive command for Julia programs
+
+* You can run a source code and continue interaction
+
+```
+$ julia -i jl/{base}.jl
+```
+
+* For trial and error, you may also consider creating a Julia notebook
+
+"""
+
+
+""" md
+## Ask Questions or Get Feedback
+"""
+""" codex w points=1
+%%hey problem_file={base}.md answer_file=jl/{base}.jl
+
+Problem:
+{{problem}}
+
+My Code (between ### begin my answer and ### end my answer):
+{{answer}}
+
+My Discussion:
+{{file:discussion.md}}
+
+Give me a feedback to my answer.
+"""
+
+""" md
+# OCaml
+"""
+
+""" md
+## Baseline code
+"""
+
+""" code w """
+import heytutor
+""" """
+
+""" code w points=1 """
+%%writefile_ ml/{base}.ml
+""" include {out_dir}/{concept}/{problem}/ml/{base}.ml """
+""" """
+
+""" md
+## Compile
+"""
+""" codex w points=1 
+%%bash_
+eval $(opam env)
+ocamlc ml/{base}.ml -o ml/{base}
+"""
+
+""" md
+* Note: when you run `ocamlc` or other OCaml commands (see below) in a terminal (SSH or Jupyter terminal), you need to execute the first line (`eval $(opam env)`)
+* You may consider adding that line in your `~/.bash_profile`
+"""
+
+""" md
+## Run
+"""
+""" codex w points=1
+%%bash_
+ml/{base}
+"""
+
+""" md
+## Interactive execution
+
+* `ocaml` command is an interactive command for OCaml programs
+
+* In terminal (Jupyter or SSH), you can directly run a source code
+
+```
+$ eval $(opam env)   # once in your session or put it in ~/.bash_profile
+$ ocaml ml/{base}.ml
+```
+
+* You can run a source code and continue interaction
+
+```
+$ eval $(opam env)   # once in your session or put it in ~/.bash_profile
+$ ocaml -init ml/{base}.ml
+```
+
+* For trial and error, you may also consider creating an OCaml notebook
+
+"""
+
+""" md
+## Ask Questions or Get Feedback
+"""
+""" codex w points=1 
+%%hey problem_file={base}.md answer_file=ml/{base}.ml
+
+Problem:
+{{problem}}
+
+My Code (between (** begin my answer *) and (** end my answer *)):
+{{answer}}
+
+My Discussion:
+{{file:discussion.md}}
+
+Give me a feedback to my answer.
+"""
+
+""" md
+# Rust
+"""
+
+""" md
+## Baseline code
+"""
+
+""" code w """
+import heytutor
+""" """
+
+""" code w points=1 """
+%%writefile_ rs/{base}.rs
+""" include {out_dir}/{concept}/{problem}/rs/{base}.rs """
+""" """
+
+""" md
+## Compile
+"""
+""" codex w points=1
+%%bash_
+. ~/.cargo/env
+rustc rs/{base}.rs -o rs/{base}
+"""
+
+""" md
+* Note: when you run `rustc` or other Rust commands in a terminal (SSH or Jupyter terminal), you need to execute the first line (`. ~/.cargo/env`)
+* You may consider adding that line in your `~/.bash_profile`
+"""
+
+
+""" md
+## Run
+"""
+""" codex w points=1
+%%bash_
+rs/{base}
+"""
+
+""" md
+## Ask Questions or Get Feedback
+"""
+""" codex w points=1
+%%hey problem_file={base}.md answer_file=rs/{base}.rs
+
+Problem:
+{{problem}}
+
+My Answer (between /** begin my answer */ and /** end my answer */):
+{{answer}}
+
+My Discussion:
+{{file:discussion.md}}
+
+Give me a feedback to my answer.
+"""
+
