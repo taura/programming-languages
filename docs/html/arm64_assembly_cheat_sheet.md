@@ -10,6 +10,7 @@
 
 * C convention
 
+<div>
 | Name     | Purpose                            |   |
 |----------|------------------------------------|---|
 | x0-x7    | Arguments / return values          |   |
@@ -22,6 +23,7 @@
 | x30      | Link register (return address)     |   |
 | sp       | Stack pointer                      |(X)|
 | zr       | Zero register                      |   |
+</div>
 
 * Each xN has a 32-bit alias: wN
 * Registers with (X) have specific purposes and should not be used for general computation

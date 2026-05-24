@@ -9,7 +9,8 @@
 
 * <font color=blue>(2026/05/25)</font>Plan for the seventh week (May 25th)
 	1. [Basics of programming language implementation](slides/05-implementation-basics.pdf)
-	1. Work on `pl07_how_compiled`
+	1. Work on `pl07_how_compiled`, which will be the next assignment, due <font color=red>June 13th</font>
+	   * see [AArch64 (ARM64) Assembly Cheat Sheet](html/arm64_assembly_cheat_sheet.html)
 	1. We encourage you to work on `pl05_parametric` and `pl06_build_system` in your spare time
 
 * <font color=blue>(2026/05/18)</font>Plan for the sixth week (May 18th)
