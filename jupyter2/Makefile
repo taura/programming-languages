@@ -264,6 +264,6 @@ $(ans_dir)/problem_index.py : $(in_dir)/problem_index.py
 	cp $< $@
 
 clean:
-	rm -f ps/*/*/*/*~ ps/*/*/*~ ps/*/*/*/*.exe ps/*/*/*/*.cmi ps/*/*/*/*.cmo ps/*/*/*/*.ok
+	rm -f ps/*/*/*/*~ ps/*/*/*~ ps/*/*/*/*.exe ps/*/*/*/*.cmi ps/*/*/*/*.cmx ps/*/*/*/*.cmo ps/*/*/*/*.ok ps/*/*/*/*.dot ps/*/*/*/*.s ps/*/*/*/*.o
 
 .DELETE_ON_ERROR:
