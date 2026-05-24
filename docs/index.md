@@ -7,6 +7,11 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2026/05/25)</font>Plan for the seventh week (May 25th)
+	1. [Basics of programming language implementation](slides/05-implementation-basics.pdf)
+	1. Work on `pl07_how_compiled`
+	1. We encourage you to work on `pl05_parametric` and `pl06_build_system` in your spare time
+
 * <font color=blue>(2026/05/18)</font>Plan for the sixth week (May 18th)
 	1. [Parametric Polymorphism (aka Generic Types/Functions)](slides/03-parametric.pdf)
 	1. Work on `pl04_oop_basics`
