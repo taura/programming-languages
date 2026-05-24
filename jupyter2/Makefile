@@ -2,7 +2,7 @@
 .SHELLFLAGS := -eu -o pipefail -c
 
 nb_srcs :=
-nb_srcs += $(wildcard nb/source/pl06_*/pl06_*.py)
+nb_srcs += $(wildcard nb/source/pl07_*/pl07_*.py)
 aux_srcs :=
 include ../../jupyter_tools/authoring/jupyter_tools.mk
 
@@ -30,8 +30,8 @@ define deploy_code
 # remove all lines between ... begin hidden ... and ... end hidden ... for problems
 #
 
-##### DO NOT DEPLOY boilerplates #######
-##### deploy : $(prob_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
+##### DEPLOY boilerplates #######
+deploy : $(prob_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
 $(prob_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) | $(prob_dir)/$(concept)/$(problem)/$(ext)
 ifeq ($(ext),go)
 	sed '/\/\*\* begin hidden \*\//,/\/\*\* end hidden \*\//d' $$< > $$@
@@ -51,8 +51,8 @@ endif
 #
 # remove lines /** (begin|end) hidden **/
 #
-##### DO NOT DEPLOY boilerplates #######
-##### deploy : $(ans_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
+##### DEPLOY boilerplates #######
+deploy : $(ans_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
 $(ans_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext) | $(ans_dir)/$(concept)/$(problem)/$(ext)
 ifeq ($(ext),go)
 	sed '/\/\*\* \(begin\|end\) hidden \*\//d' $$< > $$@
@@ -77,20 +77,24 @@ check : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).ok
 # compile the source code
 #
 $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).ok : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe
+ifeq ($(concept),how_compiled)
+	touch $$@
+else
 	$(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe | grep OK && touch $$@
+endif
 $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).exe : $(in_dir)/$(concept)/$(problem)/$(ext)/$(base).$(ext)
 ifeq ($(ext),go)
 	go build -o $$@ $$<
 endif
 ifeq ($(ext),jl)
-	echo '#!/usr/bin/env julia' | cat - $$< > $$@
+	echo '#!/usr/bin/env julia -O3' | cat - $$< > $$@
 	chmod +x $$@
 endif
 ifeq ($(ext),ml)
-	ocamlc $$< -o $$@
+	ocamlopt -O3 $$< -o $$@
 endif
 ifeq ($(ext),rs)
-	rustc -C opt-level=3 $$< -o $$@
+	rustc -C opt-level=3 --crate-type lib $$< -o $$@
 endif
 endef
 
@@ -123,22 +127,22 @@ define deploy_ipynb
 # ps/fundef/compound/go/compound.py -> problems/fundef/compound/compound.ipynb
 #
 deploy : $(prob_dir)/$(concept)/$(problem)/$(base).ipynb
-##### DO NOT DEPLOY boilerplates #######
-##### $(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/go/$(base).go
-##### $(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/jl/$(base).jl
-##### $(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/ml/$(base).ml
-##### $(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/rs/$(base).rs
+##### DEPLOY boilerplates #######
+$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/go/$(base).go
+$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/jl/$(base).jl
+$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/ml/$(base).ml
+$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/rs/$(base).rs
 $(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(in_dir)/$(concept)/$(problem)/$(base).py $(prob_dir)/$(concept)/$(problem)/$(base).md 
 	./format_string.py $$< in_dir=$(in_dir) out_dir=$(prob_dir) concept=$(concept) problem=$(problem) base=$(base) | ../../jupyter_tools/authoring/mk_nb.py --syntax py - > $$@
 
 #
 # ps/fundef/compound/go/compound.py -> answers/fundef/compound/compound.ipynb
 #
-##### DO NOT DEPLOY boilerplates #######
-##### $(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/go/$(base).go
-##### $(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/jl/$(base).jl
-##### $(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/ml/$(base).ml
-##### $(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/rs/$(base).rs
+##### DEPLOY boilerplates #######
+$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/go/$(base).go
+$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/jl/$(base).jl
+$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/ml/$(base).ml
+$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/rs/$(base).rs
 $(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(in_dir)/$(concept)/$(problem)/$(base).py $(ans_dir)/$(concept)/$(problem)/$(base).md
 	./format_string.py $$< in_dir=$(in_dir) out_dir=$(ans_dir) concept=$(concept) problem=$(problem) base=$(base) | ../../jupyter_tools/authoring/mk_nb.py --syntax py - > $$@
 
@@ -235,22 +239,21 @@ $(foreach concept,$(call dir_in,$(in_dir)), \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(call EVAL,$(call deploy_code))) \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(call EVAL,$(call check_code)))) \
 ))
+else
+$(foreach concept,how_compiled, \
+ $(foreach problem,$(call dir_in,$(in_dir)/$(concept)), \
+  $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),md),$(call EVAL,$(call deploy_md))) \
+  $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),py),$(call EVAL,$(call deploy_ipynb))) \
+  $(if $(call ext_in,$(in_dir)/$(concept)/$(problem)/svg,svg), $(call EVAL,$(call deploy_svg_dirs)) \
+   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/svg,svg),$(call EVAL,$(call deploy_svg)))) \
+   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/svg/L,svg),$(call EVAL,$(call deploy_svg_L))) \
+  $(foreach ext,$(call lang_in,$(in_dir)/$(concept)/$(problem)), \
+   $(call EVAL,$(call deploy_code_dir)) \
+   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(call EVAL,$(call deploy_code))) \
+   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(call EVAL,$(call check_code)))) \
+))
 endif
 
-ifeq (a,a)
-$(eval $(foreach concept,build_system, \
- $(foreach problem,$(call dir_in,$(in_dir)/$(concept)), \
-  $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),md),$(call deploy_md)) \
-  $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),py),$(call deploy_ipynb)) \
-  $(if $(call ext_in,$(in_dir)/$(concept)/$(problem)/svg,svg),$(call deploy_svg_dirs) \
-   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/svg,svg),$(call deploy_svg))) \
-   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/svg/L,svg),$(call deploy_svg_L)) \
-  $(foreach ext,$(call lang_in,$(in_dir)/$(concept)/$(problem)), \
-   $(call deploy_code_dir) \
-   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(call deploy_code)) \
-   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(call check_code))) \
-)))
-endif
 
 deploy : $(prob_dir)/problem_index.py
 $(prob_dir)/problem_index.py : $(in_dir)/problem_index.py

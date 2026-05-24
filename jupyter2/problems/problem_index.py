@@ -77,5 +77,20 @@ PROBLEM_INDEX = [
          "readxml",
          "readxml2",
      ]),
+    ("how_compiled",
+     [
+         "basic_data",
+         "struct",
+         "array",
+	 "conditional",
+         "loop",
+	 "funcall",
+	 "stack_growth",
+         "tail_recursion",
+	 "memory_allocation",
+         "dynamic_dispatch",
+	 "free_exploration",
+     ]),
+    
 ]
 

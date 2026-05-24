@@ -1,6 +1,7 @@
 #!/bin/bash
 p=$1
 
+## single-file
 if false; then
     cp -r ../../templates/single ${p}
     mv ${p}/template.md ${p}/${p}.md
@@ -11,9 +12,20 @@ if false; then
     ln -s ../../../templates/single.py ${p}/${p}.py
 fi
 
-if true; then
+## build
+if false; then
     cp -r ../../templates/build ${p}
     mv ${p}/template.md ${p}/${p}.md
     ln -s ../../../templates/build.py ${p}/${p}.py
 fi
 
+## asm
+if true; then
+    cp -r ../../templates/asm ${p}
+    mv ${p}/template.md ${p}/${p}.md
+    mv ${p}/go/template.go ${p}/go/${p}.go
+    mv ${p}/jl/template.jl ${p}/jl/${p}.jl
+    mv ${p}/ml/template.ml ${p}/ml/${p}.ml
+    mv ${p}/rs/template.rs ${p}/rs/${p}.rs
+    ln -s ../../../templates/asm.py ${p}/${p}.py
+fi
