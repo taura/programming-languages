@@ -34,8 +34,8 @@
   #only(i+1, image(prefix + "_L" + str(j) + ".svg", ..kwargs))
 ]
 
-#show raw.where(block: true):  x => text(size: 16pt, pad(left: 0.7em, x))
-#show raw.where(block: false): x => text(rgb(127,127,127), size: 20pt, x)
+//#show raw.where(block: true):  x => text(size: 16pt, pad(left: 0.7em, x))
+//#show raw.where(block: false): x => text(rgb(127,127,127), size: 20pt, x)
 
 //#show raw.where(block: true):  x => text(size: 20pt, pad(left: 0.7em, x))
 //#show raw.where(block: false): x => text(rgb(127,127,127), size: 20pt, x)
@@ -46,22 +46,22 @@
 
 = Introduction
 
-== Why you want to make a language, today?
+== Why do you want to make a language, today?
 
 - new hardware
   - GPUs, AI chips, Quantum, ...
   - new instructions (e.g., SIMD, matrix, ...)
 
 - new general purpose languages
-  - Scala, Julia, Go, Rust, etc.
+  - Scala, Julia, Go, Rust, Zig, Mojo, etc.
 
 #pagebreak()
 
 - special purpose (domain specific) languages
   - statistics (R, MatLab, etc.)
   - data processing (SQL, NoSQL, SPARQL, etc.)
-  - deep learning
-  - constraint solving, proof assistance (Coq, Isabelle, etc.)
+  - deep learning (PyTorch, Triton, Halide, etc.)
+  - constraint solving, proof assistance (Coq, Lean, etc.)
   - macro  
     (Visual Basic (MS Office),  
     Emacs Lisp (Emacs), Javascript (web browser), etc.)
@@ -83,7 +83,7 @@
 - *compiler* first converts source code into _*a machine (assembly) code*_ that is directly executed by the CPU
   - compiler (_source-code_) $->$ _machine-code_;
   - _machine-code_ (_input_) $->$ _output_
-- *translator* or *transpiler* are like compiler, but convert into another language, not machine (assembly) code
+- *translator* or *transpiler* are like compiler, but convert into another language, not machine (assembly) code (e.g., C, JavaScript, etc.)
 
 == A (minor) note: machine code vs. assembly code
 
@@ -93,7 +93,7 @@
   - _*machine*_ code is _the_ real encoding of instructions interpretable by a CPU
   - _*assembly*_ code refers to a _textual (human-readable) representation_ of machine code
 
-== Taxonomy : compiler/translator
+== Taxonomy : when compilation happens
 - *ahead-of-time (AOT)* compiler converts all the program parts into assembly before execution
 - *just-in-time (JIT)* compiler converts program parts incrementally as they get executed (e.g., a function at a time)
 
@@ -104,12 +104,12 @@
 - assembly _is_ just another programming language
 - it has many features present in programming languages
 #table(columns: (auto,auto), inset: 10pt,
-[*high-level language*],[*assembly language*],
-[variables],          [_registers_ and _memory_],
-[structs and arrays], [memory and load/store instructions],
-[expressions],        [arithmetic instructions],
-[if / loop],          [compare, conditional branch instructions],
-[functions],          [branch and link instructions],
+    [*high-level language*],[*assembly language*],
+    [variables],          [_registers_ and _memory_],
+    [structs and arrays], [lots of registers and memory],
+    [expressions],        [arithmetic instructions],
+    [if / loop],          [compare, conditional branch instructions],
+    [functions],          [branch and link instructions],
 )
 // - compilation is nothing like a magic; it's more like translating English to French
 
@@ -138,7 +138,7 @@
 
 == Main memory
 
-- each address typically stores 8 bits (a _*byte*_) of data
+- each address stores 8 bits (a single _*byte*_) of data
 - a larger word is stored in consecutive addresses. e.g.,
   - 32 bit (4 byte) word occupies 4 consecutive addresses
   - 64 bit (8 byte) word occupies 8 consecutive addresses
@@ -180,18 +180,21 @@ repeat:
 #grid(columns: (auto,auto), align: top, gutter: 10pt,
 [
 Rust (`add123.rs`)
+#text(size: 20pt)[    
 ```rust
 #[no_mangle]
 pub fn add123(x:i64, y:i64) -> i64 {
     y + 123
 }
-```
+```]
 #v(2em)
+#text(size: 20pt)[    
 ```bash
 $ rustc -O --emit asm --crate-type lib add123.rs -o add123.s
-```
+```]
 ],[
 assembly (`add123.s`)
+#text(size: 20pt)[    
 ```asm
         .text
         .file   "pl06.1ebfa1..."
@@ -206,16 +209,17 @@ add123:
 .Lfunc_end0:
         .size   add123, .Lfunc_...
         .cfi_endproc
-```])
+```]])
 
 == Insignificant lines
 
-#grid(columns: (55fr,45fr),
+#grid(columns: (55fr,45fr), gutter: 0.5em,
 [
 - indented lines starting with a dot (e.g., ```asm .file```, ```asm .section```, ```asm .text```, etc.) are _*directives*_ (not instructions) and largely not important
 - unindented lines ending in a colon (e.g., ```asm add123:```) are _*labels*_ used to human-readably specify jump targets
 ],
-alternatives[```asm
+alternatives[#text(size: 20pt)[    
+```asm
         .text
         .file   "pl06.1ebfa1..."
         .section .text.add123,...
@@ -229,7 +233,8 @@ add123:
 .Lfunc_end0:
         .size   add123, .Lfunc_end0-add123
         .cfi_endproc
-```][
+```]][
+#text(size: 20pt)[    
 ```asm
 
 
@@ -242,7 +247,7 @@ add123:
 .Lfunc_end0:
 
 
-```])
+```]])
 
 == How to read assembly
 
@@ -252,7 +257,7 @@ add123:
 - look for a label _similar to_ the function name --- where its instructions start
   - the label may not be exactly the same as the function name (_name mangling_)
 ],
-[
+[#text(size: 20pt)[
 ```asm
 
 
@@ -267,17 +272,17 @@ add123:
 .Lfunc_end0:
 
 
-```]
+```]]
 )
 
 == How to read instructions
 
 - ex.
+#text(size: 20pt)[    
 ```asm
         add     x0, x1, #123
-```
-performs
-```c   x0 = x1 + 123 ```
+```]
+performs ```c   x0 = x1 + 123 ```
 - ```asm add``` is an _*instruction name*_ or _mnemonic_
 - takes a few _*operands*_ (```asm x0```, ```asm x1```, and ```asm #123```)
   - ```asm x0```, ```asm x1``` : register
@@ -317,12 +322,13 @@ performs
 == Sources
 
 - when you encouter unfamiliar instructions, see #blink("https://developer.arm.com/documentation/ddi0602/2025-03/?lang=en")[Arm A-profile A64 Instruction Set Architecture]
-- Cheat sheet 
-- Google / AI
+- #blink("https://taura.github.io/programming-languages/html/arm64_assembly_cheat_sheet.html")[Cheat sheet]
+- Google or ask `heytutor` about details
+    - e.g., "what is this instruction?"
 
 == Arithmetic / move
 
-#align(center, text(size: 16pt,
+#align(center, text(size: 20pt,
 table(columns: (auto, auto), align: left,
 [assembly], [pseudo C], 
 [```asm sub x0, x1, x2```], [```c x0 = x1 - x2```],
@@ -336,7 +342,7 @@ table(columns: (auto, auto), align: left,
 
 == Load / store
 
-#align(center, text(size: 18pt, 
+#align(center, text(size: 20pt, 
 table(columns: (auto, auto, auto), align: left,
 [], [assembly], [pseudo C], 
 [basic load],  [```asm ldr x0,[x1]```],   [```c x0``` = ```c *(long*)x1```],
@@ -345,7 +351,7 @@ table(columns: (auto, auto, auto), align: left,
 [scaled offset], [```asm ldr x0,[x1,x2,lsl #3]```], [```c x0 = *(long*)(x1 + (x2<<3))```],
 [pre-increment], [```asm ldr x0,[x1,#8]!```],    [```c x1 += 8; x0 = *(long*)x1```],
 [post-increment], [```asm ldr x0,[x1],#8```],    [```c x0 = *(long*)x1; x1 += 8```],
-[negative offset], [```asm ldur x0,[x1,#-8]```], [```c x0 = *(long*)(x1 - 8)```],
+[negative/unaligned offset], [```asm ldur x0,[x1,#-8]```], [```c x0 = *(long*)(x1 - 8)```],
 [load pair], [```asm ldp x0,x1,[x2]```],         [```c x0 = *(long*)x2;``` \ ```c x1 = *(long*)(x2 + 8)```]
 )))
 
@@ -353,7 +359,7 @@ table(columns: (auto, auto, auto), align: left,
 
 == Compare and conditional branches
 
-#align(center, text(size: 18pt, 
+#align(center, text(size: 20pt, 
 table(columns: (auto, auto), align: left,
 [```asm cmp x0,x1```], [CC $=$ ```c x0 - x1```], 
 [```asm b.eq``` _label_], [if CC $= 0$, goto _label_], 
@@ -370,7 +376,7 @@ table(columns: (auto, auto), align: left,
 
 == Other jump variants
 
-#align(center, text(size: 18pt, 
+#align(center, text(size: 20pt, 
 table(columns: (auto, auto, auto), align: left,
 [```asm b``` _label_], [goto _label_], [],
 [```asm bl``` _label_], [goto _label_; `x30 = ` the next address of the `bl`], [($ast$)], 
