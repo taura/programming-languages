@@ -307,7 +307,9 @@ performs ```c   x0 = x1 + 123 ```
 
 - pack a few floating point numbers / integers in a register
 - a SIMD instruction can perform an operation on all values on SIMD register(s)
-- important for performance, but omitted in this course for brevity
+- important for performance
+- not necessary for a minimum working compiler
+- you may still witness some in the generated code, so you just want to know that they exist
 
 = ARM64 instructios
 
