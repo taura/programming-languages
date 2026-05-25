@@ -53,7 +53,7 @@
   - new instructions (e.g., SIMD, matrix, ...)
 
 - new general purpose languages
-  - Scala, Julia, Go, Rust, Zig, Mojo, etc.
+  - Julia, Go, Rust, Zig, Mojo, etc.
 
 #pagebreak()
 
