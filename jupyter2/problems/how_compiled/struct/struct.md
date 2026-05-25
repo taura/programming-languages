@@ -14,4 +14,4 @@ Make a note of the following:
 2. Add slightly different versions of the function such as those taking a pointer (or a reference) and observe how they are represented.  Specifically,
    * `*Point` in Go
    * `&Point` and `Box<Point>` in Rust
-3. By examining the assembly code, explain the role of _static type checking_ (imagine what happens if passing an arbitrary integer or another struct to this function is unchecked).
+3. By examining the assembly code, explain the role of _static type checking_ for safety and performance (imagine what happens if passing an arbitrary integer or another struct to this function is unchecked).
