@@ -229,6 +229,19 @@ gdb ./program
 # Errata in problems 
 
 1. <font color=blue>(2026/04/13)</font> in `variables/gaussian_density` problem, the problem states that the function takes "$x$, $\mu$, and $\sigma$" (suggesting this order of parameters), but the test code assumes it takes $\mu$, $\sigma$, and $x$ in this order; I found a few of you suffering from assertion error caused by this.  Apologies `m(_ _)m`
+1. <font color=blue>(2026/06/03)</font> in the "5. Generate a Problem" section of the `pl06_build_system notebook`, it states:
+```
+The goal is to solve the final problem, generic_optimize, in this topic. You may want to use prev_prob to step backward from the last problem, or next_prob to step forward from the first.
+```
+<div>
+but there is no such problem as `generic_optimize`.  It should be `readxml2`. (the error happened because I made this notebook by copying the previous notebook (`pl05_parametric`) and forgot to modify it.  Also, the following line in the code block
+</div>
+```
+#PREFERENCE = "match:.*/multiple_files"
+```
+<div>
+is meaningless (there is no such problem as `multiple_file`).  In any case, what you see in the list is the problems in a particular topic (`cat, readxml,` and `readxml2`).
+</div>
 
 # Slides and other materials
 

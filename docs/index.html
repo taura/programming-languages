@@ -498,7 +498,23 @@ class="math inline"><em>σ</em></span>, and <span
 class="math inline"><em>x</em></span> in this order; I found a few of
 you suffering from assertion error caused by this. Apologies
 <code>m(_ _)m</code></li>
+<li><font color=blue>(2026/06/03)</font> in the “5. Generate a Problem”
+section of the <code>pl06_build_system notebook</code>, it states:</li>
 </ol>
+<pre><code>The goal is to solve the final problem, generic_optimize, in this topic. You may want to use prev_prob to step backward from the last problem, or next_prob to step forward from the first.</code></pre>
+<div>
+<p>but there is no such problem as <code>generic_optimize</code>. It
+should be <code>readxml2</code>. (the error happened because I made this
+notebook by copying the previous notebook (<code>pl05_parametric</code>)
+and forgot to modify it. Also, the following line in the code block</p>
+</div>
+<pre><code>#PREFERENCE = &quot;match:.*/multiple_files&quot;</code></pre>
+<div>
+<p>is meaningless (there is no such problem as
+<code>multiple_file</code>). In any case, what you see in the list is
+the problems in a particular topic (<code>cat, readxml,</code> and
+<code>readxml2</code>).</p>
+</div>
 <h1 data-number="5" id="slides-and-other-materials"><span
 class="header-section-number">5</span> Slides and other materials</h1>
 <ul>
