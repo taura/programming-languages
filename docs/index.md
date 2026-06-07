@@ -7,6 +7,12 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2026/06/08)</font>Plan for the eighth week (June 8th)
+	1. [Basics of programming language implementation](slides/05-implementation-basics.pdf) How function call works
+	1. Work on `pl07_how_compiled`
+	1. [Memory Management](slides/06-memory-management.pdf)
+	1. [Garbage Collection (GC) : A Brief Introductions](slides/07-gc-basics.pdf)
+
 * <font color=blue>(2026/05/25)</font>Plan for the seventh week (May 25th)
 	1. [Basics of programming language implementation](slides/05-implementation-basics.pdf)
 	1. Work on `pl07_how_compiled`, which will be the next assignment, due <font color=red>June 13th</font>
