@@ -1,8 +1,9 @@
 # <font color="green">Observe Memory Management</font>
 
 - Witness memory management in action.
-- Write a program that repeatedly allocates a block of memory (an $S$-element array of 64-bit integers) and maintains a reference to the last $M$ allocated blocks via an outer array (an array of arrays). Perform $N > M$ allocations in total.
+- To this end, we are going to experiment with a program that repeatedly allocates a block of memory (an $S$-element array of 64-bit integers) and maintains a reference to the last $M$ allocated blocks via an outer array (an array of arrays). Perform $N > M$ allocations in total.
 - Programs are given in C/C++ and in your assigned languages (Go, Julia, OCaml, Rust); measure the memory consumption of each program.
+- Note: C/C++ version does not use free memory at all; observe what happens and compare it with other languages.
 - Note: Julia has a significantly larger baseline memory footprint than the other languages due to its JIT compiler.
 
 ## Work
