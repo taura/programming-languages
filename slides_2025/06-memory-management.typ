@@ -185,9 +185,10 @@ int foo() {
 )
 ])
 
+- note: lifetime of _static_ variables/arrays is the same as #ao[global]
 - note: the discussion below calls memory blocks _objects_
 
-== What can go wrong in C/C++ (stack-allocated objects)
+== What can go wrong in C/C++ (local variable/arrays)
 
 - unconditionally reclaimed when it goes out of scope
 - yet there may be a pointer still pointing to it
