@@ -2,7 +2,7 @@
 .SHELLFLAGS := -eu -o pipefail -c
 
 nb_srcs :=
-nb_srcs += $(wildcard nb/source/pl07_*/pl07_*.py)
+nb_srcs += $(wildcard nb/source/pl08_*/pl*.py)
 aux_srcs :=
 include ../../jupyter_tools/authoring/jupyter_tools.mk
 
@@ -128,10 +128,10 @@ define deploy_ipynb
 #
 deploy : $(prob_dir)/$(concept)/$(problem)/$(base).ipynb
 ##### DEPLOY boilerplates #######
-$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/go/$(base).go
-$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/jl/$(base).jl
-$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/ml/$(base).ml
-$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/rs/$(base).rs
+#$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/go/$(base).go
+#$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/jl/$(base).jl
+#$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/ml/$(base).ml
+#$(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(prob_dir)/$(concept)/$(problem)/rs/$(base).rs
 $(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(in_dir)/$(concept)/$(problem)/$(base).py $(prob_dir)/$(concept)/$(problem)/$(base).md 
 	./format_string.py $$< in_dir=$(in_dir) out_dir=$(prob_dir) concept=$(concept) problem=$(problem) base=$(base) | ../../jupyter_tools/authoring/mk_nb.py --syntax py - > $$@
 
@@ -139,10 +139,10 @@ $(prob_dir)/$(concept)/$(problem)/$(base).ipynb : $(in_dir)/$(concept)/$(problem
 # ps/fundef/compound/go/compound.py -> answers/fundef/compound/compound.ipynb
 #
 ##### DEPLOY boilerplates #######
-$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/go/$(base).go
-$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/jl/$(base).jl
-$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/ml/$(base).ml
-$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/rs/$(base).rs
+#$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/go/$(base).go
+#$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/jl/$(base).jl
+#$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/ml/$(base).ml
+#$(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(ans_dir)/$(concept)/$(problem)/rs/$(base).rs
 $(ans_dir)/$(concept)/$(problem)/$(base).ipynb : $(in_dir)/$(concept)/$(problem)/$(base).py $(ans_dir)/$(concept)/$(problem)/$(base).md
 	./format_string.py $$< in_dir=$(in_dir) out_dir=$(ans_dir) concept=$(concept) problem=$(problem) base=$(base) | ../../jupyter_tools/authoring/mk_nb.py --syntax py - > $$@
 
@@ -240,7 +240,7 @@ $(foreach concept,$(call dir_in,$(in_dir)), \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(call EVAL,$(call check_code)))) \
 ))
 else
-$(foreach concept,how_compiled, \
+$(foreach concept,memory_management, \
  $(foreach problem,$(call dir_in,$(in_dir)/$(concept)), \
   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),md),$(call EVAL,$(call deploy_md))) \
   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),py),$(call EVAL,$(call deploy_ipynb))) \

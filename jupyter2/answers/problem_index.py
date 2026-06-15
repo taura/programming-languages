@@ -91,6 +91,13 @@ PROBLEM_INDEX = [
          "dynamic_dispatch",
 	 "free_exploration",
      ]),
+    ("memory_management",
+     [
+         "simple",
+         "vis_addr",
+         "gc_params",
+	 "bst",
+     ]),
     
 ]
 
