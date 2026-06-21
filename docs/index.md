@@ -7,6 +7,12 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
+* <font color=blue>(2026/06/22)</font>Plan for the tenth week (June 22nd)
+	1. Heads up on final report
+	1. [Garbage Collection (GC) : A Brief Introductions](slides/07-gc-basics.pdf)
+	1. Work on `pl08_memory_management`
+	1. [Rust Memory Management](slides/08-rust.pdf)
+
 * <font color=blue>(2026/06/15)</font>Plan for the ninth week (June 15th)
 	1. [Memory Management](slides/06-memory-management.pdf)
 	1. [Garbage Collection (GC) : A Brief Introductions](slides/07-gc-basics.pdf)
@@ -265,9 +271,9 @@ is meaningless (there is no such problem as `multiple_file`).  In any case, what
 * [Basics of programming language implementation](slides/05-implementation-basics.pdf)
 * [Memory Management](slides/06-memory-management.pdf)
 * [Garbage Collection (GC) : A Brief Introductions](slides/07-gc-basics.pdf)
+* [Rust Memory Management](slides/08-rust.pdf)
 * [Writing Aseembly](slides/08-writing-assembly.pdf)
 * [Writing a Compiler](slides/09-compiler.pdf )
-* [Rust Memory Management](slides/10-rust.pdf)
 * [Garbage Collection](slides/09-gc-adv.pdf)
 
 

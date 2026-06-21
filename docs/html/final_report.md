@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="../scripts/style.css">
 
-# Programming Languages: the Term Report (2025) {.unnumbered}
+# Programming Languages: the Term Report (2026) {.unnumbered}
 
 # Evaluation Criteria
 
@@ -8,9 +8,10 @@
   * condition #0: participate in the class and submit reflective essays sufficient number of times
   * condition #1: engage in group work sufficiently
   * condition #2: submit assignments in UTOL 
-    * Assignment 2 (`pl03_oop_basics`), 
-    * Assignment 3 (`pl05_generic_fun_type`), and 
-    * Assignment 4 (yet to come, about memory management)
+    * Assignment 2 (`pl02_recursion`), 
+    * Assignment 3 (`pl03_typedef`), and 
+    * Assignment 4 (`pl04_oop_basics`)
+    * Assignment 6 (`pl05_how_compiled`)
   * condition #3: submit the term report (option A-C)
 
 # The Term Report
@@ -19,15 +20,15 @@
 
 ## Option A (build a compiler)
 
-* Finish code generator in the MinC (minimum subset of C) compiler construction exercise (detailed spec and base code will be announced soon).  The following baseline code and test code will be given
-  * lexical analyzer and parser (code that reads the source program)
-  * definition of syntax tree (data structure you get after reading the source program)
+* Finish the compiler construction exercise (detailed spec and base code will be announced soon).
 * What you need to submit is "heavily commented code."  Write comments with the mindset of writing down the workings of the code generator.  You should write those comments as if you are writing a "document" for others to read, except that they are embedded within the code
 * The submission is evaluated with criterion including 
   * the level of accomplishment (how many tests you passed),
   * the quality of the code and documentation of the code generator,
   * and additional advanced topics you achieved (optimization, exension (for statement, floating point numbers, pointers, etc.)
+* More details are to be announced shortly
 
+<!--
 <font color=red>*[update on July 21] detailed submission instructions (also in UTOL)*</font>
 
 * Complete the work described in `pl08_minc` and submit it through Jupyter
@@ -40,7 +41,7 @@
 * They are in the team's shared folder (`programming-languages-teamXX/pl08_minc/{results.xlsx,reflection.docx,extra-work.docx}`)
 You are encouraged to discuss and collaborate with other team members, but because of the limited time until the deadline, they are not mandatory.  You can individually finish your work and put your contents into these documents individually.
 * Finally, as usual, submit a one-line report to UTOL saying you have completed the specified tasks and submit them appropriately. e.g.,
-
+-->
 
 ## Option B (apply to your project)
 
@@ -75,8 +76,8 @@ You are encouraged to discuss and collaborate with other team members, but becau
 
 # Due
 
-* report is due: <font color="red">August 9th, 2025</font>
-* before you submit the final report, submit an abstract (declaration of what you will work on) which is due: <font color="red">July 12th</font>
+* report is due: <font color="red">August 8th, 2026</font>
+* before you submit the final report, submit an abstract (declaration of what you will work on) which is due: <font color="red">July 11th</font>
 
 # How to submit
 
