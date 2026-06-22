@@ -8,7 +8,7 @@
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
 * <font color=blue>(2026/06/22)</font>Plan for the tenth week (June 22nd)
-	1. Heads up on final report
+	1. Heads up on [final report](#grading)
 	1. [Garbage Collection (GC) : A Brief Introductions](slides/07-gc-basics.pdf)
 	1. Work on `pl08_memory_management`
 	1. [Rust Memory Management](slides/08-rust.pdf)
@@ -332,8 +332,10 @@ is meaningless (there is no such problem as `multiple_file`).  In any case, what
 * [LLVM](http://llvm.org/)
 * [COINS (in Japanese)](http://coins-compiler.sourceforge.jp/international/)
 
+<a name="grading"> </a>
+
 # Grading
 
 * Details will be described later, but it will be similar to the last year's
-* See [Programming Languages: the Term Report (2025)](html/final_report.html)
+* See [Programming Languages: the Term Report (2026)](html/final_report.html)
 
