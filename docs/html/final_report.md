@@ -11,7 +11,7 @@
     * Assignment 2 (`pl02_recursion`), 
     * Assignment 3 (`pl03_typedef`), and 
     * Assignment 4 (`pl04_oop_basics`)
-    * Assignment 6 (`pl05_how_compiled`)
+    * Assignment 5 (`pl05_how_compiled`)
   * condition #3: submit the term report (option A-C)
 
 # The Term Report
