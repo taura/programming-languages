@@ -1,4 +1,4 @@
-mutable struct Parser
+mutable struct TokenStream
     toks::Vector{Token}
     pos::Int
 end
@@ -9,33 +9,33 @@ function parsefail(msg::String)
     return nothing
 end
 
-peektok(p::Parser) = p.toks[p.pos]
+peektok(t::TokenStream) = t.toks[t.pos]
 
-function advance!(p::Parser)
-    t = p.toks[p.pos]
-    if p.pos < length(p.toks)
-        p.pos += 1
+function advance!(t::TokenStream)
+    tok = t.toks[t.pos]
+    if t.pos < length(t.toks)
+        t.pos += 1
     end
-    return t
+    return tok
 end
 
-function expect!(p::Parser, k::TokKind)::Bool
-    t = peektok(p)
-    if t.kind != k
-        parsefail("expected $(tokstr(Token(k))) but got $(tokstr(t))")
+function expect!(t::TokenStream, k::TokKind)::Bool
+    tok = peektok(t)
+    if tok.kind != k
+        parsefail("expected $(tokstr(Token(k))) but got $(tokstr(tok))")
         return false
     end
-    advance!(p)
+    advance!(t)
     return true
 end
 
 # expr = equality_expr "=" expr | equality_expr
-function parseExpr(p::Parser)::Union{Expr,Nothing}
-    lhs = parseEquality(p)
+function parseExpr(t::TokenStream)::Union{Expr,Nothing}
+    lhs = parseEquality(t)
     lhs === nothing && return nothing
-    if peektok(p).kind == TAssign
-        advance!(p)
-        rhs = parseExpr(p)
+    if peektok(t).kind == TAssign
+        advance!(t)
+        rhs = parseExpr(t)
         rhs === nothing && return nothing
         return Assign(lhs, rhs)
     end
@@ -43,14 +43,14 @@ function parseExpr(p::Parser)::Union{Expr,Nothing}
 end
 
 # equality_expr = cmp_expr { ("=="|"!=") cmp_expr }*
-function parseEquality(p::Parser)::Union{Expr,Nothing}
-    lhs = parseCmp(p)
+function parseEquality(t::TokenStream)::Union{Expr,Nothing}
+    lhs = parseCmp(t)
     lhs === nothing && return nothing
     while true
-        k = peektok(p).kind
+        k = peektok(t).kind
         if k == TEq || k == TNe
-            advance!(p)
-            rhs = parseCmp(p)
+            advance!(t)
+            rhs = parseCmp(t)
             rhs === nothing && return nothing
             lhs = Binary(k == TEq ? OpEq : OpNe, lhs, rhs)
         else
@@ -60,11 +60,11 @@ function parseEquality(p::Parser)::Union{Expr,Nothing}
 end
 
 # cmp_expr = additive_expr { ("<="|">="|"<"|">") additive_expr }*
-function parseCmp(p::Parser)::Union{Expr,Nothing}
-    lhs = parseAdditive(p)
+function parseCmp(t::TokenStream)::Union{Expr,Nothing}
+    lhs = parseAdditive(t)
     lhs === nothing && return nothing
     while true
-        k = peektok(p).kind
+        k = peektok(t).kind
         op = if k == TLt
             OpLt
         elseif k == TGt
@@ -76,19 +76,19 @@ function parseCmp(p::Parser)::Union{Expr,Nothing}
         else
             return lhs
         end
-        advance!(p)
-        rhs = parseAdditive(p)
+        advance!(t)
+        rhs = parseAdditive(t)
         rhs === nothing && return nothing
         lhs = Binary(op, lhs, rhs)
     end
 end
 
 # additive_expr = multiplicative_expr { ("+"|"-") multiplicative_expr }*
-function parseAdditive(p::Parser)::Union{Expr,Nothing}
-    lhs = parseMul(p)
+function parseAdditive(t::TokenStream)::Union{Expr,Nothing}
+    lhs = parseMul(t)
     lhs === nothing && return nothing
     while true
-        k = peektok(p).kind
+        k = peektok(t).kind
         op = if k == TPlus
             OpAdd
         elseif k == TMinus
@@ -96,19 +96,19 @@ function parseAdditive(p::Parser)::Union{Expr,Nothing}
         else
             return lhs
         end
-        advance!(p)
-        rhs = parseMul(p)
+        advance!(t)
+        rhs = parseMul(t)
         rhs === nothing && return nothing
         lhs = Binary(op, lhs, rhs)
     end
 end
 
 # multiplicative_expr = unary_expr { ("*"|"/"|"%") unary_expr }*
-function parseMul(p::Parser)::Union{Expr,Nothing}
-    lhs = parseUnary(p)
+function parseMul(t::TokenStream)::Union{Expr,Nothing}
+    lhs = parseUnary(t)
     lhs === nothing && return nothing
     while true
-        k = peektok(p).kind
+        k = peektok(t).kind
         op = if k == TStar
             OpMul
         elseif k == TSlash
@@ -118,23 +118,23 @@ function parseMul(p::Parser)::Union{Expr,Nothing}
         else
             return lhs
         end
-        advance!(p)
-        rhs = parseUnary(p)
+        advance!(t)
+        rhs = parseUnary(t)
         rhs === nothing && return nothing
         lhs = Binary(op, lhs, rhs)
     end
 end
 
 # unary_expr = number | identifier "(" arg_list ")" | identifier | "(" expr ")" | ("+"|"-"|"!"|"~") unary_expr
-function parseUnary(p::Parser)::Union{Expr,Nothing}
-    t = peektok(p)
-    k = t.kind
+function parseUnary(t::TokenStream)::Union{Expr,Nothing}
+    tok = peektok(t)
+    k = tok.kind
     if k == TNum
-        advance!(p)
-        return IntLit(t.num)
+        advance!(t)
+        return IntLit(tok.num)
     elseif k == TPlus || k == TMinus || k == TNot || k == TTilde
-        advance!(p)
-        e = parseUnary(p)
+        advance!(t)
+        e = parseUnary(t)
         e === nothing && return nothing
         op = if k == TPlus
             OpPos
@@ -147,38 +147,38 @@ function parseUnary(p::Parser)::Union{Expr,Nothing}
         end
         return Unary(op, e)
     elseif k == TLParen
-        advance!(p)
-        e = parseExpr(p)
+        advance!(t)
+        e = parseExpr(t)
         e === nothing && return nothing
-        expect!(p, TRParen) || return nothing
+        expect!(t, TRParen) || return nothing
         return e
     elseif k == TId
-        advance!(p)
-        if peektok(p).kind == TLParen
-            advance!(p)
-            args = parseArgList(p)
+        advance!(t)
+        if peektok(t).kind == TLParen
+            advance!(t)
+            args = parseArgList(t)
             args === nothing && return nothing
-            expect!(p, TRParen) || return nothing
-            return Call(t.str, args)
+            expect!(t, TRParen) || return nothing
+            return Call(tok.str, args)
         end
-        return VarRef(t.str)
+        return VarRef(tok.str)
     else
-        return parsefail("unexpected token $(tokstr(t)) in expression")
+        return parsefail("unexpected token $(tokstr(tok)) in expression")
     end
 end
 
 # arg_list = [ expr { "," expr }* ]
-function parseArgList(p::Parser)::Union{Vector{Expr},Nothing}
+function parseArgList(t::TokenStream)::Union{Vector{Expr},Nothing}
     args = Expr[]
-    if peektok(p).kind == TRParen
+    if peektok(t).kind == TRParen
         return args
     end
-    e = parseExpr(p)
+    e = parseExpr(t)
     e === nothing && return nothing
     push!(args, e)
-    while peektok(p).kind == TComma
-        advance!(p)
-        e = parseExpr(p)
+    while peektok(t).kind == TComma
+        advance!(t)
+        e = parseExpr(t)
         e === nothing && return nothing
         push!(args, e)
     end
@@ -186,87 +186,87 @@ function parseArgList(p::Parser)::Union{Vector{Expr},Nothing}
 end
 
 # type_expr = "long"
-function parseType(p::Parser)::Union{TypeExpr,Nothing}
-    expect!(p, TLong) || return nothing
+function parseType(t::TokenStream)::Union{TypeExpr,Nothing}
+    expect!(t, TLong) || return nothing
     return TyLong
 end
 
 # identifier = /[A-Za-z_][A-Za-z_0-9]*/
-function parseIdent(p::Parser)::Union{String,Nothing}
-    t = advance!(p)
-    if t.kind != TId
-        return parsefail("expected identifier but got $(tokstr(t))")
+function parseIdent(t::TokenStream)::Union{String,Nothing}
+    tok = advance!(t)
+    if tok.kind != TId
+        return parsefail("expected identifier but got $(tokstr(tok))")
     end
-    return t.str
+    return tok.str
 end
 
 # stmt = ";" | "continue" ";" | "break" ";" | "return" expr ";" | compound_stmt | if_stmt | while_stmt | expr ";"
-function parseStmt(p::Parser)::Union{Stmt,Nothing}
-    k = peektok(p).kind
+function parseStmt(t::TokenStream)::Union{Stmt,Nothing}
+    k = peektok(t).kind
     if k == TSemi
-        advance!(p)
+        advance!(t)
         return EmptyStmt()
     elseif k == TContinue
-        advance!(p)
-        expect!(p, TSemi) || return nothing
+        advance!(t)
+        expect!(t, TSemi) || return nothing
         return ContinueStmt()
     elseif k == TBreak
-        advance!(p)
-        expect!(p, TSemi) || return nothing
+        advance!(t)
+        expect!(t, TSemi) || return nothing
         return BreakStmt()
     elseif k == TReturn
-        advance!(p)
-        e = parseExpr(p)
+        advance!(t)
+        e = parseExpr(t)
         e === nothing && return nothing
-        expect!(p, TSemi) || return nothing
+        expect!(t, TSemi) || return nothing
         return ReturnStmt(e)
     elseif k == TLBrace
-        return parseCompound(p)
+        return parseCompound(t)
     elseif k == TIf
-        return parseIf(p)
+        return parseIf(t)
     else
-        e = parseExpr(p)
+        e = parseExpr(t)
         e === nothing && return nothing
-        expect!(p, TSemi) || return nothing
+        expect!(t, TSemi) || return nothing
         return ExprStmt(e)
     end
 end
 
 # compound_stmt = "{" {var_decl}* {stmt}* "}"
-function parseCompound(p::Parser)::Union{Compound,Nothing}
-    expect!(p, TLBrace) || return nothing
+function parseCompound(t::TokenStream)::Union{Compound,Nothing}
+    expect!(t, TLBrace) || return nothing
     decls = VarDecl[]
-    while peektok(p).kind == TLong
-        ty = parseType(p)
+    while peektok(t).kind == TLong
+        ty = parseType(t)
         ty === nothing && return nothing
-        name = parseIdent(p)
+        name = parseIdent(t)
         name === nothing && return nothing
-        expect!(p, TSemi) || return nothing
+        expect!(t, TSemi) || return nothing
         push!(decls, VarDecl(ty, name))
     end
     stmts = Stmt[]
-    while peektok(p).kind != TRBrace
-        s = parseStmt(p)
+    while peektok(t).kind != TRBrace
+        s = parseStmt(t)
         s === nothing && return nothing
         push!(stmts, s)
     end
-    expect!(p, TRBrace) || return nothing
+    expect!(t, TRBrace) || return nothing
     return Compound(decls, stmts)
 end
 
 # if_stmt = "if" "(" expr ")" stmt [ "else" stmt ]
-function parseIf(p::Parser)::Union{Stmt,Nothing}
-    expect!(p, TIf) || return nothing
-    expect!(p, TLParen) || return nothing
-    cond = parseExpr(p)
+function parseIf(t::TokenStream)::Union{Stmt,Nothing}
+    expect!(t, TIf) || return nothing
+    expect!(t, TLParen) || return nothing
+    cond = parseExpr(t)
     cond === nothing && return nothing
-    expect!(p, TRParen) || return nothing
-    then = parseStmt(p)
+    expect!(t, TRParen) || return nothing
+    then = parseStmt(t)
     then === nothing && return nothing
     els = nothing
-    if peektok(p).kind == TElse
-        advance!(p)
-        els = parseStmt(p)
+    if peektok(t).kind == TElse
+        advance!(t)
+        els = parseStmt(t)
         els === nothing && return nothing
     end
     return IfStmt(cond, then, els)
@@ -274,26 +274,26 @@ end
 
 
 # parameter = type_expr identifier
-function parseParam(p::Parser)::Union{Param,Nothing}
-    ty = parseType(p)
+function parseParam(t::TokenStream)::Union{Param,Nothing}
+    ty = parseType(t)
     ty === nothing && return nothing
-    name = parseIdent(p)
+    name = parseIdent(t)
     name === nothing && return nothing
     return Param(ty, name)
 end
 
 # parameter_list = [ parameter { "," parameter }* ]
-function parseParamList(p::Parser)::Union{Vector{Param},Nothing}
+function parseParamList(t::TokenStream)::Union{Vector{Param},Nothing}
     params = Param[]
-    if peektok(p).kind == TRParen
+    if peektok(t).kind == TRParen
         return params
     end
-    pm = parseParam(p)
+    pm = parseParam(t)
     pm === nothing && return nothing
     push!(params, pm)
-    while peektok(p).kind == TComma
-        advance!(p)
-        pm = parseParam(p)
+    while peektok(t).kind == TComma
+        advance!(t)
+        pm = parseParam(t)
         pm === nothing && return nothing
         push!(params, pm)
     end
@@ -301,25 +301,25 @@ function parseParamList(p::Parser)::Union{Vector{Param},Nothing}
 end
 
 # fun_definition = type_expr identifier "(" parameter_list ")" compound_stmt
-function parseFunDef(p::Parser)::Union{FunDef,Nothing}
-    ret = parseType(p)
+function parseFunDef(t::TokenStream)::Union{FunDef,Nothing}
+    ret = parseType(t)
     ret === nothing && return nothing
-    name = parseIdent(p)
+    name = parseIdent(t)
     name === nothing && return nothing
-    expect!(p, TLParen) || return nothing
-    params = parseParamList(p)
+    expect!(t, TLParen) || return nothing
+    params = parseParamList(t)
     params === nothing && return nothing
-    expect!(p, TRParen) || return nothing
-    body = parseCompound(p)
+    expect!(t, TRParen) || return nothing
+    body = parseCompound(t)
     body === nothing && return nothing
     return FunDef(ret, name, params, body)
 end
 
 # program = {definition}*
-function parseProgram(p::Parser)::Union{Program,Nothing}
+function parseProgram(t::TokenStream)::Union{Program,Nothing}
     funcs = FunDef[]
-    while peektok(p).kind != TEOF
-        f = parseFunDef(p)
+    while peektok(t).kind != TEOF
+        f = parseFunDef(t)
         f === nothing && return nothing
         push!(funcs, f)
     end
@@ -327,11 +327,11 @@ function parseProgram(p::Parser)::Union{Program,Nothing}
 end
 
 function parse_tokens(toks::Vector{Token})::Union{Program,Nothing}
-    p = Parser(toks, 1)
-    prog = parseProgram(p)
+    t = TokenStream(toks, 1)
+    prog = parseProgram(t)
     prog === nothing && return nothing
-    if peektok(p).kind != TEOF
-        return parsefail("trailing tokens, starting at $(tokstr(peektok(p)))")
+    if peektok(t).kind != TEOF
+        return parsefail("trailing tokens, starting at $(tokstr(peektok(t)))")
     end
     return prog
 end

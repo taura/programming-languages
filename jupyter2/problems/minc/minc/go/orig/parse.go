@@ -6,50 +6,50 @@ type ParseError struct{ Msg string }
 
 func (e *ParseError) Error() string { return "parse error: " + e.Msg }
 
-type parser struct {
+type tokenStream struct {
 	toks []Token
 	pos  int
 }
 
-func (p *parser) peek() Token { return p.toks[p.pos] }
+func peek(t *tokenStream) Token { return t.toks[t.pos] }
 
-func (p *parser) advance() Token {
-	t := p.toks[p.pos]
-	if p.pos < len(p.toks)-1 {
-		p.pos++
+func advance(t *tokenStream) Token {
+	tok := t.toks[t.pos]
+	if t.pos < len(t.toks)-1 {
+		t.pos++
 	}
-	return t
+	return tok
 }
 
-func (p *parser) expect(k TokKind) {
-	t := p.peek()
-	if t.Kind != k {
-		panic(&ParseError{fmt.Sprintf("expected %s but got %s", Token{Kind: k}, t)})
+func expect(t *tokenStream, k TokKind) {
+	tok := peek(t)
+	if tok.Kind != k {
+		panic(&ParseError{fmt.Sprintf("expected %s but got %s", Token{Kind: k}, tok)})
 	}
-	p.advance()
+	advance(t)
 }
 
 // expr = equality_expr "=" expr | equality_expr
-func (p *parser) parseExpr() Expr {
-	lhs := p.parseEquality()
-	if p.peek().Kind == TAssign {
-		p.advance()
-		return &Assign{LHS: lhs, RHS: p.parseExpr()}
+func parseExpr(t *tokenStream) Expr {
+	lhs := parseEquality(t)
+	if peek(t).Kind == TAssign {
+		advance(t)
+		return &Assign{LHS: lhs, RHS: parseExpr(t)}
 	}
 	return lhs
 }
 
 // equality_expr = cmp_expr { ("=="|"!=") cmp_expr }*
-func (p *parser) parseEquality() Expr {
-	lhs := p.parseCmp()
+func parseEquality(t *tokenStream) Expr {
+	lhs := parseCmp(t)
 	for {
-		switch p.peek().Kind {
+		switch peek(t).Kind {
 		case TEq:
-			p.advance()
-			lhs = &Binary{OpEq, lhs, p.parseCmp()}
+			advance(t)
+			lhs = &Binary{OpEq, lhs, parseCmp(t)}
 		case TNe:
-			p.advance()
-			lhs = &Binary{OpNe, lhs, p.parseCmp()}
+			advance(t)
+			lhs = &Binary{OpNe, lhs, parseCmp(t)}
 		default:
 			return lhs
 		}
@@ -57,11 +57,11 @@ func (p *parser) parseEquality() Expr {
 }
 
 // cmp_expr = additive_expr { ("<="|">="|"<"|">") additive_expr }*
-func (p *parser) parseCmp() Expr {
-	lhs := p.parseAdditive()
+func parseCmp(t *tokenStream) Expr {
+	lhs := parseAdditive(t)
 	for {
 		var op BinaryOp
-		switch p.peek().Kind {
+		switch peek(t).Kind {
 		case TLt:
 			op = OpLt
 		case TGt:
@@ -73,17 +73,17 @@ func (p *parser) parseCmp() Expr {
 		default:
 			return lhs
 		}
-		p.advance()
-		lhs = &Binary{op, lhs, p.parseAdditive()}
+		advance(t)
+		lhs = &Binary{op, lhs, parseAdditive(t)}
 	}
 }
 
 // additive_expr = multiplicative_expr { ("+"|"-") multiplicative_expr }*
-func (p *parser) parseAdditive() Expr {
-	lhs := p.parseMul()
+func parseAdditive(t *tokenStream) Expr {
+	lhs := parseMul(t)
 	for {
 		var op BinaryOp
-		switch p.peek().Kind {
+		switch peek(t).Kind {
 		case TPlus:
 			op = OpAdd
 		case TMinus:
@@ -91,17 +91,17 @@ func (p *parser) parseAdditive() Expr {
 		default:
 			return lhs
 		}
-		p.advance()
-		lhs = &Binary{op, lhs, p.parseMul()}
+		advance(t)
+		lhs = &Binary{op, lhs, parseMul(t)}
 	}
 }
 
 // multiplicative_expr = unary_expr { ("*"|"/"|"%") unary_expr }*
-func (p *parser) parseMul() Expr {
-	lhs := p.parseUnary()
+func parseMul(t *tokenStream) Expr {
+	lhs := parseUnary(t)
 	for {
 		var op BinaryOp
-		switch p.peek().Kind {
+		switch peek(t).Kind {
 		case TStar:
 			op = OpMul
 		case TSlash:
@@ -111,175 +111,175 @@ func (p *parser) parseMul() Expr {
 		default:
 			return lhs
 		}
-		p.advance()
-		lhs = &Binary{op, lhs, p.parseUnary()}
+		advance(t)
+		lhs = &Binary{op, lhs, parseUnary(t)}
 	}
 }
 
 // unary_expr = number | identifier "(" arg_list ")" | identifier | "(" expr ")" | ("+"|"-"|"!"|"~") unary_expr
-func (p *parser) parseUnary() Expr {
-	t := p.peek()
-	switch t.Kind {
+func parseUnary(t *tokenStream) Expr {
+	tok := peek(t)
+	switch tok.Kind {
 	case TNum:
-		p.advance()
-		return &IntLit{t.Num}
+		advance(t)
+		return &IntLit{tok.Num}
 	case TPlus:
-		p.advance()
-		return &Unary{OpPos, p.parseUnary()}
+		advance(t)
+		return &Unary{OpPos, parseUnary(t)}
 	case TMinus:
-		p.advance()
-		return &Unary{OpNeg, p.parseUnary()}
+		advance(t)
+		return &Unary{OpNeg, parseUnary(t)}
 	case TNot:
-		p.advance()
-		return &Unary{OpLNot, p.parseUnary()}
+		advance(t)
+		return &Unary{OpLNot, parseUnary(t)}
 	case TTilde:
-		p.advance()
-		return &Unary{OpBNot, p.parseUnary()}
+		advance(t)
+		return &Unary{OpBNot, parseUnary(t)}
 	case TLParen:
-		p.advance()
-		e := p.parseExpr()
-		p.expect(TRParen)
+		advance(t)
+		e := parseExpr(t)
+		expect(t, TRParen)
 		return e
 	case TId:
-		p.advance()
-		if p.peek().Kind == TLParen {
-			p.advance()
-			args := p.parseArgList()
-			p.expect(TRParen)
-			return &Call{Name: t.Str, Args: args}
+		advance(t)
+		if peek(t).Kind == TLParen {
+			advance(t)
+			args := parseArgList(t)
+			expect(t, TRParen)
+			return &Call{Name: tok.Str, Args: args}
 		}
-		return &VarRef{t.Str}
+		return &VarRef{tok.Str}
 	default:
-		panic(&ParseError{fmt.Sprintf("unexpected token %s in expression", t)})
+		panic(&ParseError{fmt.Sprintf("unexpected token %s in expression", tok)})
 	}
 }
 
 // arg_list = [ expr { "," expr }* ]
-func (p *parser) parseArgList() []Expr {
-	if p.peek().Kind == TRParen {
+func parseArgList(t *tokenStream) []Expr {
+	if peek(t).Kind == TRParen {
 		return nil
 	}
-	args := []Expr{p.parseExpr()}
-	for p.peek().Kind == TComma {
-		p.advance()
-		args = append(args, p.parseExpr())
+	args := []Expr{parseExpr(t)}
+	for peek(t).Kind == TComma {
+		advance(t)
+		args = append(args, parseExpr(t))
 	}
 	return args
 }
 
 // type_expr = "long"
-func (p *parser) parseType() TypeExpr {
-	p.expect(TLong)
+func parseType(t *tokenStream) TypeExpr {
+	expect(t, TLong)
 	return TyLong
 }
 
-func (p *parser) parseIdent() string {
-	t := p.advance()
-	if t.Kind != TId {
-		panic(&ParseError{fmt.Sprintf("expected identifier but got %s", t)})
+func parseIdent(t *tokenStream) string {
+	tok := advance(t)
+	if tok.Kind != TId {
+		panic(&ParseError{fmt.Sprintf("expected identifier but got %s", tok)})
 	}
-	return t.Str
+	return tok.Str
 }
 
 // stmt = ";" | "continue" ";" | "break" ";" | "return" expr ";" | compound_stmt | if_stmt | while_stmt | expr ";"
-func (p *parser) parseStmt() Stmt {
-	switch p.peek().Kind {
+func parseStmt(t *tokenStream) Stmt {
+	switch peek(t).Kind {
 	case TSemi:
-		p.advance()
+		advance(t)
 		return &EmptyStmt{}
 	case TContinue:
-		p.advance()
-		p.expect(TSemi)
+		advance(t)
+		expect(t, TSemi)
 		return &ContinueStmt{}
 	case TBreak:
-		p.advance()
-		p.expect(TSemi)
+		advance(t)
+		expect(t, TSemi)
 		return &BreakStmt{}
 	case TReturn:
-		p.advance()
-		e := p.parseExpr()
-		p.expect(TSemi)
+		advance(t)
+		e := parseExpr(t)
+		expect(t, TSemi)
 		return &ReturnStmt{e}
 	case TLBrace:
-		return p.parseCompound()
+		return parseCompound(t)
 	case TIf:
-		return p.parseIf()
+		return parseIf(t)
 	default:
-		e := p.parseExpr()
-		p.expect(TSemi)
+		e := parseExpr(t)
+		expect(t, TSemi)
 		return &ExprStmt{e}
 	}
 }
 
 // compound_stmt = "{" {var_decl}* {stmt}* "}"
-func (p *parser) parseCompound() *Compound {
-	p.expect(TLBrace)
+func parseCompound(t *tokenStream) *Compound {
+	expect(t, TLBrace)
 	var decls []VarDecl
-	for p.peek().Kind == TLong {
-		ty := p.parseType()
-		name := p.parseIdent()
-		p.expect(TSemi)
+	for peek(t).Kind == TLong {
+		ty := parseType(t)
+		name := parseIdent(t)
+		expect(t, TSemi)
 		decls = append(decls, VarDecl{ty, name})
 	}
 	var stmts []Stmt
-	for p.peek().Kind != TRBrace {
-		stmts = append(stmts, p.parseStmt())
+	for peek(t).Kind != TRBrace {
+		stmts = append(stmts, parseStmt(t))
 	}
-	p.expect(TRBrace)
+	expect(t, TRBrace)
 	return &Compound{Decls: decls, Stmts: stmts}
 }
 
 // if_stmt = "if" "(" expr ")" stmt [ "else" stmt ]
-func (p *parser) parseIf() Stmt {
-	p.expect(TIf)
-	p.expect(TLParen)
-	cond := p.parseExpr()
-	p.expect(TRParen)
-	then := p.parseStmt()
+func parseIf(t *tokenStream) Stmt {
+	expect(t, TIf)
+	expect(t, TLParen)
+	cond := parseExpr(t)
+	expect(t, TRParen)
+	then := parseStmt(t)
 	var els Stmt
-	if p.peek().Kind == TElse {
-		p.advance()
-		els = p.parseStmt()
+	if peek(t).Kind == TElse {
+		advance(t)
+		els = parseStmt(t)
 	}
 	return &IfStmt{Cond: cond, Then: then, Else: els}
 }
 
 
 // parameter = type_expr identifier
-func (p *parser) parseParam() Param {
-	ty := p.parseType()
-	return Param{Type: ty, Name: p.parseIdent()}
+func parseParam(t *tokenStream) Param {
+	ty := parseType(t)
+	return Param{Type: ty, Name: parseIdent(t)}
 }
 
 // parameter_list = [ parameter { "," parameter }* ]
-func (p *parser) parseParamList() []Param {
-	if p.peek().Kind == TRParen {
+func parseParamList(t *tokenStream) []Param {
+	if peek(t).Kind == TRParen {
 		return nil
 	}
-	params := []Param{p.parseParam()}
-	for p.peek().Kind == TComma {
-		p.advance()
-		params = append(params, p.parseParam())
+	params := []Param{parseParam(t)}
+	for peek(t).Kind == TComma {
+		advance(t)
+		params = append(params, parseParam(t))
 	}
 	return params
 }
 
 // fun_definition = type_expr identifier "(" parameter_list ")" compound_stmt
-func (p *parser) parseFunDef() *FunDef {
-	ret := p.parseType()
-	name := p.parseIdent()
-	p.expect(TLParen)
-	params := p.parseParamList()
-	p.expect(TRParen)
-	body := p.parseCompound()
+func parseFunDef(t *tokenStream) *FunDef {
+	ret := parseType(t)
+	name := parseIdent(t)
+	expect(t, TLParen)
+	params := parseParamList(t)
+	expect(t, TRParen)
+	body := parseCompound(t)
 	return &FunDef{RetType: ret, Name: name, Params: params, Body: body}
 }
 
 // program = {definition}*
-func (p *parser) parseProgram() *Program {
+func parseProgram(t *tokenStream) *Program {
 	var funcs []*FunDef
-	for p.peek().Kind != TEOF {
-		funcs = append(funcs, p.parseFunDef())
+	for peek(t).Kind != TEOF {
+		funcs = append(funcs, parseFunDef(t))
 	}
 	return &Program{Funcs: funcs}
 }
@@ -294,10 +294,10 @@ func Parse(toks []Token) (prog *Program, err error) {
 			panic(r)
 		}
 	}()
-	p := &parser{toks: toks}
-	prog = p.parseProgram()
-	if p.peek().Kind != TEOF {
-		panic(&ParseError{fmt.Sprintf("trailing tokens, starting at %s", p.peek())})
+	t := &tokenStream{toks: toks}
+	prog = parseProgram(t)
+	if peek(t).Kind != TEOF {
+		panic(&ParseError{fmt.Sprintf("trailing tokens, starting at %s", peek(t))})
 	}
 	return prog, nil
 }
