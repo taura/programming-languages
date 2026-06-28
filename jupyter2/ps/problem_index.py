@@ -98,6 +98,23 @@ PROBLEM_INDEX = [
          "gc_params",
 	 "bst",
      ]),
-    
+    ("hand_compile",
+     [
+         "ax_by_cz_long",
+         "ax_by_cz_double",
+         "many_args",
+         "l2_norm_long",
+         "expsum",
+         "l2_norm_local",
+         "l2_norm_malloc",
+         "call_many_args",
+         "deref_or_zero",
+         "add_or_mul_long",
+         "add_or_mul_double",
+         "sum_array_long",
+         "inner_prod_double",
+         "inner_prod_simd",
+     ]),
+
 ]
 
