@@ -115,6 +115,10 @@ PROBLEM_INDEX = [
          "inner_prod_double",
          "inner_prod_simd",
      ]),
+    ("minc",
+     [
+         "minc",
+     ]),
 
 ]
 
