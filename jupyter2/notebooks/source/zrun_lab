@@ -1,7 +1,0 @@
-#!/bin/bash
-export HEYTUTOR_ENDPOINT=https://tau-lecture-gpt-52.services.ai.azure.com/models/chat/completions?api-version=2024-05-01-preview
-source ~/.zrun_lab.env   # exports HEYTUTOR_API_KEY (kept out of git)
-export HEYTUTOR_API_VERSION=2024-05-01-preview
-export HEYTUTOR_MODEL=gpt-oss-120b
-export HEYTUTOR_PROBLEM_SET_DIR=/home/share/problems
-jupyter-lab .

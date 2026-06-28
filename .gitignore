@@ -3,3 +3,6 @@
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
+
+# personal launcher containing an API key; never commit
+jupyter2/notebooks/source/zrun_lab
