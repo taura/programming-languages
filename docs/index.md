@@ -7,7 +7,7 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
-* <font color=blue>(2026/06/29)</font>Plan for the eleventh week (June 29nd)
+* <font color=blue>(2026/06/29)</font>Plan for the eleventh week (June 29th)
 	1. [Writing Assembly (or Hand-Compilation)](slides/09-writing-assembly.pdf)
 	1. Work on `pl09_hand_compile`
 	1. [Writing a Compiler](slides/10-compiler.pdf)
