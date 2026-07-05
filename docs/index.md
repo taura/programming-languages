@@ -11,6 +11,7 @@
 	1. [Writing a Compiler](slides/10-compiler.pdf)
 	1. Work on `pl09_hand_compile`
 	1. [Rust Memory Management](slides/08-rust.pdf)
+	1. [I appreciate your consent](#consent) on data usage for [research like this](https://dl.acm.org/doi/10.1145/3770762.3772605)
 
 * <font color=blue>(2026/06/29)</font>Plan for the eleventh week (June 29th)
 	1. [Writing Assembly (or Hand-Compilation)](slides/09-writing-assembly.pdf)
@@ -241,6 +242,8 @@ gdb ./program
 * The data will be handled in accordance with applicable regulations and university policies.
 * Use  of data that identifies an individual is strictly limited to  pedagogical purposes within this course, for the benefit of that  student, such as providing feedback to them.
 * _<font color=blue>In particular, we do _not_ use what you asked AI, let alone how it responded, for grading or cheat detection.</font>_  You can choose not to provide data; and we are fully aware that serious cheater could use other AIs.
+
+<a name=consent> </a>
 
 ## Voluntary Participation (Opt-in)
 
