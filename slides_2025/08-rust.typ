@@ -88,11 +88,11 @@ _"#mura[single-ownership] rule"_
   #text(28pt)[_"borrow checker"_]
 ]
 
-== Escaping from the single ownership model
+== Exception to the single ownership model
 
-- there are actually some ways to get around the rules
+- there are actually some exceptions to ways to the rules
 
-1. #ore[reference counting pointers] (≈ multiple owning pointers)
+1. #ore[reference counting pointers] ($approx$ multiple owning pointers)
    - counts the number of owners _at runtime_, and reclaim the data when all these pointers are gone
 2. #ore[unsafe/raw pointers] (≈ totally up to you)
 
