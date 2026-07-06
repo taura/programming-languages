@@ -9,7 +9,7 @@
 
 * <font color=blue>(2026/07/06)</font>Plan for the eleventh week (July 6th)
 	1. [Writing a Compiler](slides/10-compiler.pdf)
-	1. Work on `pl09_hand_compile`
+	1. Work on `pl09_hand_compile` or take a look at `pl10_minc`
 	1. [Rust Memory Management](slides/08-rust.pdf)
 	1. [I appreciate your consent](#consent) on data usage for [research like this](https://dl.acm.org/doi/10.1145/3770762.3772605)
 
