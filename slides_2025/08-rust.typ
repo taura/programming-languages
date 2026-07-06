@@ -53,6 +53,18 @@
 
 = Introduction
 
+== The universal principle of memory management
+
+dead objects (or garbage) 
+
+$equiv$ objects that are no longer used in future
+
+$supset$ objects not reachable from the root (traversing GC)
+
+$supset$ objects not referenced by any pointer (reference counting)
+
+#align(center)[_*Rust detects "objects not referenced by any pointer" in a different way*_]
+
 == Rust's basic idea to memory management
 - Rust maintains that, for any live object, 
   + there is _one and only one pointer that "owns" it #mura[(the owning pointer)]_ 
@@ -88,9 +100,9 @@ _"#mura[single-ownership] rule"_
   #text(28pt)[_"borrow checker"_]
 ]
 
-== Exception to the single ownership model
+== Exceptions to the single ownership model
 
-- there are actually some exceptions to ways to the rules
+- there are actually some exceptions to the rules
 
 1. #ore[reference counting pointers] ($approx$ multiple owning pointers)
    - counts the number of owners _at runtime_, and reclaim the data when all these pointers are gone
@@ -397,6 +409,7 @@ fn foo() { \
 
 - Rust exactly does that, with the additional guarantee that #ao[_borrowing pointers are never dereferenced after its owning pointer is gone_]
 
+#commentout[
 == Motto:
 
 #align(left)[
@@ -419,6 +432,7 @@ fn foo() { \
 ])
 
 - ($dagger$) : determined by control flows and assignments, to be precise
+]
 
 = Borrowing pointers (`&`$T$)
 
@@ -433,7 +447,8 @@ fn foo() { \
 #hh ... a.x + b.x ... #comm[OK]
 ]
 
-- the issue is how to prevent a program from #aka[_dereferencing borrowing pointers after its owning pointer is gone_]
+- recall that Rust reclaims an object when its owning pointer is gone
+- $=>$ the central issue: how to prevent a program from #aka[_dereferencing borrowing pointers after its owning pointer is gone_]
 
 == Borrowers rule in action
 
