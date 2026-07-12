@@ -7,7 +7,13 @@
 * <font color=blue>Blue letters in the beginning of a line</font> is the day the announcement was made
 * <font color=red>Please reload the page</font> frequently as it will be updated during the course.
 
-* <font color=blue>(2026/07/06)</font>Plan for the eleventh week (July 6th)
+* <font color=blue>(2026/07/12)</font>Plan for the thirteenth (last) week (July 13th)
+	1. [Rust Memory Management](slides/08-rust.pdf)
+	1. UTAS course survey should be out
+	1. I am conducting [a survey on AI in classrooms](https://sites.google.com/g.ecc.u-tokyo.ac.jp/survey-ai-in-the-classroom/); I appreciate your answer
+	1. [I appreciate your consent](#consent) on data usage for [research like this](https://dl.acm.org/doi/10.1145/3770762.3772605)  
+
+* <font color=blue>(2026/07/06)</font>Plan for the twelveth week (July 6th)
 	1. [Writing a Compiler](slides/10-compiler.pdf)
 	1. Work on `pl09_hand_compile` or take a look at `pl10_minc`
 	1. [Rust Memory Management](slides/08-rust.pdf)
