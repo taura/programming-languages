@@ -33,7 +33,7 @@ EVAL=$(eval $(1))
 #                    -> notebooks/source/ans_X/Y.ipynb   (answer)
 # ============================================================
 #
-nb_pys := $(wildcard nb/source/*/*.py)
+nb_pys := $(wildcard nb/source/pl11_*/*.py)
 
 define nb_rule
 compile : notebooks/source/$(patsubst nb/source/%.py,%.ipynb,$(py))
@@ -352,10 +352,9 @@ $(foreach concept,$(call dir_in,$(in_dir)), \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(call EVAL,$(call check_code)))) \
 ))
 else
-$(foreach concept,hand_compile, \
+$(foreach concept,rust_memory_management, \
  $(foreach problem,$(call dir_in,$(in_dir)/$(concept)), \
   $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),md),$(call EVAL,$(call deploy_md))) \
-  $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),py),$(call EVAL,$(call deploy_ipynb))) \
   $(if $(call ext_in,$(in_dir)/$(concept)/$(problem)/svg,svg), $(call EVAL,$(call deploy_svg_dirs)) \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/svg,svg),$(call EVAL,$(call deploy_svg)))) \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/svg/L,svg),$(call EVAL,$(call deploy_svg_L))) \
@@ -363,6 +362,7 @@ $(foreach concept,hand_compile, \
    $(call EVAL,$(call deploy_code_dir)) \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(call EVAL,$(call deploy_code))) \
    $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem)/$(ext),$(ext)),$(call EVAL,$(call check_code)))) \
+  $(foreach base,$(call ext_in,$(in_dir)/$(concept)/$(problem),py),$(call EVAL,$(call deploy_ipynb))) \
 ))
 endif
 

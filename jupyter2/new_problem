@@ -20,7 +20,7 @@ if false; then
 fi
 
 ## asm
-if true; then
+if false; then
     cp -r ../../templates/asm ${p}
     mv ${p}/template.md ${p}/${p}.md
     mv ${p}/go/template.go ${p}/go/${p}.go
@@ -28,4 +28,12 @@ if true; then
     mv ${p}/ml/template.ml ${p}/ml/${p}.ml
     mv ${p}/rs/template.rs ${p}/rs/${p}.rs
     ln -s ../../../templates/asm.py ${p}/${p}.py
+fi
+
+# rust
+if true; then
+    cp -r ../../templates/rust ${p}
+    mv ${p}/template.md ${p}/${p}.md
+    mv ${p}/rs/template.rs ${p}/rs/${p}.rs
+    ln -s ../../../templates/rust.py ${p}/${p}.py
 fi

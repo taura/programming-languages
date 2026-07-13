@@ -119,6 +119,14 @@ PROBLEM_INDEX = [
      [
          "minc",
      ]),
-
+    ("rust_memory_management",
+     [
+         "assignment_is_a_move",
+         "arg_passing_is_a_move_too",
+         "borrowing_pointers",
+         "no_dereferencing_invalid_refs",
+         "passing_refs_to_function",
+         "refs_in_struct",
+     ]),
 ]
 
