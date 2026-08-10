@@ -1,0 +1,5 @@
+
+#[no_mangle]
+pub fn add_floats(x : f64, y : f64) -> f64 {
+    x + y
+}
