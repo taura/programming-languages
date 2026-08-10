@@ -1,0 +1,51 @@
+# minC grammar
+#
+# Notation (small, tool-independent EBNF):
+#   x = ... ;      production for nonterminal x      a b   sequence
+#   "if" / NUMBER  terminal (literal / token class)  a | b alternative
+#   ( ... ) group   [ a ] optional (0 or 1)   { a } repetition (0 or more)
+#   lowercase = nonterminal,  "quoted"/UPPER = terminal
+
+start   = program EOF ;
+program = { definition } ;
+definition     = fun_definition ;
+fun_definition = type identifier "(" parameter_list ")" compound_stmt ;
+parameter_list = [ parameter { "," parameter } ] ;
+parameter      = type identifier ;
+type           = "long" ;
+
+# ---- statements ----
+stmt = ";"
+     | "continue" ";"
+     | "break" ";"
+     | "return" expr ";"
+     | compound_stmt
+     | if_stmt
+     | while_stmt
+     | expr ";" ;
+compound_stmt = "{" { var_decl } { stmt } "}" ;
+var_decl      = type identifier ";" ;
+if_stmt       = "if" "(" expr ")" stmt [ "else" stmt ] ;
+while_stmt    = "while" "(" expr ")" stmt ;
+
+# ---- expressions ----
+# Each level binds tighter than the one above. Associativity is shown by the
+# recursion side:  left-recursive (X = X op Y | Y) = left associative;
+#                  right-recursive (X = Y op X | Y) = right associative.
+# The hand-written LL(1) parser removes the left recursion, turning
+#   X = X op Y | Y   into the iteration   X = Y { op Y }   (see parser comments).
+expr                = equality_expr "=" expr | equality_expr ;          # right assoc
+equality_expr       = equality_expr ( "==" | "!=" ) cmp_expr | cmp_expr ;
+cmp_expr            = cmp_expr ( "<" | ">" | "<=" | ">=" ) additive_expr | additive_expr ;
+additive_expr       = additive_expr ( "+" | "-" ) multiplicative_expr | multiplicative_expr ;
+multiplicative_expr = multiplicative_expr ( "*" | "/" | "%" ) unary_expr | unary_expr ;
+unary_expr = NUMBER
+           | identifier "(" argument_list ")"
+           | identifier
+           | "(" expr ")"
+           | ( "+" | "-" | "!" | "~" ) unary_expr ;
+argument_list = [ expr { "," expr } ] ;
+
+# ---- terminals ----
+NUMBER     = /[0-9]+/ ;
+identifier = /[A-Za-z_][A-Za-z_0-9]*/ ;
