@@ -1,0 +1,1 @@
+../../../templates/how_compile_test.sh
