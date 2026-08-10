@@ -1,0 +1,1 @@
+../../../templates/minc_test.sh

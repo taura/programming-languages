@@ -1,0 +1,4 @@
+(executable
+ (public_name vis_addr)
+ (name main)
+ (libraries base time_now vis_addr))
