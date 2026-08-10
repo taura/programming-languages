@@ -1,0 +1,83 @@
+%% Creator: Inkscape 1.2.2 (b0a8486541, 2022-12-01), www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'gc_basic_2.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{487.50001442bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.70769235)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{gc_basic_2.pdf}}%
+    \put(0.294182,0.67560371){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.22378762\unitlength}\raggedright  \end{minipage}}}%
+    \put(0.15431473,0.68959043){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.19892235\unitlength}\raggedright  \end{minipage}}}%
+    \put(0.00998049,0.3183213){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}main :\end{tabular}}}}%
+    \put(0.08074972,0.38909053){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}f :\end{tabular}}}}%
+    \put(0.07151895,0.48139822){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}g :\end{tabular}}}}%
+    \put(0.07151895,0.55832129){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}h :\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{gc_basic_2.pdf}}%
+    \put(0.54228815,0.52755206){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}x\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{gc_basic_2.pdf}}%
+    \put(0.23459587,0.45370591){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}p\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{gc_basic_2.pdf}}%
+    \put(0.23459587,0.29985976){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}r\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{gc_basic_2.pdf}}%
+    \put(0.23459587,0.39216745){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}q\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{gc_basic_2.pdf}}%
+    \put(0.5761343,0.42601361){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}y\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{gc_basic_2.pdf}}%
+    \put(0.50228815,0.28139823){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}z\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{gc_basic_2.pdf}}%
+    \put(0.07692307,0.21538467){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}活性な関数呼び出し\end{tabular}}}}%
+    \put(0.16923076,0.03076929){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}大域変数\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{gc_basic_2.pdf}}%
+    \put(0.23459587,0.11524438){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}s\end{tabular}}}}%
+    \put(0.23459587,0.08447515){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}t\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{gc_basic_2.pdf}}%
+  \end{picture}%
+\endgroup%

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="223.96979mm"
+   height="48.021873mm"
+   id="svg2"
+   version="1.1"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs4">
+    <marker
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend"
+       style="overflow:visible">
+      <path
+         id="path4006"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <marker
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Send"
+       style="overflow:visible">
+      <path
+         id="path3915"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)" />
+    </marker>
+    <marker
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Sstart"
+       style="overflow:visible">
+      <path
+         id="path3912"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(0.2,0,0,0.2,1.2,0)" />
+    </marker>
+    <marker
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart"
+       style="overflow:visible">
+      <path
+         id="path3900"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(0.8,0,0,0.8,10,0)" />
+    </marker>
+    <marker
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend"
+       style="overflow:visible">
+      <path
+         id="path3769"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     transform="translate(100.5,88.137817)">
+    <rect
+       style="fill:#ff6600;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2995"
+       width="50"
+       height="75"
+       x="75"
+       y="17.362183" />
+    <rect
+       y="17.253387"
+       x="154.8912"
+       height="75.21759"
+       width="30.519617"
+       id="rect2997"
+       style="fill:#ff6600;fill-opacity:1;stroke:#ffffff;stroke-width:0.782409;stroke-miterlimit:4;stroke-dasharray:2.34723, 2.34723;stroke-dashoffset:0;stroke-opacity:1" />
+    <rect
+       style="fill:#ff6600;fill-opacity:1;stroke:#ffffff;stroke-width:0.513724;stroke-miterlimit:4;stroke-dasharray:1.54117, 1.54117;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect2999"
+       width="13.110632"
+       height="75.486275"
+       x="254.75687"
+       y="17.119045" />
+    <rect
+       y="17.362183"
+       x="355"
+       height="75"
+       width="50"
+       id="rect3001"
+       style="fill:#ff6600;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0;stroke-opacity:1" />
+    <rect
+       y="17.119045"
+       x="274.75687"
+       height="75.486275"
+       width="13.110632"
+       id="rect3003"
+       style="fill:#ff6600;fill-opacity:1;stroke:#ffffff;stroke-width:0.513724;stroke-miterlimit:4;stroke-dasharray:1.54117, 1.54117;stroke-dashoffset:0;stroke-opacity:1" />
+    <rect
+       style="fill:#ff6600;fill-opacity:1;stroke:#ffffff;stroke-width:0.513724;stroke-miterlimit:4;stroke-dasharray:1.54117, 1.54117;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect3005"
+       width="13.110632"
+       height="75.486275"
+       x="294.75687"
+       y="17.119045" />
+    <rect
+       style="fill:#ff6600;fill-opacity:1;stroke:#ffffff;stroke-width:0.801259;stroke-miterlimit:4;stroke-dasharray:2.40378, 2.40378;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect3007"
+       width="32.015995"
+       height="75.198738"
+       x="474.90063"
+       y="17.262812" />
+    <rect
+       y="17.262812"
+       x="694.90063"
+       height="75.198738"
+       width="32.015995"
+       id="rect3009"
+       style="fill:#ff6600;fill-opacity:1;stroke:#ffffff;stroke-width:0.801259;stroke-miterlimit:4;stroke-dasharray:2.40378, 2.40378;stroke-dashoffset:0;stroke-opacity:1" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect3809"
+       width="720"
+       height="75"
+       x="25"
+       y="17.362183" />
+    <rect
+       style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect3004"
+       width="60"
+       height="180"
+       x="-100"
+       y="-87.637817" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:4, 4;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="m -70,-57.637817 h 280 v 80"
+       id="path3008" />
+  </g>
+</svg>

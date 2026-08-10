@@ -1,0 +1,108 @@
+%% Creator: Inkscape 1.2.2 (b0a8486541, 2022-12-01), www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'translate.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{165.75001144bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,1.15837096)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{translate.pdf}}%
+    \put(0.15057304,1.00916384){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}long f() {\\  ...\\}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{translate.pdf}}%
+    \put(0.15057304,0.73767064){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}long g() {\\  ...\\}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{translate.pdf}}%
+    \put(0.15057304,0.46617743){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}long h() {\\  ...\\}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{translate.pdf}}%
+    \put(0.6030617,0.9186661){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}f:\\  ...\\  ...\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{translate.pdf}}%
+    \put(0.6030617,0.63462929){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}g:\\  ...\\  ...\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{translate.pdf}}%
+    \put(0.6030617,0.33925728){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}h()\\  ...\\  ...\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{translate.pdf}}%
+    \put(0.57197319,1.05897202){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}	.file	"a.c"\\	.text\end{tabular}}}}%
+    \put(0.56879202,0.11244435){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}	.ident	"MCC"\\	....\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{translate.pdf}}%
+    \put(0.60306171,1.00916384){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}f:\\    grow stack\\    save args\\    ...\\    ...\\    ...\\    ...\\    \\    shrink stack\\    ret\\\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{translate.pdf}}%
+    \put(0.15057305,1.00916384){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}long f() {\\  ...\\  ...\\  ...\\}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{translate.pdf}}%
+    \put(0.15057305,1.00916384){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}while (      ) {\\  ...\\  ...\\  ...\\}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{translate.pdf}}%
+    \put(0.54524881,0.54977288){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}Lc:\end{tabular}}}}%
+    \put(0.64762144,0.88173191){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}jmp Lc\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{translate.pdf}}%
+    \put(0.64762144,0.36589513){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}cmpq $0,...\\jne Ls\end{tabular}}}}%
+    \put(0.54524881,0.82126568){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}Ls:\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{translate.pdf}}%
+    \put(0.63857166,0.514863){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}addq XX(\%rsp),...\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{translate.pdf}}%
+    \put(0.24208141,0.8076916){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}+\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=15]{translate.pdf}}%
+    \put(0.62952188,0.82743361){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}movq ...,XX(\%rsp)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=16]{translate.pdf}}%
+    \put(0.60237253,0.52879133){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}movq ...,YY(\%rsp)\\movq $0,\%rax\\movq YY(\%rsp),...\\cmpq XX(\%rsp),...\\setl \%al\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=17]{translate.pdf}}%
+    \put(0.24208141,0.8076916){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}<\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=18]{translate.pdf}}%
+    \put(0.60237253,0.80933418){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}movq ...,XX(\%rsp)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=19]{translate.pdf}}%
+    \put(0.66572101,0.32064624){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}movq ...,\%rdi\\movq ... \%rsi\\movq ... \%rdx\\movq ... \%rcx\\call f\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=20]{translate.pdf}}%
+    \put(0.04298642,0.84389033){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l} f(   ,    ,    ,   )\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=21]{translate.pdf}}%
+    \put(0.66572101,0.39304408){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}movq ...,..(\%rsp)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=22]{translate.pdf}}%
+    \put(0.66572101,0.53784044){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}movq ...,..(\%rsp)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=23]{translate.pdf}}%
+    \put(0.66572101,0.78218432){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}movq ...,..(\%rsp)\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=24]{translate.pdf}}%
+    \put(0.66572101,0.99032908){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}movq ...,..(\%rsp)\end{tabular}}}}%
+  \end{picture}%
+\endgroup%

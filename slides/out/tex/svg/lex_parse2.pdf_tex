@@ -1,0 +1,83 @@
+%% Creator: Inkscape 1.1.2 (0a00cf5339, 2022-02-04), www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'lex_parse2.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{559.68359756bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.74077673)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0.1637708,0.46862477){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.19492526\unitlength}\raggedright  \end{minipage}}}%
+    \put(0.0419425,0.48080759){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\begin{minipage}{0.17326692\unitlength}\raggedright  \end{minipage}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{lex_parse2.pdf}}%
+    \put(0.0147335,0.13476329){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}let x  =  a  +  b  +    2   *  c   in  f   x \end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{lex_parse2.pdf}}%
+    \put(0.0147335,0.21516586){\color[rgb]{0,0,1}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}LET  ID   EQ  ID   PLUS  ID  PLUS  NUM  MUL ID    IN    ID    ID \end{tabular}}}}%
+    \put(0.72227612,0.28752818){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}pr\end{tabular}}}}%
+    \put(0.56147098,0.28752818){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}pr\end{tabular}}}}%
+    \put(0.38726541,0.28752818){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}pr\end{tabular}}}}%
+    \put(0.22646027,0.28752818){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}pr\end{tabular}}}}%
+    \put(0.53467012,0.36793075){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}term\end{tabular}}}}%
+    \put(0.61507269,0.44833332){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}term\end{tabular}}}}%
+    \put(0.37386498,0.36793075){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}term\end{tabular}}}}%
+    \put(0.21305984,0.36793075){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}term\end{tabular}}}}%
+    \put(0.21305984,0.44833332){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}expr\end{tabular}}}}%
+    \put(0.29346241,0.52873589){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}expr\end{tabular}}}}%
+    \put(0.45426755,0.60913846){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}expr\end{tabular}}}}%
+    \put(0.86700075,0.28752818){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}pr\end{tabular}}}}%
+    \put(0.94740332,0.28752818){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}pr\end{tabular}}}}%
+    \put(0.8938016,0.36793075){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}pr\end{tabular}}}}%
+    \put(0.8562804,0.44833332){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}term\end{tabular}}}}%
+    \put(0.85896049,0.53677615){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}expr\end{tabular}}}}%
+    \put(0.42746669,0.71634189){\color[rgb]{1,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}let_expr\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{lex_parse2.pdf}}%
+    \put(0.2023395,0.00075901){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}let  x = a + b + 2 * c in f x \end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{lex_parse2.pdf}}%
+  \end{picture}%
+\endgroup%

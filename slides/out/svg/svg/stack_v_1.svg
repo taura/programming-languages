@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="73.363663mm"
+   height="55.213253mm"
+   viewBox="0 0 73.363663 55.213253"
+   version="1.1"
+   id="svg5"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       id="marker1501"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       markerWidth="8.75"
+       markerHeight="5"
+       viewBox="0 0 8.75 5"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1499"
+         transform="scale(-0.5)" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1L"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       markerWidth="8.75"
+       markerHeight="5"
+       viewBox="0 0 8.75 5"
+       preserveAspectRatio="xMidYMid">
+      <path
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="arrow1L"
+         transform="scale(-0.5)" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow2"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       markerWidth="7.6999998"
+       markerHeight="5.5999999"
+       viewBox="0 0 7.7 5.6"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="M -2,-4 9,0 -2,4 c 2,-2.33 2,-5.66 0,-8 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="arrow2L" />
+    </marker>
+  </defs>
+  <g
+     id="layer1"
+     transform="translate(-13.948834,-36.777084)">
+    <rect
+       style="fill:#ffffff;fill-opacity:0.985835;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none"
+       id="rect236"
+       width="34.395832"
+       height="50.270836"
+       x="42.333332"
+       y="37.041668" />
+    <text
+       xml:space="preserve"
+       style="font-size:8.46667px;fill:#000000;fill-opacity:0.985835;stroke:none;stroke-width:0.529167;stroke-dasharray:none"
+       x="13.229167"
+       y="89.958336"
+       id="text956"><tspan
+         id="tspan954"
+         style="fill:#000000;stroke:none;stroke-width:0.529167"
+         x="13.229167"
+         y="89.958336">rsp</tspan></text>
+    <path
+       style="fill:#000000;fill-opacity:0.985835;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none;marker-end:url(#Arrow2)"
+       d="m 29.104166,87.312499 h 7.9375"
+       id="path1064" />
+    <rect
+       style="fill:#cccccc;fill-opacity:0.985835;stroke:#000000;stroke-width:0.529167;stroke-dasharray:none"
+       id="rect1289"
+       width="34.50341"
+       height="18.263422"
+       x="42.279541"
+       y="69.102875" />
+    <text
+       xml:space="preserve"
+       style="font-size:8.46667px;fill:#000000;fill-opacity:0.985835;stroke:none;stroke-width:0.529167;stroke-dasharray:none"
+       x="83.011429"
+       y="79.375"
+       id="text1293"><tspan
+         id="tspan1291"
+         style="fill:#000000;stroke:none;stroke-width:0.529167"
+         x="83.011429"
+         y="79.375">v</tspan></text>
+    <path
+       style="fill:#cccccc;fill-opacity:0.985835;stroke:#000000;stroke-width:0.454541;stroke-dasharray:none;marker-start:url(#marker1501);marker-end:url(#Arrow1L)"
+       d="m 79.374999,71.011317 v 13.66541"
+       id="path1467" />
+    <text
+       xml:space="preserve"
+       style="font-size:8.46667px;fill:#000000;fill-opacity:0.985835;stroke:none;stroke-width:0.529167;stroke-dasharray:none"
+       x="50.241199"
+       y="81.936165"
+       id="text1615"><tspan
+         id="tspan1613"
+         style="fill:#000000;stroke:none;stroke-width:0.529167"
+         x="50.241199"
+         y="81.936165">used</tspan></text>
+  </g>
+</svg>
