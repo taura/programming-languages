@@ -1,4 +1,0 @@
-(executable
- (public_name echo)
- (name main)
- (libraries echo))

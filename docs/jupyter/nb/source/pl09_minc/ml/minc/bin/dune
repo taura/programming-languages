@@ -1,6 +1,0 @@
-(executable
- (public_name minc)
- (name main)
- (libraries minc_ast minc_parse minc_cogen compiler-libs.toplevel)
- (link_flags (-linkall))
- (modes byte exe))
