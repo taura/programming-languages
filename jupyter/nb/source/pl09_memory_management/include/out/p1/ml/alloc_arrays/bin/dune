@@ -1,0 +1,4 @@
+(executable
+ (public_name alloc_arrays)
+ (name main)
+ (libraries alloc_arrays))

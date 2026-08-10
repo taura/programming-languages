@@ -1,0 +1,4 @@
+(executable
+ (public_name gc_demo)
+ (name main)
+ (libraries gc_demo time_now))

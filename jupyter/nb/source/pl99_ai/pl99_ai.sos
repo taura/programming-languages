@@ -1,0 +1,21 @@
+#* プログラミング言語 AIチュータ
+
+#* Programming Languages Hands-on Environment
+
+<!--- code kernel=python --->
+! pip install openai
+! jupyter labextension install @jupyter-widgets/jupyterlab-manager
+<!--- end code --->
+
+<!--- code kernel=python --->
+<!--- include nb/source/pl99_ai/programming_language_tutor.py --->
+<!--- end code --->
+
+<!--- code kernel=python --->
+Q("再帰呼出しの問題を出して")
+<!--- end code --->
+
+<!--- code kernel=python --->
+T()
+<!--- end code --->
+

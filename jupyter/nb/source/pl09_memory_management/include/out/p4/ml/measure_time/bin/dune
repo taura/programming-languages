@@ -1,0 +1,4 @@
+(executable
+ (public_name measure_time)
+ (name main)
+ (libraries measure_time time_now))

@@ -1,0 +1,4 @@
+(executable
+ (public_name show_addr)
+ (name main)
+ (libraries show_addr))

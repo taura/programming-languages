@@ -1,0 +1,4 @@
+(executable
+ (public_name bst)
+ (name main)
+ (libraries bst time_now))

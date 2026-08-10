@@ -1,0 +1,516 @@
+#* Programming Languages (9) --- Observing and measuring memory management
+
+<!--- md w --->
+
+Enter your name and student ID.
+
+ * Name:
+ * Student ID:
+
+<!--- end md --->
+
+# Introduction
+
+* in this notebook, you are going to observe, measure, and tune memory management
+
+# Prepare AI Tutor
+
+* execute the following cell to set up your tutor
+<!--- code w kernel=python --->
+from heytutor import *
+config(default_lang=" ... ")  # choose one of Go/Julia/OCaml/Rust
+<!--- end code --->
+* you may want to ask a few basics
+<!--- code w kernel=python --->
+I("""memory allocation basics""")
+<!--- end code --->
+
+# Roadmap
+
+* I have given you a benchmark program that stresses memory allocator in the four programming languages
+* you collaborate with members in your team to measure and compare the performance of the four languages from several angles 
+  * <font color="blue">speed</font>
+  * <font color="blue">memory consumption</font>
+  * <font color="blue">pause time</font>
+* you also investigate performance knobs of your language (e.g., heap size) and try to improve a performance criteria if possible
+
+# Benchmark program
+
+* You are given a program that performs the following
+1. allocate an array $A$ of $M$ elements, each element of which is a reference to an array of $S$ 64-bit integers (that is, $A$ is an array of array of 64-bit integers)
+1. repeat $N$ times allocating $S$-element array of 64-bit integers and put it in one of the elements of $A$
+
+* default values for $S$, $M$, and $N$ are as follows (they can be specified by the command line)
+  * <font color="blue">$S$ : $1000 \times 1000$</font>
+  * <font color="blue">$M$ : $100$</font>
+  * <font color="blue">$N$ : $M \times 10$</font>
+
+## Go
+
+<font color="blue">Note: you do not have to execute the following cell</font>
+
+<!--- code w kernel=go --->
+<!--- exec-include ./mk_version.py -D label="alloc_arrays" nb/source/pl09_memory_management/include/pl09.go --->
+<!--- end code --->
+
+## Julia
+
+<font color="blue">Note: you do not have to execute the following cell</font>
+
+<!--- code w kernel=jl --->
+<!--- exec-include ./mk_version.py -D label="alloc_arrays" nb/source/pl09_memory_management/include/pl09.jl --->
+<!--- end code --->
+
+## OCaml
+
+<font color="blue">Note: you do not have to execute the following cell</font>
+
+<!--- code w kernel=ml --->
+<!--- exec-include ./mk_version.py -D label="alloc_arrays" nb/source/pl09_memory_management/include/pl09.ml --->
+<!--- end code --->
+
+## Rust
+
+<font color="blue">Note: you do not have to execute the following cell</font>
+
+<!--- code w kernel=rs --->
+<!--- exec-include ./mk_version.py -D label="alloc_arrays" nb/source/pl09_memory_management/include/pl09.rs --->
+<!--- end code --->
+
+#*P Discuss this program
+
+* Discuss these programs with your team members and confirm they are doing what I said they do
+* <font color="green">Q1:</font> Assuming the memory management system is "perfect" in the sense it retains only those objects that are reachable from the root, what is the minimum amount of memory this program requires for those arrays?  Express it in terms of $S$, $M$, and $N$
+* Write your team's answer in the Excel book I gave to each team on OneDrive
+
+# A C program that leaks
+
+* Before looking at Go/Julia/OCaml/Rust, let's look at C version that does not free allocated memory and see what happens
+* To observe "what happens," we print the address of each allocated array
+* In C, a pointer is actually an address; you can print it just by casting it into an integer of an appropriate size (e.g., `printf("%p", (long)p)`)
+
+* Prepare a working directory
+
+<!--- code w kernel=bash --->
+mkdir -p ~/notebooks/pl09_memory_management/p2/cc/show_addr_no_gc
+<!--- end code --->
+
+* Write the souce file
+
+<!--- code w kernel=py --->
+%%writefile p2/cc/show_addr_no_gc/show_addr_no_gc.cc
+<!--- exec-include ./mk_version.py -D label="show_addr_no_gc" nb/source/pl09_memory_management/include/pl09.cc --->
+<!--- end code --->
+
+* Compile it
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p2/cc/show_addr_no_gc
+gcc -O3 -Wall -Wextra -o show_addr_no_gc show_addr_no_gc.cc
+<!--- end code --->
+
+* Execute it
+* The following command prints N lines; be careful not to make it too large
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p2/cc/show_addr_no_gc
+S=$((1000 * 1000))
+M=10
+N=$((M * 10))
+/usr/bin/time ./show_addr_no_gc ${S} ${M} ${N}
+<!--- end code --->
+
+#*P Observe leak
+
+* Visualize these addresses in the Excel book I made for each team on OneDrive
+  * The x-axis: the number of times you allocated (iteration number)
+  * The y-axis: the address offset (see below)
+* In order to easily grasp how many bytes they are spread across, show addresses as their offsets from the minimum of all addresses (so that the minimum address is shown as zero)
+* e.g., if the result is
+```
+0,100000000
+1,100010000
+2,100020000
+3,100030000
+```
+you should visualize it as follows
+```
+0,0
+1,10000
+2,20000
+3,30000
+```
+* You can perform this conversion to offsets either with Excel formula or by a program
+* To put data in the Excel book, copy-and-paste from Jupyter is not recommended; you instead redirect the output of the program into a file (e.g., _command_ > out.csv) and download it.  Open it in the text editor or Excel and copy it in the Excel book on OneDrive
+* Hint : use scatter-plot
+* Discuss the visualized data and understand what it means
+  * <font color="green">Q2:</font> : what is the sign that memory is "leaked"?
+  * <font color="green">Q3:</font> : how many bytes two consecutive arrays are apart?  How it relates to $S$, $M$, or $N$?
+
+# Automatic memory management (reclamation)
+
+* Now let's see what happens in languages doing automatic memory management
+* We do what we did for C in each of the four languages; print the addresses of allocated arrays
+* Execute the program of the language you are assigned to
+
+## Go
+
+* In Go, you can simply print an address of an array `b` by something like
+```
+fmt.Printf("%d\n", &b[0])
+```
+* check if you can run `go` command
+
+<!--- code w kernel=bash --->
+go version
+<!--- end code --->
+
+* if it raises an error indicating `go` command is not found, add `~/go/bin` to your `PATH` environment variable
+
+<!--- code w kernel=bash --->
+export PATH=~/go/bin:$PATH
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+mkdir -p ~/notebooks/pl09_memory_management/p3/go/show_addr
+cd ~/notebooks/pl09_memory_management/p3/go/show_addr
+go mod init show_addr
+<!--- end code --->
+
+<!--- code w kernel=py --->
+%%writefile p3/go/show_addr/show_addr.go
+<!--- exec-include ./mk_version.py -D label="show_addr" nb/source/pl09_memory_management/include/pl09.go --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p3/go/show_addr
+go build
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p3/go/show_addr
+S=$((1000 * 1000))
+M=100
+N=$((M * 10))
+/usr/bin/time ./show_addr ${S} ${M} ${N}
+<!--- end code --->
+
+## Julia
+
+* In Julia, to print an address of an array `b`, you first get a pointer by `p = pointer(b)` and cast it into an integer by `Int64(p)`
+* Check if you can run `julia` command
+
+<!--- code w kernel=bash --->
+julia --version
+<!--- end code --->
+
+* If it raises an error indicating `julia` command is not found, add `~/.juliaup/bin` to your `PATH` environment variable
+
+<!--- code w kernel=bash --->
+export PATH=~/.juliaup/bin:$PATH
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+mkdir -p ~/notebooks/pl09_memory_management/p3/jl/show_addr
+<!--- end code --->
+
+<!--- code w kernel=py --->
+%%writefile p3/jl/show_addr/show_addr.jl
+<!--- exec-include ./mk_version.py -D label="show_addr" nb/source/pl09_memory_management/include/pl09.jl --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p3/jl/show_addr
+S=$((1000 * 1000))
+M=100
+N=$((M * 10))
+/usr/bin/time julia ./show_addr.jl ${S} ${M} ${N}
+<!--- end code --->
+
+
+## OCaml
+
+* In OCaml, to print an address of an array `b`, `Obj.magic (Obj.repr b)` does the trick
+* Check if you can run `ocamlc` command
+
+<!--- code w kernel=bash --->
+ocamlc --version
+<!--- end code --->
+
+* if it raises an error indicating `ocamlc` command is not found, execute the following in your shell
+
+<!--- code w kernel=bash --->
+eval $(opam env)
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+mkdir -p ~/notebooks/pl09_memory_management/p3/ml
+cd ~/notebooks/pl09_memory_management/p3/ml
+dune init project show_addr
+<!--- end code --->
+
+<!--- code w kernel=py --->
+%%writefile p3/ml/show_addr/bin/main.ml
+<!--- exec-include ./mk_version.py -D label="show_addr" nb/source/pl09_memory_management/include/pl09.ml --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p3/ml/show_addr
+dune build --profile release
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p3/ml/show_addr
+S=$((1000 * 1000))
+M=100
+N=$((M * 10))
+/usr/bin/time ./_build/default/bin/main.exe ${S} ${M} ${N}
+<!--- end code --->
+
+## Rust
+
+* In Rust, for an array `b`, `b.as_ptr() as usize` is the address of it cast into an integer (`usize`)
+* check if you can run `rustc` command
+
+<!--- code w kernel=bash --->
+rustc --version
+<!--- end code --->
+
+* if it raises an error indicating `rustc` command is not found, execute the following in your shell
+
+<!--- code w kernel=bash --->
+. ~/.cargo/env
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+mkdir -p ~/notebooks/pl09_memory_management/p3/rs
+cd ~/notebooks/pl09_memory_management/p3/rs
+cargo new show_addr
+<!--- end code --->
+
+<!--- code w kernel=py --->
+%%writefile p3/rs/show_addr/src/main.rs
+<!--- exec-include ./mk_version.py -D label="show_addr" nb/source/pl09_memory_management/include/pl09.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p3/rs/show_addr
+cargo build --release
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p3/rs/show_addr
+S=$((1000 * 1000))
+M=100
+N=$((M * 10))
+/usr/bin/time ./target/release/show_addr ${S} ${M} ${N}
+<!--- end code --->
+
+## C + conservative GC library
+
+* <a href="https://hboehm.info/gc/" target="_blank" rel="noopener">Boehm + Weiser Conservative GC</a> is a library that you can plug into your C/C++ programs
+* On Ubuntu, installation only takes
+```
+sudo apt install libgc-dev
+```
+* All you need to do is
+  * `#include <gc/gc.h>`
+  * replace `malloc` and `calloc` to `GC_MALLOC`
+  * you don't have to `free`
+  * link with `-lgc` (add this when you produce the executable, like
+```
+gcc -o foo.exe foo.c -lgc
+```
+
+<!--- code w kernel=bash --->
+mkdir -p ~/notebooks/pl09_memory_management/p3/cc/show_addr
+<!--- end code --->
+
+<!--- code w kernel=py --->
+%%writefile p3/cc/show_addr/show_addr.cc
+<!--- exec-include ./mk_version.py -D label="show_addr" nb/source/pl09_memory_management/include/pl09.cc --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p3/cc/show_addr
+gcc -O3 -Wall -Wextra -o show_addr show_addr.cc -lgc
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p3/cc/show_addr
+S=$((1000 * 1000))
+M=100
+N=$((M * 10))
+/usr/bin/time ./show_addr ${S} ${M} ${N}
+<!--- end code --->
+
+#*P Observe memory management at work
+
+* Visualize these addresses in the Excel book I made for each team on OneDrive
+  * The x-axis: the number of times you allocated (iteration number)
+  * The y-axis: the address offset (see below)
+* As you did for the C program, addresses should be shown as offsets from the minimum address (the minimum taken over addresses in a particular language)
+* As you did for the C program, redirect the result into a file (e.g., out.csv) rather than copy-pasting from Jupyter
+* Addresses are typically contiguous (they are densely packed in a contiguous region), but in some languages they may be split into two (or a few) clusters, making it difficult to grasp how much memory they actually occupy
+* If that happens, exclude all but one largest cluster from the visualization (only show addresses in the largest cluster)
+* Discuss the visualized data and understand what it means; in particular,
+  * <font color="green">Q4:</font> From the visualization, how do you know the memory management is "working"
+  * <font color="green">Q5:</font> Deduce from the visualization the amount of memory each language requires for these arrays
+  * <font color="green">Q6:</font> Count the number of distinct addresses; write a shell command that takes the output (e.g., out.csv) and counts the number of distinct addresses (hint: combine sort, uniq, and wc)
+  * <font color="green">Q7:</font> Confirm the former is close to "the number of distinct addresses x the array size"
+  * <font color="green">Q8:</font> How large is it relative to the "minimum" amount of memory required you calculated in Problem 1?
+* Change the values of $S$, $M$, and $N$ and how the behavior changes (or does not change); you can copy the sheet in Excel book to record experimental results with different parameters
+
+# Measuring allocation (pause) time
+
+* In this experiment, we measure the time taken for each allocation
+* In garbage-collected languages, an allocation _occasionally_ takes much time than usual
+* The maximum allocation time is essentially a "pause time" experienced by the user program, so a large spike in allocation time is a significant deal even if it is infrequent
+* Average time is important, too, as it indicates the basic performance of the language
+
+## Go
+
+<!--- code w kernel=bash --->
+mkdir -p ~/notebooks/pl09_memory_management/p4/go/measure_time
+cd ~/notebooks/pl09_memory_management/p4/go/measure_time
+go mod init measure_time
+<!--- end code --->
+
+<!--- code w kernel=py --->
+%%writefile p4/go/measure_time/measure_time.go
+<!--- exec-include ./mk_version.py -D label="measure_time" nb/source/pl09_memory_management/include/pl09.go --->
+<!--- end code --->
+
+* you will be complained when executing the following cell, and instructed to execute
+```
+go get github.com/loov/hrtime
+```
+* just do it when it happens
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p4/go/measure_time
+go build
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p4/go/measure_time
+S=$((1000 * 1000))
+M=100
+N=$((M * 10))
+/usr/bin/time ./measure_time ${S} ${M} ${N}
+<!--- end code --->
+
+## Julia
+
+<!--- code w kernel=bash --->
+mkdir -p ~/notebooks/pl09_memory_management/p4/jl/measure_time
+<!--- end code --->
+
+<!--- code w kernel=py --->
+%%writefile p4/jl/measure_time/measure_time.jl
+<!--- exec-include ./mk_version.py -D label="measure_time" nb/source/pl09_memory_management/include/pl09.jl --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p4/jl/measure_time
+S=$((1000 * 1000))
+M=100
+N=$((M * 10))
+/usr/bin/time julia ./measure_time.jl ${S} ${M} ${N}
+<!--- end code --->
+
+## OCaml
+
+<!--- code w kernel=bash --->
+mkdir -p ~/notebooks/pl09_memory_management/p4/ml
+cd ~/notebooks/pl09_memory_management/p4/ml
+dune init project measure_time
+<!--- end code --->
+
+<!--- code w kernel=py --->
+%%writefile p4/ml/measure_time/bin/main.ml
+<!--- exec-include ./mk_version.py -D label="measure_time" nb/source/pl09_memory_management/include/pl09.ml --->
+<!--- end code --->
+
+* You will be complained when executing the following cell
+* <font color="red">execute</font>
+```
+opam install time_now
+```
+in the terminal <font color="red">(it takes a while and ask you if you want to go ahead)</font>
+* and add `time_now` in the `p4/ml/measure_time/bin/dune` file, as follows
+```
+(executable
+ ( ... )
+ ( ...
+ (libraries measure_time time_now))
+```
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p4/ml/measure_time
+dune build --profile release
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p4/ml/measure_time
+S=$((1000 * 1000))
+M=100
+N=$((M * 10))
+/usr/bin/time ./_build/default/bin/main.exe ${S} ${M} ${N}
+<!--- end code --->
+
+## Rust
+
+<!--- code w kernel=bash --->
+mkdir -p ~/notebooks/pl09_memory_management/p4/rs
+cd ~/notebooks/pl09_memory_management/p4/rs
+cargo new measure_time
+<!--- end code --->
+
+<!--- code w kernel=py --->
+%%writefile p4/rs/measure_time/src/main.rs
+<!--- exec-include ./mk_version.py -D label="measure_time" nb/source/pl09_memory_management/include/pl09.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p4/rs/measure_time
+cargo build --release
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+cd ~/notebooks/pl09_memory_management/p4/rs/measure_time
+S=$((1000 * 1000))
+M=100
+N=$((M * 10))
+/usr/bin/time ./target/release/measure_time ${S} ${M} ${N}
+<!--- end code --->
+
+
+#*P Observe pause time
+
+* Visualize allocation time
+  * The x-axis: the number of times you allocated (iteration number)
+  * The y-axis: the time taken on that allocation
+* Discuss the visualized data and compare languages
+  * <font color="green">Q9:</font> What is the maximum pause time of each language?  What makes the pause time longer for garbage-collected languages?
+  * <font color="green">Q10:</font> What is the pause time of "average cases" in each language (i.e., when GC does not happen in garbage collected languages)?
+* Change the values of $S$, $M$, and $N$ and how the behavior changes (or does not change); you can copy the sheet in Excel book to record experimental results with different parameters
+
+#*P Show the tail of cumulative distribution 
+
+* Visualize allocation time
+  * The x-axis: the fraction (0 &le; x &le 1) of allocations that finished within the specified $y$
+  * The y-axis: allocation (pause) time
+  * for example, point (x, y) = (0.87, 2000) in the graph indicates 87% of allocations finish within 2000 nsec
+* Hint:
+  * Sort all pause times and scatter-plot $(i / N, y[i])$ for each $i = 1, 2, ..., N$
+
+#*P (Optional)
+
+* Languages typically support a few knobs to control memory usage (and frequency of garbage collections) and to report when GC happens
+* Consult the manual of your language and play with them.  In particular,
+  * try to control GC less frequenty by using more memory
+  * try to shorten pause time of GCs if there is any such option
+
+
+

@@ -1,0 +1,252 @@
+#* Programming Languages (10) --- Rust memory management
+
+<!--- md w --->
+
+Enter your name and student ID.
+
+ * Name:
+ * Student ID:
+
+<!--- end md --->
+
+# Introduction
+
+* in this notebook, you are going to learn Rust memory management
+
+# Prepare AI Tutor
+
+* execute the following cell to set up your tutor
+<!--- code w kernel=python --->
+from heytutor import *
+config(default_lang="rust")  # choose one of Go/Julia/OCaml/Rust
+<!--- end code --->
+* you may want to ask a few basics
+<!--- code w kernel=python --->
+I("""borrow-checker basics""")
+<!--- end code --->
+
+# Roadmap
+
+# Set up
+
+* check if you can run `rustc` command
+
+<!--- code w kernel=bash --->
+rustc --version
+<!--- end code --->
+
+* if it raises an error indicating `rustc` command is not found, execute the following in your shell
+
+<!--- code w kernel=bash --->
+. ~/.cargo/env
+<!--- end code --->
+
+# Owning pointer
+
+## Assignment of owning pointer does not copy a pointer but moves it
+
+* the following code does _not_ compile
+* confirm it compiles if you remove `a.x`
+
+<!--- code w kernel=py --->
+%%writefile move.rs
+<!--- include nb/source/pl10_rust/include/move.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+rustc move.rs
+<!--- end code --->
+
+## Passing argument to a function moves a pointer, too
+
+* the following code does _not_ compile either
+* confirm it compiles if you remove `a.x`
+
+<!--- code w kernel=py --->
+%%writefile move_fun.rs
+<!--- include nb/source/pl10_rust/include/move_fun.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+rustc move_fun.rs
+<!--- end code --->
+
+## `Box::new(e)` is just another way of making an owning pointer
+
+* the following code does _not_ compile
+* confirm it compiles if you remove `a.x`
+
+<!--- code w kernel=py --->
+%%writefile move_box.rs
+<!--- include nb/source/pl10_rust/include/move_box.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+rustc move_box.rs
+<!--- end code --->
+
+## Compiler conservatively estimates where owning pointer is alive (OK to dereference)
+
+### if expression
+
+* the following code does _not_ compile
+* if you look closely, we could get that it should be safe, as the condition `a.x == 1234` is always false
+* Rust compiler nevertheless rejects this code
+  * if either branch of an if expression moves the value out of `a`, the entire if expresson does so
+
+<!--- code w kernel=py --->
+%%writefile move_if.rs
+<!--- include nb/source/pl10_rust/include/move_if.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+rustc move_if.rs
+<!--- end code --->
+
+### loop expression
+
+* the following code does _not_ compile
+* again, if you look closely, we could get that it should be safe, as the loop iterates exactly once
+* Rust compiler nevertheless rejects this code
+  * if an iteration of a loop moves the value out of `a`, `a` becomes invalid at any iteration
+
+<!--- code w kernel=py --->
+%%writefile move_loop.rs
+<!--- include nb/source/pl10_rust/include/move_loop.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+rustc move_loop.rs
+<!--- end code --->
+
+## You can never make a cycle solely with owning pointers
+
+* the single-owner rule implies you cannot make a cycle solely with owning pointers
+* here is an attempt to make one, which of course does not compile
+* it is istructive to see where the compiler complaints
+
+<!--- code w kernel=py --->
+%%writefile cycle.rs
+<!--- include nb/source/pl10_rust/include/cycle.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+rustc cycle.rs
+<!--- end code --->
+
+# Borrowing pointer
+
+## Basics
+
+* the following code _does_ compile
+* you can derive a borrowing point by `&e`
+* unlike assignment of owning pointer (`let b = a`), an assignment of borrowing pointer does not invalidate the righthand side
+
+<!--- code w kernel=py --->
+%%writefile borrow.rs
+<!--- include nb/source/pl10_rust/include/borrow.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+rustc borrow.rs
+<!--- end code --->
+
+## Borrow checking in action
+
+* now the question is how Rust prevents borrowing pointers to already reclaimed data --- data whose owning pointer goes out of scope --- from being dereferenced
+* this is a simple example showing it in action
+
+<!--- code w kernel=py --->
+%%writefile borrow_check.rs
+<!--- include nb/source/pl10_rust/include/borrow_check.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+rustc borrow_check.rs
+<!--- end code --->
+
+## How borrow-checking actually works?
+
+* Rust tries to associate each borrowing pointer with _the lifetime_ of data it points to (_referent lifetime_)
+* roughly speaking,
+  * it tries to track from which owning pointer each borrowing pointer is derived from
+  * a borrowing pointer can be dereferenced only when the original owning pointer it is derived from is still alive (i.e., within its scope)
+* things become complicated due to
+  * assignments between borrowing pointers
+  * functions taking/returning borrowing pointers
+  * structures containing borrowing pointers
+* to make this tracking explicit, Rust introduces _lifetime parameters_ to each borrowing pointer
+  * `&'a T` ... an immutable borrowing pointer to `T` whose lifetime is `'a`
+  * `&mut 'a T` ... a mutable borrowing pointer to `T` whose lifetime is `'a`
+* imagine a lifetime parameter such as `'a` represents a _lifetime_ of the data it points to, or more specifically _the set of program points where the data it points to is still alive_
+
+## Functions taking borrowing pointers
+
+* you have to attach lifetime parameters to each parameter having a borrowing pointer type (`&T`)
+
+* the following program does _not_ compile, because lifetime parameters are lacking
+* practice: annotate it with lifetime parameters
+
+<!--- code w kernel=py --->
+%%writefile borrow_fun.rs
+<!--- include nb/source/pl10_rust/include/borrow_fun.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+rustc borrow_fun.rs
+<!--- end code --->
+
+## Structures having borrowing pointers
+
+* you have to attach lifetime parameters to each field having a borrowing pointer type (e.g., `&T` -> `&'a T`)
+* the resulting structure has to take these parameters (e.g., `S` -> `S<'a,'b,...>`)
+* the following program does _not_ compile, because lifetime parameters are lacking
+* practice: annotate it with lifetime parameters
+* even after fixing them by attaching lifetime parameters, it still does not compile because dereference `a.b.c.x` is unsafe
+* confirm that it compiles if you remove either `a.b.c.x` or replace the assignment `a.b = &b_` to `a.b = &b`
+
+<!--- code w kernel=py --->
+%%writefile borrow_data.rs
+<!--- include nb/source/pl10_rust/include/borrow_data.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+rustc borrow_data.rs
+<!--- end code --->
+
+## An example using functions and data structures
+
+* practice: annotate the following program with lifetime parameters
+* even after fixing them by attaching lifetime parameters, it still does not compile because dereference `a.b.c.x` is unsafe
+* confirm that it compiles if you remove either `a.b.c.x` or replace the function call `baz(&mut a, &b_)` to `baz(&mut a, &b)`
+
+<!--- code w kernel=py --->
+%%writefile borrow_data_fun.rs
+<!--- include nb/source/pl10_rust/include/borrow_data_fun.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+rustc borrow_data_fun.rs
+<!--- end code --->
+
+## The exact contraint imposed on dereferencing data structure
+
+* the goal is to prevent borrowing pointers to reclaimed data from being dereferenced
+* that is, if a borrowing pointer has type `&'a T`, prevent it from being dereferenced at program points not contained in lifetime represented by `'a`
+* the actual rule is slightly more strict
+* Rust disallows dereferencing any data structure having lifetime parameters `'a, 'b, 'c, ...` at any program point outside any of them
+* that is, dereferencing a struct of type `S<'a,'b,'c,...>` is allowed only at program points contained in all of `'a,'b,'c,...`
+
+* the following program is actually _safe_ if you closely observe that at (*), `s.b` is a dangling pointer but `s.a` is not
+* this program nevertheless does not compile, as type of `s` (S<'a,'b>) has lifetime parameters `'a` and `'b` and
+  * `'b` represents a lifetime not containing the program point (*), due to the assignment `s.b = &b;`
+
+<!--- code w kernel=py --->
+%%writefile partial_dangling.rs
+<!--- include nb/source/pl10_rust/include/partial_dangling.rs --->
+<!--- end code --->
+
+<!--- code w kernel=bash --->
+rustc partial_dangling.rs
+<!--- end code --->
+
