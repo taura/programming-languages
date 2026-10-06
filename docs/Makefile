@@ -4,6 +4,7 @@ htmls := $(patsubst %.md,%.html,$(mds))
 all : $(htmls)
 
 $(htmls) : %.html : %.md
-	pandoc --filter scripts/filter.py --number-sections $< -o $@ 
+	uv run pandoc --filter scripts/filter.py $< -o $@
+# --number-sections 
 
 .DELETE_ON_ERROR:

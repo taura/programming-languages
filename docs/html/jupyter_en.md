@@ -9,9 +9,10 @@
 
   * Note: If you cannot find the assignment, register for the course using the <font color=blue>"Register a course"</font> button in UTOL (see: <a href="https://utol.ecc.u-tokyo.ac.jp/common/manual/download?file=1" target="_blank" rel="noopener">UTOL User Manual for Students p. 28</a>).
   * Note: Registering for the course in UTOL does not mean you are officially enrolled. If you decide to enroll, do so via <a href="https://utas.adm.u-tokyo.ac.jp/" target="_blank" rel="noopener">UTAS</a>.
-* In the "Comments from the instructor", find a message like: "Visit https://xxxx.xxxx.xxxx:xxxx/ and sign in with your UTokyo Account. Your username will be u2xxxx." Then visit the URL and sign in with your UTokyo Account.
+* In the "Comments from the instructor", find a message like: "Visit https://xxxx.xxxx.xxxx:xxxx/ and sign in with your UTokyo Google Account (ECCS). Your username will be u2xxxx." Then visit the URL, click <font color=blue>"Sign in with Google (ECCS)"</font>, and sign in with your UTokyo Google Account (ECCS), whose address looks like <font color=blue>xxxx@g.ecc.u-tokyo.ac.jp</font>.<br/><br/>![](svg/jupyter_login.svg){width=100%}
 * After signing in, check the browser address bar and confirm that you are on a URL like <font color=blue>https://xxxx.xxxx.xxxx:xxxx/user/u2xxxx/lab</font>, which matches your assigned username.
-* If you see the error <font color=blue>403: Forbidden: cannot assign local user for xxxxxxxxxx@utac.u-tokyo.ac.jp</font>, it means your account is not ready yet. Make sure you have registered in UTOL (see above), and let the instructor know you are waiting.<br/><br/> <iframe width="560" height="315" src="https://www.youtube.com/embed/XMzz7jo9RzA?si=D39VS_mQYiEta3TW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+* If you see the error <font color=blue>403: Forbidden: cannot assign local user for xxxx@g.ecc.u-tokyo.ac.jp</font>, it means your account is not ready yet. Make sure you have registered in UTOL (see above), and let the instructor know you are waiting.
+* Note: the video below was recorded before when we used UTokyo Account (not UTokyo Google Account) for signing in, so the button label and page transitions differ slightly from what you will see now. We retain it for your reference. The rest of the procedure is the same.<br/><br/> <iframe width="560" height="315" src="https://www.youtube.com/embed/XMzz7jo9RzA?si=D39VS_mQYiEta3TW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 # Working with Nbgrader
 
@@ -122,7 +123,7 @@
 ```
 cd ~/notebooks/
 mv pl00_intro pl00_intro_xxx
-# Stop My Server -&gt; Start My Server
+# Stop My Server -> Start My Server
 # re-fetch
 # transplant the work you need
 ```
@@ -141,7 +142,7 @@ mv pl00_intro pl00_intro_xxx
 
 ## How to set up for SSH login
 
-### A video for inpatients
+### A video for the impatient
 
 * The video below covers steps explained in the following text<br/><br/><iframe width="560" height="315" src="https://www.youtube.com/embed/Yv10Ul3PIzY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -169,7 +170,7 @@ your_computer$ ssh-keygen
 
 * Once you have a key pair, the next step is to upload the public key on the Jupyter server
 * In the left pane of the Jupyterlab, choose the home directory so `notebooks` is shown there. Click the Upload Files icon <img src="img/upload.png" /> right below the Jupyter menu to upload the public key file (<font color="blue">id_ed25519.pub</font> or something similar). You will have the file `id_ed25519.pub` under the server's home directory
-* Execute the following commands on the Jupyter server (change `~/notebooks/id_ed25519.pub` below accordingly if the file name is different)
+* Execute the following commands on the Jupyter server (change `~/id_ed25519.pub` below accordingly if the file name is different)
 * To do so, you may want to use <a href="#bash_notebook">Bash notebook</a> or just `%%bash` cell in Python notebook
 ```
 mkdir -p ~/.ssh/
@@ -205,7 +206,7 @@ tuireuproeqiutreiurewuriouoweu0
 ```
 your_computer$ ssh u2xxxxx@server_name
 ```
-* <font color="blue">u2xxxx</font> should be replaced with your user name _in the Jupyter environment_.  It is _DIFFERENT FROM_ your UTokyo Account.
+* <font color="blue">u2xxxx</font> should be replaced with your user name _in the Jupyter environment_.  It is _DIFFERENT FROM_ your UTokyo Google Account (ECCS).
 * <font color="blue">server_name</font> should be replaced with the host name part of the URL (e.g., if the Juptyer URL is https://abc.def.org:8000/, it is `abc.def.org`)
 * To know your user name in the Jupyter environment, execute the following on the Jupyter server
 ```
@@ -224,7 +225,7 @@ Last login: Sun Dec 15 16:29:26 2019 from 111.99.149.67
 $ 
 ```
 * Then you should be able to run any editor running within a terminal (emacs, vim, nano, etc.)
-* All files distributed as part of assignments are in `notebook` directory right under your home directory.
+* All files distributed as part of assignments are in `notebooks` directory right under your home directory.
 
 # Using VSCode Remote Extension
 

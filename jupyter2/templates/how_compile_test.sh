@@ -20,12 +20,17 @@ cp ${skel_dir}/../${problem}.md ${out_dir}/
 cp ${submission_dir}/${problem}.${lang} ${out_dir}/
 cp ${submission_dir}/${problem}.s ${out_dir}/
 cp ${submission_dir}/note.md ${out_dir}/
-cp ${submission_dir}/../comparison.md ${out_dir}/
-
-wc ${out_dir}/note.md ${out_dir}/comparison.md
+if [ -e ${submission_dir}/../comparison.md ]; then
+    cp ${submission_dir}/../comparison.md ${out_dir}/
+    wc ${out_dir}/note.md ${out_dir}/comparison.md
+else
+    wc ${out_dir}/note.md
+fi
 
 echo "===== ${out_dir}/note.md ====="
 cat ${out_dir}/note.md
 
-echo "===== ${out_dir}/comparison.md ====="
-cat ${out_dir}/comparison.md
+if [ -e ${submission_dir}/../comparison.md ]; then
+    echo "===== ${out_dir}/comparison.md ====="
+    cat ${out_dir}/comparison.md
+fi
